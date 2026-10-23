@@ -145,7 +145,7 @@ function viewLogin(){
       }
     }catch(e){fail(e)}
   };
-  const sendCode=async()=>{try{await q(sb.auth.signInWithOtp({email:email.value.trim()}),"Send kode");S.needCode=true;toast("E-post sendt. Skriv inn koden (eller trykk på lenken i e-posten).");viewLogin()}catch(e){fail(e)}};
+  const sendCode=async()=>{try{await q(sb.auth.signInWithOtp({email:email.value.trim(),options:{emailRedirectTo:location.origin+location.pathname}}),"Send kode");S.needCode=true;toast("E-post sendt. Skriv inn koden (eller trykk på lenken i e-posten).");viewLogin()}catch(e){fail(e)}};
   const verify=async()=>{try{await q(sb.auth.verifyOtp({email:email.value.trim(),token:code.value.trim(),type:"email"}),"Bekreft kode")}catch(e){fail(e)}};
   app.append(
     el("h1",{},"Pling · testside"),
