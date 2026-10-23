@@ -32,12 +32,20 @@ button.small{padding:4px 9px;font-size:14px}
 #toast.bad{border-color:var(--bad)}
 .tag{font-size:12px;padding:1px 7px;border-radius:99px;border:1px solid var(--line);color:var(--dim)}
 .sec{color:var(--ok)}
+.code{font:700 min(20px,4.3vw)/1.5 ui-monospace,Consolas,monospace;letter-spacing:.03em;white-space:nowrap;background:#0b1636;border:1px dashed var(--acc);border-radius:10px;padding:14px 8px;text-align:center;user-select:all}
+.qr{background:#fff;padding:10px;border-radius:10px;display:inline-block}
+.qr svg{display:block;width:min(70vw,300px);height:auto}
+video{width:100%;max-width:360px;border-radius:10px;background:#000}
+textarea{width:100%;font:13px ui-monospace,Consolas,monospace;color:var(--txt);background:#0b1636;border:1px solid var(--line);border-radius:8px;padding:8px;min-height:70px}
+.warn{color:#ffd37a}
 </style>
 </head>
 <body>
 <main id="app"></main>
 <div id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="lib/qrcode.js"></script>
+<script src="lib/jsQR.js"></script>
 <script>
 "use strict";
 const SB_URL="https://frvnbcltyvcnyympmjua.supabase.co";
@@ -78,8 +86,47 @@ async function pairKey(theirPub){
 async function seal(key,obj){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,enc.encode(JSON.stringify(obj)));return{iv:b64(iv),ct:b64(ct)}}
 async function open(key,iv,ct){try{return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub64(iv)},key,ub64(ct))))}catch(e){return null}}
 
+/* ---------- gjenopprettingskode og enhetsoverføring ---------- */
+const B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+function newCode(){const r=crypto.getRandomValues(new Uint8Array(25));let t="";for(const b of r)t+=B32[b&31];return t.match(/.{5}/g).join("-")}
+const normCode=c=>c.toUpperCase().replace(/O/g,"0").replace(/[IL]/g,"1").replace(/[^0-9A-Z]/g,"");
+async function codeKey(code,salt,iter){
+  const base=await crypto.subtle.importKey("raw",enc.encode(normCode(code)),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+}
+async function makeBackup(code){
+  const salt=crypto.getRandomValues(new Uint8Array(16)),iter=600000;
+  const key=await codeKey(code,salt,iter);
+  const s=await seal(key,{v:1,priv:S.id.priv,pub:S.id.pub});
+  return{user_id:S.user.id,salt:b64(salt),iv:s.iv,ct:s.ct,iter,updated_at:new Date().toISOString()};
+}
+async function saveBackup(code){await q(sb.from("key_backups").upsert(await makeBackup(code)),"Lagre sikkerhetskopi");S.backup={updated_at:new Date().toISOString()}}
+async function restoreFromCode(code){
+  const rows=await q(sb.from("key_backups").select("*").eq("user_id",S.user.id),"Hente sikkerhetskopi");
+  if(!rows.length)throw new Error("Det finnes ingen sikkerhetskopi på denne kontoen");
+  const r=rows[0],key=await codeKey(code,ub64(r.salt),r.iter),o=await open(key,r.iv,r.ct);
+  if(!o)throw new Error("Koden stemmer ikke");
+  return{priv:o.priv,pub:o.pub};
+}
+const b64u=s=>s.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const unb64u=s=>atob(s.replace(/-/g,"+").replace(/_/g,"/")+"=".repeat((4-s.length%4)%4));
+function transferText(){const p=S.id.priv;return"PLING1."+b64u(btoa(JSON.stringify({u:S.user.id,x:p.x,y:p.y,d:p.d})))}
+function parseTransfer(t){
+  t=(t||"").trim();if(!t.startsWith("PLING1."))throw new Error("Ikke en Pling-overføringskode");
+  let o;try{o=JSON.parse(unb64u(t.slice(7)))}catch(e){throw new Error("Overføringskoden er ødelagt")}
+  if(o.u!==S.user.id)throw new Error("Koden hører til en annen konto");
+  return{priv:{kty:"EC",crv:"P-256",x:o.x,y:o.y,d:o.d,ext:true,key_ops:["deriveKey"]},pub:{crv:"P-256",kty:"EC",x:o.x,y:o.y}};
+}
+async function adoptIdentity(id){
+  const fp=await fpOf(id.pub);
+  if(fp!==S.profile.fp)throw new Error("Nøkkelen passer ikke til denne kontoen");
+  localStorage.setItem(keyName(S.user.id),JSON.stringify(id));S.id=id;pairCache.clear();
+}
+function qrSvg(text){const qr=qrcode(0,"M");qr.addData(text);qr.make();return qr.createSvgTag({cellSize:5,margin:0,scalable:true})}
+const download=(name,text)=>{const a=el("a",{href:URL.createObjectURL(new Blob([text],{type:"text/plain"})),download:name});document.body.append(a);a.click();a.remove()};
+
 /* ---------- tilstand ---------- */
-const S={user:null,profile:null,id:null,profiles:new Map(),friends:[],reqIn:[],reqOut:[],chat:null,msgs:[],mode:"in",needCode:false};
+const S={backup:null,user:null,profile:null,id:null,profiles:new Map(),friends:[],reqIn:[],reqOut:[],chat:null,msgs:[],mode:"in",needCode:false};
 const q=async(p,ctx)=>{const r=await p;if(r.error)throw new Error((ctx?ctx+": ":"")+r.error.message);return r.data};
 
 /* ---------- innlogging ---------- */
@@ -135,7 +182,7 @@ function viewSetup(){
       const id=S.id||await makeIdentity(S.user.id);S.id=id;
       const fp=await fpOf(id.pub);
       await q(sb.from("profiles").insert({id:S.user.id,fp,name:n,pub:id.pub}),"Lage profil");
-      S.profile={id:S.user.id,fp,name:n,pub:id.pub};await start();
+      S.profile={id:S.user.id,fp,name:n,pub:id.pub};showRecovery(true);
     }catch(e){fail(e)}
   };
   app.append(el("h1",{},"Velkommen"),el("div",{class:"card"},
@@ -144,13 +191,76 @@ function viewSetup(){
 }
 function viewNoKey(){
   const app=$("#app");app.textContent="";
-  app.append(el("h1",{},"Nøkkelen finnes ikke her"),el("div",{class:"card"},
-    el("p",{},"Du har en konto, men denne nettleseren har ikke krypteringsnøkkelen din. Gjenoppretting av nøkkel er ikke bygget ennå, så bruk nettleseren du laget kontoen i, eller lag en ny konto."),
-    el("button",{onclick:()=>sb.auth.signOut()},"Logg ut")));
+  const code=el("input",{type:"text",placeholder:"XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",id:"rc",autocapitalize:"characters",autocomplete:"off"});
+  const tr=el("textarea",{id:"tt",placeholder:"PLING1.…"});
+  const done=async id=>{try{await adoptIdentity(id);toast("Nøkkelen er tilbake");await start()}catch(e){fail(e)}};
+  app.append(el("h1",{},"Nøkkelen finnes ikke her"),
+    el("div",{class:"card"},el("p",{},"Du har en konto, men denne nettleseren har ikke krypteringsnøkkelen din. Hent den tilbake på en av disse måtene:")),
+    el("div",{class:"card"},el("strong",{},"1. Gjenopprettingskode"),el("p",{class:"dim"},"Koden du fikk da du lagde kontoen."),
+      el("div",{class:"row"},code,el("button",{id:"rcgo",onclick:async()=>{try{await done(await restoreFromCode(code.value))}catch(e){fail(e)}}},"Gjenopprett"))),
+    el("div",{class:"card"},el("strong",{},"2. Fra en annen enhet der du er logget inn"),el("p",{class:"dim"},"Velg «Flytt til ny enhet» der, og skann QR-koden her, eller lim inn overføringskoden."),
+      el("div",{class:"row"},el("button",{id:"scan",onclick:()=>scanQr(done)},"Skann QR-kode")),
+      el("p",{},tr),el("button",{id:"ttgo",onclick:async()=>{try{await done(parseTransfer(tr.value))}catch(e){fail(e)}}},"Bruk overføringskode")),
+    el("button",{class:"ghost",onclick:()=>sb.auth.signOut()},"Logg ut"));
+}
+function scanQr(done){
+  const app=$("#app");app.textContent="";
+  const v=el("video",{playsinline:true,muted:true,id:"vid"});let stop=false,stream=null;
+  const end=()=>{stop=true;if(stream)stream.getTracks().forEach(t=>t.stop())};
+  app.append(el("h1",{},"Skann QR-koden"),el("div",{class:"card"},v,el("p",{class:"dim",id:"scs"},"Holder kameraet mot QR-koden på den gamle enheten …"),
+    el("button",{class:"ghost",onclick:()=>{end();viewNoKey()}},"Avbryt")));
+  navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(st=>{
+    if(stop){st.getTracks().forEach(t=>t.stop());return}
+    stream=st;v.srcObject=st;v.play();
+    const cv=document.createElement("canvas"),cx=cv.getContext("2d",{willReadFrequently:true});
+    const tick=()=>{
+      if(stop)return;
+      if(v.readyState>=2&&v.videoWidth){
+        cv.width=v.videoWidth;cv.height=v.videoHeight;cx.drawImage(v,0,0);
+        const r=jsQR(cx.getImageData(0,0,cv.width,cv.height).data,cv.width,cv.height);
+        if(r&&r.data.startsWith("PLING1.")){end();let id;try{id=parseTransfer(r.data)}catch(e){fail(e);viewNoKey();return}done(id);return}
+      }
+      setTimeout(tick,120);
+    };tick();
+  }).catch(e=>{end();fail(new Error("Fikk ikke tilgang til kameraet. Bruk overføringskoden i stedet."));viewNoKey()});
+}
+
+/* ---------- gjenopprettingskode ---------- */
+function showRecovery(first){
+  const app=$("#app");app.textContent="";
+  const code=newCode();
+  const typed=el("input",{type:"text",placeholder:"Skriv koden på nytt for å bekrefte",id:"rcv",autocapitalize:"characters",autocomplete:"off"});
+  const go=async()=>{
+    if(normCode(typed.value)!==normCode(code))return toast("Koden stemmer ikke. Sjekk at du har skrevet den av riktig.",true);
+    try{await saveBackup(code);toast("Gjenopprettingskoden er aktivert");await start()}catch(e){fail(e)}
+  };
+  app.append(el("h1",{},first?"Siste steg: gjenopprettingskode":"Ny gjenopprettingskode"),
+    el("div",{class:"card"},
+      el("p",{},"Denne koden er den eneste måten å få tilbake samtalene dine på hvis du mister alle enhetene dine. Ikke engang vi kan hjelpe deg uten den."),
+      el("div",{class:"code",id:"rccode"},code),
+      el("div",{class:"row",style:"margin-top:10px"},
+        el("button",{class:"small",id:"cp",onclick:async()=>{try{await navigator.clipboard.writeText(code);toast("Kopiert")}catch(e){toast("Kunne ikke kopiere. Marker koden og kopier selv.",true)}}},"Kopier"),
+        el("button",{class:"small",id:"dl",onclick:()=>download("pling-gjenopprettingskode.txt","Pling gjenopprettingskode\n\n"+code+"\n\nOppbevar denne trygt. Alle med koden og passordet ditt kan åpne samtalene dine.\n")},"Last ned")),
+      el("p",{class:"warn"},"Lagre den i passordbehandleren din eller skriv den ned og oppbevar den trygt.")),
+    el("div",{class:"card"},el("p",{},typed),el("div",{class:"row"},el("button",{id:"rcgo",onclick:go},"Jeg har lagret den"),
+      el("button",{class:"ghost small",id:"skip",onclick:()=>{if(first)start();else{viewMain();refresh()}}},first?"Hopp over":"Avbryt"))));
+}
+function showQr(){
+  const app=$("#app");app.textContent="";
+  const text=transferText();let t=setTimeout(()=>{viewMain();refresh()},90000);
+  const back=()=>{clearTimeout(t);viewMain();refresh()};
+  app.append(el("h1",{},"Flytt til ny enhet"),
+    el("div",{class:"card"},
+      el("p",{},"Logg inn med samme konto på den nye enheten, velg «Skann QR-kode», og hold kameraet mot denne koden."),
+      (()=>{const d=el("div",{class:"qr",id:"qrbox"});d.innerHTML=qrSvg(text);return d})(),
+      el("p",{class:"warn"},"QR-koden er selve nøkkelen din. Ikke ta skjermbilde, og ikke vis den til andre. Den lukkes av seg selv etter 90 sekunder."),
+      el("details",{},el("summary",{class:"dim"},"Vis som tekst i stedet"),el("textarea",{id:"tx",readonly:true},text)),
+      el("p",{},el("button",{id:"qrback",onclick:back},"Ferdig"))));
 }
 
 /* ---------- hovedvisning ---------- */
 async function start(){
+  try{const bk=await q(sb.from("key_backups").select("user_id,updated_at").eq("user_id",S.user.id));S.backup=bk[0]||null}catch(e){S.backup=null}
   viewMain();await refresh();
   sb.channel("pling-live")
     .on("postgres_changes",{event:"*",schema:"public",table:"messages"},()=>refreshSoon())
@@ -200,6 +310,10 @@ function renderSide(){
       el("span",{class:"row"},el("button",{class:"small acc",onclick:async()=>{try{await q(sb.rpc("accept_request",{p_from:id}),"Godta");refresh()}catch(e){fail(e)}}},"Godta"),
         el("button",{class:"small ghost",onclick:async()=>{try{await q(sb.from("friend_requests").delete().eq("from_id",id).eq("to_id",S.user.id),"Avslå");refresh()}catch(e){fail(e)}}},"Avslå")))})));
   if(S.reqOut.length)side.append(el("div",{class:"card"},el("div",{class:"dim"},"Venter på svar"),S.reqOut.map(id=>{const p=S.profiles.get(id);return el("div",{class:"fr"},el("span",{},p?p.name:"…"),el("span",{class:"tag"},"venter"))})));
+  side.append(el("div",{class:"card"},el("div",{class:"dim"},"Sikkerhet"),
+    el("div",{class:S.backup?"sec":"warn",style:"margin:6px 0",id:"bkst"},S.backup?"Gjenopprettingskode er laget":"Du har ingen gjenopprettingskode ennå"),
+    el("div",{class:"row"},el("button",{class:"small",id:"mkcode",onclick:()=>showRecovery(false)},S.backup?"Lag ny kode":"Lag kode"),
+      el("button",{class:"small ghost",id:"mkqr",onclick:showQr},"Flytt til ny enhet"))));
   side.append(el("div",{class:"card"},el("div",{class:"dim"},"Venner"),
     S.friends.length?S.friends.map(id=>{const p=S.profiles.get(id);return el("div",{class:"fr"+(S.chat&&S.chat.other===id?" on":""),"data-id":id,onclick:()=>openChat(id)},el("span",{},p?p.name:"…"))}):el("div",{class:"dim"},"Ingen ennå")));
 }
