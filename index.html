@@ -45,7 +45,6 @@ textarea{width:100%;font:13px ui-monospace,Consolas,monospace;color:var(--txt);b
 <div id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="lib/qrcode.js"></script>
-<script src="lib/jsQR.js"></script>
 <script>
 "use strict";
 const SB_URL="https://frvnbcltyvcnyympmjua.supabase.co";
@@ -108,20 +107,15 @@ async function restoreFromCode(code){
   if(!o)throw new Error("Koden stemmer ikke");
   return{priv:o.priv,pub:o.pub};
 }
-const b64u=s=>s.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-const unb64u=s=>atob(s.replace(/-/g,"+").replace(/_/g,"/")+"=".repeat((4-s.length%4)%4));
-function transferText(){const p=S.id.priv;return"PLING1."+b64u(btoa(JSON.stringify({u:S.user.id,x:p.x,y:p.y,d:p.d})))}
-function parseTransfer(t){
-  t=(t||"").trim();if(!t.startsWith("PLING1."))throw new Error("Ikke en Pling-overføringskode");
-  let o;try{o=JSON.parse(unb64u(t.slice(7)))}catch(e){throw new Error("Overføringskoden er ødelagt")}
-  if(o.u!==S.user.id)throw new Error("Koden hører til en annen konto");
-  return{priv:{kty:"EC",crv:"P-256",x:o.x,y:o.y,d:o.d,ext:true,key_ops:["deriveKey"]},pub:{crv:"P-256",kty:"EC",x:o.x,y:o.y}};
-}
 async function adoptIdentity(id){
   const fp=await fpOf(id.pub);
   if(fp!==S.profile.fp)throw new Error("Nøkkelen passer ikke til denne kontoen");
   localStorage.setItem(keyName(S.user.id),JSON.stringify(id));S.id=id;pairCache.clear();
 }
+const pairCode=async pub=>{const h=new Uint8Array(await crypto.subtle.digest("SHA-256",enc.encode(pub.x+"."+pub.y)));return String(((h[0]<<24|h[1]<<16|h[2]<<8|h[3])>>>0)%10000).padStart(4,"0")};
+const pairFresh=r=>Date.now()-new Date(r.created_at).getTime()<10*60*1000;
+async function ephPair(){const kp=await crypto.subtle.generateKey(ECDH,false,["deriveKey"]);const pub=await crypto.subtle.exportKey("jwk",kp.publicKey);return{priv:kp.privateKey,pub:{crv:pub.crv,kty:pub.kty,x:pub.x,y:pub.y}}}
+async function aesFrom(priv,theirPub){const pk=await crypto.subtle.importKey("jwk",theirPub,ECDH,false,[]);return crypto.subtle.deriveKey({name:"ECDH",public:pk},priv,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
 function qrSvg(text){const qr=qrcode(0,"M");qr.addData(text);qr.make();return qr.createSvgTag({cellSize:5,margin:0,scalable:true})}
 const download=(name,text)=>{const a=el("a",{href:URL.createObjectURL(new Blob([text],{type:"text/plain"})),download:name});document.body.append(a);a.click();a.remove()};
 
@@ -192,37 +186,48 @@ function viewSetup(){
 function viewNoKey(){
   const app=$("#app");app.textContent="";
   const code=el("input",{type:"text",placeholder:"XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",id:"rc",autocapitalize:"characters",autocomplete:"off"});
-  const tr=el("textarea",{id:"tt",placeholder:"PLING1.…"});
-  const done=async id=>{try{await adoptIdentity(id);toast("Nøkkelen er tilbake");await start()}catch(e){fail(e)}};
   app.append(el("h1",{},"Nøkkelen finnes ikke her"),
     el("div",{class:"card"},el("p",{},"Du har en konto, men denne nettleseren har ikke krypteringsnøkkelen din. Hent den tilbake på en av disse måtene:")),
-    el("div",{class:"card"},el("strong",{},"1. Gjenopprettingskode"),el("p",{class:"dim"},"Koden du fikk da du lagde kontoen."),
-      el("div",{class:"row"},code,el("button",{id:"rcgo",onclick:async()=>{try{await done(await restoreFromCode(code.value))}catch(e){fail(e)}}},"Gjenopprett"))),
-    el("div",{class:"card"},el("strong",{},"2. Fra en annen enhet der du er logget inn"),el("p",{class:"dim"},"Velg «Flytt til ny enhet» der, og skann QR-koden her, eller lim inn overføringskoden."),
-      el("div",{class:"row"},el("button",{id:"scan",onclick:()=>scanQr(done)},"Skann QR-kode")),
-      el("p",{},tr),el("button",{id:"ttgo",onclick:async()=>{try{await done(parseTransfer(tr.value))}catch(e){fail(e)}}},"Bruk overføringskode")),
+    el("div",{class:"card"},el("strong",{},"1. Be en annen enhet om nøkkelen"),el("p",{class:"dim"},"Krever at du er innlogget på en annen enhet som har nøkkelen, for eksempel telefonen eller laptopen din."),
+      el("button",{id:"pair",onclick:startPairing},"Be om nøkkelen")),
+    el("div",{class:"card"},el("strong",{},"2. Gjenopprettingskode"),el("p",{class:"dim"},"Koden du fikk da du lagde kontoen."),
+      el("div",{class:"row"},code,el("button",{id:"rcgo",onclick:async()=>{try{await adoptIdentity(await restoreFromCode(code.value));toast("Nøkkelen er tilbake");await start()}catch(e){fail(e)}}},"Gjenopprett"))),
     el("button",{class:"ghost",onclick:()=>sb.auth.signOut()},"Logg ut"));
 }
-function scanQr(done){
+async function startPairing(){
   const app=$("#app");app.textContent="";
-  const v=el("video",{playsinline:true,muted:true,id:"vid"});let stop=false,stream=null;
-  const end=()=>{stop=true;if(stream)stream.getTracks().forEach(t=>t.stop())};
-  app.append(el("h1",{},"Skann QR-koden"),el("div",{class:"card"},v,el("p",{class:"dim",id:"scs"},"Holder kameraet mot QR-koden på den gamle enheten …"),
-    el("button",{class:"ghost",onclick:()=>{end();viewNoKey()}},"Avbryt")));
-  navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(st=>{
-    if(stop){st.getTracks().forEach(t=>t.stop());return}
-    stream=st;v.srcObject=st;v.play();
-    const cv=document.createElement("canvas"),cx=cv.getContext("2d",{willReadFrequently:true});
-    const tick=()=>{
+  let stop=false,id=null;
+  const cancel=async()=>{stop=true;if(id)try{await sb.from("key_transfers").delete().eq("id",id)}catch(e){}viewNoKey()};
+  try{
+    const e=await ephPair();id=crypto.randomUUID();
+    await q(sb.from("key_transfers").insert({id,user_id:S.user.id,eph_pub:e.pub}),"Be om nøkkel");
+    const code=await pairCode(e.pub),url=location.origin+location.pathname+"#godkjenn";
+    const box=el("div",{class:"qr",id:"qrbox"});box.innerHTML=qrSvg(url);
+    app.append(el("h1",{},"Venter på godkjenning"),
+      el("div",{class:"card"},
+        el("p",{},"Åpne Pling på en enhet der du allerede er innlogget. Der kommer det opp en forespørsel du kan godkjenne. Sjekk at koden er den samme:"),
+        el("div",{class:"code",id:"pcode"},code),
+        el("p",{class:"dim"},"Eller skann denne med kameraet på telefonen din (den åpner Pling):"),box,
+        el("p",{},el("button",{class:"ghost",id:"pcancel",onclick:cancel},"Avbryt"))));
+    const t0=Date.now();
+    const poll=async()=>{
       if(stop)return;
-      if(v.readyState>=2&&v.videoWidth){
-        cv.width=v.videoWidth;cv.height=v.videoHeight;cx.drawImage(v,0,0);
-        const r=jsQR(cx.getImageData(0,0,cv.width,cv.height).data,cv.width,cv.height);
-        if(r&&r.data.startsWith("PLING1.")){end();let id;try{id=parseTransfer(r.data)}catch(e){fail(e);viewNoKey();return}done(id);return}
-      }
-      setTimeout(tick,120);
-    };tick();
-  }).catch(e=>{end();fail(new Error("Fikk ikke tilgang til kameraet. Bruk overføringskoden i stedet."));viewNoKey()});
+      try{
+        const rows=await q(sb.from("key_transfers").select("*").eq("id",id)),r=rows[0];
+        if(!r){stop=true;toast("Forespørselen ble avvist eller utløp",true);viewNoKey();return}
+        if(r.status==="approved"){
+          stop=true;
+          const key=await aesFrom(e.priv,r.sender_pub),o=await open(key,r.iv,r.ct);
+          if(!o)throw new Error("Kunne ikke åpne nøkkelen");
+          await adoptIdentity({priv:o.priv,pub:o.pub});
+          await sb.from("key_transfers").delete().eq("id",id);
+          toast("Nøkkelen er tilbake");await start();return;
+        }
+        if(Date.now()-t0>10*60*1000){stop=true;await cancel();return}
+      }catch(err){stop=true;fail(err);viewNoKey();return}
+      setTimeout(poll,2000);
+    };poll();
+  }catch(err){fail(err);viewNoKey()}
 }
 
 /* ---------- gjenopprettingskode ---------- */
@@ -245,13 +250,27 @@ function showRecovery(first){
     el("div",{class:"card"},el("p",{},typed),el("div",{class:"row"},el("button",{id:"rcgo",onclick:go},"Jeg har lagret den"),
       el("button",{class:"ghost small",id:"skip",onclick:()=>{if(first)start();else{viewMain();refresh()}}},first?"Hopp over":"Avbryt"))));
 }
-function showQr(){
-  const app=$("#app");app.textContent="";
-  app.append(el("h1",{},"Flytt til ny enhet"),
-    el("div",{class:"card"},
-      el("p",{},"Denne funksjonen er midlertidig skrudd av. Den viste nøkkelen som tekst i en QR-kode, og et vanlig kameraprogram kan da lese og sende teksten videre, for eksempel til et nettsøk."),
-      el("p",{},"Bruk gjenopprettingskoden til å hente nøkkelen på en ny enhet mens vi bygger en tryggere løsning."),
-      el("p",{},el("button",{id:"qrback",onclick:()=>{viewMain();refresh()}},"Tilbake"))));
+/* ---------- godkjenne ny enhet (på enheten som har nøkkelen) ---------- */
+async function checkTransfers(){
+  if(!S.user||!S.id||!S.profile)return;
+  let rows;try{rows=await q(sb.from("key_transfers").select("*").eq("status","pending"))}catch(e){return}
+  for(const r of rows.filter(r=>!pairFresh(r)))sb.from("key_transfers").delete().eq("id",r.id).then(()=>{},()=>{});
+  const r=rows.filter(pairFresh)[0]||null,box=$("#pairbox");
+  if(!box)return;
+  if(!r){if(S.pairId){S.pairId=null;box.textContent=""}return}
+  if(S.pairId===r.id)return;
+  S.pairId=r.id;box.textContent="";
+  const code=await pairCode(r.eph_pub);
+  box.append(el("div",{class:"card",id:"pairreq",style:"border-color:var(--acc)"},
+    el("strong",{},"En ny enhet ber om nøkkelen din"),
+    el("p",{},"Kode på den nye enheten skal være: ",el("span",{class:"code",style:"display:inline-block;padding:2px 10px;font-size:20px"},code)),
+    el("p",{class:"warn"},"Godkjenn bare hvis det er deg, og koden stemmer med den du ser på den nye enheten."),
+    el("div",{class:"row"},
+      el("button",{id:"papprove",onclick:async()=>{try{
+        const e=await ephPair(),key=await aesFrom(e.priv,r.eph_pub),sl=await seal(key,{v:1,priv:S.id.priv,pub:S.id.pub});
+        await q(sb.from("key_transfers").update({status:"approved",sender_pub:e.pub,iv:sl.iv,ct:sl.ct}).eq("id",r.id),"Godkjenne");
+        toast("Nøkkelen er sendt til den nye enheten");S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Godkjenn"),
+      el("button",{class:"ghost",id:"pdeny",onclick:async()=>{try{await q(sb.from("key_transfers").delete().eq("id",r.id),"Avvise");S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Avvis"))));
 }
 
 /* ---------- hovedvisning ---------- */
@@ -264,6 +283,7 @@ async function start(){
     .on("postgres_changes",{event:"*",schema:"public",table:"friends"},()=>refreshSoon())
     .subscribe();
   clearInterval(S.poll);S.poll=setInterval(()=>{if(S.user&&!document.hidden)refresh()},8000);
+  clearInterval(S.pp);S.pp=setInterval(()=>{if(!document.hidden)checkTransfers()},3000);checkTransfers();
 }
 let rT=0;function refreshSoon(){clearTimeout(rT);rT=setTimeout(refresh,150)}
 async function refresh(){
@@ -286,6 +306,7 @@ function viewMain(){
     el("div",{class:"row",style:"justify-content:space-between"},
       el("div",{},el("h1",{},"Pling · testside"),el("div",{class:"dim"},S.profile.name+" · "+S.user.email)),
       el("button",{class:"ghost small",id:"out",onclick:async()=>{await sb.auth.signOut()}},"Logg ut")),
+    el("div",{id:"pairbox"}),
     el("div",{class:"grid"},el("div",{id:"side"}),el("div",{id:"chat"})));
 }
 function renderSide(){
@@ -309,7 +330,8 @@ function renderSide(){
   side.append(el("div",{class:"card"},el("div",{class:"dim"},"Sikkerhet"),
     el("div",{class:S.backup?"sec":"warn",style:"margin:6px 0",id:"bkst"},S.backup?"Gjenopprettingskode er laget":"Du har ingen gjenopprettingskode ennå"),
     el("div",{class:"row"},el("button",{class:"small",id:"mkcode",onclick:()=>showRecovery(false)},S.backup?"Lag ny kode":"Lag kode"),
-      el("button",{class:"small ghost",id:"mkqr",onclick:showQr},"Flytt til ny enhet"))));
+      null),
+    el("div",{class:"dim",style:"margin-top:8px"},"Ny enhet? Logg inn der og velg «Be om nøkkelen». Her kommer det da en forespørsel du godkjenner.")));
   side.append(el("div",{class:"card"},el("div",{class:"dim"},"Venner"),
     S.friends.length?S.friends.map(id=>{const p=S.profiles.get(id);return el("div",{class:"fr"+(S.chat&&S.chat.other===id?" on":""),"data-id":id,onclick:()=>openChat(id)},el("span",{},p?p.name:"…"))}):el("div",{class:"dim"},"Ingen ennå")));
 }
@@ -364,7 +386,7 @@ function renderChat(keep){
 /* ---------- start ---------- */
 sb.auth.onAuthStateChange((ev,session)=>{
   if(session&&session.user){if(!S.user||S.user.id!==session.user.id)setTimeout(()=>afterLogin(session.user).catch(e=>fail(e)),0)}
-  else{S.user=null;S.profile=null;S.id=null;S.chat=null;clearInterval(S.poll);sb.removeAllChannels();viewLogin()}
+  else{S.user=null;S.profile=null;S.id=null;S.chat=null;clearInterval(S.poll);clearInterval(S.pp);S.pairId=null;sb.removeAllChannels();viewLogin()}
 });
 sb.auth.getSession().then(({data})=>{if(!data.session)viewLogin()});
 </script>
