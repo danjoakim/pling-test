@@ -160,6 +160,7 @@ button.ghost{background:transparent;border-color:var(--line);text-shadow:none;co
 .badge{min-width:20px;padding:1px 6px;border-radius:99px;background:var(--glow-on);color:#0b1a00;font:700 12px/18px Tahoma,sans-serif;text-align:center;box-shadow:0 0 8px #a6ff3d88}
 .conv.unread .t b{color:#fff}
 .conv.unread .t small{color:var(--ink);font-style:normal}
+.expn{flex:none;padding:5px 12px;font-size:12px;color:var(--sys);background:#2a2410;border-bottom:1px solid #5a4a1a}
 
 </style>
 </head>
@@ -208,11 +209,12 @@ button.ghost{background:transparent;border-color:var(--line);text-shadow:none;co
    <div class="menu" id="menu" hidden>
     <div><div class="grp">Her nå</div><div class="who" id="who"></div></div>
     <div><div class="grp">Sikkerhetsnummer</div><div class="sn" id="sn"></div><div class="fine">Sammenlign nummeret med vennen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.</div></div>
-    <div><div class="fine" style="margin-bottom:4px">Utløp for meldingene du sender</div>
-     <select id="ex" aria-label="Utløp for meldingene du sender"><option value="0">Utløper ikke</option><option value="1">Etter 1 dag</option><option value="7">Etter 7 dager</option><option value="30">Etter 30 dager</option></select></div>
+    <div><div class="fine" style="margin-bottom:4px">Utløp for nye meldinger i samtalen (gjelder begge)</div>
+     <select id="ex" aria-label="Utløp for nye meldinger i samtalen (gjelder begge)"><option value="0">Utløper ikke</option><option value="1">Etter 1 dag</option><option value="7">Etter 7 dager</option><option value="30">Etter 30 dager</option></select></div>
     <div class="row"><button class="glass" id="bd" type="button">Last ned</button><button class="glass" id="bx" type="button">Slett mine meldinger</button><button class="glass" id="bfr" type="button">Fjern venn</button></div>
     <div class="fine" id="fp"></div>
    </div>
+   <div class="expn" id="expn" hidden></div>
    <div id="log" hidden></div>
    <div class="typing" id="typ" hidden></div>
    <div class="emo" id="emo" hidden></div>
@@ -323,7 +325,7 @@ function avEl(name,av,cls){const d=document.createElement("span");d.className="p
  return d}
 /* ---------- tilstand ---------- */
 const S={backup:null,user:null,profile:null,id:null,profiles:new Map(),av:new Map(),friends:[],reqIn:[],reqOut:[],chat:null,msgs:[],mode:"in",needCode:false,
-  status:"online",last:new Map(),unread:new Map(),dm:new Map(),firstRef:true,pres:new Map(),typ:new Map(),seen:new Map(),cdUntil:0,nref:0};
+  status:"online",last:new Map(),exp:new Map(),unread:new Map(),dm:new Map(),firstRef:true,pres:new Map(),typ:new Map(),seen:new Map(),cdUntil:0,nref:0};
 const q=async(p,ctx)=>{const r=await p;if(r.error)throw new Error((ctx?ctx+": ":"")+r.error.message);return r.data};
 const ST={online:"on",away:"away",busy:"busy",off:"off"};
 let myAv=null;
@@ -551,14 +553,15 @@ async function refresh(){
     if(S.chat&&!S.friends.includes(S.chat.other))closeChat();
     await loadPreviews();
     drawReqs();drawFriends();drawSec();
-    if(S.chat){drawChatHead();await loadMsgs()}
+    if(S.chat){drawExp();drawChatHead();await loadMsgs()}
   }catch(e){fail(e)}
 }
 const readKey=cid=>"pling_read_"+S.user.id+"_"+cid;
 const getRead=cid=>{try{return +localStorage.getItem(readKey(cid))||0}catch(e){return 0}};
 const setRead=(cid,id)=>{try{if(id>getRead(cid))localStorage.setItem(readKey(cid),String(id))}catch(e){}};
 async function loadPreviews(){
-  const cm=await q(sb.from("chat_members").select("chat_id,user_id"),"Samtaler");
+  const [cm,cs]=await Promise.all([q(sb.from("chat_members").select("chat_id,user_id"),"Samtaler"),q(sb.from("chats").select("id,exp_days"),"Samtaler")]);
+  for(const c of cs)S.exp.set(c.id,c.exp_days||0);
   const mine=new Set(cm.filter(r=>r.user_id===S.user.id).map(r=>r.chat_id));
   const dm=new Map();
   for(const r of cm)if(r.user_id!==S.user.id&&mine.has(r.chat_id)&&S.friends.includes(r.user_id))dm.set(r.user_id,r.chat_id);
@@ -655,11 +658,17 @@ async function openChat(otherId){
     $("#shell").classList.add("inchat");
     $("#empty").hidden=true;for(const i of ["ch","log","bar"])$("#"+i).hidden=false;
     $("#menu").hidden=true;$("#emo").hidden=true;$("#mb").setAttribute("aria-expanded","false");
-    let d=0;try{d=+localStorage.getItem("pling_exp_"+cid)||0}catch(e){}$("#ex").value=String(d);
+    drawExp();
     $("#log").textContent="";
     drawChatHead();drawFriends();drawTyping();await loadMsgs();
     if(!narrow())$("#tx").focus();
   }catch(e){fail(e)}
+}
+const dagTxt=d=>d===1?"1 dag":d+" dager";
+function drawExp(){
+  if(!S.chat)return;const d=S.exp.get(S.chat.id)||0,n=$("#expn");
+  $("#ex").value=String(d);n.hidden=!d;
+  n.textContent=d?"Nye meldinger i denne samtalen slettes etter "+dagTxt(d)+". Gjelder for begge.":"";
 }
 function drawChatHead(){
   if(!S.chat)return;const id=S.chat.other,st=ST[stOf(id)]||"off";
@@ -724,8 +733,6 @@ async function sendMsg(payload,after){
   try{
     const key=await pairKey(other.pub),s=await seal(key,payload);
     const row={chat_id:S.chat.id,sender:S.user.id,iv:s.iv,ct:s.ct};
-    let d=0;try{d=+localStorage.getItem("pling_exp_"+S.chat.id)||0}catch(e){}
-    if(d)row.exp=new Date(Date.now()+d*864e5).toISOString();
     await q(sb.from("messages").insert(row),"Sende");
     S.justSent=true;S.myTyp=null;refreshSoon();return true;
   }catch(e){fail(e);return false}
@@ -766,7 +773,11 @@ function wire(){
   $("#back").addEventListener("click",closeChat);
   $("#mb").addEventListener("click",()=>{const m=$("#menu"),o=m.hidden;m.hidden=!o;$("#mb").setAttribute("aria-expanded",String(o))});
   $("#pr").addEventListener("click",()=>$("#mb").click());
-  $("#ex").addEventListener("change",()=>{if(S.chat)try{localStorage.setItem("pling_exp_"+S.chat.id,$("#ex").value)}catch(e){}});
+  $("#ex").addEventListener("change",async()=>{
+    if(!S.chat)return;const v=+$("#ex").value,cid=S.chat.id;
+    try{await q(sb.rpc("set_chat_expiry",{p_chat:cid,p_days:v}),"Endre utløp");S.exp.set(cid,v);drawExp();toast(v?"Nye meldinger slettes etter "+dagTxt(v):"Nye meldinger utløper ikke")}
+    catch(e){fail(e);drawExp()}
+  });
   const sure=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
     if(!s){s=true;btn.textContent="Sikker? Trykk igjen";t=setTimeout(()=>{s=false;btn.textContent=label},3500);return}
     clearTimeout(t);s=false;btn.textContent=label;fn()})};
