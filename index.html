@@ -752,10 +752,10 @@ const BUCKET="chat-files",picCache=new Map();
 function shrink(file){return new Promise((ok,no)=>{
   const u=URL.createObjectURL(file),im=new Image();
   im.onload=()=>{
-    const k=Math.min(1,1280/Math.max(im.width,im.height)),w=Math.max(1,Math.round(im.width*k)),h=Math.max(1,Math.round(im.height*k));
+    const k=Math.min(1,1920/Math.max(im.width,im.height)),w=Math.max(1,Math.round(im.width*k)),h=Math.max(1,Math.round(im.height*k));
     const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);URL.revokeObjectURL(u);
-    const go=qual=>c.toBlob(b=>{if(!b)return no(new Error("Kunne ikke lese bildet"));if(b.size>2.5*1024*1024&&qual>.5)return go(.55);ok({blob:b,w,h})},"image/jpeg",qual);
-    go(.8)};
+    const go=qual=>c.toBlob(b=>{if(!b)return no(new Error("Kunne ikke lese bildet"));if(b.size>2.5*1024*1024&&qual>.5)return go(qual>.7?.7:.55);ok({blob:b,w,h})},"image/jpeg",qual);
+    go(.85)};
   im.onerror=()=>{URL.revokeObjectURL(u);no(new Error("Dette er ikke et bilde nettleseren kan lese"))};im.src=u})}
 async function sendImage(file){
   if(!S.chat||!file)return;
