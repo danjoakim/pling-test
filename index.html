@@ -161,6 +161,13 @@ button.ghost{background:transparent;border-color:var(--line);text-shadow:none;co
 .conv.unread .t b{color:#fff}
 .conv.unread .t small{color:var(--ink);font-style:normal}
 .expn{flex:none;padding:5px 12px;font-size:12px;color:var(--sys);background:#2a2410;border-bottom:1px solid #5a4a1a}
+.m.pic{padding:4px;background:transparent;border-color:transparent}
+.pic-box{display:block;max-width:100%;background:#0c1838;border-radius:6px;overflow:hidden;color:var(--mut);font-size:12px;text-align:center;line-height:1.4;min-height:60px;min-width:120px}
+.pic-box img{display:block;width:100%;height:auto;cursor:zoom-in;border-radius:6px}
+.lb{position:fixed;inset:0;z-index:20;background:#000d;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;padding:16px}
+.lb[hidden]{display:none}
+.lb img{max-width:100%;max-height:80vh;border-radius:8px;box-shadow:0 8px 40px #000}
+.btnlink{display:inline-block;cursor:pointer;border:1px solid var(--line);border-radius:4px;padding:6px 10px;color:var(--ink);text-decoration:none;font-size:13px;background:linear-gradient(#26407e,#1a2f64)}
 
 </style>
 </head>
@@ -218,10 +225,11 @@ button.ghost{background:transparent;border-color:var(--line);text-shadow:none;co
    <div id="log" hidden></div>
    <div class="typing" id="typ" hidden></div>
    <div class="emo" id="emo" hidden></div>
-   <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="Vis emoji">☺</button><input id="tx" placeholder="Skriv en melding …" maxlength="1000" autocomplete="off" aria-label="Melding"><button id="sd" type="button">Send</button><button id="dp" class="hot" type="button" title="Spiller to plinger og vibrerer hos mottakeren">Dobbeltpling</button></div>
+   <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="Vis emoji">☺</button><button class="glass eb" id="ab" type="button" aria-label="Send et bilde" title="Send et bilde">📎</button><input class="vh" id="af" type="file" accept="image/*" tabindex="-1"><input id="tx" placeholder="Skriv en melding …" maxlength="1000" autocomplete="off" aria-label="Melding"><button id="sd" type="button">Send</button><button id="dp" class="hot" type="button" title="Spiller to plinger og vibrerer hos mottakeren">Dobbeltpling</button></div>
   </section>
  </div>
 </div>
+<div class="lb" id="lb" hidden></div>
 <div id="toast" role="status"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -571,7 +579,7 @@ async function loadPreviews(){
     const rows=await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(20),"Meldinger");
     if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
     const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
-    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:m?(m.dp?"Dobbeltpling":String(m.t==null?"":m.t)):"(kan ikke dekrypteres)"});
+    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:m?(m.dp?"Dobbeltpling":m.img?"📷 Bilde":String(m.t==null?"":m.t)):"(kan ikke dekrypteres)"});
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
@@ -702,12 +710,12 @@ async function loadMsgs(){
   const rows=await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:true}).limit(300),"Meldinger");
   if(!S.chat||S.chat.id!==cid)return;
   const key=await pairKey(other.pub),out=[];
-  for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),ok:!!m,ts:r.created_at})}
+  for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),img:(m&&m.img&&typeof m.img.p==="string")?m.img:null,ok:!!m,ts:r.created_at})}
   const sig=out.map(m=>m.id).join(",");
   if(sig===S.sig)return;S.sig=sig;
   const maxSeen=S.seen.get(cid)||0,fresh=S.first?[]:out.filter(m=>!m.mine&&m.id>maxSeen);
   S.seen.set(cid,out.length?out[out.length-1].id:0);
-  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?"Dobbeltpling":(l.ok?l.t||"":"(kan ikke dekrypteres)")});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
+  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?"Dobbeltpling":l.img?"📷 Bilde":(l.ok?l.t||"":"(kan ikke dekrypteres)")});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   S.first=false;S.msgs=out;drawLog();
   if(fresh.length){
     const last=fresh[fresh.length-1],big=fresh.find(m=>m.dp&&Date.now()-new Date(m.ts).getTime()<15000);
@@ -721,7 +729,8 @@ function drawLog(){
   if(!S.msgs.length)log.append(el("div",{class:"sys"},"Samtalen er ende-til-ende-kryptert. Si hei til "+nameOf(S.chat.other)+"!"));
   for(const m of S.msgs){
     if(m.dp){log.append(el("div",{class:"sys"},(m.mine?"Du":nameOf(S.chat.other))+" sendte en dobbeltpling · "+tm(m.ts)));continue}
-    const d=el("div",{class:"m"+(m.mine?" mine":"")});
+    const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")});
+    if(m.img)d.append(picEl(m.img));else
     d.append(m.ok?emoji(m.t==null?"":m.t):"(kan ikke dekrypteres)");
     d.append(el("br"),el("time",{},tm(m.ts)));log.append(d);
   }
@@ -736,6 +745,56 @@ async function sendMsg(payload,after){
     await q(sb.from("messages").insert(row),"Sende");
     S.justSent=true;S.myTyp=null;refreshSoon();return true;
   }catch(e){fail(e);return false}
+}
+
+/* ---------- bilder (krypteres før opplasting) ---------- */
+const BUCKET="chat-files",picCache=new Map();
+function shrink(file){return new Promise((ok,no)=>{
+  const u=URL.createObjectURL(file),im=new Image();
+  im.onload=()=>{
+    const k=Math.min(1,1280/Math.max(im.width,im.height)),w=Math.max(1,Math.round(im.width*k)),h=Math.max(1,Math.round(im.height*k));
+    const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);URL.revokeObjectURL(u);
+    const go=qual=>c.toBlob(b=>{if(!b)return no(new Error("Kunne ikke lese bildet"));if(b.size>2.5*1024*1024&&qual>.5)return go(.55);ok({blob:b,w,h})},"image/jpeg",qual);
+    go(.8)};
+  im.onerror=()=>{URL.revokeObjectURL(u);no(new Error("Dette er ikke et bilde nettleseren kan lese"))};im.src=u})}
+async function sendImage(file){
+  if(!S.chat||!file)return;
+  if(!/^image\//.test(file.type||"")){toast("Bare bilder kan sendes",true);return}
+  const cid=S.chat.id,other=S.profiles.get(S.chat.other);let path=null;
+  try{
+    toast("Krypterer og sender bildet …");
+    const {blob,w,h}=await shrink(file),bytes=new Uint8Array(await blob.arrayBuffer());
+    const key=await pairKey(other.pub),iv=crypto.getRandomValues(new Uint8Array(12));
+    const ct=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},key,bytes));
+    path=cid+"/"+crypto.randomUUID();
+    const up=await sb.storage.from(BUCKET).upload(path,new Blob([iv,ct],{type:"application/octet-stream"}),{contentType:"application/octet-stream"});
+    if(up.error)throw new Error("Laste opp: "+up.error.message);
+    const ok=await sendMsg({img:{p:path,w,h},ts:Date.now()});
+    if(!ok){await sb.storage.from(BUCKET).remove([path]);return}
+    toast("Bildet er sendt")
+  }catch(e){fail(e);if(path)sb.storage.from(BUCKET).remove([path]).then(()=>{},()=>{})}
+}
+function picEl(img){
+  const box=el("span",{class:"pic-box",style:"width:"+Math.min(img.w||240,240)+"px;aspect-ratio:"+(img.w||4)+"/"+(img.h||3)});
+  const show=u=>{const i=el("img",{alt:"Bilde",src:u,tabindex:"0"});i.addEventListener("click",()=>lightbox(u));i.addEventListener("keydown",e=>{if(e.key==="Enter")lightbox(u)});box.textContent="";box.append(i)};
+  if(picCache.has(img.p)){show(picCache.get(img.p));return box}
+  box.textContent="Henter bilde …";
+  const other=S.profiles.get(S.chat.other);
+  (async()=>{
+    try{
+      const r=await sb.storage.from(BUCKET).download(img.p);if(r.error)throw r.error;
+      const buf=new Uint8Array(await r.data.arrayBuffer()),key=await pairKey(other.pub);
+      const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},key,buf.slice(12));
+      const u=URL.createObjectURL(new Blob([pt],{type:"image/jpeg"}));picCache.set(img.p,u);show(u);
+    }catch(e){box.textContent="(bildet finnes ikke lenger eller kan ikke åpnes)"}
+  })();
+  return box;
+}
+function lightbox(u){
+  const b=$("#lb");b.textContent="";
+  b.append(el("img",{src:u,alt:"Bilde"}),el("div",{class:"row"},
+    el("a",{class:"btnlink",href:u,download:"pling-bilde.jpg"},"Last ned"),el("button",{class:"glass",type:"button",onclick:()=>{b.hidden=true;b.textContent=""}},"Lukk")));
+  b.hidden=false;
 }
 
 /* ---------- koble knapper ---------- */
@@ -781,10 +840,13 @@ function wire(){
   const sure=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
     if(!s){s=true;btn.textContent="Sikker? Trykk igjen";t=setTimeout(()=>{s=false;btn.textContent=label},3500);return}
     clearTimeout(t);s=false;btn.textContent=label;fn()})};
-  sure($("#bx"),"Slett mine meldinger",async()=>{try{await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),"Slette");S.sig=null;toast("Dine meldinger er slettet");refreshSoon()}catch(e){fail(e)}});
+  sure($("#bx"),"Slett mine meldinger",async()=>{try{
+    const mine=S.msgs.filter(m=>m.mine&&m.img).map(m=>m.img.p);
+    if(mine.length)await sb.storage.from(BUCKET).remove(mine);
+    await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),"Slette");S.sig=null;toast("Dine meldinger er slettet");refreshSoon()}catch(e){fail(e)}});
   sure($("#bfr"),"Fjern venn",async()=>{try{await q(sb.rpc("remove_friend",{p_other:S.chat.other}),"Fjerne venn");closeChat();refresh()}catch(e){fail(e)}});
   $("#bd").addEventListener("click",()=>{
-    const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?"(dobbeltpling)":m.ok?m.t:"(kan ikke dekrypteres)")).join("\n");
+    const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?"(dobbeltpling)":m.img?"(bilde)":m.ok?m.t:"(kan ikke dekrypteres)")).join("\n");
     download("pling-samtale.txt",t+"\n");
   });
   const tx=$("#tx");
@@ -796,6 +858,11 @@ function wire(){
   for(const e of ["😊","😃","😉","🙁","😛","❤️","👍","👎","😮","😎","😈","😇","😢","💋","💔","🎉"]){
     emo.append(el("button",{type:"button",onclick:()=>{tx.value+=e;tx.focus()}},e));
   }
+  $("#ab").addEventListener("click",()=>$("#af").click());
+  $("#af").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)sendImage(f)});
+  tx.addEventListener("paste",e=>{const f=[...(e.clipboardData&&e.clipboardData.files||[])].find(f=>/^image\//.test(f.type));if(f){e.preventDefault();sendImage(f)}});
+  $("#lb").addEventListener("click",e=>{if(e.target.id==="lb"){$("#lb").hidden=true;$("#lb").textContent=""}});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#lb").hidden){$("#lb").hidden=true;$("#lb").textContent=""}});
   $("#eb").addEventListener("click",()=>{emo.hidden=!emo.hidden});
   $("#dp").addEventListener("click",async()=>{
     if(Date.now()<S.cdUntil)return;
