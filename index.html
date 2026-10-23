@@ -247,15 +247,11 @@ function showRecovery(first){
 }
 function showQr(){
   const app=$("#app");app.textContent="";
-  const text=transferText();let t=setTimeout(()=>{viewMain();refresh()},90000);
-  const back=()=>{clearTimeout(t);viewMain();refresh()};
   app.append(el("h1",{},"Flytt til ny enhet"),
     el("div",{class:"card"},
-      el("p",{},"Logg inn med samme konto på den nye enheten, velg «Skann QR-kode», og hold kameraet mot denne koden."),
-      (()=>{const d=el("div",{class:"qr",id:"qrbox"});d.innerHTML=qrSvg(text);return d})(),
-      el("p",{class:"warn"},"QR-koden er selve nøkkelen din. Ikke ta skjermbilde, og ikke vis den til andre. Den lukkes av seg selv etter 90 sekunder."),
-      el("details",{},el("summary",{class:"dim"},"Vis som tekst i stedet"),el("textarea",{id:"tx",readonly:true},text)),
-      el("p",{},el("button",{id:"qrback",onclick:back},"Ferdig"))));
+      el("p",{},"Denne funksjonen er midlertidig skrudd av. Den viste nøkkelen som tekst i en QR-kode, og et vanlig kameraprogram kan da lese og sende teksten videre, for eksempel til et nettsøk."),
+      el("p",{},"Bruk gjenopprettingskoden til å hente nøkkelen på en ny enhet mens vi bygger en tryggere løsning."),
+      el("p",{},el("button",{id:"qrback",onclick:()=>{viewMain();refresh()}},"Tilbake"))));
 }
 
 /* ---------- hovedvisning ---------- */
