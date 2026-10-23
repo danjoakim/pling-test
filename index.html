@@ -749,14 +749,26 @@ async function sendMsg(payload,after){
 
 /* ---------- bilder (krypteres før opplasting) ---------- */
 const BUCKET="chat-files",picCache=new Map();
-function shrink(file){return new Promise((ok,no)=>{
-  const u=URL.createObjectURL(file),im=new Image();
-  im.onload=()=>{
-    const k=Math.min(1,1920/Math.max(im.width,im.height)),w=Math.max(1,Math.round(im.width*k)),h=Math.max(1,Math.round(im.height*k));
-    const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);URL.revokeObjectURL(u);
-    const go=qual=>c.toBlob(b=>{if(!b)return no(new Error("Kunne ikke lese bildet"));if(b.size>2.5*1024*1024&&qual>.5)return go(qual>.7?.7:.55);ok({blob:b,w,h})},"image/jpeg",qual);
-    go(.85)};
-  im.onerror=()=>{URL.revokeObjectURL(u);no(new Error("Dette er ikke et bilde nettleseren kan lese"))};im.src=u})}
+async function shrink(file){
+  const MAX=1920,toBlob=(c,qual)=>new Promise(r=>c.toBlob(r,"image/jpeg",qual));
+  let src,w,h,close=()=>{};
+  try{
+    /* sparer minne: nettleseren skalerer ned mens bildet leses inn */
+    const probe=await createImageBitmap(file),pw=probe.width,ph=probe.height;probe.close();
+    const k=Math.min(1,MAX/Math.max(pw,ph));w=Math.max(1,Math.round(pw*k));h=Math.max(1,Math.round(ph*k));
+    src=await createImageBitmap(file,k<1?{resizeWidth:w,resizeHeight:h,resizeQuality:"high"}:undefined);close=()=>src.close();
+  }catch(e){
+    src=await new Promise((ok,no)=>{const u=URL.createObjectURL(file),im=new Image();
+      im.onload=()=>{URL.revokeObjectURL(u);ok(im)};im.onerror=()=>{URL.revokeObjectURL(u);no(new Error("Dette er ikke et bilde nettleseren kan lese"))};im.src=u});
+    const k=Math.min(1,MAX/Math.max(src.width,src.height));w=Math.max(1,Math.round(src.width*k));h=Math.max(1,Math.round(src.height*k));
+  }
+  const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");
+  x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(src,0,0,w,h);close();
+  let qual=.85,b=await toBlob(c,qual);
+  while(b&&b.size>2.5*1024*1024&&qual>.5){qual=qual>.7?.7:.55;b=await toBlob(c,qual)}
+  if(!b)throw new Error("Kunne ikke lese bildet");
+  return{blob:b,w,h};
+}
 async function sendImage(file){
   if(!S.chat||!file)return;
   if(!/^image\//.test(file.type||"")){toast("Bare bilder kan sendes",true);return}
