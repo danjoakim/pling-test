@@ -2,47 +2,222 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pling testside</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1430;--pane:#101d45;--line:#27407f;--txt:#e8efff;--dim:#93a6d6;--acc:#4da3ff;--ok:#8cff5a;--bad:#ff7a6b}
+/* Layout: venner og grupper i en liste, samtalen åpnes i full høyde. På PC står de side om side. XP-vindu rundt en skumringsnatt, med ildfluer som status. */
+:root{
+ --bg0:#071027;--night:#0c1630;--panel:#13224a;--panel2:#1c3166;--ink:#e9f0ff;--mut:#9db2dc;--line:#2c4580;
+ --luna1:#4a96ff;--luna2:#1859df;--luna3:#0a3fb5;--aqua:#5fe0d0;--bub:#1a2c5a;--me:#17483f;--sys:#ffd27a;
+ --glow-on:#a6ff3d;--glow-away:#ffb23c;--glow-busy:#ff5a48;--glow-off:#4b5878;
+ color-scheme:dark;
+ font-family:Tahoma,Verdana,"Trebuchet MS",system-ui,sans-serif}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.4 "Segoe UI",Tahoma,sans-serif}
-main{max-width:920px;margin:0 auto;padding:16px}
-h1{font-size:20px;margin:0 0 4px}
-.dim{color:var(--dim);font-size:14px}
-.card{background:var(--pane);border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0}
-input,button{font:inherit;color:var(--txt);background:#0b1636;border:1px solid var(--line);border-radius:8px;padding:9px 11px}
-input{width:100%}
-button{cursor:pointer;background:#1b3a86}
-button:hover{background:#2450b3}
-button.ghost{background:transparent}
-button.small{padding:4px 9px;font-size:14px}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.row>input{flex:1;min-width:160px}
-.grid{display:grid;grid-template-columns:260px 1fr;gap:12px}
-@media(max-width:720px){.grid{grid-template-columns:1fr}}
-.fr{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:8px;border-radius:8px;cursor:pointer}
-.fr:hover,.fr.on{background:#1a2f6b}
-#log{height:46vh;min-height:220px;overflow:auto;display:flex;flex-direction:column;gap:6px;padding:4px}
-.m{max-width:80%;padding:7px 10px;border-radius:10px;background:#1a2f6b;word-wrap:break-word}
-.m.me{align-self:flex-end;background:#2a5fd0}
-.m small{display:block;color:var(--dim);font-size:11px}
-#toast{position:fixed;left:12px;right:12px;bottom:12px;max-width:560px;margin:auto;background:#1a2f6b;border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:none}
-#toast.bad{border-color:var(--bad)}
-.tag{font-size:12px;padding:1px 7px;border-radius:99px;border:1px solid var(--line);color:var(--dim)}
-.sec{color:var(--ok)}
-.code{font:700 min(20px,4.3vw)/1.5 ui-monospace,Consolas,monospace;letter-spacing:.03em;white-space:nowrap;background:#0b1636;border:1px dashed var(--acc);border-radius:10px;padding:14px 8px;text-align:center;user-select:all}
-.qr{background:#fff;padding:10px;border-radius:10px;display:inline-block}
-.qr svg{display:block;width:min(70vw,300px);height:auto}
-video{width:100%;max-width:360px;border-radius:10px;background:#000}
-textarea{width:100%;font:13px ui-monospace,Consolas,monospace;color:var(--txt);background:#0b1636;border:1px solid var(--line);border-radius:8px;padding:8px;min-height:70px}
-.warn{color:#ffd37a}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(120% 90% at 20% 0%,#10244f,var(--bg0));color:var(--ink);font-size:14px;display:flex;align-items:center;justify-content:center;
+ padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.on{--fc:var(--glow-on)}.away{--fc:var(--glow-away)}.busy{--fc:var(--glow-busy)}.off{--fc:var(--glow-off)}.ro{--fc:var(--aqua)}
+
+.win{width:100%;max-width:940px;height:min(680px,100%);display:flex;flex-direction:column;background:var(--night);border:3px solid var(--luna3);border-top:0;border-radius:10px 10px 5px 5px;overflow:hidden;box-shadow:0 18px 50px #000a,0 0 0 1px #000}
+.tb{flex:none;display:flex;align-items:center;gap:8px;padding:7px 10px;color:#fff;font:700 15px "Trebuchet MS",Tahoma,sans-serif;text-shadow:1px 1px 1px #0a2a7a;
+ background:linear-gradient(#4a96ff 0,#2a74ee 8%,#1859df 45%,#0e4dd3 85%,#0a3fb5 100%);border-radius:7px 7px 0 0}
+.tb .lock{margin-left:auto;font:400 12px Tahoma,sans-serif;opacity:.92}
+.shell{flex:1;min-height:0;display:flex}
+
+input,select,button{font:inherit;color:var(--ink);min-width:0}
+input,select{background:#0c1838;border:1px solid var(--line);border-radius:4px;padding:7px 9px;width:100%}
+input::placeholder{color:#7f96c4}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible,.lbl:focus-within{outline:2px solid var(--aqua);outline-offset:1px}
+button,.lbl{cursor:pointer;border:1px solid #05205f;border-radius:4px;padding:7px 13px;color:#fff;text-shadow:0 1px 1px #0a2a7a;
+ background:linear-gradient(#6aabff,#2f78ec 48%,#1f5ad0 52%,#3d88f2)}
+button:hover:not(:disabled){filter:brightness(1.1)}
+button:disabled{opacity:.55;cursor:default}
+button.glass,.lbl{background:linear-gradient(#26407e,#1a2f64);border-color:var(--line);text-shadow:none;color:var(--ink);padding:6px 10px;font-size:13px}
+button.hot{background:linear-gradient(#ffe083,#ffb02e 48%,#f0980f 52%,#ffc13d);border-color:#9a5b00;color:#3a2200;text-shadow:0 1px 0 #ffe9ad}
+button.sm{padding:5px 10px;font-size:13px}
+.lbl{display:inline-block;position:relative;text-align:center}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.fine{font-size:12px;color:var(--mut);line-height:1.45}
+.grp{font:700 12px Tahoma,sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.row input{flex:1;min-width:140px;font-size:12px}
+.err{min-height:1.2em;color:var(--sys)}
+
+/* ildflue */
+.ff{display:block;line-height:0;flex:none}
+.ff svg{width:22px;height:22px;display:block}
+.ff .gl{fill:var(--fc);opacity:.28}.ff .wg{fill:#cfe0ff;opacity:.4}.ff .bd{fill:#7b8cb8}.ff .ab{fill:var(--fc)}
+.ff.off .gl{opacity:0}.ff.off svg{opacity:.6}
+.ff.on svg{animation:puls 2.4s ease-in-out infinite}
+.ff.away svg{animation:puls 5s ease-in-out infinite}
+.ff.busy svg{filter:drop-shadow(0 0 5px var(--fc))}
+@keyframes puls{0%,100%{filter:drop-shadow(0 0 2px var(--fc)) brightness(.85)}50%{filter:drop-shadow(0 0 9px var(--fc)) brightness(1.2)}}
+
+/* avatar */
+.av{width:46px;height:46px;border-radius:8px;border:3px solid var(--fc);box-shadow:0 0 12px var(--fc);background:var(--panel2);display:grid;place-items:center;overflow:hidden;flex:none}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.av span{font:700 20px/1 "Trebuchet MS",sans-serif}
+.pav{width:34px;height:34px;border-radius:6px;border:2px solid var(--fc);display:grid;place-items:center;overflow:hidden;font:700 15px "Trebuchet MS",sans-serif;color:#fff;box-shadow:0 0 8px var(--fc);flex:none}
+.pav img{width:100%;height:100%;object-fit:cover;display:block}
+.off.pav{box-shadow:none;opacity:.7}
+
+/* hjem */
+.home{width:300px;flex:none;display:flex;flex-direction:column;min-height:0;background:linear-gradient(#142654,#0f1d44);border-right:1px solid var(--line)}
+.hs{flex:1;overflow:auto;min-height:0}
+.me{flex:none;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:10px 12px;background:none;text-shadow:none;color:var(--ink)}
+.me .t{min-width:0}
+.me b{display:block;font:700 15px "Trebuchet MS",Tahoma,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.me small{display:block;color:var(--mut);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prof{display:grid;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.pm{font-style:italic}
+.prof label{display:flex;gap:8px;align-items:flex-start}
+.prof label input{width:auto;margin-top:2px}
+.msg{padding:6px 12px 0}
+.homebar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 12px 4px}
+.add{display:grid;gap:9px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.add label{display:flex;gap:8px;align-items:flex-start}
+.add label input{width:auto;margin-top:2px}
+.add details{display:grid;gap:8px}
+.add summary{cursor:pointer;color:var(--mut);font-size:12px}
+#inv,#reqs{display:grid;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.req{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:8px;background:#1a2f66}
+.req .row{grid-column:1/-1}
+.list{padding:4px 8px 6px;display:grid;gap:4px;align-content:start}
+.conv{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:8px;padding:7px;text-shadow:none;color:var(--ink)}
+.conv:hover{background:#1a2f66;filter:none}
+.conv.act{background:#1d3772;border-color:var(--line)}
+.conv.pend{opacity:.75}
+.conv .t{min-width:0}
+.conv .t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.conv .t small{display:block;color:var(--mut);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* samtalefelt */
+.chatpane{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
+.empty{flex:1;position:relative;display:grid;place-items:center;text-align:center;padding:24px;overflow:hidden}
+.empty h1{margin:0 0 6px;font:700 40px "Trebuchet MS",Tahoma,sans-serif;color:#fff;text-shadow:0 0 14px #a6ff3d88}
+.empty .in{position:relative}
+.amb{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.amb .ff{position:absolute;animation:drift 9s ease-in-out infinite alternate}
+.amb .ff svg{width:26px;height:26px}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(22px,-30px)}}
+.ch{flex:none;display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:linear-gradient(#17295a,#122249)}
+.ch .back{padding:4px 11px;font-size:20px;line-height:1}
+.ch .ti{flex:1;min-width:0;font:700 15px "Trebuchet MS",Tahoma,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pr{display:flex;gap:5px;align-items:center;cursor:pointer}
+.pr .pav{width:28px;height:28px;font-size:13px}
+.pr .more{font-size:12px;color:var(--mut)}
+.menu{flex:none;max-height:60%;overflow:auto;display:grid;gap:12px;padding:12px;background:#0f1d44;border-bottom:1px solid var(--line)}
+.who{display:grid;gap:2px}
+.bud{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:5px;border-radius:6px}
+.bud .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bud small{display:block;color:var(--mut);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sn{font:700 16px "Courier New",monospace;letter-spacing:.04em;margin:4px 0}
+#log{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:0}
+.m{padding:8px 11px;border-radius:8px;border:1px solid var(--line);background:var(--bub);max-width:86%;align-self:flex-start;overflow-wrap:anywhere}
+.m.mine{background:var(--me);border-color:#2a7a66;align-self:flex-end}
+.m b{display:block;font-size:12px;color:var(--aqua)}
+.m time{font-size:11px;color:var(--mut)}
+.sys{align-self:center;color:var(--sys);font-size:13px;font-style:italic;text-align:center}
+.typing{flex:none;height:20px;padding:0 12px;font-size:12px;color:var(--mut);font-style:italic}
+.emo{flex:none;display:flex;gap:2px;padding:0 8px 4px;flex-wrap:wrap}
+.emo button{padding:2px 6px;background:none;border:0;font-size:20px;text-shadow:none}
+.bar{flex:none;display:flex;gap:6px;padding:8px;border-top:1px solid var(--line);flex-wrap:wrap;align-items:center}
+.bar input{flex:1 1 150px}
+.bar .eb{padding:6px 10px;font-size:18px;line-height:1}
+
+.win.dp{animation:sh .6s,glimt .9s}
+@keyframes sh{0%,100%{transform:none}15%{transform:translate(-10px,4px)}30%{transform:translate(9px,-5px)}45%{transform:translate(-8px,-3px)}60%{transform:translate(7px,5px)}80%{transform:translate(-4px,2px)}}
+@keyframes glimt{0%,100%{box-shadow:0 18px 50px #000a,0 0 0 1px #000}30%{box-shadow:0 18px 50px #000a,0 0 70px 10px #a6ff3daa}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+@media(max-width:700px){
+ input,select{font-size:16px}
+ .win{height:100%;border-radius:0}
+ .home{width:auto;flex:1;border-right:0}
+ .chatpane{display:none}
+ .shell.inchat .home{display:none}
+ .shell.inchat .chatpane{display:flex}
+}
+[hidden]{display:none!important}
+.scr{flex:1;min-height:0;overflow:auto;padding:18px 16px}
+.sc{max-width:520px;margin:0 auto;display:grid;gap:12px;align-content:start}
+.sc h1{font:700 24px "Trebuchet MS",Tahoma,sans-serif;margin:0;color:#fff;text-shadow:0 0 12px #a6ff3d55}
+.sc p{margin:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:9px}
+.dim{color:var(--mut);font-size:13px}
+.warn{color:var(--sys)}
+.sec{color:var(--glow-on)}
+.tabs{display:flex;gap:6px}
+button.ghost{background:transparent;border-color:var(--line);text-shadow:none;color:var(--ink)}
+.code{font:700 min(20px,4.3vw)/1.5 ui-monospace,Consolas,"Courier New",monospace;letter-spacing:.03em;white-space:nowrap;background:#0b1636;border:1px dashed var(--luna1);border-radius:8px;padding:14px 8px;text-align:center;user-select:all}
+.qr{background:#fff;padding:10px;border-radius:10px;justify-self:center}
+.qr svg{display:block;width:min(60vw,240px);height:auto}
+#toast{position:fixed;left:12px;right:12px;bottom:14px;max-width:520px;margin:auto;background:#1a2f66;border:1px solid var(--line);border-radius:8px;padding:10px 14px;display:none;z-index:9;box-shadow:0 6px 24px #000a}
+#toast.bad{border-color:var(--glow-busy)}
+.pairreq{border-color:var(--luna1)!important;margin:8px}
+.pairreq .code{display:inline-block;padding:2px 10px;font-size:18px}
+.m.sysm{align-self:center}
+
 </style>
 </head>
 <body>
-<main id="app"></main>
+<div class="win" id="app">
+ <div class="tb"><span id="tbi"></span><span>Pling</span><span class="lock" id="lock" hidden title="Meldingene krypteres i nettleseren med AES-256-GCM">Kryptert</span></div>
+ <div class="scr" id="scr"><div class="sc"></div></div>
+ <div class="shell" id="shell" hidden>
+  <section class="home" id="home">
+   <button class="me" id="meb" type="button" aria-expanded="false" title="Min profil">
+    <span class="av on" id="avwrap"><img id="avimg" alt="Ditt bilde" hidden><span id="avini">?</span></span>
+    <span class="t"><b id="men">…</b><small id="mep">Pålogget</small></span>
+    <span id="mef"></span>
+   </button>
+   <div class="prof" id="prof" hidden>
+    <input id="pnm" placeholder="Visningsnavn" maxlength="24" aria-label="Visningsnavn">
+    <select id="st" aria-label="Status"><option value="online">Pålogget</option><option value="away">Borte</option><option value="busy">Opptatt</option><option value="off">Vis meg som frakoblet</option></select>
+    <input id="pm" class="pm" placeholder="&lt;Skriv en personlig melding&gt;" maxlength="60" aria-label="Personlig melding">
+    <label class="lbl" title="Bildet vises bare for vennene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
+    <button class="glass sm" id="outb" type="button">Logg ut</button>
+   </div>
+   <div class="fine err msg" id="msg" role="status"></div>
+   <div class="hs">
+    <div id="pairbox"></div>
+    <div id="reqs" hidden></div>
+    <div class="homebar"><span class="grp">Venner</span><button class="glass" id="addf" type="button" aria-expanded="false">+ Legg til venn</button></div>
+    <div class="add" id="addfp" hidden>
+     <div class="fine">Skriv e-posten til en venn som har laget konto i Pling. Personen får en forespørsel som kan godtas eller avslås.</div>
+     <div class="row"><input id="fe" type="email" placeholder="Venns e-post" autocomplete="off" aria-label="Venns e-postadresse"><button class="glass sm" id="fadd" type="button">Legg til</button></div>
+     <div class="fine err" id="ferr" role="status"></div>
+    </div>
+    <div class="list" id="friends"></div>
+    <div class="homebar"><span class="grp">Sikkerhet</span></div>
+    <div class="add" id="seccard"></div>
+   </div>
+  </section>
+
+  <section class="chatpane" id="chatpane">
+   <div class="empty" id="empty"><div class="amb" id="amb" aria-hidden="true"></div><div class="in"><h1>Pling</h1><div class="fine" id="emptyh">Dobbeltklikk på en venn for å starte en samtale.</div></div></div>
+   <div class="ch" id="ch" hidden>
+    <button class="glass back" id="back" type="button" aria-label="Lukk samtalen">‹</button>
+    <div class="ti" id="title"></div>
+    <div class="pr" id="pr" title="Hvem som er her"></div>
+    <button class="glass" id="mb" type="button" aria-expanded="false" aria-label="Innstillinger for samtalen">⋯</button>
+   </div>
+   <div class="menu" id="menu" hidden>
+    <div><div class="grp">Her nå</div><div class="who" id="who"></div></div>
+    <div><div class="grp">Sikkerhetsnummer</div><div class="sn" id="sn"></div><div class="fine">Sammenlign nummeret med vennen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.</div></div>
+    <div><div class="fine" style="margin-bottom:4px">Utløp for meldingene du sender</div>
+     <select id="ex" aria-label="Utløp for meldingene du sender"><option value="0">Utløper ikke</option><option value="1">Etter 1 dag</option><option value="7">Etter 7 dager</option><option value="30">Etter 30 dager</option></select></div>
+    <div class="row"><button class="glass" id="bd" type="button">Last ned</button><button class="glass" id="bx" type="button">Slett mine meldinger</button><button class="glass" id="bfr" type="button">Fjern venn</button></div>
+    <div class="fine" id="fp"></div>
+   </div>
+   <div id="log" hidden></div>
+   <div class="typing" id="typ" hidden></div>
+   <div class="emo" id="emo" hidden></div>
+   <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="Vis emoji">☺</button><input id="tx" placeholder="Skriv en melding …" maxlength="1000" autocomplete="off" aria-label="Melding"><button id="sd" type="button">Send</button><button id="dp" class="hot" type="button" title="Spiller to plinger og vibrerer hos mottakeren">Dobbeltpling</button></div>
+  </section>
+ </div>
+</div>
 <div id="toast" role="status"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="lib/qrcode.js"></script>
 <script>
@@ -57,7 +232,7 @@ let toastT=0;
 function toast(msg,bad){const t=$("#toast");t.textContent=msg;t.className=bad?"bad":"";t.style.display="block";clearTimeout(toastT);toastT=setTimeout(()=>t.style.display="none",bad?7000:3500)}
 const fail=(e,ctx)=>{console.error(ctx,e);toast((ctx?ctx+": ":"")+(e&&e.message||e),true)};
 
-if(!window.supabase){document.getElementById("app").textContent="Klarte ikke å laste Supabase-biblioteket (nettverk blokkert?).";throw new Error("supabase mangler")}
+if(!window.supabase){document.body.textContent="Klarte ikke å laste Supabase-biblioteket (nettverk blokkert?).";throw new Error("supabase mangler")}
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 
 /* ---------- kryptering (samme prinsipp som i Pling) ---------- */
@@ -119,13 +294,44 @@ async function aesFrom(priv,theirPub){const pk=await crypto.subtle.importKey("jw
 function qrSvg(text){const qr=qrcode(0,"M");qr.addData(text);qr.make();return qr.createSvgTag({cellSize:5,margin:0,scalable:true})}
 const download=(name,text)=>{const a=el("a",{href:URL.createObjectURL(new Blob([text],{type:"text/plain"})),download:name});document.body.append(a);a.click();a.remove()};
 
+const EMO={":)":"😊",":-)":"😊",":D":"😃",";)":"😉",":(":"🙁",":P":"😛",":p":"😛","(L)":"❤️","(Y)":"👍","(N)":"👎",":O":"😮","8-)":"😎","(6)":"😈","(A)":"😇",":'(":"😢","(K)":"💋","(U)":"💔"};
+const emoji=t=>Object.keys(EMO).sort((a,b)=>b.length-a.length).reduce((s,k)=>s.split(k).join(EMO[k]),t);
+const FF='<svg viewBox="0 0 24 24" aria-hidden="true"><circle class="gl" cx="12" cy="16" r="8"/><ellipse class="wg" cx="8.6" cy="9" rx="3" ry="5.2" transform="rotate(-24 8.6 9)"/><ellipse class="wg" cx="15.4" cy="9" rx="3" ry="5.2" transform="rotate(24 15.4 9)"/><ellipse class="bd" cx="12" cy="11" rx="2.4" ry="5.2"/><circle class="ab" cx="12" cy="15.6" r="3"/></svg>';
+function ff(st){const s=document.createElement("span");s.className="ff "+st;s.innerHTML=FF;return s}
+let AC;
+function ac(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state!=="running")AC.resume()}catch(e){}return AC}
+document.addEventListener("pointerdown",ac);
+function tone(f,at,dur,vol){const c=ac();if(!c)return;const t=c.currentTime+at;
+ [[1,1],[2.76,.35]].forEach(([m,v])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f*m;
+  g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol*v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.05)})}
+function pling(v=.12,at=0){tone(1318.5,at,.9,v);tone(1975.5,at+.1,.8,v*.7)}
+function dobbelt(){pling(.2,0);pling(.2,.32)}
+function stor(){const a=$("#app");a.classList.remove("dp");void a.offsetWidth;a.classList.add("dp");dobbelt();try{if(navigator.vibrate)navigator.vibrate([120,50,120,50,120,50,220])}catch(e){}}
+function okAv(a){return typeof a==="string"&&a.startsWith("data:image/jpeg;base64,")&&a.length<12000&&/^[A-Za-z0-9+/=]*$/.test(a.slice(23))}
+function toAvatar(file){return new Promise((ok,no)=>{const u=URL.createObjectURL(file),im=new Image();
+ im.onload=()=>{const s=Math.min(im.width,im.height),c=document.createElement("canvas");c.width=c.height=64;
+  c.getContext("2d").drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,64,64);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.72))};
+ im.onerror=()=>{URL.revokeObjectURL(u);no()};im.src=u})}
+function hue(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return h}
+function avEl(name,av,cls){const d=document.createElement("span");d.className="pav "+cls;
+ if(okAv(av)){const i=document.createElement("img");i.alt="";i.src=av;d.append(i)}else{d.textContent=(name[0]||"?").toUpperCase();d.style.background="hsl("+hue(name)+" 45% 36%)"}
+ return d}
 /* ---------- tilstand ---------- */
-const S={backup:null,user:null,profile:null,id:null,profiles:new Map(),friends:[],reqIn:[],reqOut:[],chat:null,msgs:[],mode:"in",needCode:false};
+const S={backup:null,user:null,profile:null,id:null,profiles:new Map(),av:new Map(),friends:[],reqIn:[],reqOut:[],chat:null,msgs:[],mode:"in",needCode:false,
+  status:"online",pres:new Map(),typ:new Map(),seen:new Map(),cdUntil:0,nref:0};
 const q=async(p,ctx)=>{const r=await p;if(r.error)throw new Error((ctx?ctx+": ":"")+r.error.message);return r.data};
+const ST={online:"on",away:"away",busy:"busy",off:"off"};
+let myAv=null;
+const narrow=()=>matchMedia("(max-width:700px)").matches;
+
+/* ---------- skjermer utenfor hovedvinduet ---------- */
+function scrHost(){const s=$("#scr"),c=s.firstElementChild;c.textContent="";s.hidden=false;$("#shell").hidden=true;$("#lock").hidden=true;return c}
+function showShell(){$("#scr").hidden=true;$("#shell").hidden=false;$("#lock").hidden=false}
 
 /* ---------- innlogging ---------- */
 function viewLogin(){
-  const app=$("#app");app.textContent="";
+  const app=scrHost();
   const email=el("input",{type:"email",placeholder:"E-post",autocomplete:"email",id:"em"});
   const pw=el("input",{type:"password",placeholder:"Passord (minst 10 tegn)",autocomplete:S.mode==="up"?"new-password":"current-password",id:"pw"});
   const code=el("input",{type:"text",placeholder:"Kode fra e-posten",inputmode:"numeric",id:"cd",autocomplete:"one-time-code"});
@@ -150,7 +356,7 @@ function viewLogin(){
         el("button",{class:S.mode==="up"?"":"ghost",onclick:()=>{S.mode="up";viewLogin()}},"Ny konto")),
       el("p",{},email),el("p",{},pw),
       el("div",{class:"row"},el("button",{id:"go",onclick:go},S.mode==="up"?"Lag konto":"Logg inn"),
-        el("button",{class:"ghost",id:"otp",onclick:sendCode},"Send engangskode i stedet")),
+        el("button",{class:"glass",id:"otp",onclick:sendCode},"Send engangskode i stedet")),
       S.needCode?el("div",{class:"row",style:"margin-top:10px"},code,el("button",{id:"vf",onclick:verify},"Bekreft")):null
     ));
   pw.addEventListener("keydown",e=>{if(e.key==="Enter")go()});
@@ -168,7 +374,7 @@ async function afterLogin(user){
   await start();
 }
 function viewSetup(){
-  const app=$("#app");app.textContent="";
+  const app=scrHost();
   const name=el("input",{type:"text",placeholder:"Visningsnavn",maxlength:"40",id:"nm"});
   const go=async()=>{
     const n=name.value.trim();if(!n)return toast("Skriv et navn",true);
@@ -184,7 +390,7 @@ function viewSetup(){
     el("p",{},name),el("button",{id:"mk",onclick:go},"Fortsett")));
 }
 function viewNoKey(){
-  const app=$("#app");app.textContent="";
+  const app=scrHost();
   const code=el("input",{type:"text",placeholder:"XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",id:"rc",autocapitalize:"characters",autocomplete:"off"});
   app.append(el("h1",{},"Nøkkelen finnes ikke her"),
     el("div",{class:"card"},el("p",{},"Du har en konto, men denne nettleseren har ikke krypteringsnøkkelen din. Hent den tilbake på en av disse måtene:")),
@@ -192,10 +398,10 @@ function viewNoKey(){
       el("button",{id:"pair",onclick:startPairing},"Be om nøkkelen")),
     el("div",{class:"card"},el("strong",{},"2. Gjenopprettingskode"),el("p",{class:"dim"},"Koden du fikk da du lagde kontoen."),
       el("div",{class:"row"},code,el("button",{id:"rcgo",onclick:async()=>{try{await adoptIdentity(await restoreFromCode(code.value));toast("Nøkkelen er tilbake");await start()}catch(e){fail(e)}}},"Gjenopprett"))),
-    el("button",{class:"ghost",onclick:()=>sb.auth.signOut()},"Logg ut"));
+    el("button",{class:"glass",onclick:()=>sb.auth.signOut()},"Logg ut"));
 }
 async function startPairing(){
-  const app=$("#app");app.textContent="";
+  const app=scrHost();
   let stop=false,id=null;
   const cancel=async()=>{stop=true;if(id)try{await sb.from("key_transfers").delete().eq("id",id)}catch(e){}viewNoKey()};
   try{
@@ -208,7 +414,7 @@ async function startPairing(){
         el("p",{},"Åpne Pling på en enhet der du allerede er innlogget. Der kommer det opp en forespørsel du kan godkjenne. Sjekk at koden er den samme:"),
         el("div",{class:"code",id:"pcode"},code),
         el("p",{class:"dim"},"Eller skann denne med kameraet på telefonen din (den åpner Pling):"),box,
-        el("p",{},el("button",{class:"ghost",id:"pcancel",onclick:cancel},"Avbryt"))));
+        el("p",{},el("button",{class:"glass",id:"pcancel",onclick:cancel},"Avbryt"))));
     const t0=Date.now();
     const poll=async()=>{
       if(stop)return;
@@ -232,7 +438,7 @@ async function startPairing(){
 
 /* ---------- gjenopprettingskode ---------- */
 function showRecovery(first){
-  const app=$("#app");app.textContent="";
+  const app=scrHost();
   const code=newCode();
   const typed=el("input",{type:"text",placeholder:"Skriv koden på nytt for å bekrefte",id:"rcv",autocapitalize:"characters",autocomplete:"off"});
   const go=async()=>{
@@ -244,12 +450,13 @@ function showRecovery(first){
       el("p",{},"Denne koden er den eneste måten å få tilbake samtalene dine på hvis du mister alle enhetene dine. Ikke engang vi kan hjelpe deg uten den."),
       el("div",{class:"code",id:"rccode"},code),
       el("div",{class:"row",style:"margin-top:10px"},
-        el("button",{class:"small",id:"cp",onclick:async()=>{try{await navigator.clipboard.writeText(code);toast("Kopiert")}catch(e){toast("Kunne ikke kopiere. Marker koden og kopier selv.",true)}}},"Kopier"),
-        el("button",{class:"small",id:"dl",onclick:()=>download("pling-gjenopprettingskode.txt","Pling gjenopprettingskode\n\n"+code+"\n\nOppbevar denne trygt. Alle med koden og passordet ditt kan åpne samtalene dine.\n")},"Last ned")),
+        el("button",{class:"glass sm",id:"cp",onclick:async()=>{try{await navigator.clipboard.writeText(code);toast("Kopiert")}catch(e){toast("Kunne ikke kopiere. Marker koden og kopier selv.",true)}}},"Kopier"),
+        el("button",{class:"glass sm",id:"dl",onclick:()=>download("pling-gjenopprettingskode.txt","Pling gjenopprettingskode\n\n"+code+"\n\nOppbevar denne trygt. Alle med koden og passordet ditt kan åpne samtalene dine.\n")},"Last ned")),
       el("p",{class:"warn"},"Lagre den i passordbehandleren din eller skriv den ned og oppbevar den trygt.")),
     el("div",{class:"card"},el("p",{},typed),el("div",{class:"row"},el("button",{id:"rcgo",onclick:go},"Jeg har lagret den"),
-      el("button",{class:"ghost small",id:"skip",onclick:()=>{if(first)start();else{viewMain();refresh()}}},first?"Hopp over":"Avbryt"))));
+      el("button",{class:"glass sm",id:"skip",onclick:()=>{if(first)start();else showShell()}},first?"Hopp over":"Avbryt"))));
 }
+
 /* ---------- godkjenne ny enhet (på enheten som har nøkkelen) ---------- */
 async function checkTransfers(){
   if(!S.user||!S.id||!S.profile)return;
@@ -261,22 +468,31 @@ async function checkTransfers(){
   if(S.pairId===r.id)return;
   S.pairId=r.id;box.textContent="";
   const code=await pairCode(r.eph_pub);
-  box.append(el("div",{class:"card",id:"pairreq",style:"border-color:var(--acc)"},
+  box.append(el("div",{class:"card pairreq",id:"pairreq"},
     el("strong",{},"En ny enhet ber om nøkkelen din"),
-    el("p",{},"Kode på den nye enheten skal være: ",el("span",{class:"code",style:"display:inline-block;padding:2px 10px;font-size:20px"},code)),
-    el("p",{class:"warn"},"Godkjenn bare hvis det er deg, og koden stemmer med den du ser på den nye enheten."),
+    el("p",{},"Koden på den nye enheten skal være: ",el("span",{class:"code"},code)),
+    el("p",{class:"warn fine"},"Godkjenn bare hvis det er deg, og koden stemmer med den du ser på den nye enheten."),
     el("div",{class:"row"},
       el("button",{id:"papprove",onclick:async()=>{try{
         const e=await ephPair(),key=await aesFrom(e.priv,r.eph_pub),sl=await seal(key,{v:1,priv:S.id.priv,pub:S.id.pub});
         await q(sb.from("key_transfers").update({status:"approved",sender_pub:e.pub,iv:sl.iv,ct:sl.ct}).eq("id",r.id),"Godkjenne");
         toast("Nøkkelen er sendt til den nye enheten");S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Godkjenn"),
-      el("button",{class:"ghost",id:"pdeny",onclick:async()=>{try{await q(sb.from("key_transfers").delete().eq("id",r.id),"Avvise");S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Avvis"))));
+      el("button",{class:"glass",id:"pdeny",onclick:async()=>{try{await q(sb.from("key_transfers").delete().eq("id",r.id),"Avvise");S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Avvis"))));
 }
 
-/* ---------- hovedvisning ---------- */
+/* ---------- hovedvindu ---------- */
+let wired=false;
 async function start(){
   try{const bk=await q(sb.from("key_backups").select("user_id,updated_at").eq("user_id",S.user.id));S.backup=bk[0]||null}catch(e){S.backup=null}
-  viewMain();await refresh();
+  showShell();
+  try{const a=localStorage.getItem("pling_av_"+S.user.id);if(okAv(a))myAv=a}catch(e){}
+  S.status="online";
+  try{const s=localStorage.getItem("pling_st_"+S.user.id);if(s&&ST[s])S.status=s}catch(e){}
+  $("#pnm").value=S.profile.name;$("#pm").value=S.profile.pm||"";$("#st").value=S.status;
+  if(!wired){wired=true;wire()}
+  paintMe();closeChat();
+  await refresh();
+  startPresence();
   sb.channel("pling-live")
     .on("postgres_changes",{event:"*",schema:"public",table:"messages"},()=>refreshSoon())
     .on("postgres_changes",{event:"*",schema:"public",table:"friend_requests"},()=>refreshSoon())
@@ -284,8 +500,38 @@ async function start(){
     .subscribe();
   clearInterval(S.poll);S.poll=setInterval(()=>{if(S.user&&!document.hidden)refresh()},8000);
   clearInterval(S.pp);S.pp=setInterval(()=>{if(!document.hidden)checkTransfers()},3000);checkTransfers();
+  paintAvAll();
 }
 let rT=0;function refreshSoon(){clearTimeout(rT);rT=setTimeout(refresh,150)}
+
+/* ---------- tilstedeværelse (kun innloggede brukere) ---------- */
+function startPresence(){
+  if(S.pch){try{sb.removeChannel&&sb.removeChannel(S.pch)}catch(e){}}
+  const ch=sb.channel("pling-presence",{config:{presence:{key:S.user.id}}});
+  ch.on("presence",{event:"sync"},()=>{
+    const st=ch.presenceState(),m=new Map(),now=Date.now();
+    for(const [k,arr] of Object.entries(st)){
+      const p=arr[arr.length-1];if(!p||!ST[p.st])continue;m.set(k,p.st);
+      const t=p.typ;if(t&&t.n){const old=S.typ.get(k);if(!old||old.n!==t.n)S.typ.set(k,{n:t.n,c:t.c,seen:now})}
+    }
+    S.pres=m;drawFriends();drawChatHead();drawTyping();
+  });
+  ch.subscribe(s=>{if(s==="SUBSCRIBED")trackMe(true)});
+  S.pch=ch;
+}
+function trackMe(force){
+  if(!S.pch)return;
+  if(S.status==="off"){try{S.pch.untrack()}catch(e){}return}
+  const now=Date.now();
+  if(!force&&now-(S.lastTrack||0)<2500){
+    if(!S.trT)S.trT=setTimeout(()=>{S.trT=0;trackMe(true)},2500-(now-S.lastTrack));
+    return}
+  S.lastTrack=now;
+  try{S.pch.track({st:S.status,typ:S.myTyp||null})}catch(e){}
+}
+function stOf(id){return S.pres.get(id)||"off"}
+
+/* ---------- data ---------- */
 async function refresh(){
   if(!S.user||!S.profile)return;
   try{
@@ -294,101 +540,237 @@ async function refresh(){
     S.friends=fr.map(r=>r.a===S.user.id?r.b:r.a);S.friends.forEach(i=>ids.add(i));
     S.reqIn=rq.filter(r=>r.to_id===S.user.id).map(r=>r.from_id);S.reqIn.forEach(i=>ids.add(i));
     S.reqOut=rq.filter(r=>r.from_id===S.user.id).map(r=>r.to_id);S.reqOut.forEach(i=>ids.add(i));
-    if(ids.size){const ps=await q(sb.from("profiles").select("id,name,fp,pub").in("id",[...ids]),"Profiler");ps.forEach(p=>S.profiles.set(p.id,p))}
-    if(S.chat&&!S.friends.includes(S.chat.other)){S.chat=null;S.msgs=[]}
-    renderSide();
-    if(S.chat)await loadMsgs();else renderChat();
+    if(ids.size){const ps=await q(sb.from("profiles").select("id,name,fp,pub,pm").in("id",[...ids]),"Profiler");ps.forEach(p=>S.profiles.set(p.id,p))}
+    if(S.nref++%5===0&&S.friends.length){
+      try{const as=await q(sb.from("avatars").select("id,data").in("id",S.friends));for(const a of as)if(okAv(a.data))S.av.set(a.id,a.data)}catch(e){}
+    }
+    if(S.chat&&!S.friends.includes(S.chat.other))closeChat();
+    drawReqs();drawFriends();drawSec();
+    if(S.chat){drawChatHead();await loadMsgs()}
   }catch(e){fail(e)}
 }
-function viewMain(){
-  const app=$("#app");app.textContent="";
-  app.append(
-    el("div",{class:"row",style:"justify-content:space-between"},
-      el("div",{},el("h1",{},"Pling · testside"),el("div",{class:"dim"},S.profile.name+" · "+S.user.email)),
-      el("button",{class:"ghost small",id:"out",onclick:async()=>{await sb.auth.signOut()}},"Logg ut")),
-    el("div",{id:"pairbox"}),
-    el("div",{class:"grid"},el("div",{id:"side"}),el("div",{id:"chat"})));
+const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
+
+/* ---------- min profil ---------- */
+function paintMe(){
+  const i=$("#avimg"),s=$("#avini"),nm=S.profile.name;
+  if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=(nm[0]||"?").toUpperCase()}
+  $("#avwrap").className="av "+ST[S.status];
+  $("#men").textContent=nm;
+  const sel=$("#st");$("#mep").textContent=S.profile.pm||sel.options[sel.selectedIndex].text;
+  const f=$("#mef");f.textContent="";f.append(ff(ST[S.status]));
 }
-function renderSide(){
-  const side=$("#side");if(!side)return;side.textContent="";
-  const mail=el("input",{type:"email",placeholder:"Venns e-post",id:"fe"});
-  const add=async()=>{
-    const v=mail.value.trim();if(!v)return;
-    try{
-      const f=await q(sb.rpc("find_by_email",{p_email:v}),"Søk");
-      if(!f.length)return toast("Fant ingen med den e-posten. Vennen må ha laget konto og profil først.",true);
-      const r=await q(sb.rpc("send_request",{p_to:f[0].id}),"Forespørsel");
-      toast(r==="friends"?"Dere er venner nå":"Forespørsel sendt til "+f[0].name);mail.value="";refresh();
-    }catch(e){fail(e)}
-  };
-  side.append(el("div",{class:"card"},el("div",{class:"dim"},"Legg til venn"),el("div",{class:"row",style:"margin-top:6px"},mail,el("button",{id:"add",onclick:add},"Legg til"))));
-  if(S.reqIn.length)side.append(el("div",{class:"card"},el("div",{class:"dim"},"Forespørsler til deg"),
-    S.reqIn.map(id=>{const p=S.profiles.get(id);return el("div",{class:"fr"},el("span",{},p?p.name:"…"),
-      el("span",{class:"row"},el("button",{class:"small acc",onclick:async()=>{try{await q(sb.rpc("accept_request",{p_from:id}),"Godta");refresh()}catch(e){fail(e)}}},"Godta"),
-        el("button",{class:"small ghost",onclick:async()=>{try{await q(sb.from("friend_requests").delete().eq("from_id",id).eq("to_id",S.user.id),"Avslå");refresh()}catch(e){fail(e)}}},"Avslå")))})));
-  if(S.reqOut.length)side.append(el("div",{class:"card"},el("div",{class:"dim"},"Venter på svar"),S.reqOut.map(id=>{const p=S.profiles.get(id);return el("div",{class:"fr"},el("span",{},p?p.name:"…"),el("span",{class:"tag"},"venter"))})));
-  side.append(el("div",{class:"card"},el("div",{class:"dim"},"Sikkerhet"),
-    el("div",{class:S.backup?"sec":"warn",style:"margin:6px 0",id:"bkst"},S.backup?"Gjenopprettingskode er laget":"Du har ingen gjenopprettingskode ennå"),
-    el("div",{class:"row"},el("button",{class:"small",id:"mkcode",onclick:()=>showRecovery(false)},S.backup?"Lag ny kode":"Lag kode"),
-      null),
-    el("div",{class:"dim",style:"margin-top:8px"},"Ny enhet? Logg inn der og velg «Be om nøkkelen». Her kommer det da en forespørsel du godkjenner.")));
-  side.append(el("div",{class:"card"},el("div",{class:"dim"},"Venner"),
-    S.friends.length?S.friends.map(id=>{const p=S.profiles.get(id);return el("div",{class:"fr"+(S.chat&&S.chat.other===id?" on":""),"data-id":id,onclick:()=>openChat(id)},el("span",{},p?p.name:"…"))}):el("div",{class:"dim"},"Ingen ennå")));
+function paintAvAll(){paintMe()}
+async function saveProfile(patch){
+  try{await q(sb.from("profiles").update(patch).eq("id",S.user.id),"Lagre profil");Object.assign(S.profile,patch);paintMe();drawChatHead()}catch(e){fail(e)}
+}
+
+/* ---------- vennelisten ---------- */
+const ORD={on:0,away:1,busy:1,off:2};
+function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
+function drawFriends(){
+  const box=$("#friends");if(!box)return;box.textContent="";
+  const rows=S.friends.map(id=>({id,st:ST[stOf(id)]||"off"}));
+  rows.sort((a,b)=>ORD[a.st]-ORD[b.st]||nameOf(a.id).localeCompare(nameOf(b.id),"nb"));
+  const word={on:"Pålogget",away:"Borte",busy:"Opptatt",off:"Frakoblet"};
+  for(const r of rows){
+    const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":""),type:"button","data-id":r.id});
+    b.append(pav(r.id,r.st),
+      el("span",{class:"t"},el("b",{},nameOf(r.id)),el("small",{},p.pm||word[r.st])),ff(r.st));
+    b.addEventListener("dblclick",()=>openChat(r.id));
+    b.addEventListener("click",()=>{if(narrow()||matchMedia("(pointer:coarse)").matches)openChat(r.id)});
+    b.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();openChat(r.id)}});
+    box.append(b);
+  }
+  for(const id of S.reqOut){
+    const b=el("div",{class:"conv pend"});
+    b.append(pav(id,"off"),el("span",{class:"t"},el("b",{},nameOf(id)),el("small",{},"Venter på svar")),ff("off"));
+    box.append(b);
+  }
+  if(!rows.length&&!S.reqOut.length)box.append(el("div",{class:"fine",style:"padding:6px 4px"},"Ingen venner ennå. Trykk «Legg til venn» og skriv e-posten til en du kjenner."));
+}
+function drawReqs(){
+  const box=$("#reqs");box.textContent="";box.hidden=!S.reqIn.length;
+  for(const id of S.reqIn){
+    box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til"),
+      el("div",{class:"row"},
+        el("button",{class:"sm",onclick:async()=>{try{await q(sb.rpc("accept_request",{p_from:id}),"Godta");refresh()}catch(e){fail(e)}}},"Godta"),
+        el("button",{class:"glass sm",onclick:async()=>{try{await q(sb.from("friend_requests").delete().eq("from_id",id).eq("to_id",S.user.id),"Avslå");refresh()}catch(e){fail(e)}}},"Avslå"))));
+  }
+}
+function drawSec(){
+  const c=$("#seccard");if(!c)return;c.textContent="";
+  c.append(el("div",{class:S.backup?"sec":"warn",id:"bkst"},S.backup?"Gjenopprettingskode er laget":"Du har ingen gjenopprettingskode ennå"),
+    el("div",{class:"row"},el("button",{class:"glass sm",id:"mkcode",onclick:()=>showRecovery(false)},S.backup?"Lag ny kode":"Lag kode")),
+    el("div",{class:"fine"},"Ny enhet? Logg inn der og velg «Be om nøkkelen». Her kommer det da en forespørsel du godkjenner."));
+}
+
+/* ---------- samtale ---------- */
+function closeChat(){
+  S.chat=null;S.msgs=[];S.sig=null;
+  $("#shell").classList.remove("inchat");
+  for(const i of ["ch","menu","log","typ","emo","bar"])$("#"+i).hidden=true;
+  $("#empty").hidden=false;$("#mb").setAttribute("aria-expanded","false");
+  drawFriends();
 }
 async function openChat(otherId){
   try{
     const cid=await q(sb.rpc("open_dm",{p_other:otherId}),"Åpne samtale");
-    S.chat={id:cid,other:otherId};S.msgs=[];renderSide();renderChat();await loadMsgs();
+    S.chat={id:cid,other:otherId};S.msgs=[];S.sig=null;S.first=true;
+    $("#shell").classList.add("inchat");
+    $("#empty").hidden=true;for(const i of ["ch","log","bar"])$("#"+i).hidden=false;
+    $("#menu").hidden=true;$("#emo").hidden=true;$("#mb").setAttribute("aria-expanded","false");
+    let d=0;try{d=+localStorage.getItem("pling_exp_"+cid)||0}catch(e){}$("#ex").value=String(d);
+    $("#log").textContent="";
+    drawChatHead();drawFriends();drawTyping();await loadMsgs();
+    if(!narrow())$("#tx").focus();
   }catch(e){fail(e)}
+}
+function drawChatHead(){
+  if(!S.chat)return;const id=S.chat.other,st=ST[stOf(id)]||"off";
+  $("#title").textContent=nameOf(id);
+  const pr=$("#pr");pr.textContent="";pr.append(pav(id,st));
+  const w=$("#who");w.textContent="";
+  const p=S.profiles.get(id)||{};
+  w.append(el("div",{class:"bud"},pav(id,st),el("span",{class:"t"},nameOf(id),el("small",{},p.pm||"")),ff(st)));
+  const mine=ST[S.status];
+  w.append(el("div",{class:"bud"},avEl(S.profile.name,myAv,mine),el("span",{class:"t"},S.profile.name+" (deg)",el("small",{},S.profile.pm||"")),ff(mine)));
+  const o=S.profiles.get(id);
+  if(o&&o.fp)safety(o.fp).then(s=>{if(S.chat&&S.chat.other===id)$("#sn").textContent=s});
+  $("#fp").textContent=o?"Nøkkelavtrykk, din venn: "+o.fp.match(/.{4}/g).join(" "):"";
+}
+async function safety(otherFp){
+  const a=[S.profile.fp,otherFp].sort().join(":");
+  const h=new Uint8Array(await crypto.subtle.digest("SHA-256",enc.encode("pling-safety:"+a)));
+  const g=[];for(let i=0;i<6;i++)g.push(String(((h[i*3]<<16|h[i*3+1]<<8|h[i*3+2])>>>0)%100000).padStart(5,"0"));
+  return g.join(" ");
+}
+function drawTyping(){
+  const t=$("#typ");
+  if(!S.chat){t.hidden=true;return}
+  const x=S.typ.get(S.chat.other),on=x&&x.c===S.chat.id&&Date.now()-x.seen<4000&&S.pres.has(S.chat.other);
+  t.hidden=false;t.textContent=on?nameOf(S.chat.other)+" skriver …":"";
+  if(on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,4100-(Date.now()-x.seen))}
 }
 async function loadMsgs(){
   if(!S.chat)return;
-  const other=S.profiles.get(S.chat.other);if(!other)return;
-  const rows=await q(sb.from("messages").select("*").eq("chat_id",S.chat.id).order("id",{ascending:true}).limit(300),"Meldinger");
-  const key=await pairKey(other.pub);
-  const out=[];
-  for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m?m.t:null,ts:r.created_at})}
+  const cid=S.chat.id,other=S.profiles.get(S.chat.other);if(!other)return;
+  const rows=await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:true}).limit(300),"Meldinger");
+  if(!S.chat||S.chat.id!==cid)return;
+  const key=await pairKey(other.pub),out=[];
+  for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),ok:!!m,ts:r.created_at})}
   const sig=out.map(m=>m.id).join(",");
-  if(sig===S.sig)return;S.sig=sig;S.msgs=out;renderChat(true);
-}
-function renderChat(keep){
-  const box=$("#chat");if(!box)return;
-  if(!S.chat){box.textContent="";box.append(el("div",{class:"card dim"},"Velg en venn for å starte en samtale."));return}
-  const other=S.profiles.get(S.chat.other);
-  let log=$("#log");
-  if(!log||box.dataset.cid!==S.chat.id){
-    box.textContent="";box.dataset.cid=S.chat.id;
-    const inp=el("input",{type:"text",placeholder:"Skriv en melding …",id:"msg",autocomplete:"off"});
-    const send=async()=>{
-      const t=inp.value.trim();if(!t)return;inp.value="";
-      try{
-        const key=await pairKey(other.pub);const s=await seal(key,{t,ts:Date.now()});
-        await q(sb.from("messages").insert({chat_id:S.chat.id,sender:S.user.id,iv:s.iv,ct:s.ct}),"Sende");
-        refreshSoon();
-      }catch(e){inp.value=t;fail(e)}
-    };
-    inp.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
-    let sure=false;
-    const rm=el("button",{class:"small ghost",id:"rm",onclick:async()=>{
-      if(!sure){sure=true;rm.textContent="Sikker? Trykk igjen";setTimeout(()=>{sure=false;rm.textContent="Fjern venn"},3500);return}
-      try{await q(sb.rpc("remove_friend",{p_other:S.chat.other}),"Fjerne venn");S.chat=null;refresh()}catch(e){fail(e)}
-    }},"Fjern venn");
-    box.append(el("div",{class:"card"},
-      el("div",{class:"row",style:"justify-content:space-between"},el("strong",{},other?other.name:"…"),el("span",{class:"row"},el("span",{class:"tag sec"},"ende-til-ende-kryptert"),rm)),
-      el("div",{id:"log"}),el("div",{class:"row",style:"margin-top:8px"},inp,el("button",{id:"send",onclick:send},"Send"))));
-    log=$("#log");
+  if(sig===S.sig)return;S.sig=sig;
+  const maxSeen=S.seen.get(cid)||0,fresh=S.first?[]:out.filter(m=>!m.mine&&m.id>maxSeen);
+  S.seen.set(cid,out.length?out[out.length-1].id:0);
+  S.first=false;S.msgs=out;drawLog();
+  if(fresh.length){
+    const last=fresh[fresh.length-1],big=fresh.find(m=>m.dp&&Date.now()-new Date(m.ts).getTime()<15000);
+    if(big)stor();else pling();
   }
+}
+function drawLog(){
+  const log=$("#log"),near=log.scrollHeight-log.scrollTop-log.clientHeight<80;
   log.textContent="";
-  for(const m of S.msgs)log.append(el("div",{class:"m"+(m.mine?" me":"")},m.t==null?"(kan ikke dekrypteres)":m.t,el("small",{},new Date(m.ts).toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"}))));
-  log.scrollTop=log.scrollHeight;
+  const tm=ts=>new Date(ts).toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"});
+  if(!S.msgs.length)log.append(el("div",{class:"sys"},"Samtalen er ende-til-ende-kryptert. Si hei til "+nameOf(S.chat.other)+"!"));
+  for(const m of S.msgs){
+    if(m.dp){log.append(el("div",{class:"sys"},(m.mine?"Du":nameOf(S.chat.other))+" sendte en dobbeltpling · "+tm(m.ts)));continue}
+    const d=el("div",{class:"m"+(m.mine?" mine":"")});
+    d.append(m.ok?emoji(m.t==null?"":m.t):"(kan ikke dekrypteres)");
+    d.append(el("br"),el("time",{},tm(m.ts)));log.append(d);
+  }
+  if(near||S.justSent)log.scrollTop=log.scrollHeight;S.justSent=false;
+}
+async function sendMsg(payload,after){
+  if(!S.chat)return false;
+  const other=S.profiles.get(S.chat.other);
+  try{
+    const key=await pairKey(other.pub),s=await seal(key,payload);
+    const row={chat_id:S.chat.id,sender:S.user.id,iv:s.iv,ct:s.ct};
+    let d=0;try{d=+localStorage.getItem("pling_exp_"+S.chat.id)||0}catch(e){}
+    if(d)row.exp=new Date(Date.now()+d*864e5).toISOString();
+    await q(sb.from("messages").insert(row),"Sende");
+    S.justSent=true;S.myTyp=null;refreshSoon();return true;
+  }catch(e){fail(e);return false}
 }
 
+/* ---------- koble knapper ---------- */
+function wire(){
+  $("#meb").addEventListener("click",()=>{const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
+  $("#outb").addEventListener("click",()=>sb.auth.signOut());
+  $("#pnm").addEventListener("change",()=>{const n=$("#pnm").value.trim();if(!n){$("#pnm").value=S.profile.name;return}if(n!==S.profile.name)saveProfile({name:n.slice(0,24)})});
+  $("#pm").addEventListener("change",()=>{const v=$("#pm").value.trim().slice(0,60);saveProfile({pm:v||null})});
+  $("#st").addEventListener("change",()=>{
+    S.status=$("#st").value;try{localStorage.setItem("pling_st_"+S.user.id,S.status)}catch(e){}
+    paintMe();trackMe(true);drawChatHead();
+  });
+  $("#avf").addEventListener("change",async e=>{
+    const f=e.target.files[0];e.target.value="";if(!f)return;
+    try{
+      const a=await toAvatar(f);if(!okAv(a))throw new Error("Bildet ble for stort");
+      await q(sb.from("avatars").upsert({id:S.user.id,data:a,updated_at:new Date().toISOString()}),"Lagre bilde");
+      myAv=a;try{localStorage.setItem("pling_av_"+S.user.id,a)}catch(x){}
+      paintMe();drawChatHead();toast("Bildet er lagret. Bare vennene dine ser det.");
+    }catch(err){fail(err)}
+  });
+  $("#addf").addEventListener("click",()=>{const p=$("#addfp"),o=p.hidden;p.hidden=!o;$("#addf").setAttribute("aria-expanded",String(o));if(o)$("#fe").focus()});
+  const add=async()=>{
+    const v=$("#fe").value.trim(),err=$("#ferr");err.textContent="";if(!v)return;
+    try{
+      const f=await q(sb.rpc("find_by_email",{p_email:v}),"Søk");
+      if(!f.length){err.textContent="Fant ingen med den e-posten. Vennen må ha laget konto og profil først.";return}
+      const r=await q(sb.rpc("send_request",{p_to:f[0].id}),"Forespørsel");
+      toast(r==="friends"?"Dere er venner nå":"Forespørsel sendt til "+f[0].name);$("#fe").value="";$("#addfp").hidden=true;$("#addf").setAttribute("aria-expanded","false");refresh();
+    }catch(e){fail(e)}
+  };
+  $("#fadd").addEventListener("click",add);
+  $("#fe").addEventListener("keydown",e=>{if(e.key==="Enter")add()});
+  /* samtale */
+  $("#back").addEventListener("click",closeChat);
+  $("#mb").addEventListener("click",()=>{const m=$("#menu"),o=m.hidden;m.hidden=!o;$("#mb").setAttribute("aria-expanded",String(o))});
+  $("#pr").addEventListener("click",()=>$("#mb").click());
+  $("#ex").addEventListener("change",()=>{if(S.chat)try{localStorage.setItem("pling_exp_"+S.chat.id,$("#ex").value)}catch(e){}});
+  const sure=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
+    if(!s){s=true;btn.textContent="Sikker? Trykk igjen";t=setTimeout(()=>{s=false;btn.textContent=label},3500);return}
+    clearTimeout(t);s=false;btn.textContent=label;fn()})};
+  sure($("#bx"),"Slett mine meldinger",async()=>{try{await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),"Slette");S.sig=null;toast("Dine meldinger er slettet");refreshSoon()}catch(e){fail(e)}});
+  sure($("#bfr"),"Fjern venn",async()=>{try{await q(sb.rpc("remove_friend",{p_other:S.chat.other}),"Fjerne venn");closeChat();refresh()}catch(e){fail(e)}});
+  $("#bd").addEventListener("click",()=>{
+    const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?"(dobbeltpling)":m.ok?m.t:"(kan ikke dekrypteres)")).join("\n");
+    download("pling-samtale.txt",t+"\n");
+  });
+  const tx=$("#tx");
+  const send=async()=>{const t=tx.value.trim();if(!t)return;tx.value="";if(!await sendMsg({t,ts:Date.now()}))tx.value=t};
+  $("#sd").addEventListener("click",send);
+  tx.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
+  tx.addEventListener("input",()=>{if(!S.chat)return;S.myTyp={c:S.chat.id,n:Date.now()};trackMe(false)});
+  const emo=$("#emo");
+  for(const e of ["😊","😃","😉","🙁","😛","❤️","👍","👎","😮","😎","😈","😇","😢","💋","💔","🎉"]){
+    emo.append(el("button",{type:"button",onclick:()=>{tx.value+=e;tx.focus()}},e));
+  }
+  $("#eb").addEventListener("click",()=>{emo.hidden=!emo.hidden});
+  $("#dp").addEventListener("click",async()=>{
+    if(Date.now()<S.cdUntil)return;
+    if(await sendMsg({dp:1,ts:Date.now()})){S.cdUntil=Date.now()+60000;cdTick();clearInterval(S.cdT);S.cdT=setInterval(cdTick,1000);dobbelt()}
+  });
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden&&S.user)refreshSoon()});
+}
+function cdTick(){const l=Math.ceil((S.cdUntil-Date.now())/1000),b=$("#dp");
+  if(l>0){b.disabled=true;b.textContent="Dobbeltpling ("+l+")"}else{b.disabled=false;b.textContent="Dobbeltpling";clearInterval(S.cdT)}}
+
 /* ---------- start ---------- */
+(function(){
+  $("#tbi").append(ff("on"));
+  const a=$("#amb"),cl=["on","on","away","on","busy","on","away"];
+  [[8,18],[82,12],[16,72],[70,78],[48,8],[90,54],[30,40]].forEach((p,i)=>{const f=ff(cl[i]);f.style.left=p[0]+"%";f.style.top=p[1]+"%";f.style.animationDuration=(7+i)+"s";f.style.animationDelay=(-i*1.3)+"s";f.firstChild.style.animationDelay=(-i*.7)+"s";a.append(f)});
+})();
 sb.auth.onAuthStateChange((ev,session)=>{
   if(session&&session.user){if(!S.user||S.user.id!==session.user.id)setTimeout(()=>afterLogin(session.user).catch(e=>fail(e)),0)}
-  else{S.user=null;S.profile=null;S.id=null;S.chat=null;clearInterval(S.poll);clearInterval(S.pp);S.pairId=null;sb.removeAllChannels();viewLogin()}
+  else{S.user=null;S.profile=null;S.id=null;S.chat=null;S.pres=new Map();clearInterval(S.poll);clearInterval(S.pp);S.pairId=null;sb.removeAllChannels();S.pch=null;myAv=null;viewLogin()}
 });
 sb.auth.getSession().then(({data})=>{if(!data.session)viewLogin()});
+
 </script>
 </body>
 </html>
