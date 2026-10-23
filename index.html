@@ -156,6 +156,10 @@ button.ghost{background:transparent;border-color:var(--line);text-shadow:none;co
 .pairreq{border-color:var(--luna1)!important;margin:8px}
 .pairreq .code{display:inline-block;padding:2px 10px;font-size:18px}
 .m.sysm{align-self:center}
+.conv .rt{display:flex;align-items:center;gap:8px}
+.badge{min-width:20px;padding:1px 6px;border-radius:99px;background:var(--glow-on);color:#0b1a00;font:700 12px/18px Tahoma,sans-serif;text-align:center;box-shadow:0 0 8px #a6ff3d88}
+.conv.unread .t b{color:#fff}
+.conv.unread .t small{color:var(--ink);font-style:normal}
 
 </style>
 </head>
@@ -319,7 +323,7 @@ function avEl(name,av,cls){const d=document.createElement("span");d.className="p
  return d}
 /* ---------- tilstand ---------- */
 const S={backup:null,user:null,profile:null,id:null,profiles:new Map(),av:new Map(),friends:[],reqIn:[],reqOut:[],chat:null,msgs:[],mode:"in",needCode:false,
-  status:"online",pres:new Map(),typ:new Map(),seen:new Map(),cdUntil:0,nref:0};
+  status:"online",last:new Map(),unread:new Map(),dm:new Map(),firstRef:true,pres:new Map(),typ:new Map(),seen:new Map(),cdUntil:0,nref:0};
 const q=async(p,ctx)=>{const r=await p;if(r.error)throw new Error((ctx?ctx+": ":"")+r.error.message);return r.data};
 const ST={online:"on",away:"away",busy:"busy",off:"off"};
 let myAv=null;
@@ -545,10 +549,38 @@ async function refresh(){
       try{const as=await q(sb.from("avatars").select("id,data").in("id",S.friends));for(const a of as)if(okAv(a.data))S.av.set(a.id,a.data)}catch(e){}
     }
     if(S.chat&&!S.friends.includes(S.chat.other))closeChat();
+    await loadPreviews();
     drawReqs();drawFriends();drawSec();
     if(S.chat){drawChatHead();await loadMsgs()}
   }catch(e){fail(e)}
 }
+const readKey=cid=>"pling_read_"+S.user.id+"_"+cid;
+const getRead=cid=>{try{return +localStorage.getItem(readKey(cid))||0}catch(e){return 0}};
+const setRead=(cid,id)=>{try{if(id>getRead(cid))localStorage.setItem(readKey(cid),String(id))}catch(e){}};
+async function loadPreviews(){
+  const cm=await q(sb.from("chat_members").select("chat_id,user_id"),"Samtaler");
+  const mine=new Set(cm.filter(r=>r.user_id===S.user.id).map(r=>r.chat_id));
+  const dm=new Map();
+  for(const r of cm)if(r.user_id!==S.user.id&&mine.has(r.chat_id)&&S.friends.includes(r.user_id))dm.set(r.user_id,r.chat_id);
+  S.dm=dm;let more=false;
+  await Promise.all([...dm].map(async([fid,cid])=>{
+    const p=S.profiles.get(fid);if(!p)return;
+    const rows=await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(20),"Meldinger");
+    if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
+    const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
+    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:m?(m.dp?"Dobbeltpling":String(m.t==null?"":m.t)):"(kan ikke dekrypteres)"});
+    const isOpen=S.chat&&S.chat.id===cid;
+    if(isOpen)setRead(cid,top.id);
+    const rd=getRead(cid);
+    const n=isOpen?0:rows.filter(r=>r.sender!==S.user.id&&r.id>rd).length;
+    if(!S.firstRef&&n>(S.unread.get(fid)||0))more=true;
+    S.unread.set(fid,n);
+  }));
+  S.firstRef=false;
+  if(more)pling();
+  setTitle();
+}
+function setTitle(){const tot=[...S.unread.values()].reduce((a,b)=>a+b,0);document.title=(tot?"("+tot+") ":"")+"Pling testside"}
 const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
 
 /* ---------- min profil ---------- */
@@ -568,6 +600,7 @@ async function saveProfile(patch){
 /* ---------- vennelisten ---------- */
 const ORD={on:0,away:1,busy:1,off:2};
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
+function prev(id){const l=S.last.get(id);if(!l)return "";const t=emoji(l.t).replace(/\s+/g," ");return (l.mine?"Du: ":"")+(t.length>60?t.slice(0,60)+"…":t)}
 function drawFriends(){
   const box=$("#friends");if(!box)return;box.textContent="";
   const rows=S.friends.map(id=>({id,st:ST[stOf(id)]||"off"}));
@@ -576,7 +609,9 @@ function drawFriends(){
   for(const r of rows){
     const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
-      el("span",{class:"t"},el("b",{},nameOf(r.id)),el("small",{},p.pm||word[r.st])),ff(r.st));
+      el("span",{class:"t"},el("b",{},nameOf(r.id)),el("small",{},prev(r.id)||p.pm||word[r.st])),
+      el("span",{class:"rt"},S.unread.get(r.id)?el("span",{class:"badge",title:"Uleste meldinger"},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
+    if(S.unread.get(r.id))b.classList.add("unread");
     b.addEventListener("dblclick",()=>openChat(r.id));
     b.addEventListener("click",()=>{if(narrow()||matchMedia("(pointer:coarse)").matches)openChat(r.id)});
     b.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();openChat(r.id)}});
@@ -663,6 +698,7 @@ async function loadMsgs(){
   if(sig===S.sig)return;S.sig=sig;
   const maxSeen=S.seen.get(cid)||0,fresh=S.first?[]:out.filter(m=>!m.mine&&m.id>maxSeen);
   S.seen.set(cid,out.length?out[out.length-1].id:0);
+  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?"Dobbeltpling":(l.ok?l.t||"":"(kan ikke dekrypteres)")});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   S.first=false;S.msgs=out;drawLog();
   if(fresh.length){
     const last=fresh[fresh.length-1],big=fresh.find(m=>m.dp&&Date.now()-new Date(m.ts).getTime()<15000);
