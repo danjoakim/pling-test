@@ -761,12 +761,13 @@ function drawLog(keepPos){
   }
   if(!keepPos&&(near||S.justSent))log.scrollTop=log.scrollHeight;S.justSent=false;
 }
-async function sendMsg(payload,after){
+async function sendMsg(payload,file){
   if(!S.chat)return false;
   const other=S.profiles.get(S.chat.other);
   try{
     const key=await pairKey(other.pub),s=await seal(key,payload);
     const row={chat_id:S.chat.id,sender:S.user.id,iv:s.iv,ct:s.ct};
+    if(file)row.file=file;
     await q(sb.from("messages").insert(row),"Sende");
     S.justSent=true;S.myTyp=null;refreshSoon();return true;
   }catch(e){fail(e);return false}
@@ -806,7 +807,7 @@ async function sendImage(file){
     path=cid+"/"+crypto.randomUUID();
     const up=await sb.storage.from(BUCKET).upload(path,new Blob([iv,ct],{type:"application/octet-stream"}),{contentType:"application/octet-stream"});
     if(up.error)throw new Error("Laste opp: "+up.error.message);
-    const ok=await sendMsg({img:{p:path,w,h},ts:Date.now()});
+    const ok=await sendMsg({img:{p:path,w,h},ts:Date.now()},path);
     if(!ok){await sb.storage.from(BUCKET).remove([path]);return}
     toast("Bildet er sendt")
   }catch(e){fail(e);if(path)sb.storage.from(BUCKET).remove([path]).then(()=>{},()=>{})}
