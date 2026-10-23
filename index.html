@@ -168,6 +168,7 @@ button.ghost{background:transparent;border-color:var(--line);text-shadow:none;co
 .lb[hidden]{display:none}
 .lb img{max-width:100%;max-height:80vh;border-radius:8px;box-shadow:0 8px 40px #000}
 .btnlink{display:inline-block;cursor:pointer;border:1px solid var(--line);border-radius:4px;padding:6px 10px;color:var(--ink);text-decoration:none;font-size:13px;background:linear-gradient(#26407e,#1a2f64)}
+.older{align-self:center;flex:none}
 
 </style>
 </head>
@@ -333,7 +334,7 @@ function avEl(name,av,cls){const d=document.createElement("span");d.className="p
  return d}
 /* ---------- tilstand ---------- */
 const S={backup:null,user:null,profile:null,id:null,profiles:new Map(),av:new Map(),friends:[],reqIn:[],reqOut:[],chat:null,msgs:[],mode:"in",needCode:false,
-  status:"online",last:new Map(),exp:new Map(),unread:new Map(),dm:new Map(),firstRef:true,pres:new Map(),typ:new Map(),seen:new Map(),cdUntil:0,nref:0};
+  status:"online",last:new Map(),exp:new Map(),reads:new Map(),older:[],more:false,unread:new Map(),dm:new Map(),firstRef:true,pres:new Map(),typ:new Map(),seen:new Map(),cdUntil:0,nref:0};
 const q=async(p,ctx)=>{const r=await p;if(r.error)throw new Error((ctx?ctx+": ":"")+r.error.message);return r.data};
 const ST={online:"on",away:"away",busy:"busy",off:"off"};
 let myAv=null;
@@ -565,12 +566,16 @@ async function refresh(){
   }catch(e){fail(e)}
 }
 const readKey=cid=>"pling_read_"+S.user.id+"_"+cid;
-const getRead=cid=>{try{return +localStorage.getItem(readKey(cid))||0}catch(e){return 0}};
-const setRead=(cid,id)=>{try{if(id>getRead(cid))localStorage.setItem(readKey(cid),String(id))}catch(e){}};
+const getRead=cid=>S.reads.get(cid)||0;
+const setRead=(cid,id)=>{if(id>getRead(cid)){S.reads.set(cid,id);sb.rpc("mark_read",{p_chat:cid,p_id:id}).then(()=>{},()=>{})}};
 async function loadPreviews(){
-  const [cm,cs]=await Promise.all([q(sb.from("chat_members").select("chat_id,user_id"),"Samtaler"),q(sb.from("chats").select("id,exp_days"),"Samtaler")]);
+  const [cm,cs,rr]=await Promise.all([q(sb.from("chat_members").select("chat_id,user_id"),"Samtaler"),q(sb.from("chats").select("id,exp_days"),"Samtaler"),q(sb.from("chat_reads").select("chat_id,last_id"),"Lest")]);
   for(const c of cs)S.exp.set(c.id,c.exp_days||0);
+  const hasSrv=new Set();
+  for(const r of rr){hasSrv.add(r.chat_id);S.reads.set(r.chat_id,Math.max(S.reads.get(r.chat_id)||0,+r.last_id))}
   const mine=new Set(cm.filter(r=>r.user_id===S.user.id).map(r=>r.chat_id));
+  /* engangs-flytting av «lest» som tidligere lå bare i nettleseren */
+  for(const cid of mine)if(!hasSrv.has(cid)){let l=0;try{l=+localStorage.getItem(readKey(cid))||0}catch(e){}if(l>0)setRead(cid,l)}
   const dm=new Map();
   for(const r of cm)if(r.user_id!==S.user.id&&mine.has(r.chat_id)&&S.friends.includes(r.user_id))dm.set(r.user_id,r.chat_id);
   S.dm=dm;let more=false;
@@ -653,7 +658,7 @@ function drawSec(){
 
 /* ---------- samtale ---------- */
 function closeChat(){
-  S.chat=null;S.msgs=[];S.sig=null;
+  S.chat=null;S.msgs=[];S.older=[];S.sig=null;
   $("#shell").classList.remove("inchat");
   for(const i of ["ch","menu","log","typ","emo","bar"])$("#"+i).hidden=true;
   $("#empty").hidden=false;$("#mb").setAttribute("aria-expanded","false");
@@ -662,7 +667,7 @@ function closeChat(){
 async function openChat(otherId){
   try{
     const cid=await q(sb.rpc("open_dm",{p_other:otherId}),"Åpne samtale");
-    S.chat={id:cid,other:otherId};S.msgs=[];S.sig=null;S.first=true;
+    S.chat={id:cid,other:otherId};S.msgs=[];S.older=[];S.more=false;S.sig=null;S.first=true;
     $("#shell").classList.add("inchat");
     $("#empty").hidden=true;for(const i of ["ch","log","bar"])$("#"+i).hidden=false;
     $("#menu").hidden=true;$("#emo").hidden=true;$("#mb").setAttribute("aria-expanded","false");
@@ -704,13 +709,20 @@ function drawTyping(){
   t.hidden=false;t.textContent=on?nameOf(S.chat.other)+" skriver …":"";
   if(on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,4100-(Date.now()-x.seen))}
 }
+const PAGE=50;
+async function decodeRows(rows,key){
+  const out=[];
+  for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),img:(m&&m.img&&typeof m.img.p==="string")?m.img:null,ok:!!m,ts:r.created_at})}
+  return out;
+}
 async function loadMsgs(){
   if(!S.chat)return;
   const cid=S.chat.id,other=S.profiles.get(S.chat.other);if(!other)return;
-  const rows=await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:true}).limit(300),"Meldinger");
+  const rows=(await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(PAGE),"Meldinger")).reverse();
   if(!S.chat||S.chat.id!==cid)return;
-  const key=await pairKey(other.pub),out=[];
-  for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),img:(m&&m.img&&typeof m.img.p==="string")?m.img:null,ok:!!m,ts:r.created_at})}
+  const key=await pairKey(other.pub),latest=await decodeRows(rows,key);
+  if(!S.older.length)S.more=rows.length>=PAGE;
+  const out=[...S.older,...latest];
   const sig=out.map(m=>m.id).join(",");
   if(sig===S.sig)return;S.sig=sig;
   const maxSeen=S.seen.get(cid)||0,fresh=S.first?[]:out.filter(m=>!m.mine&&m.id>maxSeen);
@@ -718,14 +730,27 @@ async function loadMsgs(){
   if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?"Dobbeltpling":l.img?"📷 Bilde":(l.ok?l.t||"":"(kan ikke dekrypteres)")});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   S.first=false;S.msgs=out;drawLog();
   if(fresh.length){
-    const last=fresh[fresh.length-1],big=fresh.find(m=>m.dp&&Date.now()-new Date(m.ts).getTime()<15000);
+    const big=fresh.find(m=>m.dp&&Date.now()-new Date(m.ts).getTime()<15000);
     if(big)stor();else pling();
   }
 }
-function drawLog(){
+async function loadOlder(){
+  if(!S.chat||!S.msgs.length)return;
+  const cid=S.chat.id,other=S.profiles.get(S.chat.other),oldest=S.msgs[0].id,log=$("#log");
+  try{
+    const rows=(await q(sb.from("messages").select("*").eq("chat_id",cid).lt("id",oldest).order("id",{ascending:false}).limit(PAGE),"Eldre meldinger")).reverse();
+    if(!S.chat||S.chat.id!==cid)return;
+    const dec=await decodeRows(rows,await pairKey(other.pub));
+    S.older=[...dec,...S.older];S.more=rows.length>=PAGE;
+    S.msgs=[...dec,...S.msgs];S.sig=S.msgs.map(m=>m.id).join(",");
+    const h=log.scrollHeight,t=log.scrollTop;drawLog(true);log.scrollTop=t+(log.scrollHeight-h);
+  }catch(e){fail(e)}
+}
+function drawLog(keepPos){
   const log=$("#log"),near=log.scrollHeight-log.scrollTop-log.clientHeight<80;
   log.textContent="";
   const tm=ts=>new Date(ts).toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"});
+  if(S.more&&S.msgs.length)log.append(el("button",{class:"glass sm older",type:"button",onclick:loadOlder},"Vis eldre meldinger"));
   if(!S.msgs.length)log.append(el("div",{class:"sys"},"Samtalen er ende-til-ende-kryptert. Si hei til "+nameOf(S.chat.other)+"!"));
   for(const m of S.msgs){
     if(m.dp){log.append(el("div",{class:"sys"},(m.mine?"Du":nameOf(S.chat.other))+" sendte en dobbeltpling · "+tm(m.ts)));continue}
@@ -734,7 +759,7 @@ function drawLog(){
     d.append(m.ok?emoji(m.t==null?"":m.t):"(kan ikke dekrypteres)");
     d.append(el("br"),el("time",{},tm(m.ts)));log.append(d);
   }
-  if(near||S.justSent)log.scrollTop=log.scrollHeight;S.justSent=false;
+  if(!keepPos&&(near||S.justSent))log.scrollTop=log.scrollHeight;S.justSent=false;
 }
 async function sendMsg(payload,after){
   if(!S.chat)return false;
@@ -893,7 +918,7 @@ function cdTick(){const l=Math.ceil((S.cdUntil-Date.now())/1000),b=$("#dp");
 })();
 sb.auth.onAuthStateChange((ev,session)=>{
   if(session&&session.user){if(!S.user||S.user.id!==session.user.id)setTimeout(()=>afterLogin(session.user).catch(e=>fail(e)),0)}
-  else{S.user=null;S.profile=null;S.id=null;S.chat=null;S.pres=new Map();clearInterval(S.poll);clearInterval(S.pp);S.pairId=null;sb.removeAllChannels();S.pch=null;myAv=null;viewLogin()}
+  else{S.user=null;S.profile=null;S.id=null;S.chat=null;S.pres=new Map();S.reads=new Map();S.last=new Map();S.unread=new Map();S.exp=new Map();S.av=new Map();S.profiles=new Map();S.firstRef=true;S.older=[];clearInterval(S.poll);clearInterval(S.pp);S.pairId=null;sb.removeAllChannels();S.pch=null;myAv=null;viewLogin()}
 });
 sb.auth.getSession().then(({data})=>{if(!data.session)viewLogin()});
 
