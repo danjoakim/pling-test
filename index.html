@@ -133,7 +133,7 @@ const q=async(p,ctx)=>{const r=await p;if(r.error)throw new Error((ctx?ctx+": ":
 function viewLogin(){
   const app=$("#app");app.textContent="";
   const email=el("input",{type:"email",placeholder:"E-post",autocomplete:"email",id:"em"});
-  const pw=el("input",{type:"password",placeholder:"Passord (minst 6 tegn)",autocomplete:S.mode==="up"?"new-password":"current-password",id:"pw"});
+  const pw=el("input",{type:"password",placeholder:"Passord (minst 10 tegn)",autocomplete:S.mode==="up"?"new-password":"current-password",id:"pw"});
   const code=el("input",{type:"text",placeholder:"Kode fra e-posten",inputmode:"numeric",id:"cd",autocomplete:"one-time-code"});
   const go=async()=>{
     try{
