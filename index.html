@@ -519,52 +519,20 @@ async function start(){
 }
 let rT=0;function refreshSoon(){clearTimeout(rT);rT=setTimeout(refresh,150)}
 
-/* ---------- tilstedeværelse (kun innloggede brukere) ----------
-   WHY: each user tracks presence on their OWN private channel `pres:<id>`; friends listen
-   to their friends' channels. The server (realtime.messages policies, see migration
-   realtime_presence_per_user_private_channels) only lets the owner write and the owner's
-   friends read. Do NOT go back to one shared channel: that let every logged-in user see
-   everyone's status and typing. `private:true` is required, otherwise the policies are not applied. */
+/* ---------- tilstedeværelse (kun innloggede brukere) ---------- */
 function startPresence(){
   if(S.pch){try{sb.removeChannel&&sb.removeChannel(S.pch)}catch(e){}}
-  const ch=sb.channel("pres:"+S.user.id,{config:{private:true,presence:{key:S.user.id}}});
-  ch.on("presence",{event:"sync"},()=>{PD.ownSync++;pdbg("last",PD.last)});
-  ch.subscribe((s,err)=>{pdbg("own",s+(err?" "+(err.message||err):""));if(s==="SUBSCRIBED")trackMe(true)});
+  const ch=sb.channel("pling-presence",{config:{presence:{key:S.user.id}}});
+  ch.on("presence",{event:"sync"},()=>{
+    const st=ch.presenceState(),m=new Map(),now=Date.now();
+    for(const [k,arr] of Object.entries(st)){
+      const p=arr[arr.length-1];if(!p||!ST[p.st])continue;m.set(k,p.st);
+      const t=p.typ;if(t&&t.n){const old=S.typ.get(k);if(!old||old.n!==t.n)S.typ.set(k,{n:t.n,c:t.c,seen:now})}
+    }
+    S.pres=m;drawFriends();drawChatHead();drawTyping();
+  });
+  ch.subscribe(s=>{if(s==="SUBSCRIBED")trackMe(true)});
   S.pch=ch;
-  syncPresence();
-}
-/* TEMPORARY diagnostics for the private-channel rollout (remove once presence is confirmed on real devices). */
-const PD={build:"pres-v4",own:"-",fr:{},syncs:0,ownSync:0,trk:"-",joins:0,last:""};
-function pdbg(k,v,id){
-  if(id)PD.fr[id.slice(0,4)]=v;else PD[k]=v;
-  let el=document.getElementById("pdbg");
-  if(!el){const f=document.getElementById("friends");if(!f)return;el=document.createElement("div");el.id="pdbg";el.style.cssText="font:11px monospace;opacity:.7;padding:6px 14px;white-space:pre-wrap;word-break:break-all";f.insertAdjacentElement("afterend",el)}
-  el.textContent="presence "+PD.build+" | own: "+PD.own+" | track: "+PD.trk+" | ownSync: "+PD.ownSync+" | friends: "+JSON.stringify(PD.fr)+" | syncs: "+PD.syncs+" joins: "+PD.joins+" | "+PD.last;
-}
-/* Listen to exactly the channels of my current friends; drop channels of removed friends. */
-function syncPresence(){
-  if(!S.pch)return;
-  if(!S.pchs)S.pchs=new Map();
-  const want=new Set(S.friends);
-  for(const [id,ch] of S.pchs){
-    if(!want.has(id)){try{sb.removeChannel&&sb.removeChannel(ch)}catch(e){}S.pchs.delete(id);S.pres.delete(id);S.typ.delete(id)}
-  }
-  for(const id of want){
-    if(S.pchs.has(id))continue;
-    const ch=sb.channel("pres:"+id,{config:{private:true}});
-    ch.on("presence",{event:"sync"},()=>{
-      const arr=(ch.presenceState()[id]||[]),p=arr[arr.length-1];
-      PD.syncs++;PD.last="keys="+Object.keys(ch.presenceState()).map(k=>k.slice(0,4)).join(",")+" want="+id.slice(0,4)+" st="+(p&&p.st);pdbg("last",PD.last);
-      if(p&&ST[p.st]){
-        S.pres.set(id,p.st);
-        const t=p.typ;if(t&&t.n){const old=S.typ.get(id);if(!old||old.n!==t.n)S.typ.set(id,{n:t.n,c:t.c,seen:Date.now()})}
-      }else S.pres.delete(id);
-      drawFriends();drawChatHead();drawTyping();
-    });
-    ch.on("presence",{event:"join"},()=>{PD.joins++;pdbg("last",PD.last)});
-    ch.subscribe((s,err)=>pdbg("fr",s+(err?" "+(err.message||err):""),id));
-    S.pchs.set(id,ch);
-  }
 }
 function trackMe(force){
   if(!S.pch)return;
@@ -574,7 +542,7 @@ function trackMe(force){
     if(!S.trT)S.trT=setTimeout(()=>{S.trT=0;trackMe(true)},2500-(now-S.lastTrack));
     return}
   S.lastTrack=now;
-  try{Promise.resolve(S.pch.track({st:S.status,typ:S.myTyp||null})).then(r=>pdbg("trk",String(r)),e=>pdbg("trk","ERR "+(e&&e.message||e)))}catch(e){pdbg("trk","THROW "+e.message)}
+  try{S.pch.track({st:S.status,typ:S.myTyp||null})}catch(e){}
 }
 function stOf(id){return S.pres.get(id)||"off"}
 
@@ -584,7 +552,7 @@ async function refresh(){
   try{
     const [fr,rq]=await Promise.all([q(sb.from("friends").select("*"),"Venner"),q(sb.from("friend_requests").select("*"),"Forespørsler")]);
     const ids=new Set();
-    S.friends=fr.map(r=>r.a===S.user.id?r.b:r.a);S.friends.forEach(i=>ids.add(i));syncPresence();
+    S.friends=fr.map(r=>r.a===S.user.id?r.b:r.a);S.friends.forEach(i=>ids.add(i));
     S.reqIn=rq.filter(r=>r.to_id===S.user.id).map(r=>r.from_id);S.reqIn.forEach(i=>ids.add(i));
     S.reqOut=rq.filter(r=>r.from_id===S.user.id).map(r=>r.to_id);S.reqOut.forEach(i=>ids.add(i));
     if(ids.size){const ps=await q(sb.from("profiles").select("id,name,fp,pub,pm").in("id",[...ids]),"Profiler");ps.forEach(p=>S.profiles.set(p.id,p))}
@@ -951,7 +919,7 @@ function cdTick(){const l=Math.ceil((S.cdUntil-Date.now())/1000),b=$("#dp");
 })();
 sb.auth.onAuthStateChange((ev,session)=>{
   if(session&&session.user){if(!S.user||S.user.id!==session.user.id)setTimeout(()=>afterLogin(session.user).catch(e=>fail(e)),0)}
-  else{S.user=null;S.profile=null;S.id=null;S.chat=null;S.pres=new Map();S.reads=new Map();S.last=new Map();S.unread=new Map();S.exp=new Map();S.av=new Map();S.profiles=new Map();S.firstRef=true;S.older=[];clearInterval(S.poll);clearInterval(S.pp);S.pairId=null;sb.removeAllChannels();S.pch=null;S.pchs=new Map();myAv=null;viewLogin()}
+  else{S.user=null;S.profile=null;S.id=null;S.chat=null;S.pres=new Map();S.reads=new Map();S.last=new Map();S.unread=new Map();S.exp=new Map();S.av=new Map();S.profiles=new Map();S.firstRef=true;S.older=[];clearInterval(S.poll);clearInterval(S.pp);S.pairId=null;sb.removeAllChannels();S.pch=null;myAv=null;viewLogin()}
 });
 sb.auth.getSession().then(({data})=>{if(!data.session)viewLogin()});
 
