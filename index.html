@@ -258,6 +258,8 @@ html.lys .me:not(:hover),html.lys .conv:not(.act):not(:hover){background:none}
 html.lys .me:hover{background:linear-gradient(#fff,#e1f1ff)}
 html.lys .ff svg{width:30px;height:30px}
 html.lys .amb .ff svg{width:34px;height:34px}
+.seccard{display:grid;gap:8px}
+#mewarn{font-style:normal;font-size:11px}
 
 </style>
 </head>
@@ -269,7 +271,7 @@ html.lys .amb .ff svg{width:34px;height:34px}
   <section class="home" id="home">
    <button class="me" id="meb" type="button" aria-expanded="false" title="Min profil">
     <span class="av on" id="avwrap"><img id="avimg" alt="Ditt bilde" hidden><span id="avini">?</span></span>
-    <span class="t"><b id="men">…</b><small id="mep">Pålogget</small></span>
+    <span class="t"><b id="men">…</b><small id="mep">Pålogget</small><small id="mewarn" class="warn" hidden>Lag gjenopprettingskode</small></span>
     <span id="mef"></span>
    </button>
    <div class="prof" id="prof" hidden>
@@ -278,6 +280,8 @@ html.lys .amb .ff svg{width:34px;height:34px}
     <input id="pm" class="pm" placeholder="&lt;Skriv en personlig melding&gt;" maxlength="60" aria-label="Personlig melding">
     <select id="thm" aria-label="Utseende"><option value="auto">Utseende: automatisk</option><option value="lys">Utseende: lys (dag)</option><option value="natt">Utseende: mørk (kveld)</option></select>
     <label class="lbl" title="Bildet vises bare for vennene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
+    <div class="grp">Sikkerhet</div>
+    <div id="seccard" class="seccard"></div>
     <button class="glass sm" id="outb" type="button">Logg ut</button>
    </div>
    <div class="fine err msg" id="msg" role="status"></div>
@@ -291,8 +295,6 @@ html.lys .amb .ff svg{width:34px;height:34px}
      <div class="fine err" id="ferr" role="status"></div>
     </div>
     <div class="list" id="friends"></div>
-    <div class="homebar"><span class="grp">Sikkerhet</span></div>
-    <div class="add" id="seccard"></div>
    </div>
   </section>
 
@@ -777,6 +779,7 @@ function drawReqs(){
 }
 function drawSec(){
   const c=$("#seccard");if(!c)return;c.textContent="";
+  $("#mewarn").hidden=!!S.backup;
   c.append(el("div",{class:S.backup?"sec":"warn",id:"bkst"},S.backup?"Gjenopprettingskode er laget":"Du har ingen gjenopprettingskode ennå"),
     el("div",{class:"row"},el("button",{class:"glass sm",id:"mkcode",onclick:()=>showRecovery(false)},S.backup?"Lag ny kode":"Lag kode")),
     el("div",{class:"fine"},"Ny enhet? Logg inn der og velg «Be om nøkkelen». Her kommer det da en forespørsel du godkjenner."));
