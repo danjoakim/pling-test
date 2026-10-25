@@ -320,8 +320,13 @@ function tone(f,at,dur,vol){const c=ac();if(!c)return;const t=c.currentTime+at;
  [[1,1],[2.76,.35]].forEach(([m,v])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f*m;
   g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol*v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
   o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.05)})}
-function pling(v=.12,at=0){tone(1318.5,at,.9,v);tone(1975.5,at+.1,.8,v*.7)}
-function dobbelt(){pling(.2,0);pling(.2,.32)}
+function marimba(f,at,vol){const c=ac();if(!c)return;const t=c.currentTime+at;
+ [[1,1,.27],[4.01,.25,.05],[8.78,.14,.02],[3,.08,.02]].forEach(([m,a,tau])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f*m;
+  g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol*a,t+.004);g.gain.setTargetAtTime(0,t+.004,tau);
+  o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+tau*8+.05)})}
+function pling(v=.12,at=0){const k=260.2/261.63; /* samme lette stemming som referansen */
+ [[261.63,0],[293.66,.19],[440,.38]].forEach(([f,d])=>marimba(f*k,at+d,v*1.4))}
+function dobbelt(){pling(.2,0);pling(.2,.75)}
 function stor(){const a=$("#app");a.classList.remove("dp");void a.offsetWidth;a.classList.add("dp");dobbelt();try{if(navigator.vibrate)navigator.vibrate([120,50,120,50,120,50,220])}catch(e){}}
 function okAv(a){return typeof a==="string"&&a.startsWith("data:image/jpeg;base64,")&&a.length<12000&&/^[A-Za-z0-9+/=]*$/.test(a.slice(23))}
 function toAvatar(file){return new Promise((ok,no)=>{const u=URL.createObjectURL(file),im=new Image();
