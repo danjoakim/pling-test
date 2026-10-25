@@ -125,7 +125,7 @@ button.sm{padding:5px 10px;font-size:13px}
 .bar input{flex:1 1 150px}
 .bar .eb{padding:6px 10px;font-size:18px;line-height:1}
 
-.win@keyframes sh2{0.0%{transform:none}3.3%{transform:translate(25px,13px) rotate(-2.4deg)}6.7%{transform:translate(-19px,-15px) rotate(-1.3deg)}10.0%{transform:translate(20px,-9px) rotate(1.4deg)}13.3%{transform:translate(-25px,-13px) rotate(1.4deg)}16.7%{transform:translate(-16px,-10px) rotate(-2.0deg)}20.0%{transform:translate(21px,-9px) rotate(-1.8deg)}23.3%{transform:translate(-21px,-12px) rotate(2.3deg)}26.7%{transform:translate(22px,11px) rotate(-2.3deg)}30.0%{transform:translate(-16px,12px) rotate(2.2deg)}33.3%{transform:translate(22px,-9px) rotate(1.5deg)}36.7%{transform:translate(17px,11px) rotate(-2.3deg)}40.0%{transform:translate(19px,13px) rotate(1.4deg)}43.3%{transform:translate(-25px,14px) rotate(-1.4deg)}46.7%{transform:translate(22px,10px) rotate(2.5deg)}50.0%{transform:translate(16px,11px) rotate(-1.9deg)}53.3%{transform:translate(-24px,-14px) rotate(1.8deg)}56.7%{transform:translate(16px,11px) rotate(2.4deg)}60.0%{transform:translate(25px,14px) rotate(2.2deg)}63.3%{transform:translate(26px,-9px) rotate(-1.6deg)}66.7%{transform:translate(-16px,-10px) rotate(-1.5deg)}70.0%{transform:translate(22px,16px) rotate(-1.9deg)}73.3%{transform:translate(18px,8px) rotate(1.2deg)}76.7%{transform:translate(-20px,7px) rotate(1.6deg)}80.0%{transform:translate(-10px,-8px) rotate(1.4deg)}83.3%{transform:translate(-14px,5px) rotate(1.4deg)}86.7%{transform:translate(9px,-7px) rotate(0.9deg)}90.0%{transform:translate(5px,-5px) rotate(0.6deg)}93.3%{transform:translate(-5px,-3px) rotate(0.3deg)}96.7%{transform:translate(-3px,2px) rotate(-0.2deg)}100.0%{transform:none}} .dp{animation:sh2 2.5s linear,glimt .9s}
+@keyframes sh2{0.0%{transform:none}3.3%{transform:translate(25px,13px) rotate(-2.4deg)}6.7%{transform:translate(-19px,-15px) rotate(-1.3deg)}10.0%{transform:translate(20px,-9px) rotate(1.4deg)}13.3%{transform:translate(-25px,-13px) rotate(1.4deg)}16.7%{transform:translate(-16px,-10px) rotate(-2.0deg)}20.0%{transform:translate(21px,-9px) rotate(-1.8deg)}23.3%{transform:translate(-21px,-12px) rotate(2.3deg)}26.7%{transform:translate(22px,11px) rotate(-2.3deg)}30.0%{transform:translate(-16px,12px) rotate(2.2deg)}33.3%{transform:translate(22px,-9px) rotate(1.5deg)}36.7%{transform:translate(17px,11px) rotate(-2.3deg)}40.0%{transform:translate(19px,13px) rotate(1.4deg)}43.3%{transform:translate(-25px,14px) rotate(-1.4deg)}46.7%{transform:translate(22px,10px) rotate(2.5deg)}50.0%{transform:translate(16px,11px) rotate(-1.9deg)}53.3%{transform:translate(-24px,-14px) rotate(1.8deg)}56.7%{transform:translate(16px,11px) rotate(2.4deg)}60.0%{transform:translate(25px,14px) rotate(2.2deg)}63.3%{transform:translate(26px,-9px) rotate(-1.6deg)}66.7%{transform:translate(-16px,-10px) rotate(-1.5deg)}70.0%{transform:translate(22px,16px) rotate(-1.9deg)}73.3%{transform:translate(18px,8px) rotate(1.2deg)}76.7%{transform:translate(-20px,7px) rotate(1.6deg)}80.0%{transform:translate(-10px,-8px) rotate(1.4deg)}83.3%{transform:translate(-14px,5px) rotate(1.4deg)}86.7%{transform:translate(9px,-7px) rotate(0.9deg)}90.0%{transform:translate(5px,-5px) rotate(0.6deg)}93.3%{transform:translate(-5px,-3px) rotate(0.3deg)}96.7%{transform:translate(-3px,2px) rotate(-0.2deg)}100.0%{transform:none}} .win.dp{animation:sh2 2.5s linear,glimt .9s}
 @keyframes sh{0%,100%{transform:none}15%{transform:translate(-10px,4px)}30%{transform:translate(9px,-5px)}45%{transform:translate(-8px,-3px)}60%{transform:translate(7px,5px)}80%{transform:translate(-4px,2px)}}
 @keyframes glimt{0%,100%{box-shadow:0 18px 50px #000a,0 0 0 1px #000}30%{box-shadow:0 18px 50px #000a,0 0 70px 10px #a6ff3daa}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
@@ -169,6 +169,16 @@ button.ghost{background:transparent;border-color:var(--line);text-shadow:none;co
 .lb img{max-width:100%;max-height:80vh;border-radius:8px;box-shadow:0 8px 40px #000}
 .btnlink{display:inline-block;cursor:pointer;border:1px solid var(--line);border-radius:4px;padding:6px 10px;color:var(--ink);text-decoration:none;font-size:13px;background:linear-gradient(#26407e,#1a2f64)}
 .older{align-self:center;flex:none}
+
+/* dobbeltpling-varsel (Dan Joakim 25. okt) */
+.dpb{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:30;padding:12px 18px;border-radius:8px;border:2px solid #a6ff3d;background:#142a56;color:#fff;font:600 16px system-ui;box-shadow:0 8px 30px #000a,0 0 30px #a6ff3d88;cursor:pointer;animation:dpbp .5s ease-in-out infinite alternate}
+@keyframes dpbp{to{box-shadow:0 8px 30px #000a,0 0 55px #a6ff3d}}
+.conv.dpflash{animation:dpfl .45s linear infinite alternate}
+@keyframes dpfl{from{background:#a6ff3d55}to{background:#a6ff3d11}}
+/* HVORFOR: «reduser bevegelse» slår av nesten all animasjon, men dobbeltpling er en bevisst handling fra en venn.
+   Der brukes en myk risting (±3 px, 1 s, ingen vridning) i stedet for ingen risting i det hele tatt. */
+@keyframes sh3{0%,100%{transform:none}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+@media(prefers-reduced-motion:reduce){.win.dp{animation:sh3 1s linear,glimt .9s!important}}
 
 </style>
 </head>
@@ -606,6 +616,8 @@ async function loadPreviews(){
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
+    if(!S.firstRef)for(const r of rows)if(r.sender!==S.user.id&&r.id>rd&&!dpSeen.has(r.id)&&Date.now()-new Date(r.created_at).getTime()<30000){
+      const mm=await open(key,r.iv,r.ct);if(mm&&mm.dp)alertDp(fid,r.id,r.created_at)}
     const n=isOpen?0:rows.filter(r=>r.sender!==S.user.id&&r.id>rd).length;
     if(!S.firstRef&&n>(S.unread.get(fid)||0))more=true;
     S.unread.set(fid,n);
@@ -613,6 +625,22 @@ async function loadPreviews(){
   S.firstRef=false;
   if(more)pling();
   setTitle();
+}
+/* HVORFOR: dobbeltpling skal fange oppmerksomheten uansett hvor mottakeren er i appen, ikke bare når samtalen er åpen
+   (Dan Joakim 25. okt: «poenget med et dobbeltpling er at man skal bli oppmerksom på at noen vil ha tak i en»).
+   dpSeen = hver melding utløser bare én gang, selv om både forhåndsvisningen og den åpne samtalen ser den. */
+const dpSeen=new Set(),dpFlash=new Set();let dpT=0;
+function alertDp(fid,id,ts){
+  if(dpSeen.has(id))return;dpSeen.add(id);
+  if(Date.now()-new Date(ts).getTime()>30000)return; /* gammel melding: ikke ring */
+  stor();
+  dpFlash.add(fid);drawFriends();setTimeout(()=>{dpFlash.delete(fid);drawFriends()},10000);
+  const old=$("#dpb");if(old)old.remove();
+  const b=el("button",{id:"dpb",class:"dpb",type:"button"},"🔔 "+nameOf(fid)+" vil ha tak i deg!");
+  b.addEventListener("click",()=>{b.remove();openChat(fid)});
+  document.body.append(b);setTimeout(()=>{if(b.isConnected)b.remove()},12000);
+  clearInterval(dpT);let n=0;const nm=nameOf(fid);
+  dpT=setInterval(()=>{n++;document.title=n%2?"🔔 "+nm+" ringer!":"Pling testside";if(n>=20){clearInterval(dpT);setTitle()}},700);
 }
 function setTitle(){const tot=[...S.unread.values()].reduce((a,b)=>a+b,0);document.title=(tot?"("+tot+") ":"")+"Pling testside"}
 const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
@@ -641,7 +669,7 @@ function drawFriends(){
   rows.sort((a,b)=>ORD[a.st]-ORD[b.st]||nameOf(a.id).localeCompare(nameOf(b.id),"nb"));
   const word={on:"Pålogget",away:"Borte",busy:"Opptatt",off:"Frakoblet"};
   for(const r of rows){
-    const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":""),type:"button","data-id":r.id});
+    const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
       el("span",{class:"t"},el("b",{},nameOf(r.id)),el("small",{},prev(r.id)||p.pm||word[r.st])),
       el("span",{class:"rt"},S.unread.get(r.id)?el("span",{class:"badge",title:"Uleste meldinger"},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
@@ -748,8 +776,9 @@ async function loadMsgs(){
   if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?"Dobbeltpling":l.img?(l.img.t==="image/gif"?"GIF":"📷 Bilde"):(l.ok?l.t||"":"(kan ikke dekrypteres)")});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   S.first=false;S.msgs=out;drawLog();
   if(fresh.length){
-    const big=fresh.find(m=>m.dp&&Date.now()-new Date(m.ts).getTime()<15000);
-    if(big)stor();else pling();
+    const bigs=fresh.filter(m=>m.dp);
+    for(const m of bigs)alertDp(S.chat.other,m.id,m.ts);
+    if(!bigs.length)pling();
   }
 }
 async function loadOlder(){
