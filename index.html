@@ -293,6 +293,19 @@ html.lys .lwm{opacity:.14}
 html.lys .mepi:focus{background:#fff}
 .me small#mep{display:block}
 
+/* ===== Lenker og forhåndsvisningskort ===== */
+.ulink{color:var(--luna1);text-decoration:underline;word-break:break-all}
+.lkc{display:flex;flex-direction:column;margin:6px 0 2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#0c1838;color:var(--ink);text-decoration:none;max-width:320px}
+.lkc:hover{border-color:var(--luna1)}
+.lki{display:block;width:100%;max-height:180px;object-fit:cover}
+.lkb{display:flex;flex-direction:column;gap:2px;padding:7px 10px 9px}
+.lkb small{color:var(--mut);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+.lkb b{font-size:14px;line-height:1.3;color:var(--ink);display:block}
+.lkd{font-size:12px;color:var(--mut);line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+html.lys .ulink{color:#1b5fb8}
+html.lys .lkc{background:#fff;border-color:#c5ddf2}
+html.lys .lkc:hover{border-color:#5a86b0}
+
 </style>
 </head>
 <body>
@@ -313,6 +326,7 @@ html.lys .mepi:focus{background:#fff}
     <input id="pnm" placeholder="Visningsnavn" maxlength="24" aria-label="Visningsnavn">
     <select id="st" aria-label="Status"><option value="online">Pålogget</option><option value="away">Borte</option><option value="busy">Opptatt</option><option value="off">Vis meg som frakoblet</option></select>
     <select id="thm" aria-label="Utseende"><option value="auto">Utseende: automatisk</option><option value="lys">Utseende: lys (dag)</option><option value="natt">Utseende: mørk (kveld)</option></select>
+    <select id="lpv" aria-label="Forhåndsvisning av lenker" title="Når du sender en lenke, henter en tjeneste hos oss tittel og bilde. Mottakeren kontakter aldri nettstedet."><option value="on">Forhåndsvisning av lenker: på</option><option value="off">Forhåndsvisning av lenker: av</option></select>
     <label class="lbl" title="Bildet vises bare for vennene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
     <div class="grp">Sikkerhet</div>
     <div id="seccard" class="seccard"></div>
@@ -886,9 +900,64 @@ function drawTyping(){
   if(on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,4100-(Date.now()-x.seen))}
 }
 const PAGE=50;
+/* ---------- lenker og forhåndsvisning ----------
+   HVORFOR avsenderen henter forhåndsvisningen: mottakeren skal aldri kontakte nettstedet (da ville det sett hvem som leste lenken).
+   Avsenderens klient ber funksjonen «linkpreview» på Supabase hente tittel, tekst og bilde. Resultatet legges i meldingen og krypteres sammen med den.
+   Avsenderen er ikke tillitsfull for mottakeren: alt som kommer i `lk` valideres før visning (bare http/https, bare jpeg-bilde som data-URL, kuttet lengde). */
+const LP_ON=()=>{try{return localStorage.getItem("pling_lp")!=="0"}catch(e){return true}};
+const URL_RE=/https?:\/\/[^\s<>"']+/gi;
+const cutUrl=u=>{let t="";while(/[.,;:!?)\]»”]$/.test(u)){t=u.slice(-1)+t;u=u.slice(0,-1)}return[u,t]};
+const okHttp=u=>{try{const x=new URL(u);return x.protocol==="http:"||x.protocol==="https:"}catch(e){return false}};
+function firstUrl(t){URL_RE.lastIndex=0;const r=URL_RE.exec(t);if(!r)return null;const u=cutUrl(r[0])[0];return okHttp(u)&&u.length<=2000?u:null}
+function linkify(t){
+  const out=[];let last=0;URL_RE.lastIndex=0;let r;
+  while((r=URL_RE.exec(t))){
+    const[u,tail]=cutUrl(r[0]);if(!okHttp(u))continue;
+    if(r.index>last)out.push(emoji(t.slice(last,r.index)));
+    out.push(el("a",{class:"ulink",href:u,target:"_blank",rel:"noopener noreferrer nofollow"},u));
+    if(tail)out.push(tail);last=r.index+r[0].length;
+  }
+  if(last<t.length)out.push(emoji(t.slice(last)));
+  return out;
+}
+function validLk(x){
+  if(!x||typeof x!=="object"||typeof x.u!=="string"||x.u.length>2000||!okHttp(x.u))return null;
+  const s=(v,n)=>typeof v==="string"?v.slice(0,n):"";
+  const o={u:x.u,ti:s(x.ti,140),d:s(x.d,240),s:s(x.s,60)};
+  if(typeof x.i==="string"&&x.i.length<=90000&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(x.i))o.i=x.i;
+  return o;
+}
+function lkCard(l){
+  const a=el("a",{class:"lkc",href:l.u,target:"_blank",rel:"noopener noreferrer nofollow"});
+  if(l.i)a.append(el("img",{class:"lki",src:l.i,alt:""}));
+  a.append(el("span",{class:"lkb"},el("small",{},l.s||""),el("b",{},l.ti||l.u),l.d?el("span",{class:"lkd"},l.d):null));
+  return a;
+}
+async function thumb(ct,b64){
+  try{
+    const bin=atob(b64),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
+    const bm=await createImageBitmap(new Blob([u8],{type:ct}));
+    for(const[W,qq]of[[360,.72],[300,.6],[220,.55]]){
+      const sc=Math.min(1,W/bm.width),c=document.createElement("canvas");c.width=Math.max(1,Math.round(bm.width*sc));c.height=Math.max(1,Math.round(bm.height*sc));
+      const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(bm,0,0,c.width,c.height);
+      const d=c.toDataURL("image/jpeg",qq);if(d.length<=60000){bm.close&&bm.close();return d}
+    }
+    bm.close&&bm.close();
+  }catch(e){}
+  return "";
+}
+async function fetchPreview(u){
+  try{
+    const r=await Promise.race([sb.functions.invoke("linkpreview",{body:{url:u}}),new Promise((_,j)=>setTimeout(()=>j(new Error("tid")),8000))]);
+    const d=r&&r.data;if(!d||!d.ok)return null;
+    const lk={u,ti:String(d.ti||"").slice(0,140),d:String(d.d||"").slice(0,240),s:String(d.s||"").slice(0,60)};
+    if(d.img&&/^image\/(jpeg|png|webp|gif)$/.test(d.img.ct)&&typeof d.img.b64==="string"){const i=await thumb(d.img.ct,d.img.b64);if(i)lk.i=i}
+    return validLk(lk);
+  }catch(e){return null}
+}
 async function decodeRows(rows,key){
   const out=[];
-  for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),img:(m&&m.img&&typeof m.img.p==="string")?m.img:null,ok:!!m,ts:r.created_at})}
+  for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),img:(m&&m.img&&typeof m.img.p==="string")?m.img:null,lk:validLk(m&&m.lk),ok:!!m,ts:r.created_at})}
   return out;
 }
 async function loadMsgs(){
@@ -933,7 +1002,8 @@ function drawLog(keepPos){
     if(m.dp){log.append(el("div",{class:"sys"},(m.mine?"Du":nameOf(S.chat.other))+" sendte en dobbeltpling · "+tm(m.ts)));continue}
     const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")});
     if(m.img)d.append(picEl(m.img));else
-    d.append(m.ok?emoji(m.t==null?"":m.t):"(kan ikke dekrypteres)");
+    if(m.ok)d.append(...linkify(m.t==null?"":m.t));else d.append("(kan ikke dekrypteres)");
+    if(m.lk)d.append(lkCard(m.lk));
     d.append(el("br"),el("time",{},tm(m.ts)));log.append(d);
   }
   if(!keepPos&&(near||S.justSent))log.scrollTop=log.scrollHeight;S.justSent=false;
@@ -1141,6 +1211,7 @@ function lightbox(u,gif){
 function wire(){
   $("#meb").addEventListener("click",()=>{const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
   $("#outb").addEventListener("click",()=>sb.auth.signOut());
+  $("#lpv").value=LP_ON()?"on":"off";$("#lpv").addEventListener("change",e=>{try{localStorage.setItem("pling_lp",e.target.value==="off"?"0":"1")}catch(x){}});
   $("#thm").value=window.plingThemeGet();$("#thm").addEventListener("change",e=>window.plingTheme(e.target.value));
   $("#pnm").addEventListener("change",()=>{const n=$("#pnm").value.trim();if(!n){$("#pnm").value=S.profile.name;return}if(n!==S.profile.name)saveProfile({name:n.slice(0,24)})});
   $("#pm").addEventListener("keydown",e=>{if(e.key==="Enter")e.target.blur();if(e.key==="Escape"){e.target.value=S.profile.pm||"";e.target.blur()}});
@@ -1192,7 +1263,11 @@ function wire(){
     download("pling-samtale.txt",t+"\n");
   });
   const tx=$("#tx");
-  const send=async()=>{const t=tx.value.trim();if(!t)return;tx.value="";if(!await sendMsg({t,ts:Date.now()}))tx.value=t};
+  const send=async()=>{
+    const t=tx.value.trim();if(!t)return;tx.value="";
+    const pl={t,ts:Date.now()},u=LP_ON()?firstUrl(t):null,sd=$("#sd");
+    if(u){sd.disabled=true;sd.textContent="…";try{const lk=await fetchPreview(u);if(lk)pl.lk=lk}finally{sd.disabled=false;sd.textContent="Send"}}
+    if(!await sendMsg(pl))tx.value=t};
   $("#sd").addEventListener("click",send);
   tx.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
   tx.addEventListener("input",()=>{if(!S.chat)return;S.myTyp={c:S.chat.id,n:Date.now()};trackMe(false)});
