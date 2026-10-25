@@ -759,6 +759,7 @@ async function start(){
     .on("postgres_changes",{event:"*",schema:"public",table:"messages"},()=>refreshSoon())
     .on("postgres_changes",{event:"*",schema:"public",table:"friend_requests"},()=>refreshSoon())
     .on("postgres_changes",{event:"*",schema:"public",table:"friends"},()=>refreshSoon())
+    .on("postgres_changes",{event:"*",schema:"public",table:"presence"},()=>presSoon())
     .subscribe();
   clearInterval(S.poll);S.poll=setInterval(()=>{if(S.user&&!document.hidden)refresh()},8000);
   clearInterval(S.pp);S.pp=setInterval(()=>{if(!document.hidden)checkTransfers()},3000);checkTransfers();
@@ -766,31 +767,50 @@ async function start(){
 }
 let rT=0;function refreshSoon(){clearTimeout(rT);rT=setTimeout(refresh,150)}
 
-/* ---------- tilstedeværelse (kun innloggede brukere) ---------- */
+/* ---------- tilstedeværelse: tabell som bare venner kan lese ----------
+   HVORFOR (25. okt): den felles Realtime-kanalen «pling-presence» lot alle innloggede se alles status og «skriver …». Private kanaler leverte aldri noe til venner mot ekte Supabase.
+   Nå ligger status i tabellen `presence` (kun venner kan lese, via get_presence()). Hver enhet melder seg med set_presence() hvert 20. sekund og ved endringer.
+   «Pålogget» betyr at siste melding er yngre enn 50 sekunder (alderen regnes på serveren, så klokken på enheten spiller ingen rolle). Realtime brukes bare som signal om at noe er endret.
+   Rader slettes aldri: «frakoblet» settes som status `off` (Realtime leverer ikke slettinger for rader beskyttet av RLS). Forrige løsning: commit 30def30 og tidligere (main.js.bak-felleskanal). */
+const PRES_BEAT=20000,PRES_STALE=50;
 function startPresence(){
-  if(S.pch){try{sb.removeChannel&&sb.removeChannel(S.pch)}catch(e){}}
-  const ch=sb.channel("pling-presence",{config:{presence:{key:S.user.id}}});
-  ch.on("presence",{event:"sync"},()=>{
-    const st=ch.presenceState(),m=new Map(),now=Date.now();
-    for(const [k,arr] of Object.entries(st)){
-      const p=arr[arr.length-1];if(!p||!ST[p.st])continue;m.set(k,p.st);
-      const t=p.typ;if(t&&t.n){const old=S.typ.get(k);if(!old||old.n!==t.n)S.typ.set(k,{n:t.n,c:t.c,seen:now})}
-    }
-    S.pres=m;drawFriends();drawChatHead();drawTyping();
-  });
-  ch.subscribe(s=>{if(s==="SUBSCRIBED")trackMe(true)});
-  S.pch=ch;
+  clearInterval(S.pbT);clearInterval(S.pfT);
+  trackMe(true);
+  S.pbT=setInterval(()=>{if(S.user)trackMe(true)},PRES_BEAT);
+  S.pfT=setInterval(()=>{if(S.user)pullPresence()},12000);
+  pullPresence();
 }
 function trackMe(force){
-  if(!S.pch)return;
-  if(S.status==="off"){try{S.pch.untrack()}catch(e){}return}
+  if(!S.user)return;
   const now=Date.now();
   if(!force&&now-(S.lastTrack||0)<2500){
     if(!S.trT)S.trT=setTimeout(()=>{S.trT=0;trackMe(true)},2500-(now-S.lastTrack));
     return}
   S.lastTrack=now;
-  try{S.pch.track({st:S.status,typ:S.myTyp||null})}catch(e){}
+  const typ=S.myTyp&&now-S.myTyp.n<4000?S.myTyp.c:null;
+  sb.rpc("set_presence",{p_st:S.status,p_typ:typ}).then(()=>{},()=>{});
 }
+let prT=0,prBusy=false;
+function presSoon(){clearTimeout(prT);prT=setTimeout(pullPresence,250)}
+async function pullPresence(){
+  if(!S.user||prBusy)return;prBusy=true;
+  try{
+    const r=await sb.rpc("get_presence");if(r.error||!S.user)return;
+    const m=new Map(),now=Date.now();
+    for(const p of r.data||[]){
+      if(!ST[p.st]||p.st==="off"||p.age_s==null||p.age_s>PRES_STALE)continue;
+      m.set(p.user_id,p.st);
+      if(p.typ_chat&&p.typ_age_s!=null&&p.typ_age_s<4)S.typ.set(p.user_id,{n:Math.round(now-p.typ_age_s*1000),c:p.typ_chat,seen:now-p.typ_age_s*1000});
+    }
+    if(S.status!=="off")m.set(S.user.id,S.status);
+    S.pres=m;drawFriends();drawChatHead();drawTyping();
+  }catch(e){}finally{prBusy=false}
+}
+/* Fanen lukkes: si fra med en gang, så vennene ser «frakoblet» i stedet for å vente 50 sekunder. keepalive lar kallet fullføres selv om siden forsvinner. */
+window.addEventListener("pagehide",()=>{
+  if(!S.user||!S.tok)return;
+  try{fetch(SB_URL+"/rest/v1/rpc/set_presence",{method:"POST",keepalive:true,headers:{apikey:SB_KEY,authorization:"Bearer "+S.tok,"content-type":"application/json"},body:JSON.stringify({p_st:"off",p_typ:null})})}catch(e){}
+});
 function stOf(id){return S.pres.get(id)||"off"}
 
 /* ---------- data ---------- */
@@ -1326,7 +1346,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#cam").hidden)c
 /* ---------- koble knapper ---------- */
 function wire(){
   $("#meb").addEventListener("click",()=>{const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
-  $("#outb").addEventListener("click",()=>sb.auth.signOut());
+  $("#outb").addEventListener("click",async()=>{try{await sb.rpc("set_presence",{p_st:"off",p_typ:null})}catch(e){}sb.auth.signOut()});
   $("#lpv").value=LP_ON()?"on":"off";$("#lpv").addEventListener("change",e=>{try{localStorage.setItem("pling_lp",e.target.value==="off"?"0":"1")}catch(x){}});
   $("#thm").value=window.plingThemeGet();$("#thm").addEventListener("change",e=>window.plingTheme(e.target.value));
   $("#pnm").addEventListener("change",()=>{const n=$("#pnm").value.trim();if(!n){$("#pnm").value=S.profile.name;return}if(n!==S.profile.name)saveProfile({name:n.slice(0,24)})});
@@ -1415,8 +1435,9 @@ function cdTick(){const l=Math.ceil((S.cdUntil-Date.now())/1000),b=$("#dp");
   [[8,18],[82,12],[16,72],[70,78],[48,8],[90,54],[30,40]].forEach((p,i)=>{const f=ff(cl[i]);f.style.left=p[0]+"%";f.style.top=p[1]+"%";f.style.animationDuration=(7+i)+"s";f.style.animationDelay=(-i*1.3)+"s";f.firstChild.style.animationDelay=(-i*.7)+"s";a.append(f)});
 })();
 sb.auth.onAuthStateChange((ev,session)=>{
+  S.tok=session&&session.access_token||null;
   if(session&&session.user){if(!S.user||S.user.id!==session.user.id)setTimeout(()=>afterLogin(session.user).catch(e=>fail(e)),0)}
-  else{S.user=null;S.profile=null;S.id=null;S.chat=null;S.pres=new Map();S.reads=new Map();S.last=new Map();S.unread=new Map();S.exp=new Map();S.av=new Map();S.profiles=new Map();S.firstRef=true;S.older=[];clearInterval(S.poll);clearInterval(S.pp);S.pairId=null;sb.removeAllChannels();S.pch=null;myAv=null;viewLogin()}
+  else{S.user=null;S.profile=null;S.id=null;S.chat=null;S.pres=new Map();S.reads=new Map();S.last=new Map();S.unread=new Map();S.exp=new Map();S.av=new Map();S.profiles=new Map();S.firstRef=true;S.older=[];clearInterval(S.poll);clearInterval(S.pp);clearInterval(S.pbT);clearInterval(S.pfT);S.pairId=null;sb.removeAllChannels();S.pch=null;myAv=null;viewLogin()}
 });
 sb.auth.getSession().then(({data})=>{if(!data.session)viewLogin()});
 
