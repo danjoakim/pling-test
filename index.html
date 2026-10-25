@@ -320,6 +320,14 @@ button.camshut,html.lys button.camshut{background:#fff;border:4px solid #fff;box
 #cb{display:none}
 @media (pointer:coarse){#cb{display:inline-block}}
 
+/* ===== Invitasjon ===== */
+.invbox{display:grid;gap:8px;margin-top:4px}
+.invbox .qr{justify-self:center}
+.invbox .qr svg{width:min(50vw,200px)}
+.invbox input{font-size:12px}
+.invb{padding:9px 12px;border:1px solid var(--glow-on);border-radius:8px;background:#123015;color:var(--ink);text-align:center;line-height:1.4}
+html.lys .invb{background:#e5f7dc;border-color:#7cc36a}
+
 </style>
 </head>
 <body>
@@ -355,6 +363,7 @@ button.camshut,html.lys button.camshut{background:#fff;border:4px solid #fff;box
      <div class="fine">Skriv e-posten til en venn som har laget konto i Pling. Personen får en forespørsel som kan godtas eller avslås.</div>
      <div class="row"><input id="fe" type="email" placeholder="Venns e-post" autocomplete="off" aria-label="Venns e-postadresse"><button class="glass sm" id="fadd" type="button">Legg til</button></div>
      <div class="fine err" id="ferr" role="status"></div>
+     <div class="invbox" id="invbox"></div>
     </div>
     <div class="list" id="friends"></div>
    </div>
@@ -547,6 +556,7 @@ function viewLogin(){
   app.append(
     fr,
     el("div",{class:"lh"},"Pling"),
+    el("div",{class:"invb",id:"invb",hidden:true}),
     el("div",{class:"dim lc"},S.mode==="up"?"Lag en konto. Samtalene dine blir kryptert i nettleseren.":"Logg på for å snakke med vennene dine."),
     el("label",{for:"em",class:"ll"},"E-postadresse:"),email,
     el("label",{for:"pw",class:"ll"},"Passord:"),pw,
@@ -560,6 +570,7 @@ function viewLogin(){
     el("div",{class:"fine lc"},"Ende-til-ende-kryptert"),
     wm);
   pw.addEventListener("keydown",e=>{if(e.key==="Enter")goW()});
+  showInviteBanner();
 }
 
 /* ---------- oppsett av profil ---------- */
@@ -680,6 +691,55 @@ async function checkTransfers(){
       el("button",{class:"glass",id:"pdeny",onclick:async()=>{try{await q(sb.from("key_transfers").delete().eq("id",r.id),"Avvise");S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Avvis"))));
 }
 
+/* ---------- invitasjonslenker ----------
+   HVORFOR i #-delen (fragmentet): den sendes aldri til noen tjener (heller ikke GitHub Pages). Tokenet er 128 bit tilfeldig, og bare SHA-256 av det lagres i databasen,
+   så en lekkasje fra databasen ikke gir brukbare lenker. En lenke kan brukes én gang og varer i 7 dager. Den som åpner den blir venn med den som inviterte (ingen forespørsel å godta),
+   så lenken skal bare deles med den man vil ha som venn. Tokenet lagres i nettleseren til personen har logget inn og har profil (pling_inv), og slettes når den er brukt. */
+(function(){try{
+  const h=new URLSearchParams(location.hash.replace(/^#/,"")),t=h.get("inv");
+  if(t&&/^[A-Za-z0-9_-]{16,64}$/.test(t)){localStorage.setItem("pling_inv",t);S.mode="up"}
+  if(h.has("inv")){h.delete("inv");const r=h.toString();history.replaceState(null,"",location.pathname+location.search+(r?"#"+r:""))}
+}catch(e){}})();
+const b64u=u8=>btoa(String.fromCharCode(...u8)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const hex=u8=>[...u8].map(b=>b.toString(16).padStart(2,"0")).join("");
+async function redeemPending(){
+  let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
+  if(!t)return;
+  try{localStorage.removeItem("pling_inv")}catch(e){}
+  try{
+    const r=await q(sb.rpc("redeem_invite",{p_token:t}),"Invitasjon"),f=r&&r[0];
+    toast("Du og "+(f?f.name:"vennen din")+" er nå venner");await refresh();
+  }catch(e){toast("Invitasjonen virket ikke: den er utløpt, allerede brukt eller din egen.",true)}
+}
+async function showInviteBanner(){
+  const box=$("#invb");if(!box)return;let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
+  if(!t)return;
+  try{const r=await sb.rpc("peek_invite",{p_token:t});box.textContent="";
+    if(r.data)box.append(el("b",{},r.data)," har invitert deg til Pling. Lag en konto eller logg på, så blir dere venner.");
+    else box.append("Invitasjonen er utløpt eller brukt. Du kan fortsatt lage en konto og legge til venner med e-post.");
+    box.hidden=false}catch(e){}
+}
+function drawInvite(){
+  const box=$("#invbox");if(!box)return;box.textContent="";
+  const mk=el("button",{class:"glass sm",id:"mkinv",type:"button",onclick:async()=>{
+    try{
+      const tok=b64u(crypto.getRandomValues(new Uint8Array(16))),hs=hex(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(tok))));
+      await q(sb.rpc("create_invite",{p_hash:hs}),"Lage invitasjon");
+      const link=location.origin+location.pathname+"#inv="+tok;
+      box.textContent="";
+      const q1=el("div",{class:"qr",id:"invqr"});q1.innerHTML=qrSvg(link);
+      const inp=el("input",{id:"invlink",readonly:true,value:link,"aria-label":"Invitasjonslenke"});
+      inp.addEventListener("focus",()=>inp.select());
+      const row=el("div",{class:"row"},
+        el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast("Lenken er kopiert")}catch(e){inp.select();toast("Merk lenken og kopier den",true)}}},"Kopier"));
+      if(navigator.share)row.append(el("button",{class:"glass sm",type:"button",onclick:()=>navigator.share({title:"Pling",text:"Bli med meg på Pling:",url:link}).catch(()=>{})},"Del …"));
+      box.append(q1,inp,row,el("div",{class:"fine"},"Gyldig i 7 dager og kan brukes én gang. Den som åpner lenken blir vennen din med en gang, så del den bare med den du vil ha som venn."),
+        el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(sb.rpc("revoke_invites"),"Trekke tilbake");toast(n+" aktive invitasjoner er trukket tilbake");drawInvite()}catch(e){fail(e)}}},"Trekk tilbake alle aktive invitasjoner"));
+    }catch(e){fail(e)}
+  }},"Lag invitasjonslenke");
+  box.append(el("div",{class:"fine"},"Eller send en lenke eller QR-kode til en som ikke har konto ennå:"),mk);
+}
+
 /* ---------- hovedvindu ---------- */
 let wired=false;
 async function start(){
@@ -693,6 +753,7 @@ async function start(){
   if(!wired){wired=true;wire()}
   paintMe();closeChat();
   await refresh();
+  drawInvite();await redeemPending();
   startPresence();
   sb.channel("pling-live")
     .on("postgres_changes",{event:"*",schema:"public",table:"messages"},()=>refreshSoon())
