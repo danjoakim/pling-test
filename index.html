@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pling testside</title>
+<script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
+var mq=matchMedia("(prefers-color-scheme: light)");
+function ap(){document.documentElement.classList.toggle("lys",t==="lys"||(t==="auto"&&mq.matches))}
+window.plingTheme=function(v){t=v;try{localStorage.setItem("pling_theme",v)}catch(e){}ap()};
+window.plingThemeGet=function(){return t};
+ap();if(mq.addEventListener)mq.addEventListener("change",ap)})()</script>
 <style>
 /* Layout: venner og grupper i en liste, samtalen åpnes i full høyde. På PC står de side om side. XP-vindu rundt en skumringsnatt, med ildfluer som status. */
 :root{
@@ -183,55 +189,75 @@ button.ghost{background:transparent;border-color:var(--line);text-shadow:none;co
 /* ===== Glass-tema (Messenger 8-retning, valgt av Dan Joakim 25. okt) =====
    HVORFOR som overstyring helt til slutt: all farge i appen går via variablene i :root, så et temabytte er stort sett nye verdier.
    Rollback: extra.css.bak-natt (gammelt mørkt tema). */
-:root{
+html.lys{
  --bg0:#2f78c4;--night:#dcecfb;--panel:#f4f9ff;--panel2:#cfe3f6;--ink:#16324f;--mut:#456b8f;--line:#8fb4d8;
  --luna1:#2a74d0;--luna2:#1b5fb8;--luna3:#7fb0dc;--aqua:#1d7a8c;--bub:#eaf3fc;--me:#e5f7dc;--sys:#7a5a00;
  --glow-on:#3fae2a;--glow-away:#e8a21c;--glow-busy:#d83a2e;--glow-off:#9aa9ba;
  color-scheme:light}
-body{background:radial-gradient(ellipse at 20% 0%,#bfe6ff 0%,transparent 55%),radial-gradient(ellipse at 90% 100%,#9fe0c0 0%,transparent 50%),linear-gradient(#5aa7e6,#2f78c4);background-attachment:fixed}
-.win{background:linear-gradient(rgba(214,236,255,.92),rgba(176,214,245,.9));border:1px solid rgba(255,255,255,.85);border-radius:12px;box-shadow:0 10px 30px rgba(10,40,80,.45),inset 0 0 0 1px rgba(70,120,170,.35)}
-.tb{color:#10304f;text-shadow:0 1px 0 rgba(255,255,255,.8);background:none;font-weight:600;border-radius:12px 12px 0 0}
-.tb .lock{color:#2a5f93}
-.shell{padding:0 10px 10px;gap:10px}
-.home,.chatpane{background:rgba(255,255,255,.93);border:1px solid rgba(70,120,170,.45);border-radius:6px;overflow:hidden}
-.home{border-right:1px solid rgba(70,120,170,.45)}
-input,select{background:#fff;color:var(--ink);border-color:#9bbad8}
-input::placeholder{color:#7f9bb8}
-button,.lbl{border-color:#5a86b0;color:#10304f;text-shadow:0 1px 0 #fff;background:linear-gradient(#fff 0%,#e8f2fb 49%,#cfe2f3 50%,#e1eefa 100%)}
-button.glass,.lbl{background:linear-gradient(#fff 0%,#eef6fd 49%,#d8e8f6 50%,#e6f1fa 100%);color:#10304f;border-color:#8fb4d8}
-button.hot{background:linear-gradient(#fff3c4,#ffd36a 48%,#f6b830 52%,#ffd04f);border-color:#a97a0c;color:#4a3000;text-shadow:0 1px 0 #fff3c4}
-.me,.conv,.bud{color:var(--ink)}
-.me{border-bottom-color:#c5dcf0}
-.prof,.add,#reqs,#inv,.menu{background:#f0f7fe;border-color:#c5dcf0}
-.homebar{background:none}
-.grp{color:#2a5f93}
-.conv:hover{background:linear-gradient(#fff,#e1f1ff);border-color:#a9cdee}
-.conv.act{background:linear-gradient(#fff,#d6eafc);border-color:#8fb4d8}
-.conv.unread .t b{color:#0a2a4a}
-.req,.card{background:#eef6fd;border-color:#bcd6ee}
-.av,.pav{background:linear-gradient(#cfe3f6,#8fb4d8);border-color:#fff;box-shadow:0 0 0 2px var(--fc),0 2px 5px rgba(0,40,80,.35);color:#16324f}
-.off.pav{box-shadow:0 0 0 2px var(--glow-off)}
-.ff .wg{fill:#fff;opacity:.8}.ff .bd{fill:#56708e}
-.ff.off .bd{fill:#9aa9ba}
-.empty h1{color:#1b5fb8;text-shadow:0 1px 0 #fff}
-.ch{background:linear-gradient(#fff,#e1eefa);border-bottom-color:#c5dcf0}
-.m{color:var(--ink);border-color:#c5ddf2;border-radius:10px}
-.m.mine{border-color:#bfe3ad}
-.m b{color:#1d6a8c}
-.sys,.expn{color:#6b5400}
-.expn{background:#fff6d6;border-bottom-color:#e6cf7a}
-.m.sysm{background:linear-gradient(#fff7da,#fbe9a8);border-color:#e6cf7a;color:#6b5400}
-.bar{border-top-color:#c5dcf0;background:#f0f7fe}
-.badge{color:#fff;box-shadow:none}
-.code{background:#fff;color:#10304f;border-color:var(--luna1)}
-#toast{background:#fff;color:var(--ink);box-shadow:0 6px 24px rgba(10,40,80,.4)}
-.sc h1{color:#1b5fb8;text-shadow:0 1px 0 #fff}
-.dpb{background:#fff;color:#10304f;border-color:#f6b830;box-shadow:0 8px 30px rgba(10,40,80,.5),0 0 30px #f6b830}
-@keyframes dpbp{to{box-shadow:0 8px 30px rgba(10,40,80,.5),0 0 55px #f6b830}}
-@keyframes dpfl{from{background:#ffe9a8}to{background:#fff7da}}
-@keyframes glimt{0%,100%{box-shadow:0 10px 30px rgba(10,40,80,.45)}30%{box-shadow:0 10px 30px rgba(10,40,80,.45),0 0 70px 10px #ffd04fcc}}
-@media(max-width:700px){.win{border-radius:0}.shell{padding:0 6px 6px}.tb{border-radius:0}}
-.ff .gl{opacity:.55}.ff svg{width:24px;height:24px}
+html.lys body{background:radial-gradient(ellipse at 20% 0%,#bfe6ff 0%,transparent 55%),radial-gradient(ellipse at 90% 100%,#9fe0c0 0%,transparent 50%),linear-gradient(#5aa7e6,#2f78c4);background-attachment:fixed}
+html.lys .win{background:linear-gradient(rgba(214,236,255,.92),rgba(176,214,245,.9));border:1px solid rgba(255,255,255,.85);border-radius:12px;box-shadow:0 10px 30px rgba(10,40,80,.45),inset 0 0 0 1px rgba(70,120,170,.35)}
+html.lys .tb{color:#10304f;text-shadow:0 1px 0 rgba(255,255,255,.8);background:none;font-weight:600;border-radius:12px 12px 0 0}
+html.lys .tb .lock{color:#2a5f93}
+html.lys .shell{padding:0 10px 10px;gap:10px}
+html.lys .home,html.lys .chatpane{background:rgba(255,255,255,.93);border:1px solid rgba(70,120,170,.45);border-radius:6px;overflow:hidden}
+html.lys .home{border-right:1px solid rgba(70,120,170,.45)}
+html.lys input,html.lys select{background:#fff;color:var(--ink);border-color:#9bbad8}
+html.lys input::placeholder{color:#7f9bb8}
+html.lys button,html.lys .lbl{border-color:#5a86b0;color:#10304f;text-shadow:0 1px 0 #fff;background:linear-gradient(#fff 0%,#e8f2fb 49%,#cfe2f3 50%,#e1eefa 100%)}
+html.lys button.glass,html.lys .lbl{background:linear-gradient(#fff 0%,#eef6fd 49%,#d8e8f6 50%,#e6f1fa 100%);color:#10304f;border-color:#8fb4d8}
+html.lys button.hot{background:linear-gradient(#fff3c4,#ffd36a 48%,#f6b830 52%,#ffd04f);border-color:#a97a0c;color:#4a3000;text-shadow:0 1px 0 #fff3c4}
+html.lys .me,html.lys .conv,html.lys .bud{color:var(--ink)}
+html.lys .me{border-bottom-color:#c5dcf0}
+html.lys .prof,html.lys .add,html.lys #reqs,html.lys #inv,html.lys .menu{background:#f0f7fe;border-color:#c5dcf0}
+html.lys .homebar{background:none}
+html.lys .grp{color:#2a5f93}
+html.lys .conv:hover{background:linear-gradient(#fff,#e1f1ff);border-color:#a9cdee}
+html.lys .conv.act{background:linear-gradient(#fff,#d6eafc);border-color:#8fb4d8}
+html.lys .conv.unread .t b{color:#0a2a4a}
+html.lys .req,html.lys .card{background:#eef6fd;border-color:#bcd6ee}
+html.lys .av,html.lys .pav{background:linear-gradient(#cfe3f6,#8fb4d8);border-color:#fff;box-shadow:0 0 0 2px var(--fc),0 2px 5px rgba(0,40,80,.35);color:#16324f}
+html.lys .off.pav{box-shadow:0 0 0 2px var(--glow-off)}
+html.lys .ff .wg{fill:#fff;opacity:.8}.ff .bd{fill:#56708e}
+html.lys .ff.off .bd{fill:#9aa9ba}
+html.lys .empty h1{color:#1b5fb8;text-shadow:0 1px 0 #fff}
+html.lys .ch{background:linear-gradient(#fff,#e1eefa);border-bottom-color:#c5dcf0}
+html.lys .m{color:var(--ink);border-color:#c5ddf2;border-radius:10px}
+html.lys .m.mine{border-color:#bfe3ad}
+html.lys .m b{color:#1d6a8c}
+html.lys .sys,html.lys .expn{color:#6b5400}
+html.lys .expn{background:#fff6d6;border-bottom-color:#e6cf7a}
+html.lys .m.sysm{background:linear-gradient(#fff7da,#fbe9a8);border-color:#e6cf7a;color:#6b5400}
+html.lys .bar{border-top-color:#c5dcf0;background:#f0f7fe}
+html.lys .badge{color:#fff;box-shadow:none}
+html.lys .code{background:#fff;color:#10304f;border-color:var(--luna1)}
+html.lys #toast{background:#fff;color:var(--ink);box-shadow:0 6px 24px rgba(10,40,80,.4)}
+html.lys .sc h1{color:#1b5fb8;text-shadow:0 1px 0 #fff}
+html.lys .dpb{background:#fff;color:#10304f;border-color:#f6b830;box-shadow:0 8px 30px rgba(10,40,80,.5),0 0 30px #f6b830}
+@keyframes dpbpL{to{box-shadow:0 8px 30px rgba(10,40,80,.5),0 0 55px #f6b830}}
+@keyframes dpflL{from{background:#ffe9a8}to{background:#fff7da}}
+@keyframes glimtL{0%,100%{box-shadow:0 10px 30px rgba(10,40,80,.45)}30%{box-shadow:0 10px 30px rgba(10,40,80,.45),0 0 70px 10px #ffd04fcc}}
+
+html.lys .dpb{animation-name:dpbpL}
+html.lys .conv.dpflash{animation-name:dpflL}
+html.lys .win.dp{animation:sh2 2.5s linear,glimtL .9s}
+@media(prefers-reduced-motion:reduce){html.lys .win.dp{animation:sh3 1s linear,glimtL .9s!important}}
+@media(max-width:700px){html.lys .win{border-radius:0}html.lys .shell{padding:0 6px 6px}html.lys .tb{border-radius:0}}
+/* Ildflue på lys bakgrunn (valg 1): mørk kropp, tydelig farget bakside med mørk kant, ingen glød, liten skygge. */
+html.lys .ff svg{width:24px;height:24px}
+html.lys .ff .gl{opacity:0}
+html.lys .ff .wg{fill:#fff;stroke:#56708e;stroke-width:.8;opacity:1}
+html.lys .ff .bd{fill:#243a58}
+html.lys .ff .ab{fill:var(--fc);stroke:#16324f;stroke-width:1.1}
+html.lys .ff svg{filter:drop-shadow(0 1px 1.5px rgba(10,40,80,.45))}
+html.lys .ff.on svg{animation:pulsL 2.4s ease-in-out infinite}
+html.lys .ff.away svg{animation:pulsL 5s ease-in-out infinite}
+html.lys .ff.busy svg{filter:drop-shadow(0 1px 1.5px rgba(10,40,80,.45))}
+html.lys .ff.off .bd{fill:#8796a8}html.lys .ff.off .ab{fill:#c3ccd7;stroke:#6f7f93}
+@keyframes pulsL{0%,100%{filter:drop-shadow(0 1px 1.5px rgba(10,40,80,.45))}50%{filter:drop-shadow(0 1px 1.5px rgba(10,40,80,.45)) drop-shadow(0 0 4px var(--fc))}}
+html.lys .me:not(:hover),html.lys .conv:not(.act):not(:hover){background:none}
+html.lys .me:hover{background:linear-gradient(#fff,#e1f1ff)}
+html.lys .ff svg{width:30px;height:30px}
+html.lys .amb .ff svg{width:34px;height:34px}
 
 </style>
 </head>
@@ -250,6 +276,7 @@ button.hot{background:linear-gradient(#fff3c4,#ffd36a 48%,#f6b830 52%,#ffd04f);b
     <input id="pnm" placeholder="Visningsnavn" maxlength="24" aria-label="Visningsnavn">
     <select id="st" aria-label="Status"><option value="online">Pålogget</option><option value="away">Borte</option><option value="busy">Opptatt</option><option value="off">Vis meg som frakoblet</option></select>
     <input id="pm" class="pm" placeholder="&lt;Skriv en personlig melding&gt;" maxlength="60" aria-label="Personlig melding">
+    <select id="thm" aria-label="Utseende"><option value="auto">Utseende: automatisk</option><option value="lys">Utseende: lys (dag)</option><option value="natt">Utseende: mørk (kveld)</option></select>
     <label class="lbl" title="Bildet vises bare for vennene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
     <button class="glass sm" id="outb" type="button">Logg ut</button>
    </div>
@@ -1064,6 +1091,7 @@ function lightbox(u,gif){
 function wire(){
   $("#meb").addEventListener("click",()=>{const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
   $("#outb").addEventListener("click",()=>sb.auth.signOut());
+  $("#thm").value=window.plingThemeGet();$("#thm").addEventListener("change",e=>window.plingTheme(e.target.value));
   $("#pnm").addEventListener("change",()=>{const n=$("#pnm").value.trim();if(!n){$("#pnm").value=S.profile.name;return}if(n!==S.profile.name)saveProfile({name:n.slice(0,24)})});
   $("#pm").addEventListener("change",()=>{const v=$("#pm").value.trim().slice(0,60);saveProfile({pm:v||null})});
   $("#st").addEventListener("change",()=>{
