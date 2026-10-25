@@ -284,6 +284,15 @@ html.lys .lpic .ff svg{width:84px;height:84px}
 html.lys .lwm .ff svg{width:130px;height:130px}
 html.lys .lwm{opacity:.14}
 
+/* Personlig melding rett under navnet, skrives direkte (som i MSN) */
+.mewrap{position:relative;flex:none}
+.mewrap .me small{visibility:hidden}
+.mepi{position:absolute;left:68px;right:44px;top:33px;width:auto;height:22px;padding:1px 4px;border:1px solid transparent;border-radius:3px;background:transparent;font-style:italic;color:var(--mut);font-size:13px}
+.mepi:hover{border-color:var(--line)}
+.mepi:focus{background:#0c1838;border-color:var(--luna1);color:var(--ink)}
+html.lys .mepi:focus{background:#fff}
+.me small#mep{display:block}
+
 </style>
 </head>
 <body>
@@ -292,15 +301,17 @@ html.lys .lwm{opacity:.14}
  <div class="scr" id="scr"><div class="sc"></div></div>
  <div class="shell" id="shell" hidden>
   <section class="home" id="home">
+   <div class="mewrap">
    <button class="me" id="meb" type="button" aria-expanded="false" title="Min profil">
     <span class="av on" id="avwrap"><img id="avimg" alt="Ditt bilde" hidden><span id="avini">?</span></span>
     <span class="t"><b id="men">…</b><small id="mep">Pålogget</small><small id="mewarn" class="warn" hidden>Lag gjenopprettingskode</small></span>
     <span id="mef"></span>
    </button>
+   <input id="pm" class="mepi" placeholder="&lt;Skriv en personlig melding&gt;" maxlength="60" autocomplete="off" aria-label="Personlig melding">
+   </div>
    <div class="prof" id="prof" hidden>
     <input id="pnm" placeholder="Visningsnavn" maxlength="24" aria-label="Visningsnavn">
     <select id="st" aria-label="Status"><option value="online">Pålogget</option><option value="away">Borte</option><option value="busy">Opptatt</option><option value="off">Vis meg som frakoblet</option></select>
-    <input id="pm" class="pm" placeholder="&lt;Skriv en personlig melding&gt;" maxlength="60" aria-label="Personlig melding">
     <select id="thm" aria-label="Utseende"><option value="auto">Utseende: automatisk</option><option value="lys">Utseende: lys (dag)</option><option value="natt">Utseende: mørk (kveld)</option></select>
     <label class="lbl" title="Bildet vises bare for vennene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
     <div class="grp">Sikkerhet</div>
@@ -769,7 +780,7 @@ function paintMe(){
   if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=(nm[0]||"?").toUpperCase()}
   $("#avwrap").className="av "+ST[S.status];
   $("#men").textContent=nm;
-  const sel=$("#st");$("#mep").textContent=S.profile.pm||sel.options[sel.selectedIndex].text;
+  const sel=$("#st");$("#mep").textContent=sel.options[sel.selectedIndex].text;const pmi=$("#pm");if(document.activeElement!==pmi)pmi.value=S.profile.pm||"";
   const f=$("#mef");f.textContent="";f.append(ff(ST[S.status]));
 }
 function paintAvAll(){paintMe()}
@@ -1132,6 +1143,7 @@ function wire(){
   $("#outb").addEventListener("click",()=>sb.auth.signOut());
   $("#thm").value=window.plingThemeGet();$("#thm").addEventListener("change",e=>window.plingTheme(e.target.value));
   $("#pnm").addEventListener("change",()=>{const n=$("#pnm").value.trim();if(!n){$("#pnm").value=S.profile.name;return}if(n!==S.profile.name)saveProfile({name:n.slice(0,24)})});
+  $("#pm").addEventListener("keydown",e=>{if(e.key==="Enter")e.target.blur();if(e.key==="Escape"){e.target.value=S.profile.pm||"";e.target.blur()}});
   $("#pm").addEventListener("change",()=>{const v=$("#pm").value.trim().slice(0,60);saveProfile({pm:v||null})});
   $("#st").addEventListener("change",()=>{
     S.status=$("#st").value;try{localStorage.setItem("pling_st_"+S.user.id,S.status)}catch(e){}
