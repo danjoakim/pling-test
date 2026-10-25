@@ -306,6 +306,17 @@ html.lys .ulink{color:#1b5fb8}
 html.lys .lkc{background:#fff;border-color:#c5ddf2}
 html.lys .lkc:hover{border-color:#5a86b0}
 
+/* ===== Kamera ===== */
+.cam{position:fixed;inset:0;z-index:25;background:#000;display:flex;flex-direction:column}
+.cam[hidden]{display:none}
+.camv{flex:1;min-height:0;width:100%;object-fit:contain;background:#000}
+.camv.mir{transform:scaleX(-1)}
+.camctl{flex:none;display:flex;align-items:center;justify-content:space-around;gap:12px;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));background:#000a}
+.camshut{width:68px;height:68px;border-radius:50%;border:4px solid #fff;background:#fff;box-shadow:0 0 0 3px #0008 inset;padding:0}
+.camside{min-width:92px;min-height:44px}
+.camsend{min-width:120px;min-height:48px;font-weight:700}
+button.camshut,html.lys button.camshut{background:#fff;border:4px solid #fff;box-shadow:0 0 0 3px #0008 inset}
+
 </style>
 </head>
 <body>
@@ -366,11 +377,12 @@ html.lys .lkc:hover{border-color:#5a86b0}
    <div id="log" hidden></div>
    <div class="typing" id="typ" hidden></div>
    <div class="emo" id="emo" hidden></div>
-   <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="Vis emoji">☺</button><button class="glass eb" id="ab" type="button" aria-label="Send et bilde" title="Send et bilde">📎</button><input class="vh" id="af" type="file" accept="image/*" tabindex="-1"><input id="tx" placeholder="Skriv en melding …" maxlength="1000" autocomplete="off" aria-label="Melding"><button id="sd" type="button">Send</button><button id="dp" class="hot" type="button" title="Spiller to plinger og vibrerer hos mottakeren">Dobbeltpling</button></div>
+   <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="Vis emoji">☺</button><button class="glass eb" id="ab" type="button" aria-label="Send et bilde" title="Send et bilde">📎</button><button class="glass eb" id="cb" type="button" aria-label="Ta bilde med kameraet" title="Ta bilde med kameraet">📷</button><input class="vh" id="af" type="file" accept="image/*" tabindex="-1"><input class="vh" id="cf" type="file" accept="image/*" capture="environment" tabindex="-1"><input id="tx" placeholder="Skriv en melding …" maxlength="1000" autocomplete="off" aria-label="Melding"><button id="sd" type="button">Send</button><button id="dp" class="hot" type="button" title="Spiller to plinger og vibrerer hos mottakeren">Dobbeltpling</button></div>
   </section>
  </div>
 </div>
 <div class="lb" id="lb" hidden></div>
+<div class="cam" id="cam" hidden></div>
 <div id="toast" role="status"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -1207,6 +1219,46 @@ function lightbox(u,gif){
   b.hidden=false;
 }
 
+/* ---------- kamera i appen ----------
+   HVORFOR eget kamera og ikke bare filvelgeren: Dan Joakim vil kunne ta bilde direkte som i andre meldingsapper. getUserMedia gir levende forhåndsvisning,
+   bytte mellom fremre og bakre kamera og «Send»/«Ta på nytt». Bildet går deretter samme vei som alle andre bilder (sendImage: skaleres, krypteres).
+   Uten støtte eller tillatelse faller vi tilbake til filvelgeren med capture (åpner kameraappen på telefonen). Strømmen stoppes alltid når vinduet lukkes. */
+let camStream=null,camFace="environment";
+function camStop(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}}
+function camClose(){camStop();const c=$("#cam");c.hidden=true;c.textContent=""}
+async function camOpen(){
+  if(!S.chat)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("#cf").click();return}
+  const c=$("#cam");c.textContent="";
+  const v=el("video",{class:"camv",autoplay:true,playsinline:true});v.muted=true;
+  const ctl=el("div",{class:"camctl"});let blob=null;
+  const mkb=(cls,label,fn)=>el("button",{class:cls,type:"button","aria-label":label,title:label,onclick:fn},label==="Ta bilde"?"":label);
+  const live=()=>{
+    blob=null;v.classList.toggle("mir",camFace==="user");
+    const shut=mkb("camshut","Ta bilde",shoot),flip=mkb("glass camside","Bytt kamera",()=>{camFace=camFace==="user"?"environment":"user";start()}),cl=mkb("glass camside","Avbryt",camClose);
+    ctl.textContent="";ctl.append(cl,shut,flip);
+  };
+  const review=()=>{
+    ctl.textContent="";
+    ctl.append(mkb("glass camside","Ta på nytt",()=>{v.play().catch(()=>{});live()}),mkb("camsend","Send",()=>{const b=blob;camClose();if(b)sendImage(new File([b],"kamera.jpg",{type:"image/jpeg"}))}));
+  };
+  function shoot(){
+    if(!v.videoWidth)return;
+    const cv=document.createElement("canvas");cv.width=v.videoWidth;cv.height=v.videoHeight;
+    cv.getContext("2d").drawImage(v,0,0);
+    cv.toBlob(b=>{if(!b)return;blob=b;v.pause();review()},"image/jpeg",.92);
+  }
+  async function start(){
+    camStop();
+    try{
+      camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:camFace,width:{ideal:1920},height:{ideal:1920}},audio:false});
+      v.srcObject=camStream;await v.play().catch(()=>{});live();
+    }catch(e){camClose();toast("Fikk ikke tilgang til kameraet. Sjekk tillatelsen i nettleseren, eller velg et bilde fra enheten med binders-knappen.",true)}
+  }
+  c.append(v,ctl);c.hidden=false;live();start();
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#cam").hidden)camClose()});
+
 /* ---------- koble knapper ---------- */
 function wire(){
   $("#meb").addEventListener("click",()=>{const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
@@ -1276,6 +1328,8 @@ function wire(){
     emo.append(el("button",{type:"button",onclick:()=>{tx.value+=e;tx.focus()}},e));
   }
   $("#ab").addEventListener("click",()=>$("#af").click());
+  $("#cb").addEventListener("click",camOpen);
+  $("#cf").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)sendImage(f)});
   $("#af").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)sendImage(f)});
   tx.addEventListener("paste",e=>{const f=[...(e.clipboardData&&e.clipboardData.files||[])].find(f=>/^image\//.test(f.type));if(f){e.preventDefault();sendImage(f)}});
   $("#lb").addEventListener("click",e=>{if(e.target.id==="lb"){$("#lb").hidden=true;$("#lb").textContent=""}});
