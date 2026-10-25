@@ -528,9 +528,17 @@ let rT=0;function refreshSoon(){clearTimeout(rT);rT=setTimeout(refresh,150)}
 function startPresence(){
   if(S.pch){try{sb.removeChannel&&sb.removeChannel(S.pch)}catch(e){}}
   const ch=sb.channel("pres:"+S.user.id,{config:{private:true,presence:{key:S.user.id}}});
-  ch.subscribe(s=>{if(s==="SUBSCRIBED")trackMe(true)});
+  ch.subscribe((s,err)=>{pdbg("own",s+(err?" "+(err.message||err):""));if(s==="SUBSCRIBED")trackMe(true)});
   S.pch=ch;
   syncPresence();
+}
+/* TEMPORARY diagnostics for the private-channel rollout (remove once presence is confirmed on real devices). */
+const PD={build:"pres-v3",own:"-",fr:{},syncs:0,last:""};
+function pdbg(k,v,id){
+  if(id)PD.fr[id.slice(0,4)]=v;else PD[k]=v;
+  let el=document.getElementById("pdbg");
+  if(!el){const f=document.getElementById("friends");if(!f)return;el=document.createElement("div");el.id="pdbg";el.style.cssText="font:11px monospace;opacity:.7;padding:6px 14px;white-space:pre-wrap;word-break:break-all";f.insertAdjacentElement("afterend",el)}
+  el.textContent="presence "+PD.build+" | own: "+PD.own+" | friends: "+JSON.stringify(PD.fr)+" | syncs: "+PD.syncs+" | "+PD.last;
 }
 /* Listen to exactly the channels of my current friends; drop channels of removed friends. */
 function syncPresence(){
@@ -545,13 +553,14 @@ function syncPresence(){
     const ch=sb.channel("pres:"+id,{config:{private:true}});
     ch.on("presence",{event:"sync"},()=>{
       const arr=(ch.presenceState()[id]||[]),p=arr[arr.length-1];
+      PD.syncs++;PD.last="keys="+Object.keys(ch.presenceState()).map(k=>k.slice(0,4)).join(",")+" want="+id.slice(0,4)+" st="+(p&&p.st);pdbg("last",PD.last);
       if(p&&ST[p.st]){
         S.pres.set(id,p.st);
         const t=p.typ;if(t&&t.n){const old=S.typ.get(id);if(!old||old.n!==t.n)S.typ.set(id,{n:t.n,c:t.c,seen:Date.now()})}
       }else S.pres.delete(id);
       drawFriends();drawChatHead();drawTyping();
     });
-    ch.subscribe();
+    ch.subscribe((s,err)=>pdbg("fr",s+(err?" "+(err.message||err):""),id));
     S.pchs.set(id,ch);
   }
 }
