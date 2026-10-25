@@ -584,7 +584,7 @@ async function loadPreviews(){
     const rows=await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(20),"Meldinger");
     if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
     const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
-    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:m?(m.dp?"Dobbeltpling":m.img?"📷 Bilde":String(m.t==null?"":m.t)):"(kan ikke dekrypteres)"});
+    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:m?(m.dp?"Dobbeltpling":m.img?(m.img.t==="image/gif"?"GIF":"📷 Bilde"):String(m.t==null?"":m.t)):"(kan ikke dekrypteres)"});
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
@@ -727,7 +727,7 @@ async function loadMsgs(){
   if(sig===S.sig)return;S.sig=sig;
   const maxSeen=S.seen.get(cid)||0,fresh=S.first?[]:out.filter(m=>!m.mine&&m.id>maxSeen);
   S.seen.set(cid,out.length?out[out.length-1].id:0);
-  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?"Dobbeltpling":l.img?"📷 Bilde":(l.ok?l.t||"":"(kan ikke dekrypteres)")});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
+  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?"Dobbeltpling":l.img?(l.img.t==="image/gif"?"GIF":"📷 Bilde"):(l.ok?l.t||"":"(kan ikke dekrypteres)")});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   S.first=false;S.msgs=out;drawLog();
   if(fresh.length){
     const big=fresh.find(m=>m.dp&&Date.now()-new Date(m.ts).getTime()<15000);
@@ -795,26 +795,40 @@ async function shrink(file){
   if(!b)throw new Error("Kunne ikke lese bildet");
   return{blob:b,w,h};
 }
+/* HVORFOR: GIF-er sendes uendret (ellers blir de stillbilder via canvas/JPEG i shrink()).
+   Bucket-grensen er 3 MB, så for store GIF-er avvises heller enn å bli stillbilder i det stille. */
+const GIF_MAX=3000000;
+async function readGif(file){
+  const b=new Uint8Array(await file.arrayBuffer());
+  if(b.length<10||String.fromCharCode(b[0],b[1],b[2],b[3])!=="GIF8")return null;
+  return{bytes:b,w:b[6]|b[7]<<8,h:b[8]|b[9]<<8};
+}
 async function sendImage(file){
   if(!S.chat||!file)return;
   if(!/^image\//.test(file.type||"")){toast("Bare bilder kan sendes",true);return}
   const cid=S.chat.id,other=S.profiles.get(S.chat.other);let path=null;
   try{
     toast("Krypterer og sender bildet …");
-    const {blob,w,h}=await shrink(file),bytes=new Uint8Array(await blob.arrayBuffer());
+    let w,h,bytes,t=null;
+    const gif=file.type==="image/gif"?await readGif(file):null;
+    if(gif){
+      if(gif.bytes.length>GIF_MAX){toast("GIF-en er for stor (maks 3 MB)",true);return}
+      ({w,h,bytes}=gif);t="image/gif";
+    }else{const r=await shrink(file);w=r.w;h=r.h;bytes=new Uint8Array(await r.blob.arrayBuffer())}
     const key=await pairKey(other.pub),iv=crypto.getRandomValues(new Uint8Array(12));
     const ct=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},key,bytes));
     path=cid+"/"+crypto.randomUUID();
     const up=await sb.storage.from(BUCKET).upload(path,new Blob([iv,ct],{type:"application/octet-stream"}),{contentType:"application/octet-stream"});
     if(up.error)throw new Error("Laste opp: "+up.error.message);
-    const ok=await sendMsg({img:{p:path,w,h},ts:Date.now()},path);
+    const ok=await sendMsg({img:t?{p:path,w,h,t}:{p:path,w,h},ts:Date.now()},path);
     if(!ok){await sb.storage.from(BUCKET).remove([path]);return}
     toast("Bildet er sendt")
   }catch(e){fail(e);if(path)sb.storage.from(BUCKET).remove([path]).then(()=>{},()=>{})}
 }
 function picEl(img){
   const box=el("span",{class:"pic-box",style:"width:"+Math.min(img.w||240,240)+"px;aspect-ratio:"+(img.w||4)+"/"+(img.h||3)});
-  const show=u=>{const i=el("img",{alt:"Bilde",src:u,tabindex:"0"});i.addEventListener("click",()=>lightbox(u));i.addEventListener("keydown",e=>{if(e.key==="Enter")lightbox(u)});box.textContent="";box.append(i)};
+  const gifT=img.t==="image/gif"; /* HVORFOR: avsenderens felt, så bare nøyaktig denne verdien godtas */
+  const show=u=>{const i=el("img",{alt:gifT?"GIF":"Bilde",src:u,tabindex:"0"});i.addEventListener("click",()=>lightbox(u,gifT));i.addEventListener("keydown",e=>{if(e.key==="Enter")lightbox(u,gifT)});box.textContent="";box.append(i)};
   if(picCache.has(img.p)){show(picCache.get(img.p));return box}
   box.textContent="Henter bilde …";
   const other=S.profiles.get(S.chat.other);
@@ -823,15 +837,15 @@ function picEl(img){
       const r=await sb.storage.from(BUCKET).download(img.p);if(r.error)throw r.error;
       const buf=new Uint8Array(await r.data.arrayBuffer()),key=await pairKey(other.pub);
       const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},key,buf.slice(12));
-      const u=URL.createObjectURL(new Blob([pt],{type:"image/jpeg"}));picCache.set(img.p,u);show(u);
+      const u=URL.createObjectURL(new Blob([pt],{type:gifT?"image/gif":"image/jpeg"}));picCache.set(img.p,u);show(u);
     }catch(e){box.textContent="(bildet finnes ikke lenger eller kan ikke åpnes)"}
   })();
   return box;
 }
-function lightbox(u){
+function lightbox(u,gif){
   const b=$("#lb");b.textContent="";
   b.append(el("img",{src:u,alt:"Bilde"}),el("div",{class:"row"},
-    el("a",{class:"btnlink",href:u,download:"pling-bilde.jpg"},"Last ned"),el("button",{class:"glass",type:"button",onclick:()=>{b.hidden=true;b.textContent=""}},"Lukk")));
+    el("a",{class:"btnlink",href:u,download:gif?"pling.gif":"pling-bilde.jpg"},"Last ned"),el("button",{class:"glass",type:"button",onclick:()=>{b.hidden=true;b.textContent=""}},"Lukk")));
   b.hidden=false;
 }
 
