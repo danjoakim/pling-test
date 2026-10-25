@@ -528,17 +528,18 @@ let rT=0;function refreshSoon(){clearTimeout(rT);rT=setTimeout(refresh,150)}
 function startPresence(){
   if(S.pch){try{sb.removeChannel&&sb.removeChannel(S.pch)}catch(e){}}
   const ch=sb.channel("pres:"+S.user.id,{config:{private:true,presence:{key:S.user.id}}});
+  ch.on("presence",{event:"sync"},()=>{PD.ownSync++;pdbg("last",PD.last)});
   ch.subscribe((s,err)=>{pdbg("own",s+(err?" "+(err.message||err):""));if(s==="SUBSCRIBED")trackMe(true)});
   S.pch=ch;
   syncPresence();
 }
 /* TEMPORARY diagnostics for the private-channel rollout (remove once presence is confirmed on real devices). */
-const PD={build:"pres-v3",own:"-",fr:{},syncs:0,last:""};
+const PD={build:"pres-v4",own:"-",fr:{},syncs:0,ownSync:0,trk:"-",joins:0,last:""};
 function pdbg(k,v,id){
   if(id)PD.fr[id.slice(0,4)]=v;else PD[k]=v;
   let el=document.getElementById("pdbg");
   if(!el){const f=document.getElementById("friends");if(!f)return;el=document.createElement("div");el.id="pdbg";el.style.cssText="font:11px monospace;opacity:.7;padding:6px 14px;white-space:pre-wrap;word-break:break-all";f.insertAdjacentElement("afterend",el)}
-  el.textContent="presence "+PD.build+" | own: "+PD.own+" | friends: "+JSON.stringify(PD.fr)+" | syncs: "+PD.syncs+" | "+PD.last;
+  el.textContent="presence "+PD.build+" | own: "+PD.own+" | track: "+PD.trk+" | ownSync: "+PD.ownSync+" | friends: "+JSON.stringify(PD.fr)+" | syncs: "+PD.syncs+" joins: "+PD.joins+" | "+PD.last;
 }
 /* Listen to exactly the channels of my current friends; drop channels of removed friends. */
 function syncPresence(){
@@ -560,6 +561,7 @@ function syncPresence(){
       }else S.pres.delete(id);
       drawFriends();drawChatHead();drawTyping();
     });
+    ch.on("presence",{event:"join"},()=>{PD.joins++;pdbg("last",PD.last)});
     ch.subscribe((s,err)=>pdbg("fr",s+(err?" "+(err.message||err):""),id));
     S.pchs.set(id,ch);
   }
@@ -572,7 +574,7 @@ function trackMe(force){
     if(!S.trT)S.trT=setTimeout(()=>{S.trT=0;trackMe(true)},2500-(now-S.lastTrack));
     return}
   S.lastTrack=now;
-  try{S.pch.track({st:S.status,typ:S.myTyp||null})}catch(e){}
+  try{Promise.resolve(S.pch.track({st:S.status,typ:S.myTyp||null})).then(r=>pdbg("trk",String(r)),e=>pdbg("trk","ERR "+(e&&e.message||e)))}catch(e){pdbg("trk","THROW "+e.message)}
 }
 function stOf(id){return S.pres.get(id)||"off"}
 
