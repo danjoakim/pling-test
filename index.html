@@ -261,6 +261,29 @@ html.lys .amb .ff svg{width:34px;height:34px}
 .seccard{display:grid;gap:8px}
 #mewarn{font-style:normal;font-size:11px}
 
+/* ===== Innlogging i MSN-stil (smal, høy rute med bildeboks, etiketter over feltene) ===== */
+.sc.lgn{max-width:340px;gap:6px;position:relative;padding-bottom:6px}
+.lpic{justify-self:center;width:120px;height:120px;border-radius:10px;border:1px solid var(--line);background:linear-gradient(#1c3166,#0f1d44);display:grid;place-items:center;margin-top:4px}
+.lpic .ff svg{width:84px;height:84px}
+.lh{text-align:center;font:700 26px "Trebuchet MS",Tahoma,sans-serif;color:#fff;text-shadow:0 0 12px #a6ff3d55;margin-top:2px}
+.lc{text-align:center}
+.ll{font-weight:700;margin-top:8px;color:var(--ink)}
+.lrow{display:flex;align-items:center;gap:8px;margin-top:10px}
+.lrow select{width:auto;flex:1}
+.lchk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink)}
+.lchk input{width:auto}
+.lgo{justify-self:center;min-width:130px;margin-top:10px;padding:9px 22px;font-weight:700}
+.llinks{display:flex;justify-content:space-between;gap:8px;margin-top:10px;position:relative;z-index:1}
+.llink{background:none;border:0;padding:4px 0;color:var(--luna1);text-decoration:underline;text-shadow:none;font-size:13px;cursor:pointer}
+.lwm{position:absolute;right:-20px;bottom:30px;opacity:.1;pointer-events:none}
+.lwm .ff svg{width:130px;height:130px}
+html.lys .lpic{background:linear-gradient(#fff,#dcebf9);box-shadow:0 2px 6px rgba(10,40,80,.25)}
+html.lys .lh{color:#1b5fb8;text-shadow:0 1px 0 #fff}
+html.lys .llink{color:#1b5fb8;background:none;border:0}
+html.lys .lpic .ff svg{width:84px;height:84px}
+html.lys .lwm .ff svg{width:130px;height:130px}
+html.lys .lwm{opacity:.14}
+
 </style>
 </head>
 <body>
@@ -472,19 +495,31 @@ function viewLogin(){
   };
   const sendCode=async()=>{try{await q(sb.auth.signInWithOtp({email:email.value.trim(),options:{emailRedirectTo:location.origin+location.pathname}}),"Send kode");S.needCode=true;toast("E-post sendt. Skriv inn koden (eller trykk på lenken i e-posten).");viewLogin()}catch(e){fail(e)}};
   const verify=async()=>{try{await q(sb.auth.verifyOtp({email:email.value.trim(),token:code.value.trim(),type:"email"}),"Bekreft kode")}catch(e){fail(e)}};
+  app.classList.add("lgn");
+  let remMail="";try{remMail=localStorage.getItem("pling_remember_email")||""}catch(e){}
+  if(remMail&&!email.value)email.value=remMail;
+  const rem=el("input",{type:"checkbox",id:"rem"});rem.checked=!!remMail;
+  const lst=el("select",{id:"lst","aria-label":"Logg på som"},el("option",{value:"online"},"Pålogget"),el("option",{value:"busy"},"Opptatt"),el("option",{value:"away"},"Borte"),el("option",{value:"off"},"Vis meg som frakoblet"));
+  const go0=go;
+  const goW=async()=>{try{localStorage.setItem("pling_st_next",lst.value);if(rem.checked)localStorage.setItem("pling_remember_email",email.value.trim());else localStorage.removeItem("pling_remember_email")}catch(e){}await go0()};
+  const fr=el("div",{class:"lpic"});fr.append(ff("on"));
+  const wm=el("div",{class:"lwm","aria-hidden":"true"});wm.append(ff("on"));
   app.append(
-    el("h1",{},"Pling · testside"),
-    el("div",{class:"dim"},"Kryptert samtale mellom to nettlesere. Bare for testing."),
-    el("div",{class:"card"},
-      el("div",{class:"row"},
-        el("button",{class:S.mode==="in"?"":"ghost",onclick:()=>{S.mode="in";viewLogin()}},"Logg inn"),
-        el("button",{class:S.mode==="up"?"":"ghost",onclick:()=>{S.mode="up";viewLogin()}},"Ny konto")),
-      el("p",{},email),el("p",{},pw),
-      el("div",{class:"row"},el("button",{id:"go",onclick:go},S.mode==="up"?"Lag konto":"Logg inn"),
-        el("button",{class:"glass",id:"otp",onclick:sendCode},"Send engangskode i stedet")),
-      S.needCode?el("div",{class:"row",style:"margin-top:10px"},code,el("button",{id:"vf",onclick:verify},"Bekreft")):null
-    ));
-  pw.addEventListener("keydown",e=>{if(e.key==="Enter")go()});
+    fr,
+    el("div",{class:"lh"},"Pling"),
+    el("div",{class:"dim lc"},S.mode==="up"?"Lag en konto. Samtalene dine blir kryptert i nettleseren.":"Logg på for å snakke med vennene dine."),
+    el("label",{for:"em",class:"ll"},"E-postadresse:"),email,
+    el("label",{for:"pw",class:"ll"},"Passord:"),pw,
+    el("div",{class:"lrow"},el("label",{for:"lst",class:"ll"},"Status:"),lst),
+    el("label",{class:"lchk"},rem," Husk e-postadressen min"),
+    ...(S.needCode?[el("div",{class:"row"},code,el("button",{id:"vf",onclick:verify},"Bekreft"))]:[]),
+    el("button",{id:"go",class:"lgo",onclick:goW},S.mode==="up"?"Lag konto":"Logg på"),
+    el("div",{class:"llinks"},
+      el("button",{class:"llink",id:"otp",type:"button",onclick:sendCode},"Send engangskode i stedet"),
+      el("button",{class:"llink",type:"button",onclick:()=>{S.mode=S.mode==="up"?"in":"up";viewLogin()}},S.mode==="up"?"Jeg har en konto":"Ny konto")),
+    el("div",{class:"fine lc"},"Ende-til-ende-kryptert"),
+    wm);
+  pw.addEventListener("keydown",e=>{if(e.key==="Enter")goW()});
 }
 
 /* ---------- oppsett av profil ---------- */
@@ -613,6 +648,7 @@ async function start(){
   try{const a=localStorage.getItem("pling_av_"+S.user.id);if(okAv(a))myAv=a}catch(e){}
   S.status="online";
   try{const s=localStorage.getItem("pling_st_"+S.user.id);if(s&&ST[s])S.status=s}catch(e){}
+  try{const n=localStorage.getItem("pling_st_next");if(n){localStorage.removeItem("pling_st_next");if(ST[n]){S.status=n;localStorage.setItem("pling_st_"+S.user.id,n)}}}catch(e){}
   $("#pnm").value=S.profile.name;$("#pm").value=S.profile.pm||"";$("#st").value=S.status;
   if(!wired){wired=true;wire()}
   paintMe();closeChat();
