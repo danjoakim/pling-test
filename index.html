@@ -326,11 +326,11 @@ function marimbaBus(c){ /* HVORFOR: felles utgang med kompressor, slik at lyden 
   g.connect(k);k.connect(c.destination);c._mb=g}
  return c._mb}
 function marimba(f,at,vol){const c=ac();if(!c)return;const t=c.currentTime+at,bus=marimbaBus(c);
- [[1,1,.27],[4.01,.34,.05],[8.78,.16,.02],[3,.1,.02]].forEach(([m,a,tau])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f*m;
+ [[1,1,.17],[4.01,.34,.04],[8.78,.16,.015],[3,.1,.015]].forEach(([m,a,tau])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f*m;
   g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol*a,t+.003);g.gain.setTargetAtTime(0,t+.003,tau);
   o.connect(g);g.connect(bus);o.start(t);o.stop(t+tau*8+.05)})}
 function pling(v=.12,at=0){const k=260.2/261.63; /* samme lette stemming som referansen */
- [[261.63,0],[293.66,.13],[440,.26]].forEach(([f,d])=>marimba(f*k,at+d,v*3.4))}
+ [[261.63,0],[293.66,.13],[440,.26]].forEach(([f,d])=>marimba(f*k,at+d,v*4.4))}
 function dobbelt(){pling(.2,0);pling(.2,.6)}
 function stor(){const a=$("#app");a.classList.remove("dp");void a.offsetWidth;a.classList.add("dp");dobbelt();try{if(navigator.vibrate)navigator.vibrate([120,50,120,50,120,50,220])}catch(e){}}
 function okAv(a){return typeof a==="string"&&a.startsWith("data:image/jpeg;base64,")&&a.length<12000&&/^[A-Za-z0-9+/=]*$/.test(a.slice(23))}
