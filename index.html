@@ -432,6 +432,9 @@ html.lys .emo .etab{border-color:#8fb4d8;background:#eef6fd;color:#10304f}html.l
 .emo .ef:hover,.emo .ef:focus-visible{background:rgba(255,255,255,.3)}
 .emo .ef .an{width:1.9rem;height:1.9rem;vertical-align:0}
 
+/* skjulte filvalg skal aldri fange klikk (de la seg usynlig over smilefjes-knappen) */
+input.vh{position:fixed!important;left:-9999px!important;top:0!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+
 </style>
 </head>
 <body>
