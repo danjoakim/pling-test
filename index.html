@@ -488,7 +488,13 @@ function qrSvg(text){const qr=qrcode(0,"M");qr.addData(text);qr.make();return qr
 const download=(name,text)=>{const a=el("a",{href:URL.createObjectURL(new Blob([text],{type:"text/plain"})),download:name});document.body.append(a);a.click();a.remove()};
 
 const EMO={":)":"😊",":-)":"😊",":D":"😃",";)":"😉",":(":"🙁",":P":"😛",":p":"😛","(L)":"❤️","(Y)":"👍","(N)":"👎",":O":"😮","8-)":"😎","(6)":"😈","(A)":"😇",":'(":"😢","(K)":"💋","(U)":"💔"};
-const emoji=t=>Object.keys(EMO).sort((a,b)=>b.length-a.length).reduce((s,k)=>s.split(k).join(EMO[k]),t);
+const EMO2={":-D":"😃",":-P":"😛",":-(":"🙁",";-)":"😉",":-O":"😮",":-@":"😠",":@":"😠",":-#":"🤐",":-|":"😐",":|":"😐",":-$":"😳",":$":"😳",":-S":"😕",":S":"😕",":-*":"😘",":*":"😘",":-]":"😍",":]":"😍",":-[":"😈","*-)":"🤔","+o(":"🤢","|-)":"😴","8-|":"🤓","8o|":"😬",":8)":"👽",":}":"👸","<3":"❤️","(@)":"🐱","(&)":"🐶","(*)":"⭐","(#)":"☀️","(^)":"🎂","(||)":"🍜","(~)":"🎬","('.')":"🐰",
+"(b)":"🍺","(d)":"🍸","(f)":"🌹","(g)":"🎁","(t)":"📞","(R)":"🌈","(w)":"🥀",
+"(brb)":"⏳","(lol)":"😂","(rotfl)":"🤣","(boo)":"👻","(ap)":"✈️","(au)":"🚗","(bah)":"🐑","(bus)":"🚌","(co)":"💻","(ip)":"🏝️","(li)":"⚡","(mo)":"💰","(mp)":"📱","(nah)":"🐐","(nnh)":"🐐","(pi)":"🍕","(pl)":"🍽️","(pu)":"☝️","(sn)":"🐌","(so)":"⚽","(st)":"⛈️","(tu)":"🐢","(um)":"☂️","(wo)":"💼","(xo)":"😘","(yn)":"🤞","(h5)":"🙌","(xx)":"🎮"};
+for(const k in EMO2)if(!(k in EMO))EMO[k]=EMO2[k];
+const EMO_LC=new Map(Object.keys(EMO).map(k=>[k.toLowerCase(),EMO[k]]));
+const EMO_RE=new RegExp(Object.keys(EMO).sort((a,b)=>b.length-a.length).map(k=>k.replace(/[^a-z0-9]/gi,c=>String.fromCharCode(92)+c)+(/[a-z0-9]$/i.test(k)?"(?![a-z0-9])":"")).join("|"),"gi");
+const emoji=t=>t.replace(EMO_RE,m=>EMO_LC.get(m.toLowerCase())||m);
 const FF='<svg viewBox="0 0 24 24" aria-hidden="true"><circle class="gl" cx="12" cy="16" r="8"/><ellipse class="wg" cx="8.6" cy="9" rx="3" ry="5.2" transform="rotate(-24 8.6 9)"/><ellipse class="wg" cx="15.4" cy="9" rx="3" ry="5.2" transform="rotate(24 15.4 9)"/><ellipse class="bd" cx="12" cy="11" rx="2.4" ry="5.2"/><circle class="ab" cx="12" cy="15.6" r="3"/></svg>';
 function ff(st){const s=document.createElement("span");s.className="ff "+st;s.innerHTML=FF;return s}
 let AC;
