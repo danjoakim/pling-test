@@ -328,6 +328,8 @@ button.camshut,html.lys button.camshut{background:#fff;border:4px solid #fff;box
 .invb{padding:9px 12px;border:1px solid var(--glow-on);border-radius:8px;background:#123015;color:var(--ink);text-align:center;line-height:1.4}
 html.lys .invb{background:#e5f7dc;border-color:#7cc36a}
 
+.lpic.hasav{padding:0;overflow:hidden}.lpic.hasav img{width:100%;height:100%;object-fit:cover;display:block}
+
 </style>
 </head>
 <body>
@@ -550,8 +552,8 @@ function viewLogin(){
   const rem=el("input",{type:"checkbox",id:"rem"});rem.checked=!!remMail;
   const lst=el("select",{id:"lst","aria-label":"Logg på som"},el("option",{value:"online"},"Pålogget"),el("option",{value:"busy"},"Opptatt"),el("option",{value:"away"},"Borte"),el("option",{value:"off"},"Vis meg som frakoblet"));
   const go0=go;
-  const goW=async()=>{try{localStorage.setItem("pling_st_next",lst.value);if(rem.checked)localStorage.setItem("pling_remember_email",email.value.trim());else localStorage.removeItem("pling_remember_email")}catch(e){}await go0()};
-  const fr=el("div",{class:"lpic"});fr.append(ff("on"));
+  const goW=async()=>{try{localStorage.setItem("pling_st_next",lst.value);if(rem.checked)localStorage.setItem("pling_remember_email",email.value.trim());else{localStorage.removeItem("pling_remember_email");localStorage.removeItem("pling_last_av")}}catch(e){}await go0()};
+  const fr=el("div",{class:"lpic"});let lastAv=null;try{lastAv=remMail?localStorage.getItem("pling_last_av"):null}catch(e){}if(lastAv&&okAv(lastAv)){fr.classList.add("hasav");fr.append(el("img",{src:lastAv,alt:""}))}else fr.append(ff("on"));
   const wm=el("div",{class:"lwm","aria-hidden":"true"});wm.append(ff("on"));
   app.append(
     fr,
@@ -745,7 +747,7 @@ let wired=false;
 async function start(){
   try{const bk=await q(sb.from("key_backups").select("user_id,updated_at").eq("user_id",S.user.id));S.backup=bk[0]||null}catch(e){S.backup=null}
   showShell();
-  try{const a=localStorage.getItem("pling_av_"+S.user.id);if(okAv(a))myAv=a}catch(e){}
+  try{const a=localStorage.getItem("pling_av_"+S.user.id);if(okAv(a)){myAv=a;localStorage.setItem("pling_last_av",a)}}catch(e){}
   S.status="online";
   try{const s=localStorage.getItem("pling_st_"+S.user.id);if(s&&ST[s])S.status=s}catch(e){}
   try{const n=localStorage.getItem("pling_st_next");if(n){localStorage.removeItem("pling_st_next");if(ST[n]){S.status=n;localStorage.setItem("pling_st_"+S.user.id,n)}}}catch(e){}
@@ -1361,7 +1363,7 @@ function wire(){
     try{
       const a=await toAvatar(f);if(!okAv(a))throw new Error("Bildet ble for stort");
       await q(sb.from("avatars").upsert({id:S.user.id,data:a,updated_at:new Date().toISOString()}),"Lagre bilde");
-      myAv=a;try{localStorage.setItem("pling_av_"+S.user.id,a)}catch(x){}
+      myAv=a;try{localStorage.setItem("pling_av_"+S.user.id,a);localStorage.setItem("pling_last_av",a)}catch(x){}
       paintMe();drawChatHead();toast("Bildet er lagret. Bare vennene dine ser det.");
     }catch(err){fail(err)}
   });
