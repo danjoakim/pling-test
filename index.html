@@ -833,10 +833,10 @@ async function start(){
   drawInvite();await redeemPending();
   startPresence();
   sb.channel("pling-live")
-    .on("postgres_changes",{event:"*",schema:"public",table:"messages"},()=>refreshSoon())
+    .on("postgres_changes",{event:"*",schema:"public",table:"messages"},p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id&&S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}refreshSoon()})
     .on("postgres_changes",{event:"*",schema:"public",table:"friend_requests"},()=>refreshSoon())
     .on("postgres_changes",{event:"*",schema:"public",table:"friends"},()=>refreshSoon())
-    .on("postgres_changes",{event:"*",schema:"public",table:"presence"},()=>presSoon())
+    .on("postgres_changes",{event:"*",schema:"public",table:"presence"},p=>presEvt(p))
     .subscribe();
   clearInterval(S.poll);S.poll=setInterval(()=>{if(S.user&&!document.hidden)refresh()},8000);
   clearInterval(S.pp);S.pp=setInterval(()=>{if(!document.hidden)checkTransfers()},3000);checkTransfers();
@@ -860,28 +860,43 @@ function startPresence(){
 function trackMe(force){
   if(!S.user)return;
   const now=Date.now();
-  if(!force&&now-(S.lastTrack||0)<2500){
-    if(!S.trT)S.trT=setTimeout(()=>{S.trT=0;trackMe(true)},2500-(now-S.lastTrack));
+  if(!force&&now-(S.lastTrack||0)<2000){
+    if(!S.trT)S.trT=setTimeout(()=>{S.trT=0;trackMe(true)},2000-(now-S.lastTrack));
     return}
   S.lastTrack=now;
-  const typ=S.myTyp&&now-S.myTyp.n<4000?S.myTyp.c:null;
+  const typ=S.myTyp&&now-S.myTyp.n<3000?S.myTyp.c:null;
   sb.rpc("set_presence",{p_st:S.status,p_typ:typ}).then(()=>{},()=>{});
 }
-let prT=0,prBusy=false;
+let prT=0,prBusy=false,prAgain=false;const typAt=new Map();
 function presSoon(){clearTimeout(prT);prT=setTimeout(pullPresence,250)}
+/* Raden som endret seg følger med i Realtime-hendelsen (bare rader vi har lov til å se, altså venner og oss selv). Bruker den med en gang, så «skriver …» vises uten ekstra runde mot serveren. Listen hentes likevel rett etterpå som kontroll. (26. okt: «skriver» kom for sent.) */
+function presEvt(p){
+  const r=p&&p.new;
+  if(!S.user||!r||!r.user_id||r.user_id===S.user.id||!ST[r.st]){presSoon();return}
+  const now=Date.now();let redraw=false;
+  if(r.st==="off"){if(S.pres.delete(r.user_id))redraw=true}
+  else if(S.pres.get(r.user_id)!==r.st){S.pres.set(r.user_id,r.st);redraw=true}
+  if(r.st!=="off"&&r.typ_chat&&r.typ_at){
+    if(typAt.get(r.user_id)!==r.typ_at){typAt.set(r.user_id,r.typ_at);S.typ.set(r.user_id,{n:now,c:r.typ_chat,seen:now})}
+  }else S.typ.delete(r.user_id);
+  if(redraw){drawFriends();drawChatHead()}
+  drawTyping();presSoon();
+}
 async function pullPresence(){
-  if(!S.user||prBusy)return;prBusy=true;
+  if(!S.user)return;
+  if(prBusy){prAgain=true;return}
+  prBusy=true;
   try{
     const r=await sb.rpc("get_presence");if(r.error||!S.user)return;
     const m=new Map(),now=Date.now();
     for(const p of r.data||[]){
       if(!ST[p.st]||p.st==="off"||p.age_s==null||p.age_s>PRES_STALE)continue;
       m.set(p.user_id,p.st);
-      if(p.typ_chat&&p.typ_age_s!=null&&p.typ_age_s<4)S.typ.set(p.user_id,{n:Math.round(now-p.typ_age_s*1000),c:p.typ_chat,seen:now-p.typ_age_s*1000});
+      if(p.typ_chat&&p.typ_age_s!=null&&p.typ_age_s<3)S.typ.set(p.user_id,{n:Math.round(now-p.typ_age_s*1000),c:p.typ_chat,seen:now-p.typ_age_s*1000});
     }
     if(S.status!=="off")m.set(S.user.id,S.status);
     S.pres=m;drawFriends();drawChatHead();drawTyping();
-  }catch(e){}finally{prBusy=false}
+  }catch(e){}finally{prBusy=false;if(prAgain){prAgain=false;presSoon()}}
 }
 /* Fanen lukkes: si fra med en gang, så vennene ser «frakoblet» i stedet for å vente 50 sekunder. keepalive lar kallet fullføres selv om siden forsvinner. */
 window.addEventListener("pagehide",()=>{
@@ -1068,9 +1083,9 @@ async function safety(otherFp){
 function drawTyping(){
   const t=$("#typ");
   if(!S.chat){t.hidden=true;return}
-  const x=S.typ.get(S.chat.other),on=x&&x.c===S.chat.id&&Date.now()-x.seen<4000&&S.pres.has(S.chat.other);
+  const x=S.typ.get(S.chat.other),on=x&&x.c===S.chat.id&&Date.now()-x.seen<3000&&S.pres.has(S.chat.other);
   t.hidden=false;t.textContent=on?nameOf(S.chat.other)+" skriver …":"";
-  if(on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,4100-(Date.now()-x.seen))}
+  if(on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,3100-(Date.now()-x.seen))}
 }
 const PAGE=50;
 /* ---------- lenker og forhåndsvisning ----------
@@ -1189,7 +1204,7 @@ async function sendMsg(payload,file){
     const row={chat_id:S.chat.id,sender:S.user.id,iv:s.iv,ct:s.ct};
     if(file)row.file=file;
     await q(sb.from("messages").insert(row),"Sende");
-    S.justSent=true;S.myTyp=null;refreshSoon();return true;
+    S.justSent=true;S.myTyp=null;trackMe(true);refreshSoon();return true;
   }catch(e){fail(e);return false}
 }
 
@@ -1484,7 +1499,10 @@ function wire(){
     if(!await sendMsg(pl))tx.value=t};
   $("#sd").addEventListener("click",send);
   tx.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
-  tx.addEventListener("input",()=>{if(!S.chat)return;S.myTyp={c:S.chat.id,n:Date.now()};trackMe(false)});
+  /* «skriver …»: første tastetrykk etter en pause sendes med en gang, så sendes det hvert 2. sekund mens du skriver. Tomt felt sender «ikke skriver» med en gang. */
+  tx.addEventListener("input",()=>{if(!S.chat)return;const now=Date.now();
+    if(!tx.value){S.myTyp=null;trackMe(true);return}
+    const first=!S.myTyp||now-S.myTyp.n>3000;S.myTyp={c:S.chat.id,n:now};trackMe(first)});
   const emo=$("#emo");
   for(const e of ["😊","😃","😉","🙁","😛","❤️","👍","👎","😮","😎","😈","😇","😢","💋","💔","🎉"]){
     emo.append(el("button",{type:"button",onclick:()=>{tx.value+=e;tx.focus()}},e));
