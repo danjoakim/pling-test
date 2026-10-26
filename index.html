@@ -330,6 +330,16 @@ html.lys .invb{background:#e5f7dc;border-color:#7cc36a}
 
 .lpic.hasav{padding:0;overflow:hidden}.lpic.hasav img{width:100%;height:100%;object-fit:cover;display:block}
 
+.info{position:fixed;inset:0;z-index:30;background:rgba(0,10,30,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.info[hidden]{display:none}
+.infob{width:min(560px,100%);max-height:100%;display:flex;flex-direction:column;border-radius:12px;background:var(--panel,#0c1630);color:var(--ink,#e9f0ff);border:1px solid var(--line,#2c4580);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.infoh{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line,#2c4580)}
+.infot{overflow:auto;padding:4px 16px 16px;line-height:1.5;font-size:14px}
+.infot h3{margin:16px 0 4px;font-size:14px}
+.infot p,.infot ul{margin:4px 0}.infot ul{padding-left:20px}.infot li{margin:3px 0}
+html.lys .infob{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,.98));color:#16324f;border-color:#8fb4d8}
+html.lys .infoh{border-color:#a9cdee}
+
 </style>
 </head>
 <body>
@@ -354,6 +364,7 @@ html.lys .invb{background:#e5f7dc;border-color:#7cc36a}
     <label class="lbl" title="Bildet vises bare for vennene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
     <div class="grp">Sikkerhet</div>
     <div id="seccard" class="seccard"></div>
+    <button class="glass sm" id="infob" type="button">Personvern og hjelp</button>
     <button class="glass sm" id="outb" type="button">Logg ut</button>
    </div>
    <div class="fine err msg" id="msg" role="status"></div>
@@ -397,6 +408,7 @@ html.lys .invb{background:#e5f7dc;border-color:#7cc36a}
 </div>
 <div class="lb" id="lb" hidden></div>
 <div class="cam" id="cam" hidden></div>
+<div class="info" id="info" hidden></div>
 <div id="toast" role="status"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -569,7 +581,7 @@ function viewLogin(){
     el("div",{class:"llinks"},
       el("button",{class:"llink",id:"otp",type:"button",onclick:sendCode},"Send engangskode i stedet"),
       el("button",{class:"llink",type:"button",onclick:()=>{S.mode=S.mode==="up"?"in":"up";viewLogin()}},S.mode==="up"?"Jeg har en konto":"Ny konto")),
-    el("div",{class:"fine lc"},"Ende-til-ende-kryptert"),
+    el("div",{class:"fine lc"},"Ende-til-ende-kryptert · ",el("button",{class:"llink",type:"button",onclick:showInfo},"Personvern og hjelp")),
     wm);
   pw.addEventListener("keydown",e=>{if(e.key==="Enter")goW()});
   showInviteBanner();
@@ -741,6 +753,57 @@ function drawInvite(){
   }},"Lag invitasjonslenke");
   box.append(el("div",{class:"fine"},"Eller send en lenke eller QR-kode til en som ikke har konto ennå:"),mk);
 }
+
+
+/* ---------- personvern og hjelp ---------- */
+/* Teksten skal være ærlig og kort. Oppdater den når noe endres i hva serveren ser (se claude/personvern.md). */
+const INFO=[
+ ["Kort fortalt",[
+  "Samtalene dine er ende-til-ende-kryptert: tekst og bilder låses i nettleseren din med en nøkkel som bare du og vennen din har. Vi (og Supabase, som driver tjenesten) kan ikke lese dem."]],
+ ["Det serveren ser",[
+  ["ul","E-postadressen din, navnet ditt, den personlige meldingen din og profilbildet ditt. Navn, melding og bilde er ikke kryptert, men bare vennene dine (og den du har sendt en forespørsel til) kan se dem.",
+   "Hvem som er venner med hvem.",
+   "Når du er pålogget, statusen din og om du skriver (hvilken samtale, ikke hva). Bare vennene dine ser det.",
+   "At en melding finnes: hvem som sendte den, hvilken samtale, når, når den utløper, og om den har et vedlegg (med en tilfeldig filsti). Ikke innholdet.",
+   "Hvor langt du har lest i hver samtale (bare du ser det)."]]],
+ ["Det serveren ikke ser",[
+  ["ul","Tekst, bilder, GIF-er og lenkekort i samtalene dine.",
+   "Nøkkelen din. Den ligger i nettleseren din, og en kopi som er låst med gjenopprettingskoden din."]]],
+ ["Lenkeforhåndsvisning",[
+  "Når du sender en lenke, henter en funksjon hos oss tittel og bilde fra nettsiden, og den må se adressen for å gjøre det. Vi bruker den bare til å hente forhåndsvisningen. Mottakeren kontakter aldri nettsiden. Du kan slå funksjonen av i profilen."]],
+ ["Gjenopprettingskoden",[
+  "Mister du alle enhetene dine og gjenopprettingskoden, kan ingen hente samtalehistorikken din tilbake, heller ikke vi. Lag koden under «Sikkerhet» i profilen og oppbevar den trygt."]],
+ ["Invitasjonslenker",[
+  "Lenken inneholder en hemmelig kode som ikke sendes til oss før noen bruker den. Vi lagrer bare et avtrykk av den. Lenken virker én gang og i 7 dager. Send den bare til den du vil ha som venn."]],
+ ["Meldinger som utløper",[
+  "Du og vennen din kan sette en samtale til å slette meldinger etter 1, 7 eller 30 dager. Utløpte meldinger og bilder slettes fra serveren, senest en time etter. Vennen din kan likevel ha tatt skjermbilde eller lagret en kopi."]],
+ ["Slik bruker du Pling",[
+  ["ul","Legg til en venn med e-postadressen hen bruker, eller send en invitasjonslenke eller QR-kode («+ Legg til venn»).",
+   "Dobbeltklikk på en venn for å åpne samtalen. Knappene under samtalen sender bilder og GIF-er; på mobil kan du også ta bilde.",
+   "Dobbeltpling får vinduet til vennen din til å riste. Bruk den sjelden.",
+   "Navn, status, personlig melding, bilde og utseende endrer du ved å trykke på navnet ditt øverst.",
+   "Sammenlign sikkerhetsnummeret i samtalen med vennen din for å være sikker på at ingen ligger imellom."]]],
+ ["Om tjenesten",[
+  "Pling er en prototype under utvikling. Ting kan endre seg og gå i stykker, så ikke bruk den til noe du ikke kan miste ennå."]]
+];
+function showInfo(){
+  const o=$("#info");o.textContent="";
+  const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":"Personvern og hjelp"});
+  box.append(el("div",{class:"infoh"},el("b",{},"Personvern og hjelp"),el("button",{class:"glass sm",type:"button",onclick:closeInfo},"Lukk")));
+  const body=el("div",{class:"infot"});
+  for(const [h,ps] of INFO){
+    body.append(el("h3",{},h));
+    for(const p of ps){
+      if(Array.isArray(p)){const ul=el("ul",{});for(const t of p.slice(1))ul.append(el("li",{},t));body.append(ul)}
+      else body.append(el("p",{},p));
+    }
+  }
+  box.append(body);o.append(box);o.hidden=false;
+  o.onclick=e=>{if(e.target===o)closeInfo()};
+  box.querySelector("button").focus();
+}
+function closeInfo(){const o=$("#info");o.hidden=true;o.textContent=""}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#info").hidden)closeInfo()});
 
 /* ---------- hovedvindu ---------- */
 let wired=false;
@@ -1348,6 +1411,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#cam").hidden)c
 /* ---------- koble knapper ---------- */
 function wire(){
   $("#meb").addEventListener("click",()=>{const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
+  $("#infob").addEventListener("click",showInfo);
   $("#outb").addEventListener("click",async()=>{try{await sb.rpc("set_presence",{p_st:"off",p_typ:null})}catch(e){}sb.auth.signOut()});
   $("#lpv").value=LP_ON()?"on":"off";$("#lpv").addEventListener("change",e=>{try{localStorage.setItem("pling_lp",e.target.value==="off"?"0":"1")}catch(x){}});
   $("#thm").value=window.plingThemeGet();$("#thm").addEventListener("change",e=>window.plingTheme(e.target.value));
