@@ -381,6 +381,8 @@ html.lys .infoh{border-color:#a9cdee}
 .an.on .an-thumb,.an.on .an-thumbd{animation:anthumb 1.4s ease-in-out infinite}
 .an.on .an-hl{animation:anhl 1.8s ease-in-out infinite}
 .an.on .an-hr{animation:anhr 1.8s ease-in-out infinite}
+.an.on .an-boo{animation:anboo 1s ease-out infinite}
+.an.on .an-boo.b2{animation-delay:.35s}
 .an.on .an-shake{animation:anshake .35s linear infinite}
 .an.on .an-puff{animation:anpuff 1.4s ease-out infinite}
 .an.on .an-shine{animation:antw 1.8s ease-in-out infinite}
@@ -416,6 +418,19 @@ html.lys .infoh{border-color:#a9cdee}
 @keyframes anhr{0%,100%{transform:translateX(0)}50%{transform:translateX(4%)}}
 @keyframes anshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3%) rotate(-2deg)}75%{transform:translateX(3%) rotate(2deg)}}
 @keyframes anpuff{0%{transform:translateY(0) scale(.7);opacity:0}30%{opacity:1}100%{transform:translateY(-25%) scale(1.2);opacity:0}}
+@keyframes anboo{0%{transform:translateX(-12%) scale(.4);opacity:0}25%{opacity:1}60%{transform:translateX(0) scale(1.1);opacity:1}100%{transform:translateX(8%) scale(1);opacity:0}}
+
+/* velger: egne figurer (stille) + vanlige emojier */
+.emo{display:block;padding:0 8px 6px}
+.emo .etabs{display:flex;gap:4px;margin-bottom:4px}
+.emo .etab{font:inherit;font-size:.8rem;padding:2px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:var(--ink,inherit);cursor:pointer}
+.emo .etab.on{background:rgba(255,255,255,.4);font-weight:700}
+html.lys .emo .etab{border-color:#8fb4d8;background:#eef6fd;color:#10304f}html.lys .emo .etab.on{background:#d8e8f6}
+.emo .eg{display:flex;flex-wrap:wrap;gap:2px}
+.emo .eg[hidden]{display:none}
+.emo .ef{font-size:1.35rem;min-width:2.3rem;height:2.3rem;padding:2px;border:0;background:transparent;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.emo .ef:hover,.emo .ef:focus-visible{background:rgba(255,255,255,.3)}
+.emo .ef .an{width:1.9rem;height:1.9rem;vertical-align:0}
 
 </style>
 </head>
@@ -659,6 +674,7 @@ const AN_FIG={
   glasses:["briller",AN_HOP(`<circle cx="22" cy="28" r="9.5" fill="#fff" fill-opacity=".85" stroke="#3a2410" stroke-width="3.2"/><circle cx="42" cy="28" r="9.5" fill="#fff" fill-opacity=".85" stroke="#3a2410" stroke-width="3.2"/><path d="M31.5 27q.5-2 1 0M12.5 27L8 24M51.5 27L56 24" ${AN_LINE} stroke-width="3"/><g class="an-blink"><circle cx="22" cy="29" r="3.6" fill="#3a2410"/><circle cx="42" cy="29" r="3.6" fill="#3a2410"/><circle cx="23.2" cy="27.6" r="1.3" fill="#fff"/><circle cx="43.2" cy="27.6" r="1.3" fill="#fff"/></g>`+AN_CHEEKS+'<path d="M19 43q13 11 26 0" fill="none" stroke="#3a2410" stroke-width="3.4" stroke-linecap="round"/><path d="M15 21q4-4 9-3" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>')],
   yes:["bra",AN_SVG(AN_SH+`<g class="an-hop"><svg x="0" y="3" width="40" height="40" viewBox="0 0 64 64">${AN_FACE("#ffd23f")}${AN_EYES}${AN_CHEEKS}${AN_MOUTH}</svg></g><g class="an-thumb"><svg x="24" y="21" width="32" height="32" viewBox="0 0 64 64">${AN_HAND}</svg></g>`)],
   no:["dårlig",AN_SVG(AN_SH+`<g class="an-sag"><svg x="0" y="3" width="40" height="40" viewBox="0 0 64 64">${AN_FACE("#ffd23f")}${AN_EYES}<path d="M15 23L27 18M49 23L37 18" ${AN_LINE} stroke-width="3"/><path d="M21 49c3-7 19-7 22 0" ${AN_LINE} stroke-width="3.4"/></svg></g><g class="an-thumbd"><g style="transform:rotate(180deg)"><svg x="30" y="22" width="32" height="32" viewBox="0 0 64 64">${AN_HAND}</svg></g></g>`)],
+  boo:["buuu",AN_SVG(AN_SH+`<g class="an-hop"><svg x="0" y="10" width="44" height="44" viewBox="0 0 64 64">${AN_FACE("#ffd23f")}<path d="M13 22l12 6M51 22l-12 6" ${AN_LINE} stroke-width="3.6"/><g class="an-blink"><ellipse cx="23" cy="32" rx="3.2" ry="4.2" fill="#3a2410"/><ellipse cx="41" cy="32" rx="3.2" ry="4.2" fill="#3a2410"/></g><g class="an-jaw"><ellipse cx="32" cy="49" rx="8" ry="9" fill="#7a1d12" stroke="#3a2410" stroke-width="3"/><ellipse cx="32" cy="54" rx="5" ry="3.4" fill="#ff6f7a"/></g></svg></g><g class="an-boo"><text x="45" y="30" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#fff" stroke="#3a2410" stroke-width="3.4" paint-order="stroke" stroke-linejoin="round" transform="rotate(-12 50 28)">BUU</text></g><g class="an-boo b2"><text x="46" y="46" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="10" fill="#fff" stroke="#3a2410" stroke-width="3" paint-order="stroke" stroke-linejoin="round" transform="rotate(8 50 44)">buu</text></g>`)],
   hourglass:["tilbake snart",AN_SVG(`<g class="an-hwob"><g class="an-turn"><rect x="10" y="4" width="44" height="8" rx="4" fill="#c9742b" stroke="#3a2410" stroke-width="3"/><rect x="10" y="52" width="44" height="8" rx="4" fill="#c9742b" stroke="#3a2410" stroke-width="3"/><path d="M15 12h34c0 12-7 16-10 20 3 4 10 8 10 20H15c0-12 7-16 10-20-3-4-10-8-10-20z" fill="#d8f0ff" fill-opacity=".8" stroke="#3a2410" stroke-width="3.6" stroke-linejoin="round"/><path class="an-sandc" d="M20 14h24c-1 7-6 10-9 14h-6c-3-4-8-7-9-14z" fill="#ffb81f"/><path class="an-sandd" d="M20 51c1-6 6-9 12-9s11 3 12 9z" fill="#ffb81f"/><path d="M19 14c0 6 3 9 6 12" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8" fill="none"/></g></g>`)]
 };
 /* kode (små bokstaver) -> figur. Alt som ikke står her blir vanlig emoji. */
@@ -1669,9 +1685,17 @@ function wire(){
     if(!tx.value){S.myTyp=null;trackMe(true);return}
     const first=!S.myTyp||now-S.myTyp.n>3000;S.myTyp={c:S.chat.id,n:now};trackMe(first)});
   const emo=$("#emo");
+  const put=t=>{const v=tx.value,pre=v&&!/\s$/.test(v)?" ":"";tx.value=v+pre+t+" ";tx.focus()};
+  const FIGS=[[":)","smile"],[":D","grin"],[";)","wink"],[":(","sad"],[":P","tongue"],[":O","surprised"],[":'(","cry"],["xD","xd"],["(lol)","lol"],["(Y)","yes"],["(N)","no"],[":-@","angry"],["(H)","cool"],["8-)","glasses"],["(6)","devil"],["(A)","angel"],["(K)","kiss"],["<3","heart"],["(U)","broken"],["(b)","beer"],["(*)","star"],["(brb)","hourglass"]];
+  const pf=el("div",{class:"eg"}),pe=el("div",{class:"eg",hidden:true});
+  for(const[c,id]of FIGS){const b=el("button",{type:"button",class:"ef",title:c+" ("+AN_FIG[id][0]+")","aria-label":AN_FIG[id][0]+", skriver "+c,onclick:()=>put(c)});b.append(anEl(id));pf.append(b)}
   for(const e of ["😊","😃","😉","🙁","😛","❤️","👍","👎","😮","😎","😈","😇","😢","💋","💔","🎉"]){
-    emo.append(el("button",{type:"button",onclick:()=>{tx.value+=e;tx.focus()}},e));
+    pe.append(el("button",{type:"button",class:"ef",onclick:()=>{tx.value+=e;tx.focus()}},e));
   }
+  const t1=el("button",{type:"button",class:"etab on"},"Figurer"),t2=el("button",{type:"button",class:"etab"},"Emoji");
+  const tab=n=>{pf.hidden=n!==1;pe.hidden=n!==2;t1.classList.toggle("on",n===1);t2.classList.toggle("on",n===2)};
+  t1.onclick=()=>tab(1);t2.onclick=()=>tab(2);
+  emo.append(el("div",{class:"etabs"},t1,t2),pf,pe);
   $("#ab").addEventListener("click",()=>$("#af").click());
   $("#cb").addEventListener("click",camOpen);
   $("#cf").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)sendImage(f)});
