@@ -623,7 +623,7 @@ function viewNoKey(){
       el("button",{id:"pair",onclick:startPairing},"Be om nøkkelen")),
     el("div",{class:"card"},el("strong",{},"2. Gjenopprettingskode"),el("p",{class:"dim"},"Koden du fikk da du lagde kontoen."),
       el("div",{class:"row"},code,el("button",{id:"rcgo",onclick:async()=>{try{await adoptIdentity(await restoreFromCode(code.value));toast("Nøkkelen er tilbake");await start()}catch(e){fail(e)}}},"Gjenopprett"))),
-    el("button",{class:"glass",onclick:()=>sb.auth.signOut()},"Logg ut"));
+    el("button",{class:"glass",onclick:doLogout},"Logg ut"));
 }
 async function startPairing(){
   const app=scrHost();
@@ -805,6 +805,18 @@ function showInfo(){
 function closeInfo(){const o=$("#info");o.hidden=true;o.textContent=""}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#info").hidden)closeInfo()});
 
+/* Logg ut. supabase-js sin signOut() avbryter uten å gjøre noe hvis kallet mot serveren feiler (nett, utløpt økt, uventet svar), og da ble brukeren stående på skjermen. Derfor: prøv vanlig utlogging, ellers lokalt, ellers fjern økten for hånd og last siden på nytt. */
+async function doLogout(){
+  try{if(S.user&&S.id)await Promise.race([sb.rpc("set_presence",{p_st:"off",p_typ:null}),new Promise(r=>setTimeout(r,2000))])}catch(e){}
+  let bad=false;
+  try{const r=await Promise.race([sb.auth.signOut(),new Promise(r=>setTimeout(()=>r({error:1}),4000))]);bad=!!(r&&r.error)}catch(e){bad=true}
+  await new Promise(r=>setTimeout(r,50));
+  if(S.user){
+    try{await sb.auth.signOut({scope:"local"})}catch(e){}
+    await new Promise(r=>setTimeout(r,50));
+    if(S.user){try{Object.keys(localStorage).filter(k=>/^sb-.*-auth-token/.test(k)).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()}
+  }
+}
 /* ---------- hovedvindu ---------- */
 let wired=false;
 async function start(){
@@ -1412,7 +1424,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#cam").hidden)c
 function wire(){
   $("#meb").addEventListener("click",()=>{const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
   $("#infob").addEventListener("click",showInfo);
-  $("#outb").addEventListener("click",async()=>{try{await sb.rpc("set_presence",{p_st:"off",p_typ:null})}catch(e){}sb.auth.signOut()});
+  $("#outb").addEventListener("click",doLogout);
   $("#lpv").value=LP_ON()?"on":"off";$("#lpv").addEventListener("change",e=>{try{localStorage.setItem("pling_lp",e.target.value==="off"?"0":"1")}catch(x){}});
   $("#thm").value=window.plingThemeGet();$("#thm").addEventListener("change",e=>window.plingTheme(e.target.value));
   $("#pnm").addEventListener("change",()=>{const n=$("#pnm").value.trim();if(!n){$("#pnm").value=S.profile.name;return}if(n!==S.profile.name)saveProfile({name:n.slice(0,24)})});
