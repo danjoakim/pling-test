@@ -435,6 +435,12 @@ html.lys .emo .etab{border-color:#8fb4d8;background:#eef6fd;color:#10304f}html.l
 /* skjulte filvalg skal aldri fange klikk (de la seg usynlig over smilefjes-knappen) */
 input.vh{position:fixed!important;left:-9999px!important;top:0!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
 
+/* personlig melding ved siden av navnet (vennelista og chatvinduet) */
+.conv .nl{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv .npm,.ti .tpm{font-weight:400;font-style:italic;opacity:.78}
+.ti{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.conv .nl b{display:inline!important}
+
 </style>
 </head>
 <body>
@@ -1176,7 +1182,13 @@ async function saveProfile(patch){
 const ORD={on:0,away:1,busy:1,off:2};
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
 function prev(id){const l=S.last.get(id);if(!l)return "";const t=emoji(l.t).replace(/\s+/g," ");return (l.mine?"Du: ":"")+(t.length>60?t.slice(0,60)+"…":t)}
+function drawTitle(){
+  const t=$("#title");if(!S.chat){t.textContent="";return}
+  const id=S.chat.other,pm=(S.profiles.get(id)||{}).pm;t.textContent="";
+  t.append(nameOf(id));if(pm){t.append(el("span",{class:"tpm"}," – "+pm));t.title=nameOf(id)+" – "+pm}else t.removeAttribute("title");
+}
 function drawFriends(){
+  if(S.chat&&$("#title")&&$("#title").dataset.k!==((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)){$("#title").dataset.k=((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other);drawTitle()}
   const box=$("#friends");if(!box)return;box.textContent="";
   const rows=S.friends.map(id=>({id,st:ST[stOf(id)]||"off"}));
   rows.sort((a,b)=>ORD[a.st]-ORD[b.st]||nameOf(a.id).localeCompare(nameOf(b.id),"nb"));
@@ -1184,7 +1196,7 @@ function drawFriends(){
   for(const r of rows){
     const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
-      el("span",{class:"t"},el("b",{},nameOf(r.id)),el("small",{},prev(r.id)||p.pm||word[r.st])),
+      el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
       el("span",{class:"rt"},S.unread.get(r.id)?el("span",{class:"badge",title:"Uleste meldinger"},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
     if(S.unread.get(r.id))b.classList.add("unread");
     b.addEventListener("dblclick",()=>openChat(r.id));
@@ -1245,7 +1257,7 @@ function drawExp(){
 }
 function drawChatHead(){
   if(!S.chat)return;const id=S.chat.other,st=ST[stOf(id)]||"off";
-  $("#title").textContent=nameOf(id);
+  drawTitle();
   const pr=$("#pr");pr.textContent="";pr.append(pav(id,st));
   const w=$("#who");w.textContent="";
   const p=S.profiles.get(id)||{};
