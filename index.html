@@ -466,6 +466,9 @@ input.vh{position:fixed!important;left:-9999px!important;top:0!important;width:1
 .rxo:hover,.rxo:focus-visible{background:#e6f1fa}.rxo.me{background:#d8ecff}
 .rxo .an{width:30px;height:30px;vertical-align:0}
 
+.brow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 0}
+.brow span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 </style>
 </head>
 <body>
@@ -490,6 +493,8 @@ input.vh{position:fixed!important;left:-9999px!important;top:0!important;width:1
     <label class="lbl" title="Bildet vises bare for vennene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
     <div class="grp">Sikkerhet</div>
     <div id="seccard" class="seccard"></div>
+    <div class="grp" id="bgrp" hidden>Blokkerte</div>
+    <div id="blist"></div>
     <button class="glass sm" id="infob" type="button">Personvern og hjelp</button>
     <button class="glass sm" id="outb" type="button">Logg ut</button>
    </div>
@@ -521,7 +526,7 @@ input.vh{position:fixed!important;left:-9999px!important;top:0!important;width:1
     <div><div class="grp">Sikkerhetsnummer</div><div class="sn" id="sn"></div><div class="fine">Sammenlign nummeret med vennen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.</div></div>
     <div><div class="fine" style="margin-bottom:4px">Utløp for nye meldinger i samtalen (gjelder begge)</div>
      <select id="ex" aria-label="Utløp for nye meldinger i samtalen (gjelder begge)"><option value="0">Utløper ikke</option><option value="1">Etter 1 dag</option><option value="7">Etter 7 dager</option><option value="30">Etter 30 dager</option></select></div>
-    <div class="row"><button class="glass" id="bd" type="button">Last ned</button><button class="glass" id="bx" type="button">Slett mine meldinger</button><button class="glass" id="bfr" type="button">Fjern venn</button></div>
+    <div class="row"><button class="glass" id="bd" type="button">Last ned</button><button class="glass" id="bx" type="button">Slett mine meldinger</button><button class="glass" id="bfr" type="button">Fjern venn</button><button class="glass" id="bbl" type="button">Blokker</button></div>
     <div class="fine" id="fp"></div>
    </div>
    <div class="expn" id="expn" hidden></div>
@@ -1137,11 +1142,16 @@ async function refresh(){
       try{const as=await q(sb.from("avatars").select("id,data").in("id",S.friends));for(const a of as)if(okAv(a.data))S.av.set(a.id,a.data)}catch(e){}
     }
     if(S.chat&&!S.friends.includes(S.chat.other))closeChat();
+    try{S.blocks=await q(sb.from("blocks").select("blocked,name"),"Blokkerte")}catch(e){S.blocks=S.blocks||[]}
     await loadPreviews();
-    drawReqs();drawFriends();drawSec();
+    drawReqs();drawFriends();drawSec();drawBlocks();
     if(S.chat){drawExp();drawChatHead();await loadMsgs()}
   }catch(e){fail(e)}
 }
+function drawBlocks(){
+  const c=$("#blist");if(!c)return;c.textContent="";const bl=S.blocks||[];$("#bgrp").hidden=!bl.length;
+  for(const b of bl)c.append(el("div",{class:"brow"},el("span",{},b.name||"Ukjent"),el("button",{class:"glass sm",type:"button",onclick:async()=>{
+    try{await q(sb.rpc("unblock_user",{p_other:b.blocked}),"Fjerne blokkering");toast("Blokkeringen er fjernet");refresh()}catch(e){fail(e)}}},"Fjern")))}
 const readKey=cid=>"pling_read_"+S.user.id+"_"+cid;
 const getRead=cid=>S.reads.get(cid)||0;
 const setRead=(cid,id)=>{if(id>getRead(cid)){S.reads.set(cid,id);sb.rpc("mark_read",{p_chat:cid,p_id:id}).then(()=>{},()=>{})}};
@@ -1805,6 +1815,7 @@ function wire(){
     if(mine.length)await sb.storage.from(BUCKET).remove(mine);
     await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),"Slette");S.sig=null;toast("Dine meldinger er slettet");refreshSoon()}catch(e){fail(e)}});
   sure($("#bfr"),"Fjern venn",async()=>{try{await q(sb.rpc("remove_friend",{p_other:S.chat.other}),"Fjerne venn");closeChat();refresh()}catch(e){fail(e)}});
+  sure($("#bbl"),"Blokker",async()=>{try{await q(sb.rpc("block_user",{p_other:S.chat.other}),"Blokkere");closeChat();toast("Blokkert");refresh()}catch(e){fail(e)}});
   $("#bd").addEventListener("click",()=>{
     const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?"(dobbeltpling)":m.img?"(bilde)":m.ok?m.t:"(kan ikke dekrypteres)")).join("\n");
     download("pling-samtale.txt",t+"\n");
