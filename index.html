@@ -482,6 +482,8 @@ input.vh{position:fixed!important;left:-9999px!important;top:0!important;width:1
 .ff .bd{fill:#eef6fd}.ff.off .bd{fill:#9aa7b5}.ff .ab{stroke:#fff;stroke-opacity:.4;stroke-width:.8}
 html.lys .ff .bd{fill:#1b5fb8}html.lys .ff.off .bd{fill:#9aa9ba}html.lys .ff .ab{stroke:#fff;stroke-opacity:.5}
 .tbn .prkw{width:84px;margin:2px 0 0 4px}#tbi[hidden]{display:none}
+.epv{flex:none;padding:4px 12px;font-size:13px;opacity:.85;display:flex;align-items:center;flex-wrap:wrap;gap:2px;min-height:24px;border-top:1px solid rgba(120,160,210,.25)}
+.epv[hidden]{display:none}.epv .an{width:22px;height:22px;display:inline-block}.epv .an svg{width:100%;height:100%}
 
 </style>
 </head>
@@ -546,6 +548,7 @@ html.lys .ff .bd{fill:#1b5fb8}html.lys .ff.off .bd{fill:#9aa9ba}html.lys .ff .ab
    <div class="expn" id="expn" hidden></div>
    <div id="log" hidden></div>
    <div class="typing" id="typ" hidden></div>
+   <div class="epv" id="epv" hidden aria-hidden="true"></div>
    <div class="emo" id="emo" hidden></div>
    <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="Vis emoji">☺</button><button class="glass eb" id="ab" type="button" aria-label="Send et bilde" title="Send et bilde">📎</button><button class="glass eb" id="cb" type="button" aria-label="Ta bilde med kameraet" title="Ta bilde med kameraet">📷</button><input class="vh" id="af" type="file" accept="image/*" tabindex="-1"><input class="vh" id="cf" type="file" accept="image/*" capture="environment" tabindex="-1"><input id="tx" placeholder="Skriv en melding …" maxlength="1000" autocomplete="off" aria-label="Melding"><button id="sd" type="button">Send</button><button id="dp" class="hot" type="button" title="Spiller to plinger og vibrerer hos mottakeren">Dobbeltpling</button></div>
   </section>
@@ -1852,23 +1855,29 @@ function wire(){
   });
   const tx=$("#tx");
   const send=async()=>{
-    const t=tx.value.trim();if(!t)return;tx.value="";
+    const t=tx.value.trim();if(!t)return;tx.value="";drawPv();
     const pl={t,ts:Date.now()},u=LP_ON()?firstUrl(t):null,sd=$("#sd");
     if(u){sd.disabled=true;sd.textContent="…";try{const lk=await fetchPreview(u);if(lk)pl.lk=lk}finally{sd.disabled=false;sd.textContent="Send"}}
-    if(!await sendMsg(pl))tx.value=t};
+    if(!await sendMsg(pl)){tx.value=t;drawPv()}};
   $("#sd").addEventListener("click",send);
   tx.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
   /* «skriver …»: første tastetrykk etter en pause sendes med en gang, så sendes det hvert 2. sekund mens du skriver. Tomt felt sender «ikke skriver» med en gang. */
   tx.addEventListener("input",()=>{if(!S.chat)return;const now=Date.now();
     if(!tx.value){S.myTyp=null;trackMe(true);return}
     const first=!S.myTyp||now-S.myTyp.n>3000;S.myTyp={c:S.chat.id,n:now};trackMe(first)});
+  /* forhåndsvisning av smilefjes mens du skriver (27. oktober): vises bare når teksten inneholder en kode; selve meldingen sendes som før */
+  const epv=$("#epv");
+  const drawPv=()=>{const t=tx.value;epv.textContent="";if(!t){epv.hidden=true;return}
+    const ns=emojiNodes(t);if(!ns.some(n=>typeof n!=="string")&&ns.join("")===t){epv.hidden=true;return}
+    ns.forEach(n=>epv.append(n));epv.hidden=false};
+  tx.addEventListener("input",drawPv);
   const emo=$("#emo");
-  const put=t=>{const v=tx.value,pre=v&&!/\s$/.test(v)?" ":"";tx.value=v+pre+t+" ";tx.focus()};
+  const put=t=>{const v=tx.value,pre=v&&!/\s$/.test(v)?" ":"";tx.value=v+pre+t+" ";drawPv();tx.focus()};
   const FIGS=[[":)","smile"],[":D","grin"],[";)","wink"],[":(","sad"],[":P","tongue"],[":O","surprised"],[":'(","cry"],["xD","xd"],["(lol)","lol"],[":L","rofl"],["(Y)","yes"],["(N)","no"],[":-@","angry"],["(H)","cool"],["8-)","glasses"],["(6)","devil"],["(A)","angel"],["(K)","kiss"],["<3","heart"],["(U)","broken"],["(b)","beer"],["(*)","star"],["(brb)","hourglass"]];
   const pf=el("div",{class:"eg"}),pe=el("div",{class:"eg",hidden:true});
   for(const[c,id]of FIGS){const b=el("button",{type:"button",class:"ef",title:c+" ("+AN_FIG[id][0]+")","aria-label":AN_FIG[id][0]+", skriver "+c,onclick:()=>put(c)});b.append(anEl(id));pf.append(b)}
   for(const e of ["😊","😃","😉","🙁","😛","❤️","👍","👎","😮","😎","😈","😇","😢","💋","💔","🎉"]){
-    pe.append(el("button",{type:"button",class:"ef",onclick:()=>{tx.value+=e;tx.focus()}},e));
+    pe.append(el("button",{type:"button",class:"ef",onclick:()=>{tx.value+=e;drawPv();tx.focus()}},e));
   }
   const t1=el("button",{type:"button",class:"etab on"},"Figurer"),t2=el("button",{type:"button",class:"etab"},"Emoji");
   const tab=n=>{pf.hidden=n!==1;pe.hidden=n!==2;t1.classList.toggle("on",n===1);t2.classList.toggle("on",n===2)};
