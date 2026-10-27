@@ -383,6 +383,10 @@ html.lys .infoh{border-color:#a9cdee}
 .an.on .an-hr{animation:anhr 1.8s ease-in-out infinite}
 .an.on .an-boo{animation:anboo 1s ease-out infinite}
 .an.on .an-boo.b2{animation-delay:.35s}
+.an.on .an-roll{animation:anroll .7s ease-in-out infinite}
+.an.on .an-squirt.q3{animation-delay:.5s}
+.an.on .an-squirt.r.q3{animation-delay:.6s}
+.an.on .an-squirt.r{animation-name:ansquirtr}
 .an.on .an-shake{animation:anshake .35s linear infinite}
 .an.on .an-puff{animation:anpuff 1.4s ease-out infinite}
 .an.on .an-shine{animation:antw 1.8s ease-in-out infinite}
@@ -440,6 +444,8 @@ input.vh{position:fixed!important;left:-9999px!important;top:0!important;width:1
 .conv .npm,.ti .tpm{font-weight:400;font-style:italic;opacity:.78}
 .ti{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .conv .nl b{display:inline!important}
+@keyframes anroll{0%,100%{transform:rotate(-14deg) translateX(-2%)}50%{transform:rotate(14deg) translateX(2%)}}
+@keyframes ansquirtr{0%{transform:translate(0,0);opacity:1}100%{transform:translate(40%,30%);opacity:0}}
 
 </style>
 </head>
@@ -591,7 +597,7 @@ const download=(name,text)=>{const a=el("a",{href:URL.createObjectURL(new Blob([
 const EMO={":)":"😊",":-)":"😊",":D":"😃",";)":"😉",":(":"🙁",":P":"😛",":p":"😛","(L)":"❤️","(Y)":"👍","(N)":"👎",":O":"😮","8-)":"😎","(6)":"😈","(A)":"😇",":'(":"😢","(K)":"💋","(U)":"💔"};
 const EMO2={":-D":"😃",":-P":"😛",":-(":"🙁",";-)":"😉",":-O":"😮",":-@":"😠",":@":"😠",":-#":"🤐",":-|":"😐",":|":"😐",":-$":"😳",":$":"😳",":-S":"😕",":S":"😕",":-*":"😘",":*":"😘",":-]":"😍",":]":"😍",":-[":"😈","*-)":"🤔","+o(":"🤢","|-)":"😴","8-|":"🤓","8o|":"😬",":8)":"👽",":}":"👸","<3":"❤️","(@)":"🐱","(&)":"🐶","(*)":"⭐","(#)":"☀️","(^)":"🎂","(||)":"🍜","(~)":"🎬","('.')":"🐰",
 "(b)":"🍺","(d)":"🍸","(f)":"🌹","(g)":"🎁","(t)":"📞","(R)":"🌈","(w)":"🥀",
-"(brb)":"⏳","(h)":"😎","(lol)":"😂","(rotfl)":"🤣","(boo)":"👻","(ap)":"✈️","(au)":"🚗","(bah)":"🐑","(bus)":"🚌","(co)":"💻","(ip)":"🏝️","(li)":"⚡","(mo)":"💰","(mp)":"📱","(nah)":"🐐","(nnh)":"🐐","(pi)":"🍕","(pl)":"🍽️","(pu)":"☝️","(sn)":"🐌","(so)":"⚽","(st)":"⛈️","(tu)":"🐢","(um)":"☂️","(wo)":"💼","(xo)":"😘","(yn)":"🤞","(h5)":"🙌","(xx)":"🎮"};
+"(brb)":"⏳","(h)":"😎",":L":"🤣","(lol)":"😂","(rotfl)":"🤣","(boo)":"👻","(ap)":"✈️","(au)":"🚗","(bah)":"🐑","(bus)":"🚌","(co)":"💻","(ip)":"🏝️","(li)":"⚡","(mo)":"💰","(mp)":"📱","(nah)":"🐐","(nnh)":"🐐","(pi)":"🍕","(pl)":"🍽️","(pu)":"☝️","(sn)":"🐌","(so)":"⚽","(st)":"⛈️","(tu)":"🐢","(um)":"☂️","(wo)":"💼","(xo)":"😘","(yn)":"🤞","(h5)":"🙌","(xx)":"🎮"};
 for(const k in EMO2)if(!(k in EMO))EMO[k]=EMO2[k];
 const EMO_LC=new Map(Object.keys(EMO).map(k=>[k.toLowerCase(),EMO[k]]));
 const EMO_RE=new RegExp(Object.keys(EMO).sort((a,b)=>b.length-a.length).map(k=>k.replace(/[^a-z0-9]/gi,c=>String.fromCharCode(92)+c)+(/[a-z0-9]$/i.test(k)?"(?![a-z0-9])":"")).join("|"),"gi");
@@ -684,10 +690,11 @@ const AN_FIG={
   yes:["bra",AN_SVG(AN_SH+`<g class="an-hop"><svg x="0" y="3" width="40" height="40" viewBox="0 0 64 64">${AN_FACE("#ffd23f")}${AN_EYES}${AN_CHEEKS}${AN_MOUTH}</svg></g><g class="an-thumb"><svg x="24" y="21" width="32" height="32" viewBox="0 0 64 64">${AN_HAND}</svg></g>`)],
   no:["dårlig",AN_SVG(AN_SH+`<g class="an-sag"><svg x="0" y="3" width="40" height="40" viewBox="0 0 64 64">${AN_FACE("#ffd23f")}${AN_EYES}<path d="M15 23L27 18M49 23L37 18" ${AN_LINE} stroke-width="3"/><path d="M21 49c3-7 19-7 22 0" ${AN_LINE} stroke-width="3.4"/></svg></g><g class="an-thumbd"><g style="transform:rotate(180deg)"><svg x="30" y="22" width="32" height="32" viewBox="0 0 64 64">${AN_HAND}</svg></g></g>`)],
   boo:["buuu",AN_SVG(AN_SH+`<g class="an-hop"><svg x="0" y="10" width="44" height="44" viewBox="0 0 64 64">${AN_FACE("#ffd23f")}<path d="M13 22l12 6M51 22l-12 6" ${AN_LINE} stroke-width="3.6"/><g class="an-blink"><ellipse cx="23" cy="32" rx="3.2" ry="4.2" fill="#3a2410"/><ellipse cx="41" cy="32" rx="3.2" ry="4.2" fill="#3a2410"/></g><g class="an-jaw"><ellipse cx="32" cy="49" rx="8" ry="9" fill="#7a1d12" stroke="#3a2410" stroke-width="3"/><ellipse cx="32" cy="54" rx="5" ry="3.4" fill="#ff6f7a"/></g></svg></g><g class="an-boo"><text x="45" y="30" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#fff" stroke="#3a2410" stroke-width="3.4" paint-order="stroke" stroke-linejoin="round" transform="rotate(-12 50 28)">BUU</text></g><g class="an-boo b2"><text x="46" y="46" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="10" fill="#fff" stroke="#3a2410" stroke-width="3" paint-order="stroke" stroke-linejoin="round" transform="rotate(8 50 44)">buu</text></g>`)],
+  rofl:["ler seg i hjel",AN_SVG(AN_SH+`<g class="an-roll"><g class="an-lolhop">${AN_FACE("#ffd23f")}<path d="M11 20l12 7-12 7M53 20l-12 7 12 7" ${AN_LINE} stroke-width="4"/><ellipse cx="13" cy="42" rx="4" ry="2.8" fill="#ff7b6b" opacity=".85"/><ellipse cx="51" cy="42" rx="4" ry="2.8" fill="#ff7b6b" opacity=".85"/><g class="an-jaw"><path d="M12 37c1 20 39 20 40 0z" fill="#7a1d12" stroke="#3a2410" stroke-width="3.2" stroke-linejoin="round"/><path d="M14.5 38.5h35c0 2.4-1 4-2.4 5H16.9c-1.4-1-2.4-2.6-2.4-5z" fill="#fff"/><ellipse cx="32" cy="53" rx="10" ry="4.6" fill="#ff6f7a"/><path d="M32 48v8" stroke="#c4414d" stroke-width="1.8" stroke-linecap="round"/></g></g></g><path class="an-squirt" d="M9 30c-3 4-2 7 0 8 3-1 3-5 0-8z" fill="#8fd4ff" stroke="#3a2410" stroke-width="1.6" stroke-linejoin="round"/><path class="an-squirt q2" d="M7 38c-3 4-2 7 0 8 3-1 3-5 0-8z" fill="#8fd4ff" stroke="#3a2410" stroke-width="1.6" stroke-linejoin="round"/><path class="an-squirt q3" d="M11 24c-3 4-2 7 0 8 3-1 3-5 0-8z" fill="#8fd4ff" stroke="#3a2410" stroke-width="1.6" stroke-linejoin="round"/><path class="an-squirt r" d="M55 30c-3 4-2 7 0 8 3-1 3-5 0-8z" fill="#8fd4ff" stroke="#3a2410" stroke-width="1.6" stroke-linejoin="round"/><path class="an-squirt r q2" d="M57 38c-3 4-2 7 0 8 3-1 3-5 0-8z" fill="#8fd4ff" stroke="#3a2410" stroke-width="1.6" stroke-linejoin="round"/><path class="an-squirt r q3" d="M53 24c-3 4-2 7 0 8 3-1 3-5 0-8z" fill="#8fd4ff" stroke="#3a2410" stroke-width="1.6" stroke-linejoin="round"/>`)],
   hourglass:["tilbake snart",AN_SVG(`<g class="an-hwob"><g class="an-turn"><rect x="10" y="4" width="44" height="8" rx="4" fill="#c9742b" stroke="#3a2410" stroke-width="3"/><rect x="10" y="52" width="44" height="8" rx="4" fill="#c9742b" stroke="#3a2410" stroke-width="3"/><path d="M15 12h34c0 12-7 16-10 20 3 4 10 8 10 20H15c0-12 7-16 10-20-3-4-10-8-10-20z" fill="#d8f0ff" fill-opacity=".8" stroke="#3a2410" stroke-width="3.6" stroke-linejoin="round"/><path class="an-sandc" d="M20 14h24c-1 7-6 10-9 14h-6c-3-4-8-7-9-14z" fill="#ffb81f"/><path class="an-sandd" d="M20 51c1-6 6-9 12-9s11 3 12 9z" fill="#ffb81f"/><path d="M19 14c0 6 3 9 6 12" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8" fill="none"/></g></g>`)]
 };
 /* kode (små bokstaver) -> figur. Alt som ikke står her blir vanlig emoji. */
-const AN_CODES={":)":"smile",":-)":"smile",":d":"grin",":-d":"grin",";)":"wink",";-)":"wink",":(":"sad",":-(":"sad",":p":"tongue",":-p":"tongue",":o":"surprised",":-o":"surprised",":'(":"cry","(6)":"devil","(a)":"angel","(k)":"kiss","(xo)":"kiss","<3":"heart","(l)":"heart","(u)":"broken","(y)":"yes","(n)":"no","(b)":"beer","(*)":"star","(lol)":"lol","(brb)":"hourglass",":-@":"angry",":@":"angry","(h)":"cool","8-)":"glasses"};
+const AN_CODES={":)":"smile",":-)":"smile",":d":"grin",":-d":"grin",";)":"wink",";-)":"wink",":(":"sad",":-(":"sad",":p":"tongue",":-p":"tongue",":o":"surprised",":-o":"surprised",":'(":"cry","(6)":"devil","(a)":"angel","(k)":"kiss","(xo)":"kiss","<3":"heart","(l)":"heart","(u)":"broken","(y)":"yes","(n)":"no","(b)":"beer","(*)":"star","(lol)":"lol","(brb)":"hourglass",":-@":"angry",":@":"angry","(h)":"cool","8-)":"glasses",":l":"rofl"};
 const AN_CS={"xD":"xd","XD":"xd","T_T":"cry"};
 function anEl(id){const f=AN_FIG[id],s=document.createElement("span");s.className="an";s.setAttribute("role","img");s.setAttribute("aria-label",f[0]);s.title=f[0];s.innerHTML=f[1];return s}
 /* Som emoji(), men gir en liste med tekst og figurer. Private tegn brukes som midlertidig markør; brukerens egne slike tegn fjernes først. */
@@ -1701,7 +1708,7 @@ function wire(){
     const first=!S.myTyp||now-S.myTyp.n>3000;S.myTyp={c:S.chat.id,n:now};trackMe(first)});
   const emo=$("#emo");
   const put=t=>{const v=tx.value,pre=v&&!/\s$/.test(v)?" ":"";tx.value=v+pre+t+" ";tx.focus()};
-  const FIGS=[[":)","smile"],[":D","grin"],[";)","wink"],[":(","sad"],[":P","tongue"],[":O","surprised"],[":'(","cry"],["xD","xd"],["(lol)","lol"],["(Y)","yes"],["(N)","no"],[":-@","angry"],["(H)","cool"],["8-)","glasses"],["(6)","devil"],["(A)","angel"],["(K)","kiss"],["<3","heart"],["(U)","broken"],["(b)","beer"],["(*)","star"],["(brb)","hourglass"]];
+  const FIGS=[[":)","smile"],[":D","grin"],[";)","wink"],[":(","sad"],[":P","tongue"],[":O","surprised"],[":'(","cry"],["xD","xd"],["(lol)","lol"],[":L","rofl"],["(Y)","yes"],["(N)","no"],[":-@","angry"],["(H)","cool"],["8-)","glasses"],["(6)","devil"],["(A)","angel"],["(K)","kiss"],["<3","heart"],["(U)","broken"],["(b)","beer"],["(*)","star"],["(brb)","hourglass"]];
   const pf=el("div",{class:"eg"}),pe=el("div",{class:"eg",hidden:true});
   for(const[c,id]of FIGS){const b=el("button",{type:"button",class:"ef",title:c+" ("+AN_FIG[id][0]+")","aria-label":AN_FIG[id][0]+", skriver "+c,onclick:()=>put(c)});b.append(anEl(id));pf.append(b)}
   for(const e of ["😊","😃","😉","🙁","😛","❤️","👍","👎","😮","😎","😈","😇","😢","💋","💔","🎉"]){
