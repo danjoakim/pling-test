@@ -447,6 +447,25 @@ input.vh{position:fixed!important;left:-9999px!important;top:0!important;width:1
 @keyframes anroll{0%,100%{transform:rotate(-14deg) translateX(-2%)}50%{transform:rotate(14deg) translateX(2%)}}
 @keyframes ansquirtr{0%{transform:translate(0,0);opacity:1}100%{transform:translate(40%,30%);opacity:0}}
 
+/* reaksjoner (skisse A: piller under meldingen) */
+.m{position:relative}
+.rxs{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;width:max-content;max-width:100%}
+.rxc{flex:none;width:auto;display:inline-flex;align-items:center;gap:3px;font:inherit;font-size:12px;line-height:1;padding:1px 8px 1px 3px;border-radius:12px;border:1px solid rgba(120,160,200,.7);background:rgba(238,246,253,.85);color:#2a5a8a;cursor:pointer}
+.rxc.me{background:#d8ecff;border-color:#4a8fe0}
+.rxc .an{width:20px;height:20px;vertical-align:0}
+.rxb{position:absolute;top:-11px;right:6px;width:24px;height:24px;padding:0;border-radius:50%;border:1px solid rgba(120,160,200,.8);background:#fff;color:#4a7aa8;font-size:14px;line-height:1;cursor:pointer;opacity:0;transition:opacity .12s}
+.m:hover .rxb,.rxb:focus-visible{opacity:1}
+@media (pointer:coarse){
+.rxb{display:none}
+#log .m{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+}
+.m.lpd{box-shadow:0 0 0 3px rgba(74,143,224,.55)}
+.rxk{align-self:center;margin:0 4px 0 6px;padding:6px 12px;border-radius:16px;border:1px solid #9cc3e6;background:#eef6fd;color:#10304f;font:inherit;font-size:13px;cursor:pointer}
+.rxp{position:fixed;z-index:30;display:flex;gap:2px;padding:4px 6px;background:#fff;border:1px solid #9cc3e6;border-radius:24px;box-shadow:0 6px 18px #0004}
+.rxo{width:36px;height:36px;padding:2px;border:0;border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.rxo:hover,.rxo:focus-visible{background:#e6f1fa}.rxo.me{background:#d8ecff}
+.rxo .an{width:30px;height:30px;vertical-align:0}
+
 </style>
 </head>
 <body>
@@ -960,9 +979,10 @@ const INFO=[
    "Hvem som er venner med hvem.",
    "Når du er pålogget, statusen din og om du skriver (hvilken samtale, ikke hva). Bare vennene dine ser det.",
    "At en melding finnes: hvem som sendte den, hvilken samtale, når, når den utløper, og om den har et vedlegg (med en tilfeldig filsti). Ikke innholdet.",
+   "At du har reagert på en melding, og når. Ikke hvilken reaksjon, for den er kryptert som meldingene.",
    "Hvor langt du har lest i hver samtale (bare du ser det)."]]],
  ["Det serveren ikke ser",[
-  ["ul","Tekst, bilder, GIF-er og lenkekort i samtalene dine.",
+  ["ul","Tekst, bilder, GIF-er, lenkekort og reaksjoner i samtalene dine.",
    "Nøkkelen din. Den ligger i nettleseren din, og en kopi som er låst med gjenopprettingskoden din."]]],
  ["Lenkeforhåndsvisning",[
   "Når du sender en lenke, henter en funksjon hos oss tittel og bilde fra nettsiden, og den må se adressen for å gjøre det. Vi bruker den bare til å hente forhåndsvisningen. Mottakeren kontakter aldri nettsiden. Du kan slå funksjonen av i profilen."]],
@@ -1029,6 +1049,7 @@ async function start(){
   startPresence();
   sb.channel("pling-live")
     .on("postgres_changes",{event:"*",schema:"public",table:"messages"},p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id&&S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}refreshSoon()})
+    .on("postgres_changes",{event:"*",schema:"public",table:"reactions"},()=>refreshSoon())
     .on("postgres_changes",{event:"*",schema:"public",table:"friend_requests"},()=>refreshSoon())
     .on("postgres_changes",{event:"*",schema:"public",table:"friends"},()=>refreshSoon())
     .on("postgres_changes",{event:"*",schema:"public",table:"presence"},p=>presEvt(p))
@@ -1237,7 +1258,7 @@ function drawSec(){
 
 /* ---------- samtale ---------- */
 function closeChat(){
-  S.chat=null;S.msgs=[];S.older=[];S.sig=null;S.anSeen=new Map();
+  S.chat=null;S.msgs=[];S.older=[];S.sig=null;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
   $("#shell").classList.remove("inchat");
   for(const i of ["ch","menu","log","typ","emo","bar"])$("#"+i).hidden=true;
   $("#empty").hidden=false;$("#mb").setAttribute("aria-expanded","false");
@@ -1246,7 +1267,7 @@ function closeChat(){
 async function openChat(otherId){
   try{
     const cid=await q(sb.rpc("open_dm",{p_other:otherId}),"Åpne samtale");
-    S.chat={id:cid,other:otherId};S.msgs=[];S.older=[];S.more=false;S.sig=null;S.first=true;S.anSeen=new Map();
+    S.chat={id:cid,other:otherId};S.msgs=[];S.older=[];S.more=false;S.sig=null;S.first=true;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
     $("#shell").classList.add("inchat");
     $("#empty").hidden=true;for(const i of ["ch","log","bar"])$("#"+i).hidden=false;
     $("#menu").hidden=true;$("#emo").hidden=true;$("#mb").setAttribute("aria-expanded","false");
@@ -1355,10 +1376,13 @@ async function loadMsgs(){
   const rows=(await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(PAGE),"Meldinger")).reverse();
   if(!S.chat||S.chat.id!==cid)return;
   const key=await pairKey(other.pub),latest=await decodeRows(rows,key);
+  const rxr=await loadReacts(cid,key);
+  if(!S.chat||S.chat.id!==cid)return;
+  let rxChanged=false;if(rxr&&rxr.sig!==S.rxSig){S.rx=rxr.map;S.rxSig=rxr.sig;rxChanged=true}
   if(!S.older.length)S.more=rows.length>=PAGE;
   const out=[...S.older,...latest];
   const sig=out.map(m=>m.id).join(",");
-  if(sig===S.sig)return;S.sig=sig;
+  if(sig===S.sig){if(rxChanged)drawLog(true);return}S.sig=sig;
   const maxSeen=S.seen.get(cid)||0,fresh=S.first?[]:out.filter(m=>!m.mine&&m.id>maxSeen);
   S.seen.set(cid,out.length?out[out.length-1].id:0);
   if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?"Dobbeltpling":l.img?(l.img.t==="image/gif"?"GIF":"📷 Bilde"):(l.ok?l.t||"":"(kan ikke dekrypteres)")});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
@@ -1394,10 +1418,99 @@ function drawLog(keepPos){
     if(m.img)d.append(picEl(m.img));else
     if(m.ok)d.append(...linkify(m.t==null?"":m.t));else d.append("(kan ikke dekrypteres)");
     if(m.lk)d.append(lkCard(m.lk));
-    d.append(el("br"),el("time",{},tm(m.ts)));log.append(d);
+    d.append(el("br"),el("time",{},tm(m.ts)));
+    if(m.ok||m.img){const ch=rxChips(m);if(ch)d.append(ch);d.append(el("button",{type:"button",class:"rxb","aria-label":"Reager på meldingen",title:"Reager",onclick:e=>{e.stopPropagation();openRx(m,e.currentTarget)}},"☺"))}
+    log.append(d);
   }
   markAn();
   if(!keepPos&&(near||S.justSent))log.scrollTop=log.scrollHeight;S.justSent=false;
+}
+/* ---------- reaksjoner (kryptert som meldinger; se claude/reaksjoner.md) ---------- */
+const RX=[["rofl","ler"],["thumbup","bra"],["heart","hjerte"],["surprised","overrasket"],["cry","trist"],["thumbdown","dårlig"]];
+const RX_OK=new Set(RX.map(x=>x[0]));
+async function loadReacts(cid,key){
+  try{
+    const r=await sb.from("reactions").select("msg_id,user_id,iv,ct").eq("chat_id",cid);
+    if(!r||r.error||!Array.isArray(r.data))return null;
+    const map=new Map(),parts=[];
+    for(const x of r.data){
+      const p=await open(key,x.iv,x.ct);
+      /* meldings-id og avsender ligger også inne i det krypterte, så serveren ikke kan flytte en reaksjon til en annen melding eller person */
+      if(!p||typeof p.r!=="string"||Number(p.m)!==Number(x.msg_id)||p.u!==x.user_id)continue;
+      if(p.r===""||!RX_OK.has(p.r))continue;
+      let mp=map.get(x.msg_id);if(!mp){mp=new Map();map.set(x.msg_id,mp)}
+      mp.set(x.user_id,p.r);parts.push(x.msg_id+":"+x.user_id+":"+p.r);
+    }
+    parts.sort();return{map,sig:parts.join("|")};
+  }catch(e){return null}
+}
+function rxChips(m){
+  const mp=S.rx.get(m.id);if(!mp||!mp.size)return null;
+  const g=new Map();for(const[u,r]of mp)g.set(r,(g.get(r)||[]).concat(u));
+  const w=el("div",{class:"rxs"});
+  for(const[r,us]of g){
+    const mine=us.includes(S.user.id),nm=AN_FIG[r][0];
+    const b=el("button",{type:"button",class:"rxc"+(mine?" me":""),title:mine?"Fjern reaksjonen din ("+nm+")":nm,"aria-label":nm+", "+us.length+(mine?", din reaksjon":""),onclick:e=>{e.stopPropagation();setReact(m.id,mine?null:r)}});
+    b.append(anEl(r),el("span",{},String(us.length)));w.append(b);
+  }
+  return w;
+}
+let rxPop=null;
+function closeRx(){if(rxPop){rxPop.remove();rxPop=null}}
+function openRx(m,anchor){
+  closeRx();
+  const mine=(S.rx.get(m.id)||new Map()).get(S.user.id);
+  const p=el("div",{class:"rxp",role:"menu","aria-label":"Velg reaksjon"});
+  for(const[r,nm]of RX){
+    const b=el("button",{type:"button",class:"rxo"+(mine===r?" me":""),title:nm,"aria-label":nm,onclick:e=>{e.stopPropagation();closeRx();setReact(m.id,mine===r?null:r)}});
+    b.append(anEl(r));p.append(b);
+  }
+  if(m.ok&&m.t!=null&&!m.img)p.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();copyText(String(m.t))}},"Kopier"));
+  document.body.append(p);rxPop=p;
+  const a=anchor.getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight;
+  let x=Math.min(Math.max(8,a.right-w),innerWidth-w-8),y=a.top-h-6;if(y<8)y=a.bottom+6;
+  p.style.left=x+"px";p.style.top=y+"px";
+}
+async function copyText(t){
+  try{await navigator.clipboard.writeText(t);toast("Meldingen er kopiert");return}catch(e){}
+  try{const a=document.createElement("textarea");a.value=t;a.style.cssText="position:fixed;left:-9999px;top:0";document.body.append(a);a.select();const ok=document.execCommand("copy");a.remove();toast(ok?"Meldingen er kopiert":"Kunne ikke kopiere")}catch(e){toast("Kunne ikke kopiere")}
+}
+/* trykk og hold på en melding (berøring) åpner reaksjonsvalget */
+let lp=null,lpFired=0;
+function lpCancel(){if(lp){clearTimeout(lp.t);lp=null}}
+document.addEventListener("pointerdown",e=>{
+  if(rxPop&&!e.target.closest(".rxp,.rxb"))closeRx();
+  if(e.pointerType!=="touch")return;
+  const b=e.target.closest&&e.target.closest("#log .m[data-mid]");
+  if(!b||e.target.closest("a,button,.rxs"))return;
+  lpCancel();
+  const mid=b.dataset.mid;
+  lp={x:e.clientX,y:e.clientY,t:setTimeout(()=>{
+    lp=null;const m=S.msgs.find(z=>String(z.id)===mid);if(!m||!(m.ok||m.img))return;
+    lpFired=Date.now();b.classList.add("lpd");setTimeout(()=>b.classList.remove("lpd"),700);
+    try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}
+    openRx(m,b);
+  },450)};
+});
+document.addEventListener("pointermove",e=>{if(lp&&Math.hypot(e.clientX-lp.x,e.clientY-lp.y)>10)lpCancel()});
+for(const ev of["pointerup","pointercancel"])document.addEventListener(ev,lpCancel,true);
+document.addEventListener("scroll",lpCancel,true);
+document.addEventListener("contextmenu",e=>{if(e.target.closest&&e.target.closest("#log .m")&&matchMedia("(pointer:coarse)").matches)e.preventDefault()});
+/* fingeren løftes etter trykk-og-hold: ikke la det åpne for eksempel bildevisning */
+document.addEventListener("click",e=>{if(Date.now()-lpFired<800&&e.target.closest&&e.target.closest("#log")){e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeRx()});
+async function setReact(mid,r){
+  if(!S.chat)return;
+  const cid=S.chat.id,other=S.profiles.get(S.chat.other);if(!other)return;
+  try{
+    const key=await pairKey(other.pub),s=await seal(key,{r:r||"",m:mid,u:S.user.id});
+    const res=await sb.from("reactions").upsert({msg_id:mid,chat_id:cid,user_id:S.user.id,iv:s.iv,ct:s.ct},{onConflict:"msg_id,user_id"});
+    if(res&&res.error)throw res.error;
+    if(!S.chat||S.chat.id!==cid)return;
+    let mp=S.rx.get(mid);if(!mp){mp=new Map();S.rx.set(mid,mp)}
+    if(r)mp.set(S.user.id,r);else mp.delete(S.user.id);
+    drawLog(true);refreshSoon();
+  }catch(e){fail(e)}
 }
 async function sendMsg(payload,file){
   if(!S.chat)return false;
