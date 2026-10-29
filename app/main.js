@@ -94,44 +94,20 @@ function drawInvite(){
 /* ---------- personvern og hjelp ---------- */
 /* Teksten skal være ærlig og kort. Oppdater den når noe endres i hva serveren ser (se claude/personvern.md). */
 const INFO=[
- ["Kort fortalt",[
-  "Samtalene dine er ende-til-ende-kryptert: tekst og bilder låses i nettleseren din med en nøkkel som bare du og kompisen din har. Vi (og Supabase, som driver tjenesten) kan ikke lese dem."]],
- ["Det serveren ser",[
-  ["ul","E-postadressen din, navnet ditt, den personlige meldingen din og profilbildet ditt. Navn, melding og bilde er ikke kryptert, men bare kompisene dine (og den du har sendt en forespørsel til) kan se dem.",
-   "Hvem som er kompiser med hvem.",
-   "Når du er pålogget, statusen din og om du skriver (hvilken samtale, ikke hva). Bare kompisene dine ser det.",
-   "At en melding finnes: hvem som sendte den, hvilken samtale, når, når den utløper, og om den har et vedlegg (med en tilfeldig filsti). Ikke innholdet.",
-   "At du har reagert på en melding, og når. Ikke hvilken reaksjon, for den er kryptert som meldingene.",
-   "Hvem du har blokkert (bare du ser listen).",
-   "Hvor langt du har lest i hver samtale (bare du ser det)."]]],
- ["Det serveren ikke ser",[
-  ["ul","Tekst, bilder, GIF-er, lenkekort og reaksjoner i samtalene dine.",
-   "Nøkkelen din. Den ligger i nettleseren din, og en kopi som er låst med gjenopprettingskoden din."]]],
- ["Lenkeforhåndsvisning",[
-  "Når du sender en lenke, henter en funksjon hos oss tittel og bilde fra nettsiden, og den må se adressen for å gjøre det. Vi bruker den bare til å hente forhåndsvisningen. Mottakeren kontakter aldri nettsiden. Du kan slå funksjonen av i profilen."]],
- ["Gjenopprettingskoden",[
-  "Mister du alle enhetene dine og gjenopprettingskoden, kan ingen hente samtalehistorikken din tilbake, heller ikke vi. Lag koden under «Sikkerhet» i profilen og oppbevar den trygt."]],
- ["Invitasjonslenker",[
-  "Lenken inneholder en hemmelig kode som ikke sendes til oss før noen bruker den. Vi lagrer bare et avtrykk av den. Lenken virker én gang og i 7 dager. Send den bare til den du vil ha som kompis."]],
- ["Meldinger som utløper",[
-  "Du og kompisen din kan sette en samtale til å slette meldinger etter 1, 7 eller 30 dager. Utløpte meldinger og bilder slettes fra serveren, senest en time etter. Kompisen din kan likevel ha tatt skjermbilde eller lagret en kopi."]],
- ["Slik bruker du Prek!",[
-  ["ul","Legg til en kompis med e-postadressen hen bruker, eller send en invitasjonslenke eller QR-kode («+ Legg til kompis»).",
-   "Dobbeltklikk på en kompis for å åpne samtalen. Knappene under samtalen sender bilder og GIF-er; på mobil kan du også ta bilde.",
-   "Reager på en melding: hold musen over den og trykk ☺, eller trykk og hold på mobil. Der kan du også kopiere teksten.",
-   "Demp en kompis i menyen (⋯) i samtalen: ingen lyd eller dobbeltpling, men meldingene kommer. Gjelder bare denne enheten.",
-   "Blokker en kompis i menyen (⋯) i samtalen. Du finner og fjerner blokkeringer under navnet ditt. Hen får ikke vite det.",
-   "Smilefjesknappen har egne animerte figurer. Du kan også skrive koder som :) og (Y).",
-   "Dobbeltpling får vinduet til kompisen din til å riste. Bruk den sjelden.",
-   "Navn, status, personlig melding, bilde og utseende endrer du ved å trykke på navnet ditt øverst.",
-   "Sammenlign sikkerhetsnummeret i samtalen med kompisen din for å være sikker på at ingen ligger imellom."]]],
- ["Om tjenesten",[
-  "Prek! er en prototype under utvikling. Ting kan endre seg og gå i stykker, så ikke bruk den til noe du ikke kan miste ennå."]]
+ [tr("info.short.title"),[tr("info.short.p1")]],
+ [tr("info.sees.title"),[["ul",tr("info.sees.li1"),tr("info.sees.li2"),tr("info.sees.li3"),tr("info.sees.li4"),tr("info.sees.li5"),tr("info.sees.li6"),tr("info.sees.li7")]]],
+ [tr("info.notsees.title"),[["ul",tr("info.notsees.li1"),tr("info.notsees.li2")]]],
+ [tr("info.linkprev.title"),[tr("info.linkprev.p1")]],
+ [tr("info.recovery.title"),[tr("info.recovery.p1")]],
+ [tr("info.invites.title"),[tr("info.invites.p1")]],
+ [tr("info.expiry.title"),[tr("info.expiry.p1")]],
+ [tr("info.howto.title"),[["ul",tr("info.howto.li1"),tr("info.howto.li2"),tr("info.howto.li3"),tr("info.howto.li4"),tr("info.howto.li5"),tr("info.howto.li6"),tr("info.howto.li7"),tr("info.howto.li8"),tr("info.howto.li9")]]],
+ [tr("info.about.title"),[tr("info.about.p1")]]
 ];
 function showInfo(){
   const o=$("#info");o.textContent="";
-  const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":"Personvern og hjelp"});
-  box.append(el("div",{class:"infoh"},el("b",{},"Personvern og hjelp"),el("button",{class:"glass sm",type:"button",onclick:closeInfo},"Lukk")));
+  const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":tr("info.title")});
+  box.append(el("div",{class:"infoh"},el("b",{},tr("info.title")),el("button",{class:"glass sm",type:"button",onclick:closeInfo},tr("info.close"))));
   const body=el("div",{class:"infot"});
   for(const [h,ps] of INFO){
     body.append(el("h3",{},h));
