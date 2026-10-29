@@ -30,9 +30,9 @@ async function checkTransfers(){
   S.pairId=r.id;box.textContent="";
   const code=await pairCode(r.eph_pub);
   box.append(el("div",{class:"card pairreq",id:"pairreq"},
-    el("strong",{},"En ny enhet ber om nøkkelen din"),
-    el("p",{},"Koden på den nye enheten skal være: ",el("span",{class:"code"},code)),
-    el("p",{class:"warn fine"},"Godkjenn bare hvis det er deg, og koden stemmer med den du ser på den nye enheten."),
+    el("strong",{},tr("device.requestTitle")),
+    el("p",{},tr("device.codeShouldBe"),el("span",{class:"code"},code)),
+    el("p",{class:"warn fine"},tr("device.approveWarning")),
     el("div",{class:"row"},
       el("button",{id:"papprove",onclick:async()=>{try{
         const e=await ephPair(),key=await aesFrom(e.priv,r.eph_pub),sl=await seal(key,{v:1,priv:S.id.priv,pub:S.id.pub});
@@ -65,8 +65,8 @@ async function showInviteBanner(){
   const box=$("#invb");if(!box)return;let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
   if(!t)return;
   try{const r=await sb.rpc("peek_invite",{p_token:t});box.textContent="";
-    if(r.data)box.append(el("b",{},r.data)," har invitert deg til Prek!. Lag en konto eller logg på, så blir dere kompiser.");
-    else box.append("Invitasjonen er utløpt eller brukt. Du kan fortsatt lage en konto og legge til kompiser med e-post.");
+    if(r.data)box.append(el("b",{},r.data),tr("invite.invitedBy"));
+    else box.append(tr("invite.expiredBanner"));
     box.hidden=false}catch(e){}
 }
 function drawInvite(){
@@ -74,20 +74,20 @@ function drawInvite(){
   const mk=el("button",{class:"glass sm",id:"mkinv",type:"button",onclick:async()=>{
     try{
       const tok=b64u(crypto.getRandomValues(new Uint8Array(16))),hs=hex(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(tok))));
-      await q(sb.rpc("create_invite",{p_hash:hs}),"Lage invitasjon");
+      await q(sb.rpc("create_invite",{p_hash:hs}),tr("ctx.createInvite"));
       const link=location.origin+location.pathname+"#inv="+tok;
       box.textContent="";
       const q1=el("div",{class:"qr",id:"invqr"});q1.innerHTML=qrSvg(link);
       const inp=el("input",{id:"invlink",readonly:true,value:link,"aria-label":"Invitasjonslenke"});
       inp.addEventListener("focus",()=>inp.select());
       const row=el("div",{class:"row"},
-        el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast(tr("invite.copied"))}catch(e){inp.select();toast(tr("invite.selectToCopy"),true)}}},"Kopier"));
-      if(navigator.share)row.append(el("button",{class:"glass sm",type:"button",onclick:()=>navigator.share({title:"Prek!",text:"Bli med meg på Prek!:",url:link}).catch(()=>{})},"Del …"));
-      box.append(q1,inp,row,el("div",{class:"fine"},"Gyldig i 7 dager og kan brukes én gang. Den som åpner lenken blir kompisen din med en gang, så del den bare med den du vil ha som kompis."),
-        el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(sb.rpc("revoke_invites"),"Trekke tilbake");toast(tr("invite.revoked",{n}));drawInvite()}catch(e){fail(e)}}},"Trekk tilbake alle aktive invitasjoner"));
+        el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast(tr("invite.copied"))}catch(e){inp.select();toast(tr("invite.selectToCopy"),true)}}},tr("common.copy")));
+      if(navigator.share)row.append(el("button",{class:"glass sm",type:"button",onclick:()=>navigator.share({title:"Prek!",text:tr("invite.shareText"),url:link}).catch(()=>{})},tr("invite.share")));
+      box.append(q1,inp,row,el("div",{class:"fine"},tr("invite.validity")),
+        el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(sb.rpc("revoke_invites"),tr("ctx.revokeInvites"));toast(tr("invite.revoked",{n}));drawInvite()}catch(e){fail(e)}}},tr("invite.revokeAll")));
     }catch(e){fail(e)}
-  }},"Lag invitasjonslenke");
-  box.append(el("div",{class:"fine"},"Eller send en lenke eller QR-kode til en som ikke har konto ennå:"),mk);
+  }},tr("invite.create"));
+  box.append(el("div",{class:"fine"},tr("invite.orSendLink")),mk);
 }
 
 
@@ -226,14 +226,14 @@ window.addEventListener("pagehide",()=>{
 const muteKey=()=>"pling_mute_"+S.user.id;
 function muted(id){try{return JSON.parse(localStorage.getItem(muteKey())||"[]").includes(id)}catch(e){return false}}
 function setMuted(id,on){let l=[];try{l=JSON.parse(localStorage.getItem(muteKey())||"[]")}catch(e){}l=l.filter(x=>x!==id);if(on)l.push(id);try{localStorage.setItem(muteKey(),JSON.stringify(l))}catch(e){}}
-function drawMute(){const b=$("#bmu");if(!b||!S.chat)return;b.textContent=muted(S.chat.other)?"Slå på lyd":"Demp"}
+function drawMute(){const b=$("#bmu");if(!b||!S.chat)return;b.textContent=muted(S.chat.other)?tr("mute.unmuteButton"):tr("mute.muteButton")}
 function stOf(id){return S.pres.get(id)||"off"}
 
 /* ---------- data ---------- */
 async function refresh(){
   if(!S.user||!S.profile)return;
   try{
-    const [fr,rq]=await Promise.all([q(sb.from("friends").select("*"),"Kompiser"),q(sb.from("friend_requests").select("*"),"Forespørsler")]);
+    const [fr,rq]=await Promise.all([q(sb.from("friends").select("*"),tr("ctx.friends")),q(sb.from("friend_requests").select("*"),tr("ctx.requests"))]);
     const ids=new Set();
     S.friends=fr.map(r=>r.a===S.user.id?r.b:r.a);S.friends.forEach(i=>ids.add(i));
     S.reqIn=rq.filter(r=>r.to_id===S.user.id).map(r=>r.from_id);S.reqIn.forEach(i=>ids.add(i));
@@ -252,7 +252,7 @@ async function refresh(){
 function drawBlocks(){
   const c=$("#blist");if(!c)return;c.textContent="";const bl=S.blocks||[];$("#bgrp").hidden=!bl.length;
   for(const b of bl)c.append(el("div",{class:"brow"},el("span",{},b.name||"Ukjent"),el("button",{class:"glass sm",type:"button",onclick:async()=>{
-    try{await q(sb.rpc("unblock_user",{p_other:b.blocked}),"Fjerne blokkering");toast(tr("block.removed"));refresh()}catch(e){fail(e)}}},"Fjern")))}
+    try{await q(sb.rpc("unblock_user",{p_other:b.blocked}),tr("ctx.unblock"));toast(tr("block.removed"));refresh()}catch(e){fail(e)}}},tr("block.remove"))))}
 const readKey=cid=>"pling_read_"+S.user.id+"_"+cid;
 const getRead=cid=>S.reads.get(cid)||0;
 const setRead=(cid,id)=>{if(id>getRead(cid)){S.reads.set(cid,id);sb.rpc("mark_read",{p_chat:cid,p_id:id}).then(()=>{},()=>{})}};
@@ -301,9 +301,9 @@ function alertDp(fid,id,ts){
   b.addEventListener("click",()=>{b.remove();openChat(fid)});
   document.body.append(b);setTimeout(()=>{if(b.isConnected)b.remove()},12000);
   clearInterval(dpT);let n=0;const nm=nameOf(fid);
-  dpT=setInterval(()=>{n++;document.title=n%2?"🔔 "+nm+" ringer!":"Prek! testside";if(n>=20){clearInterval(dpT);setTitle()}},700);
+  dpT=setInterval(()=>{n++;document.title=n%2?"🔔 "+nm+" ringer!":tr("app.pageTitle");if(n>=20){clearInterval(dpT);setTitle()}},700);
 }
-function setTitle(){const tot=[...S.unread.values()].reduce((a,b)=>a+b,0);document.title=(tot?"("+tot+") ":"")+"Prek! testside"}
+function setTitle(){const tot=[...S.unread.values()].reduce((a,b)=>a+b,0);document.title=(tot?"("+tot+") ":"")+tr("app.pageTitle")}
 const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
 
 /* ---------- min profil ---------- */
@@ -318,13 +318,13 @@ function paintMe(){
 }
 function paintAvAll(){paintMe()}
 async function saveProfile(patch){
-  try{await q(sb.from("profiles").update(patch).eq("id",S.user.id),"Lagre profil");Object.assign(S.profile,patch);paintMe();drawChatHead()}catch(e){fail(e)}
+  try{await q(sb.from("profiles").update(patch).eq("id",S.user.id),tr("ctx.saveProfile"));Object.assign(S.profile,patch);paintMe();drawChatHead()}catch(e){fail(e)}
 }
 
 /* ---------- kompislisten ---------- */
 const ORD={on:0,away:1,busy:1,off:2};
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
-function prev(id){const l=S.last.get(id);if(!l)return "";const t=emoji(l.t).replace(/\s+/g," ");return (l.mine?"Du: ":"")+(t.length>60?t.slice(0,60)+"…":t)}
+function prev(id){const l=S.last.get(id);if(!l)return "";const t=emoji(l.t).replace(/\s+/g," ");return (l.mine?tr("chat.youPrefix"):"")+(t.length>60?t.slice(0,60)+"…":t)}
 function drawTitle(){
   const t=$("#title");if(!S.chat){t.textContent="";return}
   const id=S.chat.other,pm=(S.profiles.get(id)||{}).pm;t.textContent="";
@@ -335,12 +335,12 @@ function drawFriends(){
   const box=$("#friends");if(!box)return;box.textContent="";
   const rows=S.friends.map(id=>({id,st:ST[stOf(id)]||"off"}));
   rows.sort((a,b)=>ORD[a.st]-ORD[b.st]||nameOf(a.id).localeCompare(nameOf(b.id),"nb"));
-  const word={on:"Pålogget",away:"Borte",busy:"Opptatt",off:"Frakoblet"};
+  const word={on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")};
   for(const r of rows){
     const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
       el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:"Dempet"}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
-      el("span",{class:"rt"},S.unread.get(r.id)?el("span",{class:"badge",title:"Uleste meldinger"},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
+      el("span",{class:"rt"},S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
     if(S.unread.get(r.id))b.classList.add("unread");
     b.addEventListener("dblclick",()=>openChat(r.id));
     b.addEventListener("click",()=>{if(narrow()||matchMedia("(pointer:coarse)").matches)openChat(r.id)});
@@ -349,26 +349,26 @@ function drawFriends(){
   }
   for(const id of S.reqOut){
     const b=el("div",{class:"conv pend"});
-    b.append(pav(id,"off"),el("span",{class:"t"},el("b",{},nameOf(id)),el("small",{},"Venter på svar")),ff("off"));
+    b.append(pav(id,"off"),el("span",{class:"t"},el("b",{},nameOf(id)),el("small",{},tr("friends.waiting"))),ff("off"));
     box.append(b);
   }
-  if(!rows.length&&!S.reqOut.length)box.append(el("div",{class:"fine",style:"padding:6px 4px"},"Ingen kompiser ennå. Trykk «Legg til kompis» og skriv e-posten til en du kjenner."));
+  if(!rows.length&&!S.reqOut.length)box.append(el("div",{class:"fine",style:"padding:6px 4px"},tr("friends.empty")));
 }
 function drawReqs(){
   const box=$("#reqs");box.textContent="";box.hidden=!S.reqIn.length;
   for(const id of S.reqIn){
     box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til"),
       el("div",{class:"row"},
-        el("button",{class:"sm",onclick:async()=>{try{await q(sb.rpc("accept_request",{p_from:id}),"Godta");refresh()}catch(e){fail(e)}}},"Godta"),
-        el("button",{class:"glass sm",onclick:async()=>{try{await q(sb.from("friend_requests").delete().eq("from_id",id).eq("to_id",S.user.id),"Avslå");refresh()}catch(e){fail(e)}}},"Avslå"))));
+        el("button",{class:"sm",onclick:async()=>{try{await q(sb.rpc("accept_request",{p_from:id}),tr("friends.accept"));refresh()}catch(e){fail(e)}}},tr("friends.accept")),
+        el("button",{class:"glass sm",onclick:async()=>{try{await q(sb.from("friend_requests").delete().eq("from_id",id).eq("to_id",S.user.id),tr("friends.decline"));refresh()}catch(e){fail(e)}}},tr("friends.decline")))));
   }
 }
 function drawSec(){
   const c=$("#seccard");if(!c)return;c.textContent="";
   $("#mewarn").hidden=!!S.backup;
-  c.append(el("div",{class:S.backup?"sec":"warn",id:"bkst"},S.backup?"Gjenopprettingskode er laget":"Du har ingen gjenopprettingskode ennå"),
-    el("div",{class:"row"},el("button",{class:"glass sm",id:"mkcode",onclick:()=>showRecovery(false)},S.backup?"Lag ny kode":"Lag kode")),
-    el("div",{class:"fine"},"Ny enhet? Logg inn der og velg «Be om nøkkelen». Her kommer det da en forespørsel du godkjenner."));
+  c.append(el("div",{class:S.backup?"sec":"warn",id:"bkst"},S.backup?tr("recovery.exists"):tr("recovery.missing")),
+    el("div",{class:"row"},el("button",{class:"glass sm",id:"mkcode",onclick:()=>showRecovery(false)},S.backup?tr("recovery.makeNew"):tr("recovery.make"))),
+    el("div",{class:"fine"},tr("recovery.newDeviceHint")));
 }
 
 /* ---------- samtale ---------- */
@@ -381,7 +381,7 @@ function closeChat(){
 }
 async function openChat(otherId){
   try{
-    const cid=await q(sb.rpc("open_dm",{p_other:otherId}),"Åpne samtale");
+    const cid=await q(sb.rpc("open_dm",{p_other:otherId}),tr("ctx.openChat"));
     S.chat={id:cid,other:otherId};S.msgs=[];S.older=[];S.more=false;S.sig=null;S.first=true;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
     $("#shell").classList.add("inchat");
     $("#empty").hidden=true;for(const i of ["ch","log","bar"])$("#"+i).hidden=false;
@@ -396,7 +396,7 @@ const dagTxt=d=>d===1?"1 dag":d+" dager";
 function drawExp(){
   if(!S.chat)return;drawMute();const d=S.exp.get(S.chat.id)||0,n=$("#expn");
   $("#ex").value=String(d);n.hidden=!d;
-  n.textContent=d?"Nye meldinger i denne samtalen slettes etter "+dagTxt(d)+". Gjelder for begge.":"";
+  n.textContent=d?tr("exp.chatNote",{when:dagTxt(d)}):"";
 }
 function drawChatHead(){
   if(!S.chat)return;const id=S.chat.other,st=ST[stOf(id)]||"off";
@@ -409,7 +409,7 @@ function drawChatHead(){
   w.append(el("div",{class:"bud"},avEl(S.profile.name,myAv,mine),el("span",{class:"t"},S.profile.name+" (deg)",el("small",{},S.profile.pm||"")),ff(mine)));
   const o=S.profiles.get(id);
   if(o&&o.fp)safety(o.fp).then(s=>{if(S.chat&&S.chat.other===id)$("#sn").textContent=s});
-  $("#fp").textContent=o?"Nøkkelavtrykk, din kompis: "+o.fp.match(/.{4}/g).join(" "):"";
+  $("#fp").textContent=o?tr("chat.fingerprint",{fp:o.fp.match(/.{4}/g).join(" ")}):"";
 }
 async function safety(otherFp){
   const a=[S.profile.fp,otherFp].sort().join(":");
@@ -513,7 +513,7 @@ async function loadOlder(){
   if(!S.chat||!S.msgs.length)return;
   const cid=S.chat.id,other=S.profiles.get(S.chat.other),oldest=S.msgs[0].id,log=$("#log");
   try{
-    const rows=(await q(sb.from("messages").select("*").eq("chat_id",cid).lt("id",oldest).order("id",{ascending:false}).limit(PAGE),"Eldre meldinger")).reverse();
+    const rows=(await q(sb.from("messages").select("*").eq("chat_id",cid).lt("id",oldest).order("id",{ascending:false}).limit(PAGE),tr("ctx.olderMessages"))).reverse();
     if(!S.chat||S.chat.id!==cid)return;
     const dec=await decodeRows(rows,await pairKey(other.pub));
     S.older=[...dec,...S.older];S.more=rows.length>=PAGE;
@@ -525,23 +525,23 @@ function drawLog(keepPos){
   const log=$("#log"),near=log.scrollHeight-log.scrollTop-log.clientHeight<80;
   log.textContent="";
   const tm=ts=>new Date(ts).toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"});
-  if(S.more&&S.msgs.length)log.append(el("button",{class:"glass sm older",type:"button",onclick:loadOlder},"Vis eldre meldinger"));
-  if(!S.msgs.length)log.append(el("div",{class:"sys"},"Samtalen er ende-til-ende-kryptert. Si hei til "+nameOf(S.chat.other)+"!"));
+  if(S.more&&S.msgs.length)log.append(el("button",{class:"glass sm older",type:"button",onclick:loadOlder},tr("chat.showOlder")));
+  if(!S.msgs.length)log.append(el("div",{class:"sys"},tr("chat.empty",{name:nameOf(S.chat.other)})));
   for(const m of S.msgs){
-    if(m.dp){log.append(el("div",{class:"sys"},(m.mine?"Du":nameOf(S.chat.other))+" sendte en dobbeltpling · "+tm(m.ts)));continue}
+    if(m.dp){log.append(el("div",{class:"sys"},tr("chat.sentDp",{who:m.mine?tr("chat.you"):nameOf(S.chat.other),time:tm(m.ts)})));continue}
     const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")});d.dataset.mid=m.id;
     if(m.img)d.append(picEl(m.img));else
     if(m.ok)d.append(...linkify(m.t==null?"":m.t));else d.append("(kan ikke dekrypteres)");
     if(m.lk)d.append(lkCard(m.lk));
     d.append(el("br"),el("time",{},tm(m.ts)));
-    if(m.ok||m.img){const ch=rxChips(m);if(ch)d.append(ch);d.append(el("button",{type:"button",class:"rxb","aria-label":"Reager på meldingen",title:"Reager",onclick:e=>{e.stopPropagation();openRx(m,e.currentTarget)}},"☺"))}
+    if(m.ok||m.img){const ch=rxChips(m);if(ch)d.append(ch);d.append(el("button",{type:"button",class:"rxb","aria-label":tr("rx.ariaReact"),title:tr("rx.react"),onclick:e=>{e.stopPropagation();openRx(m,e.currentTarget)}},"☺"))}
     log.append(d);
   }
   markAn();
   if(!keepPos&&(near||S.justSent))log.scrollTop=log.scrollHeight;S.justSent=false;
 }
 /* ---------- reaksjoner (kryptert som meldinger; se claude/reaksjoner.md) ---------- */
-const RX=[["rofl","ler"],["thumbup","bra"],["heart","hjerte"],["surprised","overrasket"],["cry","trist"],["thumbdown","dårlig"]];
+const RX=[["rofl",tr("rx.name.rofl")],["thumbup",tr("rx.name.thumbup")],["heart",tr("rx.name.heart")],["surprised",tr("rx.name.surprised")],["cry",tr("rx.name.cry")],["thumbdown",tr("rx.name.thumbdown")]];
 const RX_OK=new Set(RX.map(x=>x[0]));
 async function loadReacts(cid,key){
   try{
@@ -565,7 +565,7 @@ function rxChips(m){
   const w=el("div",{class:"rxs"});
   for(const[r,us]of g){
     const mine=us.includes(S.user.id),nm=AN_FIG[r][0];
-    const b=el("button",{type:"button",class:"rxc"+(mine?" me":""),title:mine?"Fjern reaksjonen din ("+nm+")":nm,"aria-label":nm+", "+us.length+(mine?", din reaksjon":""),onclick:e=>{e.stopPropagation();setReact(m.id,mine?null:r)}});
+    const b=el("button",{type:"button",class:"rxc"+(mine?" me":""),title:mine?tr("rx.removeMine",{name:nm}):nm,"aria-label":mine?tr("rx.ariaMine",{name:nm,n:us.length}):tr("rx.aria",{name:nm,n:us.length}),onclick:e=>{e.stopPropagation();setReact(m.id,mine?null:r)}});
     b.append(anEl(r),el("span",{},String(us.length)));w.append(b);
   }
   return w;
@@ -575,12 +575,12 @@ function closeRx(){if(rxPop){rxPop.remove();rxPop=null}}
 function openRx(m,anchor){
   closeRx();
   const mine=(S.rx.get(m.id)||new Map()).get(S.user.id);
-  const p=el("div",{class:"rxp",role:"menu","aria-label":"Velg reaksjon"});
+  const p=el("div",{class:"rxp",role:"menu","aria-label":tr("rx.choose")});
   for(const[r,nm]of RX){
     const b=el("button",{type:"button",class:"rxo"+(mine===r?" me":""),title:nm,"aria-label":nm,onclick:e=>{e.stopPropagation();closeRx();setReact(m.id,mine===r?null:r)}});
     b.append(anEl(r));p.append(b);
   }
-  if(m.ok&&m.t!=null&&!m.img)p.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();copyText(String(m.t))}},"Kopier"));
+  if(m.ok&&m.t!=null&&!m.img)p.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();copyText(String(m.t))}},tr("common.copy")));
   document.body.append(p);rxPop=p;
   const a=anchor.getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight;
   let x=Math.min(Math.max(8,a.right-w),innerWidth-w-8),y=a.top-h-6;if(y<8)y=a.bottom+6;
@@ -807,7 +807,7 @@ function picEl(img){
   const gifT=img.t==="image/gif"; /* HVORFOR: avsenderens felt, så bare nøyaktig denne verdien godtas */
   const show=u=>{const i=el("img",{alt:gifT?"GIF":"Bilde",src:u,tabindex:"0"});i.addEventListener("click",()=>lightbox(u,gifT));i.addEventListener("keydown",e=>{if(e.key==="Enter")lightbox(u,gifT)});box.textContent="";box.append(i)};
   if(picCache.has(img.p)){show(picCache.get(img.p));return box}
-  box.textContent="Henter bilde …";
+  box.textContent=tr("img.loading");
   const other=S.profiles.get(S.chat.other);
   (async()=>{
     try{
@@ -815,14 +815,14 @@ function picEl(img){
       const buf=new Uint8Array(await r.data.arrayBuffer()),key=await pairKey(other.pub);
       const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},key,buf.slice(12));
       const u=URL.createObjectURL(new Blob([pt],{type:gifT?"image/gif":"image/jpeg"}));picCache.set(img.p,u);show(u);
-    }catch(e){box.textContent="(bildet finnes ikke lenger eller kan ikke åpnes)"}
+    }catch(e){box.textContent=tr("img.missing")}
   })();
   return box;
 }
 function lightbox(u,gif){
   const b=$("#lb");b.textContent="";
   b.append(el("img",{src:u,alt:"Bilde"}),el("div",{class:"row"},
-    el("a",{class:"btnlink",href:u,download:gif?"pling.gif":"pling-bilde.jpg"},"Last ned"),el("button",{class:"glass",type:"button",onclick:()=>{b.hidden=true;b.textContent=""}},"Lukk")));
+    el("a",{class:"btnlink",href:u,download:gif?"pling.gif":"pling-bilde.jpg"},tr("img.download")),el("button",{class:"glass",type:"button",onclick:()=>{b.hidden=true;b.textContent=""}},tr("common.close"))));
   b.hidden=false;
 }
 
@@ -839,15 +839,15 @@ async function camOpen(){
   const c=$("#cam");c.textContent="";
   const v=el("video",{class:"camv",autoplay:true,playsinline:true});v.muted=true;
   const ctl=el("div",{class:"camctl"});let blob=null;
-  const mkb=(cls,label,fn)=>el("button",{class:cls,type:"button","aria-label":label,title:label,onclick:fn},label==="Ta bilde"?"":label);
+  const mkb=(cls,label,fn)=>el("button",{class:cls,type:"button","aria-label":label,title:label,onclick:fn},label===tr("cam.shoot")?"":label);
   const live=()=>{
     blob=null;v.classList.toggle("mir",camFace==="user");
-    const shut=mkb("camshut","Ta bilde",shoot),flip=mkb("glass camside","Bytt kamera",()=>{camFace=camFace==="user"?"environment":"user";start()}),cl=mkb("glass camside","Avbryt",camClose);
+    const shut=mkb("camshut",tr("cam.shoot"),shoot),flip=mkb("glass camside",tr("cam.flip"),()=>{camFace=camFace==="user"?"environment":"user";start()}),cl=mkb("glass camside",tr("cam.cancel"),camClose);
     ctl.textContent="";ctl.append(cl,shut,flip);
   };
   const review=()=>{
     ctl.textContent="";
-    ctl.append(mkb("glass camside","Ta på nytt",()=>{v.play().catch(()=>{});live()}),mkb("camsend","Send",()=>{const b=blob;camClose();if(b)sendImage(new File([b],"kamera.jpg",{type:"image/jpeg"}))}));
+    ctl.append(mkb("glass camside",tr("cam.retake"),()=>{v.play().catch(()=>{});live()}),mkb("camsend",tr("common.send"),()=>{const b=blob;camClose();if(b)sendImage(new File([b],"kamera.jpg",{type:"image/jpeg"}))}));
   };
   function shoot(){
     if(!v.videoWidth)return;
@@ -884,7 +884,7 @@ function wire(){
     const f=e.target.files[0];e.target.value="";if(!f)return;
     try{
       const a=await toAvatar(f);if(!okAv(a))throw new Error(tr("img.avatarTooBig"));
-      await q(sb.from("avatars").upsert({id:S.user.id,data:a,updated_at:new Date().toISOString()}),"Lagre bilde");
+      await q(sb.from("avatars").upsert({id:S.user.id,data:a,updated_at:new Date().toISOString()}),tr("ctx.saveAvatar"));
       myAv=a;try{localStorage.setItem("pling_av_"+S.user.id,a);localStorage.setItem("pling_last_av",a)}catch(x){}
       paintMe();drawChatHead();toast(tr("avatar.saved"));
     }catch(err){fail(err)}
@@ -893,9 +893,9 @@ function wire(){
   const add=async()=>{
     const v=$("#fe").value.trim(),err=$("#ferr");err.textContent="";if(!v)return;
     try{
-      const f=await q(sb.rpc("find_by_email",{p_email:v}),"Søk");
-      if(!f.length){err.textContent="Fant ingen med den e-posten. Kompisen må ha laget konto og profil først.";return}
-      const r=await q(sb.rpc("send_request",{p_to:f[0].id}),"Forespørsel");
+      const f=await q(sb.rpc("find_by_email",{p_email:v}),tr("ctx.search"));
+      if(!f.length){err.textContent=tr("friend.notFound");return}
+      const r=await q(sb.rpc("send_request",{p_to:f[0].id}),tr("ctx.request"));
       toast(r==="friends"?tr("friend.nowFriends"):tr("friend.requestSent",{name:f[0].name}));$("#fe").value="";$("#addfp").hidden=true;$("#addf").setAttribute("aria-expanded","false");refresh();
     }catch(e){fail(e)}
   };
@@ -907,19 +907,19 @@ function wire(){
   $("#pr").addEventListener("click",()=>$("#mb").click());
   $("#ex").addEventListener("change",async()=>{
     if(!S.chat)return;const v=+$("#ex").value,cid=S.chat.id;
-    try{await q(sb.rpc("set_chat_expiry",{p_chat:cid,p_days:v}),"Endre utløp");S.exp.set(cid,v);drawExp();toast(v?tr("exp.on",{when:dagTxt(v)}):tr("exp.off"))}
+    try{await q(sb.rpc("set_chat_expiry",{p_chat:cid,p_days:v}),tr("ctx.changeExpiry"));S.exp.set(cid,v);drawExp();toast(v?tr("exp.on",{when:dagTxt(v)}):tr("exp.off"))}
     catch(e){fail(e);drawExp()}
   });
   const sure=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
-    if(!s){s=true;btn.textContent="Sikker? Trykk igjen";t=setTimeout(()=>{s=false;btn.textContent=label},3500);return}
+    if(!s){s=true;btn.textContent=tr("common.sure");t=setTimeout(()=>{s=false;btn.textContent=label},3500);return}
     clearTimeout(t);s=false;btn.textContent=label;fn()})};
-  sure($("#bx"),"Slett mine meldinger",async()=>{try{
+  sure($("#bx"),tr("chat.deleteMine"),async()=>{try{
     const mine=S.msgs.filter(m=>m.mine&&m.img).map(m=>m.img.p);
     if(mine.length)await sb.storage.from(BUCKET).remove(mine);
     await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),"Slette");S.sig=null;toast(tr("msg.mineDeleted"));refreshSoon()}catch(e){fail(e)}});
-  sure($("#bfr"),"Fjern kompis",async()=>{try{await q(sb.rpc("remove_friend",{p_other:S.chat.other}),"Fjerne kompis");closeChat();refresh()}catch(e){fail(e)}});
+  sure($("#bfr"),tr("chat.removeFriend"),async()=>{try{await q(sb.rpc("remove_friend",{p_other:S.chat.other}),tr("ctx.removeFriend"));closeChat();refresh()}catch(e){fail(e)}});
   $("#bmu").addEventListener("click",()=>{if(!S.chat)return;const id=S.chat.other,on=!muted(id);setMuted(id,on);drawMute();drawFriends();toast(on?tr("mute.on"):tr("mute.off"))});
-  sure($("#bbl"),"Blokker",async()=>{try{await q(sb.rpc("block_user",{p_other:S.chat.other}),"Blokkere");closeChat();toast(tr("block.done"));refresh()}catch(e){fail(e)}});
+  sure($("#bbl"),tr("chat.block"),async()=>{try{await q(sb.rpc("block_user",{p_other:S.chat.other}),tr("ctx.block"));closeChat();toast(tr("block.done"));refresh()}catch(e){fail(e)}});
   $("#bd").addEventListener("click",()=>{
     const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?"(dobbeltpling)":m.img?"(bilde)":m.ok?m.t:"(kan ikke dekrypteres)")).join("\n");
     download("pling-samtale.txt",t+"\n");
@@ -928,7 +928,7 @@ function wire(){
   const send=async()=>{
     const t=tx.value.trim();if(!t)return;tx.value="";drawPv();
     const pl={t,ts:Date.now()},u=LP_ON()?firstUrl(t):null,sd=$("#sd");
-    if(u){sd.disabled=true;sd.textContent="…";try{const lk=await fetchPreview(u);if(lk)pl.lk=lk}finally{sd.disabled=false;sd.textContent="Send"}}
+    if(u){sd.disabled=true;sd.textContent="…";try{const lk=await fetchPreview(u);if(lk)pl.lk=lk}finally{sd.disabled=false;sd.textContent=tr("common.send")}}
     if(!await sendMsg(pl)){tx.value=t;drawPv()}};
   $("#sd").addEventListener("click",send);
   tx.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
@@ -969,7 +969,7 @@ function wire(){
   document.addEventListener("visibilitychange",()=>{if(!document.hidden&&S.user)refreshSoon()});
 }
 function cdTick(){const l=Math.ceil((S.cdUntil-Date.now())/1000),b=$("#dp");
-  if(l>0){b.disabled=true;b.textContent="Dobbeltpling ("+l+")"}else{b.disabled=false;b.textContent="Dobbeltpling";clearInterval(S.cdT)}}
+  if(l>0){b.disabled=true;b.textContent=tr("chat.dpCooldown",{n:l})}else{b.disabled=false;b.textContent=tr("chat.dp");clearInterval(S.cdT)}}
 
 /* ---------- start ---------- */
 (function(){

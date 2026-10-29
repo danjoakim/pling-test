@@ -42,7 +42,7 @@ in the database for now; for an English version they become error codes that the
 Tests fail if the app uses a text key that does not exist or if a key is unused.
 
 Progress: the mechanism (`src/i18n/`, `tr("key",{params})`) and all notifications and thrown errors in
-`main.js` and `crypto-glue.js` are moved. Round 2 moved the privacy and help dialog (35 texts). Still to move: labels built in JavaScript,
+`main.js` and `crypto-glue.js` are moved. Rounds 2 and 3 moved the privacy and help dialog and the labels, headings and status texts in `main.js`. Still to move:
 the static HTML in `body.html`, and the sign-in screens that `build.py` takes from the old base file.
 
 ## Step 3 - Backend access layer
