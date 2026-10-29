@@ -37,8 +37,13 @@ Done when: `main.js` imports the module, the old functions are gone, fixtures an
 ## Step 2 - Language file
 
 Move all user-visible Norwegian text to `src/i18n/nb-NO.ts` (typed keys). Needed anyway before an English
-version. The SQL error messages the client matches on (see `supabase/README.md`) get named constants
-here, so they cannot drift apart silently.
+version. The SQL error messages are shown to the user as they are (the client does not parse them), so they stay
+in the database for now; for an English version they become error codes that the client maps to texts here.
+Tests fail if the app uses a text key that does not exist or if a key is unused.
+
+Progress: the mechanism (`src/i18n/`, `tr("key",{params})`) and all notifications and thrown errors in
+`main.js` and `crypto-glue.js` are moved. Still to move: help and privacy texts, labels built in JavaScript,
+the static HTML in `body.html`, and the sign-in screens that `build.py` takes from the old base file.
 
 ## Step 3 - Backend access layer
 

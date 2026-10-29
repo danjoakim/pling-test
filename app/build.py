@@ -69,8 +69,8 @@ head='\n'.join(old[oidx('const SB_URL'):oidx('const sb=')+1])
 head=head.replace('document.getElementById("app").textContent=','document.body.textContent=')
 # The cryptography is TypeScript (src/crypto.ts), bundled by esbuild; crypto-glue.js connects it to the app.
 import subprocess
-bundle=subprocess.run(['node',HERE+'/bundle-crypto.js'],check=True,capture_output=True,text=True).stdout
-crypto='/* ---------- src/crypto.ts (bundled) ---------- */\n'+bundle+'\n'+open(HERE+'/crypto-glue.js',encoding='utf8').read()
+bundle=subprocess.run(['node',HERE+'/bundle.js'],check=True,capture_output=True,text=True).stdout
+crypto='/* ---------- src/ (bundled TypeScript) ---------- */\n'+bundle+'\n'+open(HERE+'/crypto-glue.js',encoding='utf8').read()
 views='\n'.join(old[oidx('/* ---------- innlogging'):oidx('/* ---------- godkjenne')])
 views=views.replace('const app=$("#app");app.textContent="";','const app=scrHost();')
 views=views.replace("vennene dine","kompisene dine")

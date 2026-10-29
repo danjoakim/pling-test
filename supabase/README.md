@@ -32,5 +32,6 @@ New changes go in new files named `YYYYMMDDHHMMSS_description.sql`. Never edit t
   the baseline revokes them. Fixing production needs an explicit approval.
 - `linkpreview` has no rate limit.
 - The realtime policies and `presence_topic_ok()` are unused since presence became a table. Can be dropped.
-- Error messages from the SQL functions are Norwegian on purpose (the app is Norwegian-only for now and
-  the client matches a few of them).
+- Error messages from the SQL functions are Norwegian on purpose: the app shows them to the user as they
+  are (the client does not parse them), and the app is Norwegian-only for now. For an English version they
+  must be translated or replaced by error codes that the client maps to texts.

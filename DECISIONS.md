@@ -18,8 +18,8 @@ Short records of choices that are not obvious from the code. Newest last.
 9. **One baseline migration** (2026-10-29) replaces the 20 incremental ones, many of which only undid
    earlier experiments. New changes are new migration files.
 10. **English in the repo, Norwegian in the product.** Code, comments and docs are US English. The UI is
-    Norwegian until an English version is added. SQL error messages stay Norwegian because the client
-    matches some of them.
+    Norwegian until an English version is added. SQL error messages stay Norwegian because the app shows
+    them to the user as they are.
 11. **Version 0.x.y until release.**
 12. **Name:** the app is called Prek! (domain prek.es). Internal names (repo, storage keys, job names) still
     say "pling"; renaming them touches stored keys and needs a migration plan.

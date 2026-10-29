@@ -13,8 +13,8 @@
 --     anon key (the production job embeds the public anon key).
 --
 -- User-facing error messages raised by the functions are Norwegian because the app is Norwegian-only
--- during the test phase (decision 2026-10-27). They are matched by the client in a few places
--- (for example 'finner ikke bruker'), so do not translate them without changing app/main.js.
+-- during the test phase (decision 2026-10-27). They are shown to the user as they are (the client
+-- does not parse them), so translating them means changing what users see.
 
 -- ---------------------------------------------------------------- extensions
 create extension if not exists pgcrypto;

@@ -37,7 +37,7 @@ async function checkTransfers(){
       el("button",{id:"papprove",onclick:async()=>{try{
         const e=await ephPair(),key=await aesFrom(e.priv,r.eph_pub),sl=await seal(key,{v:1,priv:S.id.priv,pub:S.id.pub});
         await q(sb.from("key_transfers").update({status:"approved",sender_pub:e.pub,iv:sl.iv,ct:sl.ct}).eq("id",r.id),"Godkjenne");
-        toast("Nøkkelen er sendt til den nye enheten");S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Godkjenn"),
+        toast(tr("device.sent"));S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Godkjenn"),
       el("button",{class:"glass",id:"pdeny",onclick:async()=>{try{await q(sb.from("key_transfers").delete().eq("id",r.id),"Avvise");S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Avvis"))));
 }
 
@@ -58,8 +58,8 @@ async function redeemPending(){
   try{localStorage.removeItem("pling_inv")}catch(e){}
   try{
     const r=await q(sb.rpc("redeem_invite",{p_token:t}),"Invitasjon"),f=r&&r[0];
-    toast("Du og "+(f?f.name:"kompisen din")+" er nå kompiser");await refresh();
-  }catch(e){toast("Invitasjonen virket ikke: den er utløpt, allerede brukt eller din egen.",true)}
+    toast(tr("invite.nowFriends",{name:f?f.name:tr("invite.fallbackName")}));await refresh();
+  }catch(e){toast(tr("invite.failed"),true)}
 }
 async function showInviteBanner(){
   const box=$("#invb");if(!box)return;let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
@@ -81,10 +81,10 @@ function drawInvite(){
       const inp=el("input",{id:"invlink",readonly:true,value:link,"aria-label":"Invitasjonslenke"});
       inp.addEventListener("focus",()=>inp.select());
       const row=el("div",{class:"row"},
-        el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast("Lenken er kopiert")}catch(e){inp.select();toast("Merk lenken og kopier den",true)}}},"Kopier"));
+        el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast(tr("invite.copied"))}catch(e){inp.select();toast(tr("invite.selectToCopy"),true)}}},"Kopier"));
       if(navigator.share)row.append(el("button",{class:"glass sm",type:"button",onclick:()=>navigator.share({title:"Prek!",text:"Bli med meg på Prek!:",url:link}).catch(()=>{})},"Del …"));
       box.append(q1,inp,row,el("div",{class:"fine"},"Gyldig i 7 dager og kan brukes én gang. Den som åpner lenken blir kompisen din med en gang, så del den bare med den du vil ha som kompis."),
-        el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(sb.rpc("revoke_invites"),"Trekke tilbake");toast(n+" aktive invitasjoner er trukket tilbake");drawInvite()}catch(e){fail(e)}}},"Trekk tilbake alle aktive invitasjoner"));
+        el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(sb.rpc("revoke_invites"),"Trekke tilbake");toast(tr("invite.revoked",{n}));drawInvite()}catch(e){fail(e)}}},"Trekk tilbake alle aktive invitasjoner"));
     }catch(e){fail(e)}
   }},"Lag invitasjonslenke");
   box.append(el("div",{class:"fine"},"Eller send en lenke eller QR-kode til en som ikke har konto ennå:"),mk);
@@ -276,7 +276,7 @@ async function refresh(){
 function drawBlocks(){
   const c=$("#blist");if(!c)return;c.textContent="";const bl=S.blocks||[];$("#bgrp").hidden=!bl.length;
   for(const b of bl)c.append(el("div",{class:"brow"},el("span",{},b.name||"Ukjent"),el("button",{class:"glass sm",type:"button",onclick:async()=>{
-    try{await q(sb.rpc("unblock_user",{p_other:b.blocked}),"Fjerne blokkering");toast("Blokkeringen er fjernet");refresh()}catch(e){fail(e)}}},"Fjern")))}
+    try{await q(sb.rpc("unblock_user",{p_other:b.blocked}),"Fjerne blokkering");toast(tr("block.removed"));refresh()}catch(e){fail(e)}}},"Fjern")))}
 const readKey=cid=>"pling_read_"+S.user.id+"_"+cid;
 const getRead=cid=>S.reads.get(cid)||0;
 const setRead=(cid,id)=>{if(id>getRead(cid)){S.reads.set(cid,id);sb.rpc("mark_read",{p_chat:cid,p_id:id}).then(()=>{},()=>{})}};
@@ -611,8 +611,8 @@ function openRx(m,anchor){
   p.style.left=x+"px";p.style.top=y+"px";
 }
 async function copyText(t){
-  try{await navigator.clipboard.writeText(t);toast("Meldingen er kopiert");return}catch(e){}
-  try{const a=document.createElement("textarea");a.value=t;a.style.cssText="position:fixed;left:-9999px;top:0";document.body.append(a);a.select();const ok=document.execCommand("copy");a.remove();toast(ok?"Meldingen er kopiert":"Kunne ikke kopiere")}catch(e){toast("Kunne ikke kopiere")}
+  try{await navigator.clipboard.writeText(t);toast(tr("msg.copied"));return}catch(e){}
+  try{const a=document.createElement("textarea");a.value=t;a.style.cssText="position:fixed;left:-9999px;top:0";document.body.append(a);a.select();const ok=document.execCommand("copy");a.remove();toast(ok?tr("msg.copied"):tr("msg.copyFailed"))}catch(e){toast(tr("msg.copyFailed"))}
 }
 /* trykk og hold på en melding (berøring) åpner reaksjonsvalget */
 let lp=null,lpFired=0;
@@ -675,14 +675,14 @@ async function shrink(file){
     src=await createImageBitmap(file,k<1?{resizeWidth:w,resizeHeight:h,resizeQuality:"high"}:undefined);close=()=>src.close();
   }catch(e){
     src=await new Promise((ok,no)=>{const u=URL.createObjectURL(file),im=new Image();
-      im.onload=()=>{URL.revokeObjectURL(u);ok(im)};im.onerror=()=>{URL.revokeObjectURL(u);no(new Error("Dette er ikke et bilde nettleseren kan lese"))};im.src=u});
+      im.onload=()=>{URL.revokeObjectURL(u);ok(im)};im.onerror=()=>{URL.revokeObjectURL(u);no(new Error(tr("img.notReadable")))};im.src=u});
     const k=Math.min(1,MAX/Math.max(src.width,src.height));w=Math.max(1,Math.round(src.width*k));h=Math.max(1,Math.round(src.height*k));
   }
   const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");
   x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(src,0,0,w,h);close();
   let qual=.85,b=await toBlob(c,qual);
   while(b&&b.size>2.5*1024*1024&&qual>.5){qual=qual>.7?.7:.55;b=await toBlob(c,qual)}
-  if(!b)throw new Error("Kunne ikke lese bildet");
+  if(!b)throw new Error(tr("img.readFailed"));
   return{blob:b,w,h};
 }
 /* HVORFOR: GIF-er sendes uendret (ellers blir de stillbilder via canvas/JPEG i shrink()).
@@ -768,8 +768,8 @@ function gifEncode(frames,w,h){
   return Uint8Array.from(o);
 }
 async function shrinkGif(file,limit,onStep){
-  if(typeof ImageDecoder==="undefined")throw new Error("Nettleseren din kan ikke gjøre GIF-er mindre. Velg en mindre GIF.");
-  if(file.size>40*1024*1024)throw new Error("GIF-en er altfor stor til å bli gjort mindre (over 40 MB)");
+  if(typeof ImageDecoder==="undefined")throw new Error(tr("gif.noDecoder"));
+  if(file.size>40*1024*1024)throw new Error(tr("gif.tooLarge"));
   const dec=new ImageDecoder({data:await file.arrayBuffer(),type:"image/gif"});
   await dec.tracks.ready;await dec.completed;
   const n=dec.tracks.selectedTrack.frameCount;
@@ -797,21 +797,21 @@ async function shrinkGif(file,limit,onStep){
     if(bytes.length<=limit){dec.close();return{bytes,w,h}}
   }
   dec.close();
-  throw new Error("Klarte ikke å gjøre GIF-en liten nok");
+  throw new Error(tr("gif.cannotShrink"));
 }
 
 async function sendImage(file){
   if(!S.chat||!file)return;
-  if(!/^image\//.test(file.type||"")){toast("Bare bilder kan sendes",true);return}
+  if(!/^image\//.test(file.type||"")){toast(tr("img.onlyImages"),true);return}
   const cid=S.chat.id,other=S.profiles.get(S.chat.other);let path=null;
   try{
-    toast("Krypterer og sender bildet …");
+    toast(tr("img.sending"));
     let w,h,bytes,t=null;
     const gif=file.type==="image/gif"?await readGif(file):null;
     if(gif){
       if(gif.bytes.length>GIF_MAX){
         /* HVORFOR: for store GIF-er gjøres mindre med animasjonen i behold (Dan Joakim 25. okt), ikke avvist og ikke stillbilde */
-        const r=await shrinkGif(file,GIF_MAX,(i,n)=>toast("GIF-en er stor, gjør den mindre ("+i+"/"+n+") …"));
+        const r=await shrinkGif(file,GIF_MAX,(i,n)=>toast(tr("gif.shrinking",{i,n})));
         ({w,h,bytes}=r);
       }else({w,h,bytes}=gif);
       t="image/gif";
@@ -820,10 +820,10 @@ async function sendImage(file){
     const ct=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},key,bytes));
     path=cid+"/"+crypto.randomUUID();
     const up=await sb.storage.from(BUCKET).upload(path,new Blob([iv,ct],{type:"application/octet-stream"}),{contentType:"application/octet-stream"});
-    if(up.error)throw new Error("Laste opp: "+up.error.message);
+    if(up.error)throw new Error(tr("img.uploadFailed",{msg:up.error.message}));
     const ok=await sendMsg({img:t?{p:path,w,h,t}:{p:path,w,h},ts:Date.now()},path);
     if(!ok){await sb.storage.from(BUCKET).remove([path]);return}
-    toast("Bildet er sendt")
+    toast(tr("img.sent"))
   }catch(e){fail(e);if(path)sb.storage.from(BUCKET).remove([path]).then(()=>{},()=>{})}
 }
 function picEl(img){
@@ -884,7 +884,7 @@ async function camOpen(){
     try{
       camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:camFace,width:{ideal:1920},height:{ideal:1920}},audio:false});
       v.srcObject=camStream;await v.play().catch(()=>{});live();
-    }catch(e){camClose();toast("Fikk ikke tilgang til kameraet. Sjekk tillatelsen i nettleseren, eller velg et bilde fra enheten med binders-knappen.",true)}
+    }catch(e){camClose();toast(tr("cam.denied"),true)}
   }
   c.append(v,ctl);c.hidden=false;live();start();
 }
@@ -907,10 +907,10 @@ function wire(){
   $("#avf").addEventListener("change",async e=>{
     const f=e.target.files[0];e.target.value="";if(!f)return;
     try{
-      const a=await toAvatar(f);if(!okAv(a))throw new Error("Bildet ble for stort");
+      const a=await toAvatar(f);if(!okAv(a))throw new Error(tr("img.avatarTooBig"));
       await q(sb.from("avatars").upsert({id:S.user.id,data:a,updated_at:new Date().toISOString()}),"Lagre bilde");
       myAv=a;try{localStorage.setItem("pling_av_"+S.user.id,a);localStorage.setItem("pling_last_av",a)}catch(x){}
-      paintMe();drawChatHead();toast("Bildet er lagret. Bare kompisene dine ser det.");
+      paintMe();drawChatHead();toast(tr("avatar.saved"));
     }catch(err){fail(err)}
   });
   $("#addf").addEventListener("click",()=>{const p=$("#addfp"),o=p.hidden;p.hidden=!o;$("#addf").setAttribute("aria-expanded",String(o));if(o)$("#fe").focus()});
@@ -920,7 +920,7 @@ function wire(){
       const f=await q(sb.rpc("find_by_email",{p_email:v}),"Søk");
       if(!f.length){err.textContent="Fant ingen med den e-posten. Kompisen må ha laget konto og profil først.";return}
       const r=await q(sb.rpc("send_request",{p_to:f[0].id}),"Forespørsel");
-      toast(r==="friends"?"Dere er kompiser nå":"Forespørsel sendt til "+f[0].name);$("#fe").value="";$("#addfp").hidden=true;$("#addf").setAttribute("aria-expanded","false");refresh();
+      toast(r==="friends"?tr("friend.nowFriends"):tr("friend.requestSent",{name:f[0].name}));$("#fe").value="";$("#addfp").hidden=true;$("#addf").setAttribute("aria-expanded","false");refresh();
     }catch(e){fail(e)}
   };
   $("#fadd").addEventListener("click",add);
@@ -931,7 +931,7 @@ function wire(){
   $("#pr").addEventListener("click",()=>$("#mb").click());
   $("#ex").addEventListener("change",async()=>{
     if(!S.chat)return;const v=+$("#ex").value,cid=S.chat.id;
-    try{await q(sb.rpc("set_chat_expiry",{p_chat:cid,p_days:v}),"Endre utløp");S.exp.set(cid,v);drawExp();toast(v?"Nye meldinger slettes etter "+dagTxt(v):"Nye meldinger utløper ikke")}
+    try{await q(sb.rpc("set_chat_expiry",{p_chat:cid,p_days:v}),"Endre utløp");S.exp.set(cid,v);drawExp();toast(v?tr("exp.on",{when:dagTxt(v)}):tr("exp.off"))}
     catch(e){fail(e);drawExp()}
   });
   const sure=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
@@ -940,10 +940,10 @@ function wire(){
   sure($("#bx"),"Slett mine meldinger",async()=>{try{
     const mine=S.msgs.filter(m=>m.mine&&m.img).map(m=>m.img.p);
     if(mine.length)await sb.storage.from(BUCKET).remove(mine);
-    await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),"Slette");S.sig=null;toast("Dine meldinger er slettet");refreshSoon()}catch(e){fail(e)}});
+    await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),"Slette");S.sig=null;toast(tr("msg.mineDeleted"));refreshSoon()}catch(e){fail(e)}});
   sure($("#bfr"),"Fjern kompis",async()=>{try{await q(sb.rpc("remove_friend",{p_other:S.chat.other}),"Fjerne kompis");closeChat();refresh()}catch(e){fail(e)}});
-  $("#bmu").addEventListener("click",()=>{if(!S.chat)return;const id=S.chat.other,on=!muted(id);setMuted(id,on);drawMute();drawFriends();toast(on?"Samtalen er dempet":"Lyden er på igjen")});
-  sure($("#bbl"),"Blokker",async()=>{try{await q(sb.rpc("block_user",{p_other:S.chat.other}),"Blokkere");closeChat();toast("Blokkert");refresh()}catch(e){fail(e)}});
+  $("#bmu").addEventListener("click",()=>{if(!S.chat)return;const id=S.chat.other,on=!muted(id);setMuted(id,on);drawMute();drawFriends();toast(on?tr("mute.on"):tr("mute.off"))});
+  sure($("#bbl"),"Blokker",async()=>{try{await q(sb.rpc("block_user",{p_other:S.chat.other}),"Blokkere");closeChat();toast(tr("block.done"));refresh()}catch(e){fail(e)}});
   $("#bd").addEventListener("click",()=>{
     const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?"(dobbeltpling)":m.img?"(bilde)":m.ok?m.t:"(kan ikke dekrypteres)")).join("\n");
     download("pling-samtale.txt",t+"\n");

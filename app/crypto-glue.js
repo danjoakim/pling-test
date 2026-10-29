@@ -2,6 +2,7 @@
    The cryptography itself lives in src/crypto.ts (bundled into PrekCrypto by build.py).
    This file only connects it to the app: browser storage (key per user), app state (S) and Supabase. */
 const enc=new TextEncoder(),dec=new TextDecoder();
+const tr=PrekI18n.tr;
 const {b64,ub64,fpOf,newCode,normCode,pairCode,ephPair,aesFrom,seal,open}=PrekCrypto;
 const keyName=uid=>"pling_test_key_"+uid;
 function loadIdentity(uid){try{const j=JSON.parse(localStorage.getItem(keyName(uid))||"null");return j}catch(e){return null}}
@@ -24,14 +25,14 @@ async function makeBackup(code){
 async function saveBackup(code){await q(sb.from("key_backups").upsert(await makeBackup(code)),"Lagre sikkerhetskopi");S.backup={updated_at:new Date().toISOString()}}
 async function restoreFromCode(code){
   const rows=await q(sb.from("key_backups").select("*").eq("user_id",S.user.id),"Hente sikkerhetskopi");
-  if(!rows.length)throw new Error("Det finnes ingen sikkerhetskopi på denne kontoen");
+  if(!rows.length)throw new Error(tr("key.noBackup"));
   const id=await PrekCrypto.restoreBackup(code,rows[0]);
-  if(!id)throw new Error("Koden stemmer ikke");
+  if(!id)throw new Error(tr("key.wrongCode"));
   return id;
 }
 async function adoptIdentity(id){
   const fp=await fpOf(id.pub);
-  if(fp!==S.profile.fp)throw new Error("Nøkkelen passer ikke til denne kontoen");
+  if(fp!==S.profile.fp)throw new Error(tr("key.wrongAccount"));
   localStorage.setItem(keyName(S.user.id),JSON.stringify(id));S.id=id;pairCache.clear();
 }
 const pairFresh=r=>Date.now()-new Date(r.created_at).getTime()<10*60*1000;
