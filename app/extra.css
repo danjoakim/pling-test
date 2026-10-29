@@ -1,0 +1,341 @@
+[hidden]{display:none!important}
+.scr{flex:1;min-height:0;overflow:auto;padding:18px 16px}
+.sc{max-width:520px;margin:0 auto;display:grid;gap:12px;align-content:start}
+.sc h1{font:700 24px "Trebuchet MS",Tahoma,sans-serif;margin:0;color:#fff;text-shadow:0 0 12px #a6ff3d55}
+.sc p{margin:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:9px}
+.dim{color:var(--mut);font-size:13px}
+.warn{color:var(--sys)}
+.sec{color:var(--glow-on)}
+.tabs{display:flex;gap:6px}
+button.ghost{background:transparent;border-color:var(--line);text-shadow:none;color:var(--ink)}
+.code{font:700 min(20px,4.3vw)/1.5 ui-monospace,Consolas,"Courier New",monospace;letter-spacing:.03em;white-space:nowrap;background:#0b1636;border:1px dashed var(--luna1);border-radius:8px;padding:14px 8px;text-align:center;user-select:all}
+.qr{background:#fff;padding:10px;border-radius:10px;justify-self:center}
+.qr svg{display:block;width:min(60vw,240px);height:auto}
+#toast{position:fixed;left:12px;right:12px;bottom:14px;max-width:520px;margin:auto;background:#1a2f66;border:1px solid var(--line);border-radius:8px;padding:10px 14px;display:none;z-index:9;box-shadow:0 6px 24px #000a}
+#toast.bad{border-color:var(--glow-busy)}
+.pairreq{border-color:var(--luna1)!important;margin:8px}
+.pairreq .code{display:inline-block;padding:2px 10px;font-size:18px}
+.m.sysm{align-self:center}
+.conv .rt{display:flex;align-items:center;gap:8px}
+.badge{min-width:20px;padding:1px 6px;border-radius:99px;background:var(--glow-on);color:#0b1a00;font:700 12px/18px Tahoma,sans-serif;text-align:center;box-shadow:0 0 8px #a6ff3d88}
+.conv.unread .t b{color:#fff}
+.conv.unread .t small{color:var(--ink);font-style:normal}
+.expn{flex:none;padding:5px 12px;font-size:12px;color:var(--sys);background:#2a2410;border-bottom:1px solid #5a4a1a}
+.m.pic{padding:4px;background:transparent;border-color:transparent}
+.pic-box{display:block;max-width:100%;background:#0c1838;border-radius:6px;overflow:hidden;color:var(--mut);font-size:12px;text-align:center;line-height:1.4;min-height:60px;min-width:120px}
+.pic-box img{display:block;width:100%;height:auto;cursor:zoom-in;border-radius:6px}
+.lb{position:fixed;inset:0;z-index:20;background:#000d;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;padding:16px}
+.lb[hidden]{display:none}
+.lb img{max-width:100%;max-height:80vh;border-radius:8px;box-shadow:0 8px 40px #000}
+.btnlink{display:inline-block;cursor:pointer;border:1px solid var(--line);border-radius:4px;padding:6px 10px;color:var(--ink);text-decoration:none;font-size:13px;background:linear-gradient(#26407e,#1a2f64)}
+.older{align-self:center;flex:none}
+
+/* dobbeltpling-varsel (Dan Joakim 25. okt) */
+.dpb{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:30;padding:12px 18px;border-radius:8px;border:2px solid #a6ff3d;background:#142a56;color:#fff;font:600 16px system-ui;box-shadow:0 8px 30px #000a,0 0 30px #a6ff3d88;cursor:pointer;animation:dpbp .5s ease-in-out infinite alternate}
+@keyframes dpbp{to{box-shadow:0 8px 30px #000a,0 0 55px #a6ff3d}}
+.conv.dpflash{animation:dpfl .45s linear infinite alternate}
+@keyframes dpfl{from{background:#a6ff3d55}to{background:#a6ff3d11}}
+/* HVORFOR: «reduser bevegelse» slår av nesten all animasjon, men dobbeltpling er en bevisst handling fra en venn.
+   Der brukes en myk risting (±3 px, 1 s, ingen vridning) i stedet for ingen risting i det hele tatt. */
+@keyframes sh3{0%,100%{transform:none}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+@media(prefers-reduced-motion:reduce){.win.dp{animation:sh3 1s linear,glimt .9s!important}}
+
+/* ===== Glass-tema (Messenger 8-retning, valgt av Dan Joakim 25. okt) =====
+   HVORFOR som overstyring helt til slutt: all farge i appen går via variablene i :root, så et temabytte er stort sett nye verdier.
+   Rollback: extra.css.bak-natt (gammelt mørkt tema). */
+html.lys{
+ --bg0:#2f78c4;--night:#dcecfb;--panel:#f4f9ff;--panel2:#cfe3f6;--ink:#16324f;--mut:#456b8f;--line:#8fb4d8;
+ --luna1:#2a74d0;--luna2:#1b5fb8;--luna3:#7fb0dc;--aqua:#1d7a8c;--bub:#eaf3fc;--me:#e5f7dc;--sys:#7a5a00;
+ --glow-on:#3fae2a;--glow-away:#e8a21c;--glow-busy:#d83a2e;--glow-off:#9aa9ba;
+ color-scheme:light}
+html.lys body{background:radial-gradient(ellipse at 20% 0%,#bfe6ff 0%,transparent 55%),radial-gradient(ellipse at 90% 100%,#9fe0c0 0%,transparent 50%),linear-gradient(#5aa7e6,#2f78c4);background-attachment:fixed}
+html.lys .win{background:linear-gradient(rgba(214,236,255,.92),rgba(176,214,245,.9));border:1px solid rgba(255,255,255,.85);border-radius:12px;box-shadow:0 10px 30px rgba(10,40,80,.45),inset 0 0 0 1px rgba(70,120,170,.35)}
+html.lys .tb{color:#10304f;text-shadow:0 1px 0 rgba(255,255,255,.8);background:none;font-weight:600;border-radius:12px 12px 0 0}
+html.lys .tb .lock{color:#2a5f93}
+html.lys .shell{padding:0 10px 10px;gap:10px}
+html.lys .home,html.lys .chatpane{background:rgba(255,255,255,.93);border:1px solid rgba(70,120,170,.45);border-radius:6px;overflow:hidden}
+html.lys .home{border-right:1px solid rgba(70,120,170,.45)}
+html.lys input,html.lys select{background:#fff;color:var(--ink);border-color:#9bbad8}
+html.lys input::placeholder{color:#7f9bb8}
+html.lys button,html.lys .lbl{border-color:#5a86b0;color:#10304f;text-shadow:0 1px 0 #fff;background:linear-gradient(#fff 0%,#e8f2fb 49%,#cfe2f3 50%,#e1eefa 100%)}
+html.lys button.glass,html.lys .lbl{background:linear-gradient(#fff 0%,#eef6fd 49%,#d8e8f6 50%,#e6f1fa 100%);color:#10304f;border-color:#8fb4d8}
+html.lys button.hot{background:linear-gradient(#fff3c4,#ffd36a 48%,#f6b830 52%,#ffd04f);border-color:#a97a0c;color:#4a3000;text-shadow:0 1px 0 #fff3c4}
+html.lys .me,html.lys .conv,html.lys .bud{color:var(--ink)}
+html.lys .me{border-bottom-color:#c5dcf0}
+html.lys .prof,html.lys .add,html.lys #reqs,html.lys #inv,html.lys .menu{background:#f0f7fe;border-color:#c5dcf0}
+html.lys .homebar{background:none}
+html.lys .grp{color:#2a5f93}
+html.lys .conv:hover{background:linear-gradient(#fff,#e1f1ff);border-color:#a9cdee}
+html.lys .conv.act{background:linear-gradient(#fff,#d6eafc);border-color:#8fb4d8}
+html.lys .conv.unread .t b{color:#0a2a4a}
+html.lys .req,html.lys .card{background:#eef6fd;border-color:#bcd6ee}
+html.lys .av,html.lys .pav{background:linear-gradient(#cfe3f6,#8fb4d8);border-color:#fff;box-shadow:0 0 0 2px var(--fc),0 2px 5px rgba(0,40,80,.35);color:#16324f}
+html.lys .off.pav{box-shadow:0 0 0 2px var(--glow-off)}
+html.lys .ff .wg{fill:#fff;opacity:.8}.ff .bd{fill:#56708e}
+html.lys .ff.off .bd{fill:#9aa9ba}
+html.lys .empty h1{color:#1b5fb8;text-shadow:0 1px 0 #fff}
+html.lys .ch{background:linear-gradient(#fff,#e1eefa);border-bottom-color:#c5dcf0}
+html.lys .m{color:var(--ink);border-color:#c5ddf2;border-radius:10px}
+html.lys .m.mine{border-color:#bfe3ad}
+html.lys .m b{color:#1d6a8c}
+html.lys .sys,html.lys .expn{color:#6b5400}
+html.lys .expn{background:#fff6d6;border-bottom-color:#e6cf7a}
+html.lys .m.sysm{background:linear-gradient(#fff7da,#fbe9a8);border-color:#e6cf7a;color:#6b5400}
+html.lys .bar{border-top-color:#c5dcf0;background:#f0f7fe}
+html.lys .badge{color:#fff;box-shadow:none}
+html.lys .code{background:#fff;color:#10304f;border-color:var(--luna1)}
+html.lys #toast{background:#fff;color:var(--ink);box-shadow:0 6px 24px rgba(10,40,80,.4)}
+html.lys .sc h1{color:#1b5fb8;text-shadow:0 1px 0 #fff}
+html.lys .dpb{background:#fff;color:#10304f;border-color:#f6b830;box-shadow:0 8px 30px rgba(10,40,80,.5),0 0 30px #f6b830}
+@keyframes dpbpL{to{box-shadow:0 8px 30px rgba(10,40,80,.5),0 0 55px #f6b830}}
+@keyframes dpflL{from{background:#ffe9a8}to{background:#fff7da}}
+@keyframes glimtL{0%,100%{box-shadow:0 10px 30px rgba(10,40,80,.45)}30%{box-shadow:0 10px 30px rgba(10,40,80,.45),0 0 70px 10px #ffd04fcc}}
+
+html.lys .dpb{animation-name:dpbpL}
+html.lys .conv.dpflash{animation-name:dpflL}
+html.lys .win.dp{animation:sh2 2.5s linear,glimtL .9s}
+@media(prefers-reduced-motion:reduce){html.lys .win.dp{animation:sh3 1s linear,glimtL .9s!important}}
+@media(max-width:700px){html.lys .win{border-radius:0}html.lys .shell{padding:0 6px 6px}html.lys .tb{border-radius:0}}
+/* Ildflue på lys bakgrunn (valg 1): mørk kropp, tydelig farget bakside med mørk kant, ingen glød, liten skygge. */
+html.lys .ff svg{width:24px;height:24px}
+html.lys .ff .gl{opacity:0}
+html.lys .ff .wg{fill:#fff;stroke:#56708e;stroke-width:.8;opacity:1}
+html.lys .ff .bd{fill:#243a58}
+html.lys .ff .ab{fill:var(--fc);stroke:#16324f;stroke-width:1.1}
+html.lys .ff svg{filter:drop-shadow(0 1px 1.5px rgba(10,40,80,.45))}
+html.lys .ff.on svg{animation:pulsL 2.4s ease-in-out infinite}
+html.lys .ff.away svg{animation:pulsL 5s ease-in-out infinite}
+html.lys .ff.busy svg{filter:drop-shadow(0 1px 1.5px rgba(10,40,80,.45))}
+html.lys .ff.off .bd{fill:#8796a8}html.lys .ff.off .ab{fill:#c3ccd7;stroke:#6f7f93}
+@keyframes pulsL{0%,100%{filter:drop-shadow(0 1px 1.5px rgba(10,40,80,.45))}50%{filter:drop-shadow(0 1px 1.5px rgba(10,40,80,.45)) drop-shadow(0 0 4px var(--fc))}}
+html.lys .me:not(:hover),html.lys .conv:not(.act):not(:hover){background:none}
+html.lys .me:hover{background:linear-gradient(#fff,#e1f1ff)}
+html.lys .ff svg{width:30px;height:30px}
+html.lys .amb .ff svg{width:34px;height:34px}
+.seccard{display:grid;gap:8px}
+#mewarn{font-style:normal;font-size:11px}
+
+/* ===== Innlogging i MSN-stil (smal, høy rute med bildeboks, etiketter over feltene) ===== */
+.sc.lgn{max-width:340px;gap:6px;position:relative;padding-bottom:6px}
+.lpic{justify-self:center;width:120px;height:120px;border-radius:10px;border:1px solid var(--line);background:linear-gradient(#1c3166,#0f1d44);display:grid;place-items:center;margin-top:4px}
+.lpic .ff svg{width:84px;height:84px}
+.lh{text-align:center;font:700 26px "Trebuchet MS",Tahoma,sans-serif;color:#fff;text-shadow:0 0 12px #a6ff3d55;margin-top:2px}
+.lc{text-align:center}
+.ll{font-weight:700;margin-top:8px;color:var(--ink)}
+.lrow{display:flex;align-items:center;gap:8px;margin-top:10px}
+.lrow select{width:auto;flex:1}
+.lchk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink)}
+.lchk input{width:auto}
+.lgo{justify-self:center;min-width:130px;margin-top:10px;padding:9px 22px;font-weight:700}
+.llinks{display:flex;justify-content:space-between;gap:8px;margin-top:10px;position:relative;z-index:1}
+.llink{background:none;border:0;padding:4px 0;color:var(--luna1);text-decoration:underline;text-shadow:none;font-size:13px;cursor:pointer}
+.lwm{position:absolute;right:-20px;bottom:30px;opacity:.1;pointer-events:none}
+.lwm .ff svg{width:130px;height:130px}
+html.lys .lpic{background:linear-gradient(#fff,#dcebf9);box-shadow:0 2px 6px rgba(10,40,80,.25)}
+html.lys .lh{color:#1b5fb8;text-shadow:0 1px 0 #fff}
+html.lys .llink{color:#1b5fb8;background:none;border:0}
+html.lys .lpic .ff svg{width:84px;height:84px}
+html.lys .lwm .ff svg{width:130px;height:130px}
+html.lys .lwm{opacity:.14}
+
+/* Personlig melding rett under navnet, skrives direkte (som i MSN) */
+.mewrap{position:relative;flex:none}
+.mewrap .me small{visibility:hidden}
+.mepi{position:absolute;left:68px;right:44px;top:33px;width:auto;height:22px;padding:1px 4px;border:1px solid transparent;border-radius:3px;background:transparent;font-style:italic;color:var(--mut);font-size:13px}
+.mepi:hover{border-color:var(--line)}
+.mepi:focus{background:#0c1838;border-color:var(--luna1);color:var(--ink)}
+html.lys .mepi:focus{background:#fff}
+.me small#mep{display:block}
+
+/* ===== Lenker og forhåndsvisningskort ===== */
+.ulink{color:var(--luna1);text-decoration:underline;word-break:break-all}
+.lkc{display:flex;flex-direction:column;margin:6px 0 2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#0c1838;color:var(--ink);text-decoration:none;max-width:320px}
+.lkc:hover{border-color:var(--luna1)}
+.lki{display:block;width:100%;max-height:180px;object-fit:cover}
+.lkb{display:flex;flex-direction:column;gap:2px;padding:7px 10px 9px}
+.lkb small{color:var(--mut);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+.lkb b{font-size:14px;line-height:1.3;color:var(--ink);display:block}
+.lkd{font-size:12px;color:var(--mut);line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+html.lys .ulink{color:#1b5fb8}
+html.lys .lkc{background:#fff;border-color:#c5ddf2}
+html.lys .lkc:hover{border-color:#5a86b0}
+
+/* ===== Kamera ===== */
+.cam{position:fixed;inset:0;z-index:25;background:#000;display:flex;flex-direction:column}
+.cam[hidden]{display:none}
+.camv{flex:1;min-height:0;width:100%;object-fit:contain;background:#000}
+.camv.mir{transform:scaleX(-1)}
+.camctl{flex:none;display:flex;align-items:center;justify-content:space-around;gap:12px;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));background:#000a}
+.camshut{width:68px;height:68px;border-radius:50%;border:4px solid #fff;background:#fff;box-shadow:0 0 0 3px #0008 inset;padding:0}
+.camside{min-width:92px;min-height:44px}
+.camsend{min-width:120px;min-height:48px;font-weight:700}
+button.camshut,html.lys button.camshut{background:#fff;border:4px solid #fff;box-shadow:0 0 0 3px #0008 inset}
+/* Kamera-knappen vises bare på berøringsskjermer (telefon/nettbrett). På maskin finnes binders-knappen for filer. */
+#cb{display:none}
+@media (pointer:coarse){#cb{display:inline-block}}
+
+/* ===== Invitasjon ===== */
+.invbox{display:grid;gap:8px;margin-top:4px}
+.invbox .qr{justify-self:center}
+.invbox .qr svg{width:min(50vw,200px)}
+.invbox input{font-size:12px}
+.invb{padding:9px 12px;border:1px solid var(--glow-on);border-radius:8px;background:#123015;color:var(--ink);text-align:center;line-height:1.4}
+html.lys .invb{background:#e5f7dc;border-color:#7cc36a}
+
+.lpic.hasav{padding:0;overflow:hidden}.lpic.hasav img{width:100%;height:100%;object-fit:cover;display:block}
+
+.info{position:fixed;inset:0;z-index:30;background:rgba(0,10,30,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.info[hidden]{display:none}
+.infob{width:min(560px,100%);max-height:100%;display:flex;flex-direction:column;border-radius:12px;background:var(--panel,#0c1630);color:var(--ink,#e9f0ff);border:1px solid var(--line,#2c4580);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.infoh{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line,#2c4580)}
+.infot{overflow:auto;padding:4px 16px 16px;line-height:1.5;font-size:14px}
+.infot h3{margin:16px 0 4px;font-size:14px}
+.infot p,.infot ul{margin:4px 0}.infot ul{padding-left:20px}.infot li{margin:3px 0}
+html.lys .infob{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,.98));color:#16324f;border-color:#8fb4d8}
+html.lys .infoh{border-color:#a9cdee}
+
+/* animerte smilefjes: bevegelse bare når .on (de nyeste), ikke ved «reduser bevegelse» */
+.an{display:inline-block;width:1.7em;height:1.7em;vertical-align:-.5em;line-height:0}
+.an>svg{width:100%;height:100%;overflow:visible;display:block}
+.an svg *{transform-box:fill-box;transform-origin:center}
+.an-shadow{opacity:.18}
+.an-cheek{opacity:.7}
+@media (prefers-reduced-motion:no-preference){
+.an.on .an-hop{animation:anhop 2.4s ease-in-out infinite}
+.an.on .an-shadow{animation:anshadow 2.4s ease-in-out infinite}
+.an.on .an-blink{animation:anblink 4s infinite}
+.an.on .an-cheek{animation:ancheek 2.4s ease-in-out infinite}
+.an.on .an-thump{animation:anthump 1.1s ease-in-out infinite}
+.an.on .an-ring{animation:anring 1.1s ease-out infinite}
+.an.on .an-slosh{animation:anslosh 2.6s ease-in-out infinite}
+.an.on .an-fo{animation:anfo 2.6s ease-in-out infinite}
+.an.on .an-bub{animation:anbub 1.8s ease-in infinite}
+.an.on .an-bub.b2{animation-delay:.6s}.an.on .an-bub.b3{animation-delay:1.2s}
+.an.on .an-spin{animation:anspin 3.2s ease-in-out infinite}
+.an.on .an-tw{animation:antw 1.6s ease-in-out infinite}
+.an.on .an-tw.t2{animation-delay:.5s}.an.on .an-tw.t3{animation-delay:1s}
+.an.on .an-lolhop{animation:anlol .5s ease-in-out infinite}
+.an.on .an-jaw{animation:anjaw .5s ease-in-out infinite}
+.an.on .an-squirt{animation:ansquirt 1s ease-out infinite}
+.an.on .an-squirt.q2{animation-delay:.25s}
+.an.on .an-hwob{animation:anwob 6s ease-in-out infinite}
+.an.on .an-turn{animation:anturn 6s ease-in-out infinite}
+.an.on .an-sandc{animation:ansandc 6s linear infinite}
+.an.on .an-sandd{animation:ansandd 6s linear infinite}
+.an.on .an-sag{animation:ansag 3s ease-in-out infinite}
+.an.on .an-tear,.an.on .an-stream{animation:antear 2s ease-in infinite}
+.an.on .an-stream.s2{animation-delay:.7s}
+.an.on .an-wob{animation:anwob2 .6s ease-in-out infinite}
+.an.on .an-pop{animation:anpop 2.2s ease-in-out infinite}
+.an.on .an-halo{animation:anhalo 2.4s ease-in-out infinite}
+.an.on .an-pucker{animation:anpucker 1.6s ease-in-out infinite}
+.an.on .an-fh{animation:anfh 1.6s ease-out infinite}
+.an.on .an-fh.f2{animation-delay:.8s}
+.an.on .an-tongue{animation:antongue 1.2s ease-in-out infinite}
+.an.on .an-thumb,.an.on .an-thumbd{animation:anthumb 1.4s ease-in-out infinite}
+.an.on .an-hl{animation:anhl 1.8s ease-in-out infinite}
+.an.on .an-hr{animation:anhr 1.8s ease-in-out infinite}
+.an.on .an-boo{animation:anboo 1s ease-out infinite}
+.an.on .an-boo.b2{animation-delay:.35s}
+.an.on .an-roll{animation:anroll .7s ease-in-out infinite}
+.an.on .an-squirt.q3{animation-delay:.5s}
+.an.on .an-squirt.r.q3{animation-delay:.6s}
+.an.on .an-squirt.r{animation-name:ansquirtr}
+.an.on .an-shake{animation:anshake .35s linear infinite}
+.an.on .an-puff{animation:anpuff 1.4s ease-out infinite}
+.an.on .an-shine{animation:antw 1.8s ease-in-out infinite}
+}
+@keyframes anhop{0%,100%{transform:translateY(0)}45%{transform:translateY(-7%) scale(1.03,.98)}}
+@keyframes anshadow{0%,100%{transform:scale(1)}45%{transform:scale(.8)}}
+@keyframes anblink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes ancheek{0%,100%{opacity:.5}50%{opacity:.9}}
+@keyframes anthump{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(.97)}45%{transform:scale(1.07)}}
+@keyframes anring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.4);opacity:0}}
+@keyframes anslosh{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@keyframes anfo{0%,100%{transform:translateY(0)}50%{transform:translateY(-6%)}}
+@keyframes anbub{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-70%);opacity:0}}
+@keyframes anspin{0%,100%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(8deg) scale(1.08)}}
+@keyframes antw{0%,100%{transform:scale(0);opacity:0}50%{transform:scale(1);opacity:1}}
+@keyframes anlol{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6%) rotate(3deg)}}
+@keyframes anjaw{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.82)}}
+@keyframes ansquirt{0%{transform:translate(0,0);opacity:1}100%{transform:translate(-40%,30%);opacity:0}}
+@keyframes anwob{0%,100%{transform:rotate(0)}50%{transform:rotate(3deg)}}
+@keyframes anturn{0%,80%{transform:rotate(0)}95%,100%{transform:rotate(180deg)}}
+@keyframes ansandc{0%{transform:scaleY(1)}80%,100%{transform:scaleY(.1)}}
+@keyframes ansandd{0%{transform:scaleY(.1)}80%,100%{transform:scaleY(1)}}
+@keyframes ansag{0%,100%{transform:translateY(0)}50%{transform:translateY(3%)}}
+@keyframes antear{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(60%);opacity:0}}
+@keyframes anwob2{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.9)}}
+@keyframes anpop{0%,70%,100%{transform:scale(1)}80%{transform:scale(1.1)}}
+@keyframes anhalo{0%,100%{transform:translateY(0)}50%{transform:translateY(-12%)}}
+@keyframes anpucker{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes anfh{0%{transform:translate(0,0) scale(.6);opacity:0}30%{opacity:1}100%{transform:translate(8%,-60%) scale(1.2);opacity:0}}
+@keyframes antongue{0%,100%{transform:translateY(0)}50%{transform:translateY(8%)}}
+@keyframes anthumb{0%,100%{transform:rotate(0) translateY(0)}30%{transform:rotate(-10deg) translateY(-6%)}60%{transform:rotate(4deg) translateY(0)}}
+@keyframes anhl{0%,100%{transform:translateX(0)}50%{transform:translateX(-4%)}}
+@keyframes anhr{0%,100%{transform:translateX(0)}50%{transform:translateX(4%)}}
+@keyframes anshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3%) rotate(-2deg)}75%{transform:translateX(3%) rotate(2deg)}}
+@keyframes anpuff{0%{transform:translateY(0) scale(.7);opacity:0}30%{opacity:1}100%{transform:translateY(-25%) scale(1.2);opacity:0}}
+@keyframes anboo{0%{transform:translateX(-12%) scale(.4);opacity:0}25%{opacity:1}60%{transform:translateX(0) scale(1.1);opacity:1}100%{transform:translateX(8%) scale(1);opacity:0}}
+
+/* velger: egne figurer (stille) + vanlige emojier */
+.emo{display:block;padding:0 8px 6px}
+.emo .etabs{display:flex;gap:4px;margin-bottom:4px}
+.emo .etab{font:inherit;font-size:.8rem;padding:2px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:var(--ink,inherit);cursor:pointer}
+.emo .etab.on{background:rgba(255,255,255,.4);font-weight:700}
+html.lys .emo .etab{border-color:#8fb4d8;background:#eef6fd;color:#10304f}html.lys .emo .etab.on{background:#d8e8f6}
+.emo .eg{display:flex;flex-wrap:wrap;gap:2px}
+.emo .eg[hidden]{display:none}
+.emo .ef{font-size:1.35rem;min-width:2.3rem;height:2.3rem;padding:2px;border:0;background:transparent;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.emo .ef:hover,.emo .ef:focus-visible{background:rgba(255,255,255,.3)}
+.emo .ef .an{width:1.9rem;height:1.9rem;vertical-align:0}
+
+/* skjulte filvalg skal aldri fange klikk (de la seg usynlig over smilefjes-knappen) */
+input.vh{position:fixed!important;left:-9999px!important;top:0!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+
+/* personlig melding ved siden av navnet (kompislista og chatvinduet) */
+.conv .nl{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv .npm,.ti .tpm{font-weight:400;font-style:italic;opacity:.78}
+.ti{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.conv .nl b{display:inline!important}
+@keyframes anroll{0%,100%{transform:rotate(-14deg) translateX(-2%)}50%{transform:rotate(14deg) translateX(2%)}}
+@keyframes ansquirtr{0%{transform:translate(0,0);opacity:1}100%{transform:translate(40%,30%);opacity:0}}
+
+/* reaksjoner (skisse A: piller under meldingen) */
+.m{position:relative}
+.rxs{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;width:max-content;max-width:100%}
+.rxc{flex:none;width:auto;display:inline-flex;align-items:center;gap:3px;font:inherit;font-size:12px;line-height:1;padding:1px 8px 1px 3px;border-radius:12px;border:1px solid rgba(120,160,200,.7);background:rgba(238,246,253,.85);color:#2a5a8a;cursor:pointer}
+.rxc.me{background:#d8ecff;border-color:#4a8fe0}
+.rxc .an{width:20px;height:20px;vertical-align:0}
+.rxb{position:absolute;top:-11px;right:6px;width:24px;height:24px;padding:0;border-radius:50%;border:1px solid rgba(120,160,200,.8);background:#fff;color:#4a7aa8;font-size:14px;line-height:1;cursor:pointer;opacity:0;transition:opacity .12s}
+.m:hover .rxb,.rxb:focus-visible{opacity:1}
+@media (pointer:coarse){
+.rxb{display:none}
+#log .m{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+}
+.m.lpd{box-shadow:0 0 0 3px rgba(74,143,224,.55)}
+.rxk{align-self:center;margin:0 4px 0 6px;padding:6px 12px;border-radius:16px;border:1px solid #9cc3e6;background:#eef6fd;color:#10304f;font:inherit;font-size:13px;cursor:pointer}
+.rxp{position:fixed;z-index:30;display:flex;gap:2px;padding:4px 6px;background:#fff;border:1px solid #9cc3e6;border-radius:24px;box-shadow:0 6px 18px #0004}
+.rxo{width:36px;height:36px;padding:2px;border:0;border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.rxo:hover,.rxo:focus-visible{background:#e6f1fa}.rxo.me{background:#d8ecff}
+.rxo .an{width:30px;height:30px;vertical-align:0}
+
+.brow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 0}
+.brow span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* logo Prek! */
+:root{--lgc:#eef6fd}html.lys{--lgc:#1b5fb8}
+.prkw{display:inline-block;line-height:0;vertical-align:middle}.prk{display:block;width:100%;height:auto;overflow:visible}
+.tbn{display:inline-flex;align-items:center}.tbn .prkw{width:58px}
+.empty h1{margin:0}.empty h1 .prkw{width:min(360px,72%)}
+.lh .prkw{width:250px;margin:8px 0 4px}
+
+.icow{display:inline-block;line-height:0}.icow svg{display:block;width:100%;height:100%}.tbic{width:20px;height:20px}.lgi{width:64px;height:64px}
+:root{--dot:#43d65a}
+.lwm .icow{width:130px;height:130px}
+.ff .bd{fill:#eef6fd}.ff.off .bd{fill:#9aa7b5}.ff .ab{stroke:#fff;stroke-opacity:.4;stroke-width:.8}
+html.lys .ff .bd{fill:#1b5fb8}html.lys .ff.off .bd{fill:#9aa9ba}html.lys .ff .ab{stroke:#fff;stroke-opacity:.5}
+.tbn .prkw{width:84px;margin:2px 0 0 4px}#tbi[hidden]{display:none}
+.epv{flex:none;padding:4px 12px;font-size:13px;opacity:.85;display:flex;align-items:center;flex-wrap:wrap;gap:2px;min-height:24px;border-top:1px solid rgba(120,160,210,.25)}
+.epv[hidden]{display:none}.epv .an{width:22px;height:22px;display:inline-block}.epv .an svg{width:100%;height:100%}

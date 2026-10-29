@@ -53,8 +53,15 @@ Schema, functions and policies are in `supabase/migrations/`. Principles:
 - **Cleanup:** pg_cron jobs delete expired messages hourly; the `cleanup` function removes expired files
   through the Storage API.
 
-## Front end
+## Front end, build and tests
 
-The app is one generated page. Sources (not yet in this repo) are `main.js`, `body.html`, `extra.css`,
-`anim.js` and a Python build script that inlines them, plus tests with Node and Playwright against a fake
-Supabase client. Moving them here, with CI, is the next cleanup step.
+The app is one generated page. `app/main.js`, `app/body.html`, `app/extra.css` and `app/anim.js` are the
+sources; `app/build.py` inlines them into `index.html`. The builder still patches two legacy base files in
+`app/base/` (`messenger.html`, `old-index.html`); replacing that with plain source files is part of the
+TypeScript transition. Always run `npm run build` and commit the regenerated `index.html`; CI fails if it
+is out of date.
+
+`tests/` holds browser tests (Node + Playwright) that run the built page against a fake Supabase client
+(`tests/mock.js`). `npm test` runs them all. They cover login and sign-up, friends and blocking, muting, the
+smiley preview, reactions, personal messages, the recovery code, device transfer and the key-missing screen.
+Some tests only print what they see and fail on crashes or page errors, not on every wrong value.

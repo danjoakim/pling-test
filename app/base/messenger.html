@@ -1,0 +1,3753 @@
+<title>Pling</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: venner og grupper i en liste, samtalen åpnes i full høyde. På PC står de side om side. XP-vindu rundt en skumringsnatt, med ildfluer som status. */
+:root{
+ --bg0:#071027;--night:#0c1630;--panel:#13224a;--panel2:#1c3166;--ink:#e9f0ff;--mut:#9db2dc;--line:#2c4580;
+ --luna1:#4a96ff;--luna2:#1859df;--luna3:#0a3fb5;--aqua:#5fe0d0;--bub:#1a2c5a;--me:#17483f;--sys:#ffd27a;
+ --glow-on:#a6ff3d;--glow-away:#ffb23c;--glow-busy:#ff5a48;--glow-off:#4b5878;
+ color-scheme:dark;
+ font-family:Tahoma,Verdana,"Trebuchet MS",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(120% 90% at 20% 0%,#10244f,var(--bg0));color:var(--ink);font-size:14px;display:flex;align-items:center;justify-content:center;
+ padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.on{--fc:var(--glow-on)}.away{--fc:var(--glow-away)}.busy{--fc:var(--glow-busy)}.off{--fc:var(--glow-off)}.ro{--fc:var(--aqua)}
+
+.win{width:100%;max-width:940px;height:min(680px,100%);display:flex;flex-direction:column;background:var(--night);border:3px solid var(--luna3);border-top:0;border-radius:10px 10px 5px 5px;overflow:hidden;box-shadow:0 18px 50px #000a,0 0 0 1px #000}
+.tb{flex:none;display:flex;align-items:center;gap:8px;padding:7px 10px;color:#fff;font:700 15px "Trebuchet MS",Tahoma,sans-serif;text-shadow:1px 1px 1px #0a2a7a;
+ background:linear-gradient(#4a96ff 0,#2a74ee 8%,#1859df 45%,#0e4dd3 85%,#0a3fb5 100%);border-radius:7px 7px 0 0}
+.tb .lock{margin-left:auto;font:400 12px Tahoma,sans-serif;opacity:.92}
+.shell{flex:1;min-height:0;display:flex}
+
+input,select,button{font:inherit;color:var(--ink);min-width:0}
+input,select{background:#0c1838;border:1px solid var(--line);border-radius:4px;padding:7px 9px;width:100%}
+input::placeholder{color:#7f96c4}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible,.lbl:focus-within{outline:2px solid var(--aqua);outline-offset:1px}
+button,.lbl{cursor:pointer;border:1px solid #05205f;border-radius:4px;padding:7px 13px;color:#fff;text-shadow:0 1px 1px #0a2a7a;
+ background:linear-gradient(#6aabff,#2f78ec 48%,#1f5ad0 52%,#3d88f2)}
+button:hover:not(:disabled){filter:brightness(1.1)}
+button:disabled{opacity:.55;cursor:default}
+button.glass,.lbl{background:linear-gradient(#26407e,#1a2f64);border-color:var(--line);text-shadow:none;color:var(--ink);padding:6px 10px;font-size:13px}
+button.hot{background:linear-gradient(#ffe083,#ffb02e 48%,#f0980f 52%,#ffc13d);border-color:#9a5b00;color:#3a2200;text-shadow:0 1px 0 #ffe9ad}
+button.sm{padding:5px 10px;font-size:13px}
+.lbl{display:inline-block;position:relative;text-align:center}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.fine{font-size:12px;color:var(--mut);line-height:1.45}
+.grp{font:700 12px Tahoma,sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.row input{flex:1;min-width:140px;font-size:12px}
+.err{min-height:1.2em;color:var(--sys)}
+
+/* ildflue */
+.ff{display:block;line-height:0;flex:none}
+.ff svg{width:22px;height:22px;display:block}
+.ff .gl{fill:var(--fc);opacity:.28}.ff .wg{fill:#cfe0ff;opacity:.4}.ff .bd{fill:#7b8cb8}.ff .ab{fill:var(--fc)}
+.ff.off .gl{opacity:0}.ff.off svg{opacity:.6}
+.ff.on svg{animation:puls 2.4s ease-in-out infinite}
+.ff.away svg{animation:puls 5s ease-in-out infinite}
+.ff.busy svg{filter:drop-shadow(0 0 5px var(--fc))}
+@keyframes puls{0%,100%{filter:drop-shadow(0 0 2px var(--fc)) brightness(.85)}50%{filter:drop-shadow(0 0 9px var(--fc)) brightness(1.2)}}
+
+/* avatar */
+.av{width:46px;height:46px;border-radius:8px;border:3px solid var(--fc);box-shadow:0 0 12px var(--fc);background:var(--panel2);display:grid;place-items:center;overflow:hidden;flex:none}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.av span{font:700 20px/1 "Trebuchet MS",sans-serif}
+.pav{width:34px;height:34px;border-radius:6px;border:2px solid var(--fc);display:grid;place-items:center;overflow:hidden;font:700 15px "Trebuchet MS",sans-serif;color:#fff;box-shadow:0 0 8px var(--fc);flex:none}
+.pav img{width:100%;height:100%;object-fit:cover;display:block}
+.off.pav{box-shadow:none;opacity:.7}
+
+/* hjem */
+.home{width:300px;flex:none;display:flex;flex-direction:column;min-height:0;background:linear-gradient(#142654,#0f1d44);border-right:1px solid var(--line)}
+.hs{flex:1;overflow:auto;min-height:0}
+.me{flex:none;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:10px 12px;background:none;text-shadow:none;color:var(--ink)}
+.me .t{min-width:0}
+.me b{display:block;font:700 15px "Trebuchet MS",Tahoma,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.me small{display:block;color:var(--mut);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prof{display:grid;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.pm{font-style:italic}
+.prof label{display:flex;gap:8px;align-items:flex-start}
+.prof label input{width:auto;margin-top:2px}
+.msg{padding:6px 12px 0}
+.homebar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 12px 4px}
+.add{display:grid;gap:9px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.add label{display:flex;gap:8px;align-items:flex-start}
+.add label input{width:auto;margin-top:2px}
+.add details{display:grid;gap:8px}
+.add summary{cursor:pointer;color:var(--mut);font-size:12px}
+#inv,#reqs{display:grid;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.req{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:8px;background:#1a2f66}
+.req .row{grid-column:1/-1}
+.list{padding:4px 8px 6px;display:grid;gap:4px;align-content:start}
+.conv{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:8px;padding:7px;text-shadow:none;color:var(--ink)}
+.conv:hover{background:#1a2f66;filter:none}
+.conv.act{background:#1d3772;border-color:var(--line)}
+.conv.pend{opacity:.75}
+.conv .t{min-width:0}
+.conv .t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.conv .t small{display:block;color:var(--mut);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* samtalefelt */
+.chatpane{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
+.empty{flex:1;position:relative;display:grid;place-items:center;text-align:center;padding:24px;overflow:hidden}
+.empty h1{margin:0 0 6px;font:700 40px "Trebuchet MS",Tahoma,sans-serif;color:#fff;text-shadow:0 0 14px #a6ff3d88}
+.empty .in{position:relative}
+.amb{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.amb .ff{position:absolute;animation:drift 9s ease-in-out infinite alternate}
+.amb .ff svg{width:26px;height:26px}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(22px,-30px)}}
+.ch{flex:none;display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:linear-gradient(#17295a,#122249)}
+.ch .back{padding:4px 11px;font-size:20px;line-height:1}
+.ch .ti{flex:1;min-width:0;font:700 15px "Trebuchet MS",Tahoma,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pr{display:flex;gap:5px;align-items:center;cursor:pointer}
+.pr .pav{width:28px;height:28px;font-size:13px}
+.pr .more{font-size:12px;color:var(--mut)}
+.menu{flex:none;max-height:60%;overflow:auto;display:grid;gap:12px;padding:12px;background:#0f1d44;border-bottom:1px solid var(--line)}
+.who{display:grid;gap:2px}
+.bud{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:5px;border-radius:6px}
+.bud .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bud small{display:block;color:var(--mut);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sn{font:700 16px "Courier New",monospace;letter-spacing:.04em;margin:4px 0}
+#log{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:0}
+.m{padding:8px 11px;border-radius:8px;border:1px solid var(--line);background:var(--bub);max-width:86%;align-self:flex-start;overflow-wrap:anywhere}
+.m.mine{background:var(--me);border-color:#2a7a66;align-self:flex-end}
+.m b{display:block;font-size:12px;color:var(--aqua)}
+.m time{font-size:11px;color:var(--mut)}
+.sys{align-self:center;color:var(--sys);font-size:13px;font-style:italic;text-align:center}
+.typing{flex:none;height:20px;padding:0 12px;font-size:12px;color:var(--mut);font-style:italic}
+.emo{flex:none;display:flex;gap:2px;padding:0 8px 4px;flex-wrap:wrap}
+.emo button{padding:2px 6px;background:none;border:0;font-size:20px;text-shadow:none}
+.bar{flex:none;display:flex;gap:6px;padding:8px;border-top:1px solid var(--line);flex-wrap:wrap;align-items:center}
+.bar input{flex:1 1 150px}
+.bar .eb{padding:6px 10px;font-size:18px;line-height:1}
+
+.win.dp{animation:sh .6s,glimt .9s}
+@keyframes sh{0%,100%{transform:none}15%{transform:translate(-10px,4px)}30%{transform:translate(9px,-5px)}45%{transform:translate(-8px,-3px)}60%{transform:translate(7px,5px)}80%{transform:translate(-4px,2px)}}
+@keyframes glimt{0%,100%{box-shadow:0 18px 50px #000a,0 0 0 1px #000}30%{box-shadow:0 18px 50px #000a,0 0 70px 10px #a6ff3daa}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+@media(max-width:700px){
+ input,select{font-size:16px}
+ .win{height:100%;border-radius:0}
+ .home{width:auto;flex:1;border-right:0}
+ .chatpane{display:none}
+ .shell.inchat .home{display:none}
+ .shell.inchat .chatpane{display:flex}
+}
+
+/* sjakk */
+.cxb{position:relative;font-size:18px;line-height:1;padding:4px 10px}
+.cxb.dot::after{content:"";position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:var(--glow-on);box-shadow:0 0 8px var(--glow-on);animation:cxpuls 1.6s ease-in-out infinite}
+@keyframes cxpuls{0%,100%{opacity:.55}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.cxb.dot::after{animation:none}}
+.cxbn{flex:none;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:8px 12px;background:#10265a;border-bottom:1px solid var(--line);font-size:13px}
+.cxbn>span:first-child{flex:1 1 180px;min-width:0}
+.cxp{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 12px}
+.cxh{align-self:stretch;display:flex;gap:10px;align-items:center}
+#cxs{font:700 14px "Trebuchet MS",Tahoma,sans-serif;color:var(--sys);text-align:center}
+.cxbd{container-type:inline-size;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:min(100%,calc(100dvh - 450px),480px);min-width:250px;aspect-ratio:1/1;border:2px solid var(--luna2);border-radius:6px;overflow:hidden;box-shadow:0 0 22px #1859df55;flex:none}
+button.sq{position:relative;overflow:visible;display:grid;place-items:center;margin:0;padding:0;min-height:0;border:0;border-radius:0;text-shadow:none;font-size:min(9.5vw,44px);font-size:9.6cqw;line-height:1;cursor:pointer;background:var(--sqc)}
+button.sq.l{--sqc:#27373f}button.sq.d{--sqc:#161f26}
+button.sq:hover:not(:disabled){filter:none}
+.cs{width:104%;height:104%;display:block;overflow:visible}
+.cs .sh{fill:#0007;stroke:none}
+.cs.sw{fill:#cfd9e6;stroke:#e9eff7;stroke-width:1.5;stroke-linejoin:round}
+.cs.sw .dt{fill:none;stroke:#8da2bb;stroke-width:3;stroke-linecap:round}
+.cs.sw .ey{fill:#6f86a3;stroke:none}
+.cs.sb{fill:#506877;stroke:#a7c0d0;stroke-width:3;stroke-linejoin:round;paint-order:stroke}
+.cs.sb .dt{fill:none;stroke:#a7c0d0;stroke-width:2.6;stroke-linecap:round}
+.cs.sb .ey{fill:#a7c0d0;stroke:none}
+.cxpb .cs{width:34px;height:34px}
+button.sq.lm{background-image:linear-gradient(#c9b27a55,#c9b27a55)}
+button.sq.sel{box-shadow:inset 0 0 0 3px var(--glow-on),inset 0 0 14px #a6ff3d99}
+button.sq.tg::after{content:"";position:absolute;width:26%;height:26%;border-radius:50%;background:var(--glow-on);box-shadow:0 0 10px var(--glow-on);opacity:.9}
+button.sq.tc{box-shadow:inset 0 0 0 3px var(--glow-on)}
+button.sq.chk{background:radial-gradient(circle,#ff5a48cc 0,#ff5a4800 75%),var(--sqc)}
+button.sq[data-r]::before,button.sq[data-f]::after{position:absolute;font:700 9px "Trebuchet MS",Tahoma,sans-serif;color:#cfe0ff;opacity:.7;text-shadow:none}
+button.sq[data-r]::before{content:attr(data-r);top:2px;left:3px}
+button.sq[data-f]::after{content:attr(data-f);bottom:1px;right:3px}
+button.sq.tg[data-f]::after{content:attr(data-f);position:absolute;width:auto;height:auto;border-radius:0;background:none;box-shadow:none;bottom:1px;right:3px;opacity:.7}
+.cxpr{align-items:center}.cxpb{font-size:26px;line-height:1;padding:4px 12px}
+.cxmv{align-self:stretch;max-height:64px;overflow:auto;overflow-wrap:anywhere;text-align:center}
+
+/* sjakk mot datamaskinen */
+.sicon{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:26px;color:#f6f9ff;background:linear-gradient(#26407e,#14285a);border:2px solid var(--glow-on);box-shadow:0 0 12px #a6ff3d55;text-shadow:0 0 6px #0a1230}
+button.sel{background:linear-gradient(#2f7f86,#1d5a62);border-color:var(--aqua)}
+.cxlab{flex-basis:100%;margin-top:2px}
+
+/* sjakk: animasjon */
+.pc{display:grid;place-items:center;width:100%;height:100%;pointer-events:none}
+button.sq.anim{z-index:3}
+.ghost{position:absolute;inset:0;z-index:2}
+</style>
+
+<div class="win" id="app">
+ <div class="tb"><span id="tbi"></span><span>Pling</span><span class="lock" id="lock" hidden title="Meldingene krypteres i nettleseren med AES-256-GCM">Kryptert</span></div>
+ <div class="shell" id="shell">
+  <section class="home" id="home">
+   <button class="me" id="meb" type="button" aria-expanded="false" title="Min profil">
+    <span class="av on" id="avwrap"><img id="avimg" alt="Ditt bilde" hidden><span id="avini">?</span></span>
+    <span class="t"><b id="men">Anonym</b><small id="mep">Pålogget</small></span>
+    <span id="mef"></span>
+   </button>
+   <div class="prof" id="prof" hidden>
+    <input id="nm" placeholder="Visningsnavn" maxlength="24" aria-label="Visningsnavn">
+    <select id="st" aria-label="Status"><option value="online">Pålogget</option><option value="away">Borte</option><option value="busy">Opptatt</option><option value="off">Vis meg som frakoblet</option></select>
+    <input id="pm" class="pm" placeholder="&lt;Skriv en personlig melding&gt;" maxlength="60" aria-label="Personlig melding">
+    <label class="fine"><input type="checkbox" id="vis" checked> Vis meg i «Finn folk» for andre på siden</label>
+    <label class="lbl" title="Bildet vises bare for vennene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
+   </div>
+   <div class="fine err msg" id="msg" role="status"></div>
+   <div class="hs">
+    <div id="inv" hidden><div class="fine" id="invt"></div><button id="ij" type="button">Legg til</button></div>
+    <div id="reqs" hidden></div>
+    <div class="homebar"><span class="grp">Spill</span></div>
+    <div class="list"><button class="conv" id="solo" type="button"><span class="sicon" aria-hidden="true">♟︎</span><span class="t"><b>Sjakk mot datamaskinen</b><small id="solor"></small></span></button></div>
+    <div class="homebar"><span class="grp">Venner</span><button class="glass" id="addf" type="button" aria-expanded="false">+ Legg til venn</button></div>
+    <div class="add" id="addfp" hidden>
+     <div class="fine">Alle som har åpnet Pling står her. Trykk «Legg til», så får personen en forespørsel som kan godtas eller avslås.</div>
+     <input id="fs" placeholder="Søk etter navn" autocomplete="off" aria-label="Søk etter navn">
+     <div class="list" id="dir"></div>
+     <div class="row"><input id="em" type="email" placeholder="Inviter på e-post" autocomplete="off" aria-label="E-postadresse til en du vil invitere"><button class="glass sm" id="sem" type="button">Send</button></div>
+     <details><summary>Eller bruk en lenke</summary>
+      <div class="fine">Send lenken din til en venn, eller lim inn en lenke du har fått.</div>
+      <div class="row"><input id="myl" readonly aria-label="Din vennelenke"><button class="glass sm" id="copyf" type="button">Kopier</button></div>
+      <input id="fc" placeholder="Lim inn en venns lenke" autocomplete="off" aria-label="Lenke fra en venn">
+     </details>
+     <div class="fine err" id="ferr" role="status"></div>
+    </div>
+    <div class="list" id="friends"></div>
+    <div class="homebar"><span class="grp">Grupper</span><button class="glass" id="addb" type="button" aria-expanded="false">+ Ny gruppe</button></div>
+    <div class="add" id="add" hidden>
+     <div class="fine">Gruppesamtaler åpnes med en lenke. Lenken inneholder en tilfeldig nøkkel som nettleseren bruker til å kryptere meldingene.</div>
+     <input id="ct" placeholder="Navn på gruppen" maxlength="40" aria-label="Navn på gruppen">
+     <button id="nw" type="button">Lag gruppe</button>
+     <input id="ic" placeholder="Eller lim inn en gruppelenke" autocomplete="off" aria-label="Gruppelenke">
+     <label class="fine"><input type="checkbox" id="rem" checked> Ha gruppen i listen min (lagres bare på denne enheten, aldri på en server)</label>
+     <details><summary>Bli med med navn og passord</summary>
+      <input id="rn" placeholder="Gruppenavn, for eksempel gamle-venner" maxlength="40" aria-label="Gruppenavn">
+      <input id="pp" type="password" placeholder="Felles passord (minst 8 tegn)" autocomplete="off" aria-label="Felles passord">
+      <button id="go" type="button">Logg på</button>
+     </details>
+     <div class="fine err" id="err" role="status"></div>
+    </div>
+    <div class="list" id="saved"></div>
+   </div>
+  </section>
+
+  <section class="chatpane" id="chatpane">
+   <div class="empty" id="empty"><div class="amb" id="amb" aria-hidden="true"></div><div class="in"><h1>Pling</h1><div class="fine">Dobbeltklikk på en venn for å starte en samtale.</div></div></div>
+   <div class="ch" id="ch" hidden>
+    <button class="glass back" id="back" type="button" aria-label="Lukk samtalen">‹</button>
+    <div class="ti" id="title"></div>
+    <div class="pr" id="pr" title="Hvem som er her"></div>
+    <button class="glass cxb" id="cxb" type="button" hidden aria-label="Sjakk" title="Sjakk">♟︎</button>
+    <button class="glass" id="mb" type="button" aria-expanded="false" aria-label="Innstillinger for samtalen">⋯</button>
+   </div>
+   <div class="menu" id="menu" hidden>
+    <div><div class="grp">Her nå</div><div class="who" id="who"></div></div>
+    <div id="mdm" hidden><div class="grp">Sikkerhetsnummer</div><div class="sn" id="sn"></div><div class="fine">Sammenlign nummeret med vennen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.</div></div>
+    <div><div class="fine" style="margin-bottom:4px">Utløp for meldingene du sender</div>
+     <select id="ex" aria-label="Utløp for meldingene du sender"><option value="0">Utløper ikke</option><option value="1">Etter 1 dag</option><option value="7">Etter 7 dager</option><option value="30">Etter 30 dager</option></select></div>
+    <div class="row"><button class="glass" id="bi" type="button">Inviter</button><button class="glass" id="bd" type="button">Last ned</button><button class="glass" id="bx" type="button">Slett for alle</button><button class="glass" id="bf" type="button">Fjern fra listen</button><button class="glass" id="bfr" type="button">Fjern venn</button></div>
+    <input id="lk" readonly hidden aria-label="Invitasjonslenke">
+    <div class="fine" id="fp"></div>
+   </div>
+   <div class="cxbn" id="cxbn" hidden><span id="cxt"></span><span class="row"><button class="glass sm hot" id="cxa" type="button"></button><button class="glass sm" id="cxd" type="button"></button></span></div>
+   <div class="cxp" id="cxp" hidden>
+    <div class="cxh"><button class="glass sm" id="cxcl" type="button">‹ Til samtalen</button></div>
+    <div id="cxs" role="status"></div>
+    <div class="cxbd" id="cxbd" hidden></div>
+    <div class="row cxpr" id="cxpr" hidden></div>
+    <div class="row" id="cxbt"></div>
+    <div class="fine cxmv" id="cxmv"></div>
+   </div>
+   <div id="log" hidden></div>
+   <div class="typing" id="typ" hidden></div>
+   <div class="emo" id="emo" hidden></div>
+   <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="Vis emoji">☺</button><input id="tx" placeholder="Skriv en melding …" maxlength="1000" autocomplete="off" aria-label="Melding"><button id="sd" type="button">Send</button><button id="dp" class="hot" type="button" title="Spiller to plinger og vibrerer hos mottakeren">Dobbeltpling</button></div>
+  </section>
+ </div>
+</div>
+
+<script>
+/*
+ * Copyright (c) 2022, Jeff Hlywa (jhlywa@gmail.com)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ *----------------------------------------------------------------------------*/
+
+(function(){
+const SYMBOLS = 'pnbrqkPNBRQK'
+
+const DEFAULT_POSITION =
+  'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+
+const TERMINATION_MARKERS = ['1-0', '0-1', '1/2-1/2', '*']
+
+const PAWN_OFFSETS = {
+  b: [16, 32, 17, 15],
+  w: [-16, -32, -17, -15],
+}
+
+const PIECE_OFFSETS = {
+  n: [-18, -33, -31, -14, 18, 33, 31, 14],
+  b: [-17, -15, 17, 15],
+  r: [-16, 1, 16, -1],
+  q: [-17, -16, -15, 1, 17, 16, 15, -1],
+  k: [-17, -16, -15, 1, 17, 16, 15, -1],
+}
+
+// prettier-ignore
+const ATTACKS = [
+  20, 0, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0, 0,20, 0,
+   0,20, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0,20, 0, 0,
+   0, 0,20, 0, 0, 0, 0, 24,  0, 0, 0, 0,20, 0, 0, 0,
+   0, 0, 0,20, 0, 0, 0, 24,  0, 0, 0,20, 0, 0, 0, 0,
+   0, 0, 0, 0,20, 0, 0, 24,  0, 0,20, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0,20, 2, 24,  2,20, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 2,53, 56, 53, 2, 0, 0, 0, 0, 0, 0,
+  24,24,24,24,24,24,56,  0, 56,24,24,24,24,24,24, 0,
+   0, 0, 0, 0, 0, 2,53, 56, 53, 2, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0,20, 2, 24,  2,20, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0,20, 0, 0, 24,  0, 0,20, 0, 0, 0, 0, 0,
+   0, 0, 0,20, 0, 0, 0, 24,  0, 0, 0,20, 0, 0, 0, 0,
+   0, 0,20, 0, 0, 0, 0, 24,  0, 0, 0, 0,20, 0, 0, 0,
+   0,20, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0,20, 0, 0,
+  20, 0, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0, 0,20
+];
+
+// prettier-ignore
+const RAYS = [
+   17,  0,  0,  0,  0,  0,  0, 16,  0,  0,  0,  0,  0,  0, 15, 0,
+    0, 17,  0,  0,  0,  0,  0, 16,  0,  0,  0,  0,  0, 15,  0, 0,
+    0,  0, 17,  0,  0,  0,  0, 16,  0,  0,  0,  0, 15,  0,  0, 0,
+    0,  0,  0, 17,  0,  0,  0, 16,  0,  0,  0, 15,  0,  0,  0, 0,
+    0,  0,  0,  0, 17,  0,  0, 16,  0,  0, 15,  0,  0,  0,  0, 0,
+    0,  0,  0,  0,  0, 17,  0, 16,  0, 15,  0,  0,  0,  0,  0, 0,
+    0,  0,  0,  0,  0,  0, 17, 16, 15,  0,  0,  0,  0,  0,  0, 0,
+    1,  1,  1,  1,  1,  1,  1,  0, -1, -1,  -1,-1, -1, -1, -1, 0,
+    0,  0,  0,  0,  0,  0,-15,-16,-17,  0,  0,  0,  0,  0,  0, 0,
+    0,  0,  0,  0,  0,-15,  0,-16,  0,-17,  0,  0,  0,  0,  0, 0,
+    0,  0,  0,  0,-15,  0,  0,-16,  0,  0,-17,  0,  0,  0,  0, 0,
+    0,  0,  0,-15,  0,  0,  0,-16,  0,  0,  0,-17,  0,  0,  0, 0,
+    0,  0,-15,  0,  0,  0,  0,-16,  0,  0,  0,  0,-17,  0,  0, 0,
+    0,-15,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,-17,  0, 0,
+  -15,  0,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,  0,-17
+];
+
+const SHIFTS = { p: 0, n: 1, b: 2, r: 3, q: 4, k: 5 }
+
+const BITS = {
+  NORMAL: 1,
+  CAPTURE: 2,
+  BIG_PAWN: 4,
+  EP_CAPTURE: 8,
+  PROMOTION: 16,
+  KSIDE_CASTLE: 32,
+  QSIDE_CASTLE: 64,
+}
+
+const RANK_1 = 7
+const RANK_2 = 6
+const RANK_3 = 5
+const RANK_4 = 4
+const RANK_5 = 3
+const RANK_6 = 2
+const RANK_7 = 1
+const RANK_8 = 0
+
+// prettier-ignore
+const SQUARE_MAP = {
+  a8:   0, b8:   1, c8:   2, d8:   3, e8:   4, f8:   5, g8:   6, h8:   7,
+  a7:  16, b7:  17, c7:  18, d7:  19, e7:  20, f7:  21, g7:  22, h7:  23,
+  a6:  32, b6:  33, c6:  34, d6:  35, e6:  36, f6:  37, g6:  38, h6:  39,
+  a5:  48, b5:  49, c5:  50, d5:  51, e5:  52, f5:  53, g5:  54, h5:  55,
+  a4:  64, b4:  65, c4:  66, d4:  67, e4:  68, f4:  69, g4:  70, h4:  71,
+  a3:  80, b3:  81, c3:  82, d3:  83, e3:  84, f3:  85, g3:  86, h3:  87,
+  a2:  96, b2:  97, c2:  98, d2:  99, e2: 100, f2: 101, g2: 102, h2: 103,
+  a1: 112, b1: 113, c1: 114, d1: 115, e1: 116, f1: 117, g1: 118, h1: 119
+};
+
+const ROOKS = {
+  w: [
+    { square: SQUARE_MAP.a1, flag: BITS.QSIDE_CASTLE },
+    { square: SQUARE_MAP.h1, flag: BITS.KSIDE_CASTLE },
+  ],
+  b: [
+    { square: SQUARE_MAP.a8, flag: BITS.QSIDE_CASTLE },
+    { square: SQUARE_MAP.h8, flag: BITS.KSIDE_CASTLE },
+  ],
+}
+
+const PARSER_STRICT = 0
+const PARSER_SLOPPY = 1
+
+/* this function is used to uniquely identify ambiguous moves */
+function get_disambiguator(move, moves) {
+  var from = move.from
+  var to = move.to
+  var piece = move.piece
+
+  var ambiguities = 0
+  var same_rank = 0
+  var same_file = 0
+
+  for (var i = 0, len = moves.length; i < len; i++) {
+    var ambig_from = moves[i].from
+    var ambig_to = moves[i].to
+    var ambig_piece = moves[i].piece
+
+    /* if a move of the same piece type ends on the same to square, we'll
+     * need to add a disambiguator to the algebraic notation
+     */
+    if (piece === ambig_piece && from !== ambig_from && to === ambig_to) {
+      ambiguities++
+
+      if (rank(from) === rank(ambig_from)) {
+        same_rank++
+      }
+
+      if (file(from) === file(ambig_from)) {
+        same_file++
+      }
+    }
+  }
+
+  if (ambiguities > 0) {
+    /* if there exists a similar moving piece on the same rank and file as
+     * the move in question, use the square as the disambiguator
+     */
+    if (same_rank > 0 && same_file > 0) {
+      return algebraic(from)
+    } else if (same_file > 0) {
+      /* if the moving piece rests on the same file, use the rank symbol as the
+       * disambiguator
+       */
+      return algebraic(from).charAt(1)
+    } else {
+      /* else use the file symbol */
+      return algebraic(from).charAt(0)
+    }
+  }
+
+  return ''
+}
+
+function infer_piece_type(san) {
+  var piece_type = san.charAt(0)
+  if (piece_type >= 'a' && piece_type <= 'h') {
+    var matches = san.match(/[a-h]\d.*[a-h]\d/)
+    if (matches) {
+      return undefined
+    }
+    return PAWN
+  }
+  piece_type = piece_type.toLowerCase()
+  if (piece_type === 'o') {
+    return KING
+  }
+  return piece_type
+}
+
+// parses all of the decorators out of a SAN string
+function stripped_san(move) {
+  return move.replace(/=/, '').replace(/[+#]?[?!]*$/, '')
+}
+
+/*****************************************************************************
+ * UTILITY FUNCTIONS
+ ****************************************************************************/
+function rank(i) {
+  return i >> 4
+}
+
+function file(i) {
+  return i & 15
+}
+
+function algebraic(i) {
+  var f = file(i),
+    r = rank(i)
+  return 'abcdefgh'.substring(f, f + 1) + '87654321'.substring(r, r + 1)
+}
+
+function swap_color(c) {
+  return c === WHITE ? BLACK : WHITE
+}
+
+function is_digit(c) {
+  return '0123456789'.indexOf(c) !== -1
+}
+
+function clone(obj) {
+  var dupe = obj instanceof Array ? [] : {}
+
+  for (var property in obj) {
+    if (typeof property === 'object') {
+      dupe[property] = clone(obj[property])
+    } else {
+      dupe[property] = obj[property]
+    }
+  }
+
+  return dupe
+}
+
+function trim(str) {
+  return str.replace(/^\s+|\s+$/g, '')
+}
+
+/***************************************************************************
+ * PUBLIC CONSTANTS
+ **************************************************************************/
+
+const BLACK = 'b'
+const WHITE = 'w'
+
+const EMPTY = -1
+
+const PAWN = 'p'
+const KNIGHT = 'n'
+const BISHOP = 'b'
+const ROOK = 'r'
+const QUEEN = 'q'
+const KING = 'k'
+
+const SQUARES = (function () {
+  /* from the ECMA-262 spec (section 12.6.4):
+   * "The mechanics of enumerating the properties ... is
+   * implementation dependent"
+   * so: for (var sq in SQUARES) { keys.push(sq); } might not be
+   * ordered correctly
+   */
+  var keys = []
+  for (var i = SQUARE_MAP.a8; i <= SQUARE_MAP.h1; i++) {
+    if (i & 0x88) {
+      i += 7
+      continue
+    }
+    keys.push(algebraic(i))
+  }
+  return keys
+})()
+
+const FLAGS = {
+  NORMAL: 'n',
+  CAPTURE: 'c',
+  BIG_PAWN: 'b',
+  EP_CAPTURE: 'e',
+  PROMOTION: 'p',
+  KSIDE_CASTLE: 'k',
+  QSIDE_CASTLE: 'q',
+}
+
+const Chess = function (fen) {
+  var board = new Array(128)
+  var kings = { w: EMPTY, b: EMPTY }
+  var turn = WHITE
+  var castling = { w: 0, b: 0 }
+  var ep_square = EMPTY
+  var half_moves = 0
+  var move_number = 1
+  var history = []
+  var header = {}
+  var comments = {}
+
+  /* if the user passes in a fen string, load it, else default to
+   * starting position
+   */
+  if (typeof fen === 'undefined') {
+    load(DEFAULT_POSITION)
+  } else {
+    load(fen)
+  }
+
+  function clear(keep_headers) {
+    if (typeof keep_headers === 'undefined') {
+      keep_headers = false
+    }
+
+    board = new Array(128)
+    kings = { w: EMPTY, b: EMPTY }
+    turn = WHITE
+    castling = { w: 0, b: 0 }
+    ep_square = EMPTY
+    half_moves = 0
+    move_number = 1
+    history = []
+    if (!keep_headers) header = {}
+    comments = {}
+    update_setup(generate_fen())
+  }
+
+  function prune_comments() {
+    var reversed_history = []
+    var current_comments = {}
+    var copy_comment = function (fen) {
+      if (fen in comments) {
+        current_comments[fen] = comments[fen]
+      }
+    }
+    while (history.length > 0) {
+      reversed_history.push(undo_move())
+    }
+    copy_comment(generate_fen())
+    while (reversed_history.length > 0) {
+      make_move(reversed_history.pop())
+      copy_comment(generate_fen())
+    }
+    comments = current_comments
+  }
+
+  function reset() {
+    load(DEFAULT_POSITION)
+  }
+
+  function load(fen, keep_headers) {
+    if (typeof keep_headers === 'undefined') {
+      keep_headers = false
+    }
+
+    var tokens = fen.split(/\s+/)
+    var position = tokens[0]
+    var square = 0
+
+    if (!validate_fen(fen).valid) {
+      return false
+    }
+
+    clear(keep_headers)
+
+    for (var i = 0; i < position.length; i++) {
+      var piece = position.charAt(i)
+
+      if (piece === '/') {
+        square += 8
+      } else if (is_digit(piece)) {
+        square += parseInt(piece, 10)
+      } else {
+        var color = piece < 'a' ? WHITE : BLACK
+        put({ type: piece.toLowerCase(), color: color }, algebraic(square))
+        square++
+      }
+    }
+
+    turn = tokens[1]
+
+    if (tokens[2].indexOf('K') > -1) {
+      castling.w |= BITS.KSIDE_CASTLE
+    }
+    if (tokens[2].indexOf('Q') > -1) {
+      castling.w |= BITS.QSIDE_CASTLE
+    }
+    if (tokens[2].indexOf('k') > -1) {
+      castling.b |= BITS.KSIDE_CASTLE
+    }
+    if (tokens[2].indexOf('q') > -1) {
+      castling.b |= BITS.QSIDE_CASTLE
+    }
+
+    ep_square = tokens[3] === '-' ? EMPTY : SQUARE_MAP[tokens[3]]
+    half_moves = parseInt(tokens[4], 10)
+    move_number = parseInt(tokens[5], 10)
+
+    update_setup(generate_fen())
+
+    return true
+  }
+
+  /* TODO: this function is pretty much crap - it validates structure but
+   * completely ignores content (e.g. doesn't verify that each side has a king)
+   * ... we should rewrite this, and ditch the silly error_number field while
+   * we're at it
+   */
+  function validate_fen(fen) {
+    var errors = {
+      0: 'No errors.',
+      1: 'FEN string must contain six space-delimited fields.',
+      2: '6th field (move number) must be a positive integer.',
+      3: '5th field (half move counter) must be a non-negative integer.',
+      4: '4th field (en-passant square) is invalid.',
+      5: '3rd field (castling availability) is invalid.',
+      6: '2nd field (side to move) is invalid.',
+      7: "1st field (piece positions) does not contain 8 '/'-delimited rows.",
+      8: '1st field (piece positions) is invalid [consecutive numbers].',
+      9: '1st field (piece positions) is invalid [invalid piece].',
+      10: '1st field (piece positions) is invalid [row too large].',
+      11: 'Illegal en-passant square',
+    }
+
+    /* 1st criterion: 6 space-seperated fields? */
+    var tokens = fen.split(/\s+/)
+    if (tokens.length !== 6) {
+      return { valid: false, error_number: 1, error: errors[1] }
+    }
+
+    /* 2nd criterion: move number field is a integer value > 0? */
+    if (isNaN(parseInt(tokens[5])) || parseInt(tokens[5], 10) <= 0) {
+      return { valid: false, error_number: 2, error: errors[2] }
+    }
+
+    /* 3rd criterion: half move counter is an integer >= 0? */
+    if (isNaN(parseInt(tokens[4])) || parseInt(tokens[4], 10) < 0) {
+      return { valid: false, error_number: 3, error: errors[3] }
+    }
+
+    /* 4th criterion: 4th field is a valid e.p.-string? */
+    if (!/^(-|[abcdefgh][36])$/.test(tokens[3])) {
+      return { valid: false, error_number: 4, error: errors[4] }
+    }
+
+    /* 5th criterion: 3th field is a valid castle-string? */
+    if (!/^(KQ?k?q?|Qk?q?|kq?|q|-)$/.test(tokens[2])) {
+      return { valid: false, error_number: 5, error: errors[5] }
+    }
+
+    /* 6th criterion: 2nd field is "w" (white) or "b" (black)? */
+    if (!/^(w|b)$/.test(tokens[1])) {
+      return { valid: false, error_number: 6, error: errors[6] }
+    }
+
+    /* 7th criterion: 1st field contains 8 rows? */
+    var rows = tokens[0].split('/')
+    if (rows.length !== 8) {
+      return { valid: false, error_number: 7, error: errors[7] }
+    }
+
+    /* 8th criterion: every row is valid? */
+    for (var i = 0; i < rows.length; i++) {
+      /* check for right sum of fields AND not two numbers in succession */
+      var sum_fields = 0
+      var previous_was_number = false
+
+      for (var k = 0; k < rows[i].length; k++) {
+        if (!isNaN(rows[i][k])) {
+          if (previous_was_number) {
+            return { valid: false, error_number: 8, error: errors[8] }
+          }
+          sum_fields += parseInt(rows[i][k], 10)
+          previous_was_number = true
+        } else {
+          if (!/^[prnbqkPRNBQK]$/.test(rows[i][k])) {
+            return { valid: false, error_number: 9, error: errors[9] }
+          }
+          sum_fields += 1
+          previous_was_number = false
+        }
+      }
+      if (sum_fields !== 8) {
+        return { valid: false, error_number: 10, error: errors[10] }
+      }
+    }
+
+    if (
+      (tokens[3][1] == '3' && tokens[1] == 'w') ||
+      (tokens[3][1] == '6' && tokens[1] == 'b')
+    ) {
+      return { valid: false, error_number: 11, error: errors[11] }
+    }
+
+    /* everything's okay! */
+    return { valid: true, error_number: 0, error: errors[0] }
+  }
+
+  function generate_fen() {
+    var empty = 0
+    var fen = ''
+
+    for (var i = SQUARE_MAP.a8; i <= SQUARE_MAP.h1; i++) {
+      if (board[i] == null) {
+        empty++
+      } else {
+        if (empty > 0) {
+          fen += empty
+          empty = 0
+        }
+        var color = board[i].color
+        var piece = board[i].type
+
+        fen += color === WHITE ? piece.toUpperCase() : piece.toLowerCase()
+      }
+
+      if ((i + 1) & 0x88) {
+        if (empty > 0) {
+          fen += empty
+        }
+
+        if (i !== SQUARE_MAP.h1) {
+          fen += '/'
+        }
+
+        empty = 0
+        i += 8
+      }
+    }
+
+    var cflags = ''
+    if (castling[WHITE] & BITS.KSIDE_CASTLE) {
+      cflags += 'K'
+    }
+    if (castling[WHITE] & BITS.QSIDE_CASTLE) {
+      cflags += 'Q'
+    }
+    if (castling[BLACK] & BITS.KSIDE_CASTLE) {
+      cflags += 'k'
+    }
+    if (castling[BLACK] & BITS.QSIDE_CASTLE) {
+      cflags += 'q'
+    }
+
+    /* do we have an empty castling flag? */
+    cflags = cflags || '-'
+    var epflags = ep_square === EMPTY ? '-' : algebraic(ep_square)
+
+    return [fen, turn, cflags, epflags, half_moves, move_number].join(' ')
+  }
+
+  function set_header(args) {
+    for (var i = 0; i < args.length; i += 2) {
+      if (typeof args[i] === 'string' && typeof args[i + 1] === 'string') {
+        header[args[i]] = args[i + 1]
+      }
+    }
+    return header
+  }
+
+  /* called when the initial board setup is changed with put() or remove().
+   * modifies the SetUp and FEN properties of the header object.  if the FEN is
+   * equal to the default position, the SetUp and FEN are deleted
+   * the setup is only updated if history.length is zero, ie moves haven't been
+   * made.
+   */
+  function update_setup(fen) {
+    if (history.length > 0) return
+
+    if (fen !== DEFAULT_POSITION) {
+      header['SetUp'] = '1'
+      header['FEN'] = fen
+    } else {
+      delete header['SetUp']
+      delete header['FEN']
+    }
+  }
+
+  function get(square) {
+    var piece = board[SQUARE_MAP[square]]
+    return piece ? { type: piece.type, color: piece.color } : null
+  }
+
+  function put(piece, square) {
+    /* check for valid piece object */
+    if (!('type' in piece && 'color' in piece)) {
+      return false
+    }
+
+    /* check for piece */
+    if (SYMBOLS.indexOf(piece.type.toLowerCase()) === -1) {
+      return false
+    }
+
+    /* check for valid square */
+    if (!(square in SQUARE_MAP)) {
+      return false
+    }
+
+    var sq = SQUARE_MAP[square]
+
+    /* don't let the user place more than one king */
+    if (
+      piece.type == KING &&
+      !(kings[piece.color] == EMPTY || kings[piece.color] == sq)
+    ) {
+      return false
+    }
+
+    board[sq] = { type: piece.type, color: piece.color }
+    if (piece.type === KING) {
+      kings[piece.color] = sq
+    }
+
+    update_setup(generate_fen())
+
+    return true
+  }
+
+  function remove(square) {
+    var piece = get(square)
+    board[SQUARE_MAP[square]] = null
+    if (piece && piece.type === KING) {
+      kings[piece.color] = EMPTY
+    }
+
+    update_setup(generate_fen())
+
+    return piece
+  }
+
+  function build_move(board, from, to, flags, promotion) {
+    var move = {
+      color: turn,
+      from: from,
+      to: to,
+      flags: flags,
+      piece: board[from].type,
+    }
+
+    if (promotion) {
+      move.flags |= BITS.PROMOTION
+      move.promotion = promotion
+    }
+
+    if (board[to]) {
+      move.captured = board[to].type
+    } else if (flags & BITS.EP_CAPTURE) {
+      move.captured = PAWN
+    }
+    return move
+  }
+
+  function generate_moves(options) {
+    function add_move(board, moves, from, to, flags) {
+      /* if pawn promotion */
+      if (
+        board[from].type === PAWN &&
+        (rank(to) === RANK_8 || rank(to) === RANK_1)
+      ) {
+        var pieces = [QUEEN, ROOK, BISHOP, KNIGHT]
+        for (var i = 0, len = pieces.length; i < len; i++) {
+          moves.push(build_move(board, from, to, flags, pieces[i]))
+        }
+      } else {
+        moves.push(build_move(board, from, to, flags))
+      }
+    }
+
+    var moves = []
+    var us = turn
+    var them = swap_color(us)
+    var second_rank = { b: RANK_7, w: RANK_2 }
+
+    var first_sq = SQUARE_MAP.a8
+    var last_sq = SQUARE_MAP.h1
+    var single_square = false
+
+    /* do we want legal moves? */
+    var legal =
+      typeof options !== 'undefined' && 'legal' in options
+        ? options.legal
+        : true
+
+    var piece_type =
+      typeof options !== 'undefined' &&
+      'piece' in options &&
+      typeof options.piece === 'string'
+        ? options.piece.toLowerCase()
+        : true
+
+    /* are we generating moves for a single square? */
+    if (typeof options !== 'undefined' && 'square' in options) {
+      if (options.square in SQUARE_MAP) {
+        first_sq = last_sq = SQUARE_MAP[options.square]
+        single_square = true
+      } else {
+        /* invalid square */
+        return []
+      }
+    }
+
+    for (var i = first_sq; i <= last_sq; i++) {
+      /* did we run off the end of the board */
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
+
+      var piece = board[i]
+      if (piece == null || piece.color !== us) {
+        continue
+      }
+
+      if (piece.type === PAWN && (piece_type === true || piece_type === PAWN)) {
+        /* single square, non-capturing */
+        var square = i + PAWN_OFFSETS[us][0]
+        if (board[square] == null) {
+          add_move(board, moves, i, square, BITS.NORMAL)
+
+          /* double square */
+          var square = i + PAWN_OFFSETS[us][1]
+          if (second_rank[us] === rank(i) && board[square] == null) {
+            add_move(board, moves, i, square, BITS.BIG_PAWN)
+          }
+        }
+
+        /* pawn captures */
+        for (j = 2; j < 4; j++) {
+          var square = i + PAWN_OFFSETS[us][j]
+          if (square & 0x88) continue
+
+          if (board[square] != null && board[square].color === them) {
+            add_move(board, moves, i, square, BITS.CAPTURE)
+          } else if (square === ep_square) {
+            add_move(board, moves, i, ep_square, BITS.EP_CAPTURE)
+          }
+        }
+      } else if (piece_type === true || piece_type === piece.type) {
+        for (var j = 0, len = PIECE_OFFSETS[piece.type].length; j < len; j++) {
+          var offset = PIECE_OFFSETS[piece.type][j]
+          var square = i
+
+          while (true) {
+            square += offset
+            if (square & 0x88) break
+
+            if (board[square] == null) {
+              add_move(board, moves, i, square, BITS.NORMAL)
+            } else {
+              if (board[square].color === us) break
+              add_move(board, moves, i, square, BITS.CAPTURE)
+              break
+            }
+
+            /* break, if knight or king */
+            if (piece.type === 'n' || piece.type === 'k') break
+          }
+        }
+      }
+    }
+
+    /* check for castling if: a) we're generating all moves, or b) we're doing
+     * single square move generation on the king's square
+     */
+    if (piece_type === true || piece_type === KING) {
+      if (!single_square || last_sq === kings[us]) {
+        /* king-side castling */
+        if (castling[us] & BITS.KSIDE_CASTLE) {
+          var castling_from = kings[us]
+          var castling_to = castling_from + 2
+
+          if (
+            board[castling_from + 1] == null &&
+            board[castling_to] == null &&
+            !attacked(them, kings[us]) &&
+            !attacked(them, castling_from + 1) &&
+            !attacked(them, castling_to)
+          ) {
+            add_move(board, moves, kings[us], castling_to, BITS.KSIDE_CASTLE)
+          }
+        }
+
+        /* queen-side castling */
+        if (castling[us] & BITS.QSIDE_CASTLE) {
+          var castling_from = kings[us]
+          var castling_to = castling_from - 2
+
+          if (
+            board[castling_from - 1] == null &&
+            board[castling_from - 2] == null &&
+            board[castling_from - 3] == null &&
+            !attacked(them, kings[us]) &&
+            !attacked(them, castling_from - 1) &&
+            !attacked(them, castling_to)
+          ) {
+            add_move(board, moves, kings[us], castling_to, BITS.QSIDE_CASTLE)
+          }
+        }
+      }
+    }
+
+    /* return all pseudo-legal moves (this includes moves that allow the king
+     * to be captured)
+     */
+    if (!legal) {
+      return moves
+    }
+
+    /* filter out illegal moves */
+    var legal_moves = []
+    for (var i = 0, len = moves.length; i < len; i++) {
+      make_move(moves[i])
+      if (!king_attacked(us)) {
+        legal_moves.push(moves[i])
+      }
+      undo_move()
+    }
+
+    return legal_moves
+  }
+
+  /* convert a move from 0x88 coordinates to Standard Algebraic Notation
+   * (SAN)
+   *
+   * @param {boolean} sloppy Use the sloppy SAN generator to work around over
+   * disambiguation bugs in Fritz and Chessbase.  See below:
+   *
+   * r1bqkbnr/ppp2ppp/2n5/1B1pP3/4P3/8/PPPP2PP/RNBQK1NR b KQkq - 2 4
+   * 4. ... Nge7 is overly disambiguated because the knight on c6 is pinned
+   * 4. ... Ne7 is technically the valid SAN
+   */
+  function move_to_san(move, moves) {
+    var output = ''
+
+    if (move.flags & BITS.KSIDE_CASTLE) {
+      output = 'O-O'
+    } else if (move.flags & BITS.QSIDE_CASTLE) {
+      output = 'O-O-O'
+    } else {
+      if (move.piece !== PAWN) {
+        var disambiguator = get_disambiguator(move, moves)
+        output += move.piece.toUpperCase() + disambiguator
+      }
+
+      if (move.flags & (BITS.CAPTURE | BITS.EP_CAPTURE)) {
+        if (move.piece === PAWN) {
+          output += algebraic(move.from)[0]
+        }
+        output += 'x'
+      }
+
+      output += algebraic(move.to)
+
+      if (move.flags & BITS.PROMOTION) {
+        output += '=' + move.promotion.toUpperCase()
+      }
+    }
+
+    make_move(move)
+    if (in_check()) {
+      if (in_checkmate()) {
+        output += '#'
+      } else {
+        output += '+'
+      }
+    }
+    undo_move()
+
+    return output
+  }
+
+  function attacked(color, square) {
+    for (var i = SQUARE_MAP.a8; i <= SQUARE_MAP.h1; i++) {
+      /* did we run off the end of the board */
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
+
+      /* if empty square or wrong color */
+      if (board[i] == null || board[i].color !== color) continue
+
+      var piece = board[i]
+      var difference = i - square
+      var index = difference + 119
+
+      if (ATTACKS[index] & (1 << SHIFTS[piece.type])) {
+        if (piece.type === PAWN) {
+          if (difference > 0) {
+            if (piece.color === WHITE) return true
+          } else {
+            if (piece.color === BLACK) return true
+          }
+          continue
+        }
+
+        /* if the piece is a knight or a king */
+        if (piece.type === 'n' || piece.type === 'k') return true
+
+        var offset = RAYS[index]
+        var j = i + offset
+
+        var blocked = false
+        while (j !== square) {
+          if (board[j] != null) {
+            blocked = true
+            break
+          }
+          j += offset
+        }
+
+        if (!blocked) return true
+      }
+    }
+
+    return false
+  }
+
+  function king_attacked(color) {
+    return attacked(swap_color(color), kings[color])
+  }
+
+  function in_check() {
+    return king_attacked(turn)
+  }
+
+  function in_checkmate() {
+    return in_check() && generate_moves().length === 0
+  }
+
+  function in_stalemate() {
+    return !in_check() && generate_moves().length === 0
+  }
+
+  function insufficient_material() {
+    var pieces = {}
+    var bishops = []
+    var num_pieces = 0
+    var sq_color = 0
+
+    for (var i = SQUARE_MAP.a8; i <= SQUARE_MAP.h1; i++) {
+      sq_color = (sq_color + 1) % 2
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
+
+      var piece = board[i]
+      if (piece) {
+        pieces[piece.type] = piece.type in pieces ? pieces[piece.type] + 1 : 1
+        if (piece.type === BISHOP) {
+          bishops.push(sq_color)
+        }
+        num_pieces++
+      }
+    }
+
+    /* k vs. k */
+    if (num_pieces === 2) {
+      return true
+    } else if (
+      /* k vs. kn .... or .... k vs. kb */
+      num_pieces === 3 &&
+      (pieces[BISHOP] === 1 || pieces[KNIGHT] === 1)
+    ) {
+      return true
+    } else if (num_pieces === pieces[BISHOP] + 2) {
+      /* kb vs. kb where any number of bishops are all on the same color */
+      var sum = 0
+      var len = bishops.length
+      for (var i = 0; i < len; i++) {
+        sum += bishops[i]
+      }
+      if (sum === 0 || sum === len) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  function in_threefold_repetition() {
+    /* TODO: while this function is fine for casual use, a better
+     * implementation would use a Zobrist key (instead of FEN). the
+     * Zobrist key would be maintained in the make_move/undo_move functions,
+     * avoiding the costly that we do below.
+     */
+    var moves = []
+    var positions = {}
+    var repetition = false
+
+    while (true) {
+      var move = undo_move()
+      if (!move) break
+      moves.push(move)
+    }
+
+    while (true) {
+      /* remove the last two fields in the FEN string, they're not needed
+       * when checking for draw by rep */
+      var fen = generate_fen().split(' ').slice(0, 4).join(' ')
+
+      /* has the position occurred three or move times */
+      positions[fen] = fen in positions ? positions[fen] + 1 : 1
+      if (positions[fen] >= 3) {
+        repetition = true
+      }
+
+      if (!moves.length) {
+        break
+      }
+      make_move(moves.pop())
+    }
+
+    return repetition
+  }
+
+  function push(move) {
+    history.push({
+      move: move,
+      kings: { b: kings.b, w: kings.w },
+      turn: turn,
+      castling: { b: castling.b, w: castling.w },
+      ep_square: ep_square,
+      half_moves: half_moves,
+      move_number: move_number,
+    })
+  }
+
+  function make_move(move) {
+    var us = turn
+    var them = swap_color(us)
+    push(move)
+
+    board[move.to] = board[move.from]
+    board[move.from] = null
+
+    /* if ep capture, remove the captured pawn */
+    if (move.flags & BITS.EP_CAPTURE) {
+      if (turn === BLACK) {
+        board[move.to - 16] = null
+      } else {
+        board[move.to + 16] = null
+      }
+    }
+
+    /* if pawn promotion, replace with new piece */
+    if (move.flags & BITS.PROMOTION) {
+      board[move.to] = { type: move.promotion, color: us }
+    }
+
+    /* if we moved the king */
+    if (board[move.to].type === KING) {
+      kings[board[move.to].color] = move.to
+
+      /* if we castled, move the rook next to the king */
+      if (move.flags & BITS.KSIDE_CASTLE) {
+        var castling_to = move.to - 1
+        var castling_from = move.to + 1
+        board[castling_to] = board[castling_from]
+        board[castling_from] = null
+      } else if (move.flags & BITS.QSIDE_CASTLE) {
+        var castling_to = move.to + 1
+        var castling_from = move.to - 2
+        board[castling_to] = board[castling_from]
+        board[castling_from] = null
+      }
+
+      /* turn off castling */
+      castling[us] = ''
+    }
+
+    /* turn off castling if we move a rook */
+    if (castling[us]) {
+      for (var i = 0, len = ROOKS[us].length; i < len; i++) {
+        if (
+          move.from === ROOKS[us][i].square &&
+          castling[us] & ROOKS[us][i].flag
+        ) {
+          castling[us] ^= ROOKS[us][i].flag
+          break
+        }
+      }
+    }
+
+    /* turn off castling if we capture a rook */
+    if (castling[them]) {
+      for (var i = 0, len = ROOKS[them].length; i < len; i++) {
+        if (
+          move.to === ROOKS[them][i].square &&
+          castling[them] & ROOKS[them][i].flag
+        ) {
+          castling[them] ^= ROOKS[them][i].flag
+          break
+        }
+      }
+    }
+
+    /* if big pawn move, update the en passant square */
+    if (move.flags & BITS.BIG_PAWN) {
+      if (turn === 'b') {
+        ep_square = move.to - 16
+      } else {
+        ep_square = move.to + 16
+      }
+    } else {
+      ep_square = EMPTY
+    }
+
+    /* reset the 50 move counter if a pawn is moved or a piece is captured */
+    if (move.piece === PAWN) {
+      half_moves = 0
+    } else if (move.flags & (BITS.CAPTURE | BITS.EP_CAPTURE)) {
+      half_moves = 0
+    } else {
+      half_moves++
+    }
+
+    if (turn === BLACK) {
+      move_number++
+    }
+    turn = swap_color(turn)
+  }
+
+  function undo_move() {
+    var old = history.pop()
+    if (old == null) {
+      return null
+    }
+
+    var move = old.move
+    kings = old.kings
+    turn = old.turn
+    castling = old.castling
+    ep_square = old.ep_square
+    half_moves = old.half_moves
+    move_number = old.move_number
+
+    var us = turn
+    var them = swap_color(turn)
+
+    board[move.from] = board[move.to]
+    board[move.from].type = move.piece // to undo any promotions
+    board[move.to] = null
+
+    if (move.flags & BITS.CAPTURE) {
+      board[move.to] = { type: move.captured, color: them }
+    } else if (move.flags & BITS.EP_CAPTURE) {
+      var index
+      if (us === BLACK) {
+        index = move.to - 16
+      } else {
+        index = move.to + 16
+      }
+      board[index] = { type: PAWN, color: them }
+    }
+
+    if (move.flags & (BITS.KSIDE_CASTLE | BITS.QSIDE_CASTLE)) {
+      var castling_to, castling_from
+      if (move.flags & BITS.KSIDE_CASTLE) {
+        castling_to = move.to + 1
+        castling_from = move.to - 1
+      } else if (move.flags & BITS.QSIDE_CASTLE) {
+        castling_to = move.to - 2
+        castling_from = move.to + 1
+      }
+
+      board[castling_to] = board[castling_from]
+      board[castling_from] = null
+    }
+
+    return move
+  }
+
+  // convert a move from Standard Algebraic Notation (SAN) to 0x88 coordinates
+  function move_from_san(move, sloppy) {
+    // strip off any move decorations: e.g Nf3+?! becomes Nf3
+    var clean_move = stripped_san(move)
+
+    // the move parsers is a 2-step state
+    for (var parser = 0; parser < 2; parser++) {
+      if (parser == PARSER_SLOPPY) {
+        // only run the sloppy parse if explicitly requested
+        if (!sloppy) {
+          return null
+        }
+
+        // The sloppy parser allows the user to parse non-standard chess
+        // notations. This parser is opt-in (by specifying the
+        // '{ sloppy: true }' setting) and is only run after the Standard
+        // Algebraic Notation (SAN) parser has failed.
+        //
+        // When running the sloppy parser, we'll run a regex to grab the piece,
+        // the to/from square, and an optional promotion piece. This regex will
+        // parse common non-standard notation like: Pe2-e4, Rc1c4, Qf3xf7,
+        // f7f8q, b1c3
+
+        // NOTE: Some positions and moves may be ambiguous when using the
+        // sloppy parser. For example, in this position:
+        // 6k1/8/8/B7/8/8/8/BN4K1 w - - 0 1, the move b1c3 may be interpreted
+        // as Nc3 or B1c3 (a disambiguated bishop move). In these cases, the
+        // sloppy parser will default to the most most basic interpretation
+        // (which is b1c3 parsing to Nc3).
+
+        // FIXME: these var's are hoisted into function scope, this will need
+        // to change when switching to const/let
+
+        var overly_disambiguated = false
+
+        var matches = clean_move.match(
+          /([pnbrqkPNBRQK])?([a-h][1-8])x?-?([a-h][1-8])([qrbnQRBN])?/
+        )
+        if (matches) {
+          var piece = matches[1]
+          var from = matches[2]
+          var to = matches[3]
+          var promotion = matches[4]
+
+          if (from.length == 1) {
+            overly_disambiguated = true
+          }
+        } else {
+          // The [a-h]?[1-8]? portion of the regex below handles moves that may
+          // be overly disambiguated (e.g. Nge7 is unnecessary and non-standard
+          // when there is one legal knight move to e7). In this case, the value
+          // of 'from' variable will be a rank or file, not a square.
+          var matches = clean_move.match(
+            /([pnbrqkPNBRQK])?([a-h]?[1-8]?)x?-?([a-h][1-8])([qrbnQRBN])?/
+          )
+
+          if (matches) {
+            var piece = matches[1]
+            var from = matches[2]
+            var to = matches[3]
+            var promotion = matches[4]
+
+            if (from.length == 1) {
+              var overly_disambiguated = true
+            }
+          }
+        }
+      }
+
+      var piece_type = infer_piece_type(clean_move)
+      var moves = generate_moves({
+        legal: true,
+        piece: piece ? piece : piece_type,
+      })
+
+      for (var i = 0, len = moves.length; i < len; i++) {
+        switch (parser) {
+          case PARSER_STRICT: {
+            if (clean_move === stripped_san(move_to_san(moves[i], moves))) {
+              return moves[i]
+            }
+            break
+          }
+          case PARSER_SLOPPY: {
+            if (matches) {
+              // hand-compare move properties with the results from our sloppy
+              // regex
+              if (
+                (!piece || piece.toLowerCase() == moves[i].piece) &&
+                SQUARE_MAP[from] == moves[i].from &&
+                SQUARE_MAP[to] == moves[i].to &&
+                (!promotion || promotion.toLowerCase() == moves[i].promotion)
+              ) {
+                return moves[i]
+              } else if (overly_disambiguated) {
+                // SPECIAL CASE: we parsed a move string that may have an
+                // unneeded rank/file disambiguator (e.g. Nge7).  The 'from'
+                // variable will
+                var square = algebraic(moves[i].from)
+                if (
+                  (!piece || piece.toLowerCase() == moves[i].piece) &&
+                  SQUARE_MAP[to] == moves[i].to &&
+                  (from == square[0] || from == square[1]) &&
+                  (!promotion || promotion.toLowerCase() == moves[i].promotion)
+                ) {
+                  return moves[i]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return null
+  }
+
+  /* pretty = external move object */
+  function make_pretty(ugly_move) {
+    var move = clone(ugly_move)
+    move.san = move_to_san(move, generate_moves({ legal: true }))
+    move.to = algebraic(move.to)
+    move.from = algebraic(move.from)
+
+    var flags = ''
+
+    for (var flag in BITS) {
+      if (BITS[flag] & move.flags) {
+        flags += FLAGS[flag]
+      }
+    }
+    move.flags = flags
+
+    return move
+  }
+
+  /*****************************************************************************
+   * DEBUGGING UTILITIES
+   ****************************************************************************/
+  function perft(depth) {
+    var moves = generate_moves({ legal: false })
+    var nodes = 0
+    var color = turn
+
+    for (var i = 0, len = moves.length; i < len; i++) {
+      make_move(moves[i])
+      if (!king_attacked(color)) {
+        if (depth - 1 > 0) {
+          var child_nodes = perft(depth - 1)
+          nodes += child_nodes
+        } else {
+          nodes++
+        }
+      }
+      undo_move()
+    }
+
+    return nodes
+  }
+
+  return {
+    /***************************************************************************
+     * PUBLIC API
+     **************************************************************************/
+    load: function (fen) {
+      return load(fen)
+    },
+
+    reset: function () {
+      return reset()
+    },
+
+    moves: function (options) {
+      /* The internal representation of a chess move is in 0x88 format, and
+       * not meant to be human-readable.  The code below converts the 0x88
+       * square coordinates to algebraic coordinates.  It also prunes an
+       * unnecessary move keys resulting from a verbose call.
+       */
+
+      var ugly_moves = generate_moves(options)
+      var moves = []
+
+      for (var i = 0, len = ugly_moves.length; i < len; i++) {
+        /* does the user want a full move object (most likely not), or just
+         * SAN
+         */
+        if (
+          typeof options !== 'undefined' &&
+          'verbose' in options &&
+          options.verbose
+        ) {
+          moves.push(make_pretty(ugly_moves[i]))
+        } else {
+          moves.push(
+            move_to_san(ugly_moves[i], generate_moves({ legal: true }))
+          )
+        }
+      }
+
+      return moves
+    },
+
+    in_check: function () {
+      return in_check()
+    },
+
+    in_checkmate: function () {
+      return in_checkmate()
+    },
+
+    in_stalemate: function () {
+      return in_stalemate()
+    },
+
+    in_draw: function () {
+      return (
+        half_moves >= 100 ||
+        in_stalemate() ||
+        insufficient_material() ||
+        in_threefold_repetition()
+      )
+    },
+
+    insufficient_material: function () {
+      return insufficient_material()
+    },
+
+    in_threefold_repetition: function () {
+      return in_threefold_repetition()
+    },
+
+    game_over: function () {
+      return (
+        half_moves >= 100 ||
+        in_checkmate() ||
+        in_stalemate() ||
+        insufficient_material() ||
+        in_threefold_repetition()
+      )
+    },
+
+    validate_fen: function (fen) {
+      return validate_fen(fen)
+    },
+
+    fen: function () {
+      return generate_fen()
+    },
+
+    board: function () {
+      var output = [],
+        row = []
+
+      for (var i = SQUARE_MAP.a8; i <= SQUARE_MAP.h1; i++) {
+        if (board[i] == null) {
+          row.push(null)
+        } else {
+          row.push({
+            square: algebraic(i),
+            type: board[i].type,
+            color: board[i].color,
+          })
+        }
+        if ((i + 1) & 0x88) {
+          output.push(row)
+          row = []
+          i += 8
+        }
+      }
+
+      return output
+    },
+
+    pgn: function (options) {
+      /* using the specification from http://www.chessclub.com/help/PGN-spec
+       * example for html usage: .pgn({ max_width: 72, newline_char: "<br />" })
+       */
+      var newline =
+        typeof options === 'object' && typeof options.newline_char === 'string'
+          ? options.newline_char
+          : '\n'
+      var max_width =
+        typeof options === 'object' && typeof options.max_width === 'number'
+          ? options.max_width
+          : 0
+      var result = []
+      var header_exists = false
+
+      /* add the PGN header information */
+      for (var i in header) {
+        /* TODO: order of enumerated properties in header object is not
+         * guaranteed, see ECMA-262 spec (section 12.6.4)
+         */
+        result.push('[' + i + ' "' + header[i] + '"]' + newline)
+        header_exists = true
+      }
+
+      if (header_exists && history.length) {
+        result.push(newline)
+      }
+
+      var append_comment = function (move_string) {
+        var comment = comments[generate_fen()]
+        if (typeof comment !== 'undefined') {
+          var delimiter = move_string.length > 0 ? ' ' : ''
+          move_string = `${move_string}${delimiter}{${comment}}`
+        }
+        return move_string
+      }
+
+      /* pop all of history onto reversed_history */
+      var reversed_history = []
+      while (history.length > 0) {
+        reversed_history.push(undo_move())
+      }
+
+      var moves = []
+      var move_string = ''
+
+      /* special case of a commented starting position with no moves */
+      if (reversed_history.length === 0) {
+        moves.push(append_comment(''))
+      }
+
+      /* build the list of moves.  a move_string looks like: "3. e3 e6" */
+      while (reversed_history.length > 0) {
+        move_string = append_comment(move_string)
+        var move = reversed_history.pop()
+
+        /* if the position started with black to move, start PGN with #. ... */
+        if (!history.length && move.color === 'b') {
+          const prefix = `${move_number}. ...`
+          /* is there a comment preceding the first move? */
+          move_string = move_string ? `${move_string} ${prefix}` : prefix
+        } else if (move.color === 'w') {
+          /* store the previous generated move_string if we have one */
+          if (move_string.length) {
+            moves.push(move_string)
+          }
+          move_string = move_number + '.'
+        }
+
+        move_string =
+          move_string + ' ' + move_to_san(move, generate_moves({ legal: true }))
+        make_move(move)
+      }
+
+      /* are there any other leftover moves? */
+      if (move_string.length) {
+        moves.push(append_comment(move_string))
+      }
+
+      /* is there a result? */
+      if (typeof header.Result !== 'undefined') {
+        moves.push(header.Result)
+      }
+
+      /* history should be back to what it was before we started generating PGN,
+       * so join together moves
+       */
+      if (max_width === 0) {
+        return result.join('') + moves.join(' ')
+      }
+
+      var strip = function () {
+        if (result.length > 0 && result[result.length - 1] === ' ') {
+          result.pop()
+          return true
+        }
+        return false
+      }
+
+      /* NB: this does not preserve comment whitespace. */
+      var wrap_comment = function (width, move) {
+        for (var token of move.split(' ')) {
+          if (!token) {
+            continue
+          }
+          if (width + token.length > max_width) {
+            while (strip()) {
+              width--
+            }
+            result.push(newline)
+            width = 0
+          }
+          result.push(token)
+          width += token.length
+          result.push(' ')
+          width++
+        }
+        if (strip()) {
+          width--
+        }
+        return width
+      }
+
+      /* wrap the PGN output at max_width */
+      var current_width = 0
+      for (var i = 0; i < moves.length; i++) {
+        if (current_width + moves[i].length > max_width) {
+          if (moves[i].includes('{')) {
+            current_width = wrap_comment(current_width, moves[i])
+            continue
+          }
+        }
+        /* if the current move will push past max_width */
+        if (current_width + moves[i].length > max_width && i !== 0) {
+          /* don't end the line with whitespace */
+          if (result[result.length - 1] === ' ') {
+            result.pop()
+          }
+
+          result.push(newline)
+          current_width = 0
+        } else if (i !== 0) {
+          result.push(' ')
+          current_width++
+        }
+        result.push(moves[i])
+        current_width += moves[i].length
+      }
+
+      return result.join('')
+    },
+
+    load_pgn: function (pgn, options) {
+      // allow the user to specify the sloppy move parser to work around over
+      // disambiguation bugs in Fritz and Chessbase
+      var sloppy =
+        typeof options !== 'undefined' && 'sloppy' in options
+          ? options.sloppy
+          : false
+
+      function mask(str) {
+        return str.replace(/\\/g, '\\')
+      }
+
+      function parse_pgn_header(header, options) {
+        var newline_char =
+          typeof options === 'object' &&
+          typeof options.newline_char === 'string'
+            ? options.newline_char
+            : '\r?\n'
+        var header_obj = {}
+        var headers = header.split(new RegExp(mask(newline_char)))
+        var key = ''
+        var value = ''
+
+        for (var i = 0; i < headers.length; i++) {
+          var regex = /^\s*\[([A-Za-z]+)\s*"(.*)"\s*\]\s*$/
+          key = headers[i].replace(regex, '$1')
+          value = headers[i].replace(regex, '$2')
+          if (trim(key).length > 0) {
+            header_obj[key] = value
+          }
+        }
+
+        return header_obj
+      }
+
+      // strip whitespace from head/tail of PGN block
+      pgn = pgn.trim()
+
+      var newline_char =
+        typeof options === 'object' && typeof options.newline_char === 'string'
+          ? options.newline_char
+          : '\r?\n'
+
+      // RegExp to split header. Takes advantage of the fact that header and movetext
+      // will always have a blank line between them (ie, two newline_char's).
+      // With default newline_char, will equal: /^(\[((?:\r?\n)|.)*\])(?:\s*\r?\n){2}/
+      var header_regex = new RegExp(
+        '^(\\[((?:' +
+          mask(newline_char) +
+          ')|.)*\\])' +
+          '(?:\\s*' +
+          mask(newline_char) +
+          '){2}'
+      )
+
+      // If no header given, begin with moves.
+      var header_string = header_regex.test(pgn)
+        ? header_regex.exec(pgn)[1]
+        : ''
+
+      // Put the board in the starting position
+      reset()
+
+      /* parse PGN header */
+      var headers = parse_pgn_header(header_string, options)
+      var fen = ''
+
+      for (var key in headers) {
+        // check to see user is including fen (possibly with wrong tag case)
+        if (key.toLowerCase() === 'fen') {
+          fen = headers[key]
+        }
+        set_header([key, headers[key]])
+      }
+
+      /* sloppy parser should attempt to load a fen tag, even if it's
+       * the wrong case and doesn't include a corresponding [SetUp "1"] tag */
+      if (sloppy) {
+        if (fen) {
+          if (!load(fen, true)) {
+            return false
+          }
+        }
+      } else {
+        /* strict parser - load the starting position indicated by [Setup '1']
+         * and [FEN position] */
+        if (headers['SetUp'] === '1') {
+          if (!('FEN' in headers && load(headers['FEN'], true))) {
+            // second argument to load: don't clear the headers
+            return false
+          }
+        }
+      }
+
+      /* NB: the regexes below that delete move numbers, recursive
+       * annotations, and numeric annotation glyphs may also match
+       * text in comments. To prevent this, we transform comments
+       * by hex-encoding them in place and decoding them again after
+       * the other tokens have been deleted.
+       *
+       * While the spec states that PGN files should be ASCII encoded,
+       * we use {en,de}codeURIComponent here to support arbitrary UTF8
+       * as a convenience for modern users */
+
+      var to_hex = function (string) {
+        return Array.from(string)
+          .map(function (c) {
+            /* encodeURI doesn't transform most ASCII characters,
+             * so we handle these ourselves */
+            return c.charCodeAt(0) < 128
+              ? c.charCodeAt(0).toString(16)
+              : encodeURIComponent(c).replace(/\%/g, '').toLowerCase()
+          })
+          .join('')
+      }
+
+      var from_hex = function (string) {
+        return string.length == 0
+          ? ''
+          : decodeURIComponent('%' + string.match(/.{1,2}/g).join('%'))
+      }
+
+      var encode_comment = function (string) {
+        string = string.replace(new RegExp(mask(newline_char), 'g'), ' ')
+        return `{${to_hex(string.slice(1, string.length - 1))}}`
+      }
+
+      var decode_comment = function (string) {
+        if (string.startsWith('{') && string.endsWith('}')) {
+          return from_hex(string.slice(1, string.length - 1))
+        }
+      }
+
+      /* delete header to get the moves */
+      var ms = pgn
+        .replace(header_string, '')
+        .replace(
+          /* encode comments so they don't get deleted below */
+          new RegExp(`(\{[^}]*\})+?|;([^${mask(newline_char)}]*)`, 'g'),
+          function (match, bracket, semicolon) {
+            return bracket !== undefined
+              ? encode_comment(bracket)
+              : ' ' + encode_comment(`{${semicolon.slice(1)}}`)
+          }
+        )
+        .replace(new RegExp(mask(newline_char), 'g'), ' ')
+
+      /* delete recursive annotation variations */
+      var rav_regex = /(\([^\(\)]+\))+?/g
+      while (rav_regex.test(ms)) {
+        ms = ms.replace(rav_regex, '')
+      }
+
+      /* delete move numbers */
+      ms = ms.replace(/\d+\.(\.\.)?/g, '')
+
+      /* delete ... indicating black to move */
+      ms = ms.replace(/\.\.\./g, '')
+
+      /* delete numeric annotation glyphs */
+      ms = ms.replace(/\$\d+/g, '')
+
+      /* trim and get array of moves */
+      var moves = trim(ms).split(new RegExp(/\s+/))
+
+      /* delete empty entries */
+      moves = moves.join(',').replace(/,,+/g, ',').split(',')
+      var move = ''
+
+      var result = ''
+
+      for (var half_move = 0; half_move < moves.length; half_move++) {
+        var comment = decode_comment(moves[half_move])
+        if (comment !== undefined) {
+          comments[generate_fen()] = comment
+          continue
+        }
+
+        move = move_from_san(moves[half_move], sloppy)
+
+        /* invalid move */
+        if (move == null) {
+          /* was the move an end of game marker */
+          if (TERMINATION_MARKERS.indexOf(moves[half_move]) > -1) {
+            result = moves[half_move]
+          } else {
+            return false
+          }
+        } else {
+          /* reset the end of game marker if making a valid move */
+          result = ''
+          make_move(move)
+        }
+      }
+
+      /* Per section 8.2.6 of the PGN spec, the Result tag pair must match
+       * match the termination marker. Only do this when headers are present,
+       * but the result tag is missing
+       */
+      if (result && Object.keys(header).length && !header['Result']) {
+        set_header(['Result', result])
+      }
+
+      return true
+    },
+
+    header: function () {
+      return set_header(arguments)
+    },
+
+    turn: function () {
+      return turn
+    },
+
+    move: function (move, options) {
+      /* The move function can be called with in the following parameters:
+       *
+       * .move('Nxb7')      <- where 'move' is a case-sensitive SAN string
+       *
+       * .move({ from: 'h7', <- where the 'move' is a move object (additional
+       *         to :'h8',      fields are ignored)
+       *         promotion: 'q',
+       *      })
+       */
+
+      // allow the user to specify the sloppy move parser to work around over
+      // disambiguation bugs in Fritz and Chessbase
+      var sloppy =
+        typeof options !== 'undefined' && 'sloppy' in options
+          ? options.sloppy
+          : false
+
+      var move_obj = null
+
+      if (typeof move === 'string') {
+        move_obj = move_from_san(move, sloppy)
+      } else if (typeof move === 'object') {
+        var moves = generate_moves()
+
+        /* convert the pretty move object to an ugly move object */
+        for (var i = 0, len = moves.length; i < len; i++) {
+          if (
+            move.from === algebraic(moves[i].from) &&
+            move.to === algebraic(moves[i].to) &&
+            (!('promotion' in moves[i]) ||
+              move.promotion === moves[i].promotion)
+          ) {
+            move_obj = moves[i]
+            break
+          }
+        }
+      }
+
+      /* failed to find move */
+      if (!move_obj) {
+        return null
+      }
+
+      /* need to make a copy of move because we can't generate SAN after the
+       * move is made
+       */
+      var pretty_move = make_pretty(move_obj)
+
+      make_move(move_obj)
+
+      return pretty_move
+    },
+
+    undo: function () {
+      var move = undo_move()
+      return move ? make_pretty(move) : null
+    },
+
+    clear: function () {
+      return clear()
+    },
+
+    put: function (piece, square) {
+      return put(piece, square)
+    },
+
+    get: function (square) {
+      return get(square)
+    },
+
+    ascii() {
+      var s = '   +------------------------+\n'
+      for (var i = SQUARE_MAP.a8; i <= SQUARE_MAP.h1; i++) {
+        /* display the rank */
+        if (file(i) === 0) {
+          s += ' ' + '87654321'[rank(i)] + ' |'
+        }
+
+        /* empty piece */
+        if (board[i] == null) {
+          s += ' . '
+        } else {
+          var piece = board[i].type
+          var color = board[i].color
+          var symbol =
+            color === WHITE ? piece.toUpperCase() : piece.toLowerCase()
+          s += ' ' + symbol + ' '
+        }
+
+        if ((i + 1) & 0x88) {
+          s += '|\n'
+          i += 8
+        }
+      }
+      s += '   +------------------------+\n'
+      s += '     a  b  c  d  e  f  g  h'
+
+      return s
+    },
+
+    remove: function (square) {
+      return remove(square)
+    },
+
+    perft: function (depth) {
+      return perft(depth)
+    },
+
+    square_color: function (square) {
+      if (square in SQUARE_MAP) {
+        var sq_0x88 = SQUARE_MAP[square]
+        return (rank(sq_0x88) + file(sq_0x88)) % 2 === 0 ? 'light' : 'dark'
+      }
+
+      return null
+    },
+
+    history: function (options) {
+      var reversed_history = []
+      var move_history = []
+      var verbose =
+        typeof options !== 'undefined' &&
+        'verbose' in options &&
+        options.verbose
+
+      while (history.length > 0) {
+        reversed_history.push(undo_move())
+      }
+
+      while (reversed_history.length > 0) {
+        var move = reversed_history.pop()
+        if (verbose) {
+          move_history.push(make_pretty(move))
+        } else {
+          move_history.push(move_to_san(move, generate_moves({ legal: true })))
+        }
+        make_move(move)
+      }
+
+      return move_history
+    },
+
+    get_comment: function () {
+      return comments[generate_fen()]
+    },
+
+    set_comment: function (comment) {
+      comments[generate_fen()] = comment.replace('{', '[').replace('}', ']')
+    },
+
+    delete_comment: function () {
+      var comment = comments[generate_fen()]
+      delete comments[generate_fen()]
+      return comment
+    },
+
+    get_comments: function () {
+      prune_comments()
+      return Object.keys(comments).map(function (fen) {
+        return { fen: fen, comment: comments[fen] }
+      })
+    },
+
+    delete_comments: function () {
+      prune_comments()
+      return Object.keys(comments).map(function (fen) {
+        var comment = comments[fen]
+        delete comments[fen]
+        return { fen: fen, comment: comment }
+      })
+    },
+  }
+}
+window.Chess=Chess;
+})();
+
+</script>
+<script id="cxbot">
+/* Pling-motor: egen sjakkmotor (0x88, alpha-beta). Uten avhengigheter, kan kjøres i Web Worker. */
+var cxBest=(function(){
+"use strict";
+const INF=32000,MATE=30000;
+const VAL=[0,100,320,330,500,900,0];
+const B=new Int8Array(128);
+let side=0,castle=15,ep=-1,half=0,hlo=0,hhi=0;
+const kg=[4,116];
+/* zobrist */
+let seed=0x9e3779b9;
+function rnd(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return(t^t>>>14)|0}
+const ZP=new Int32Array(16*128*2),ZC=new Int32Array(16*2),ZE=new Int32Array(8*2),ZS=[rnd(),rnd()];
+for(let i=0;i<ZP.length;i++)ZP[i]=rnd();
+for(let i=0;i<ZC.length;i++)ZC[i]=rnd();
+for(let i=0;i<ZE.length;i++)ZE[i]=rnd();
+const HL=new Int32Array(1024),HH=new Int32Array(1024);let hp=0;
+/* angrepsretninger */
+const KN=[33,31,18,14,-33,-31,-18,-14],KG=[1,-1,16,-16,15,17,-15,-17],DG=[15,17,-15,-17],OR=[1,-1,16,-16];
+/* rokaderettigheter per rute */
+const CM=new Int8Array(128).fill(15);
+CM[4]=12;CM[0]=13;CM[7]=14;CM[116]=3;CM[112]=7;CM[119]=11;
+/* stillingstabeller (hvit sett ovenfra, rad 8 først) */
+const PST=[null,
+[0,0,0,0,0,0,0,0,50,50,50,50,50,50,50,50,10,10,20,30,30,20,10,10,5,5,10,25,25,10,5,5,0,0,0,20,20,0,0,0,5,-5,-10,0,0,-10,-5,5,5,10,10,-20,-20,10,10,5,0,0,0,0,0,0,0,0],
+[-50,-40,-30,-30,-30,-30,-40,-50,-40,-20,0,0,0,0,-20,-40,-30,0,10,15,15,10,0,-30,-30,5,15,20,20,15,5,-30,-30,0,15,20,20,15,0,-30,-30,5,10,15,15,10,5,-30,-40,-20,0,5,5,0,-20,-40,-50,-40,-30,-30,-30,-30,-40,-50],
+[-20,-10,-10,-10,-10,-10,-10,-20,-10,0,0,0,0,0,0,-10,-10,0,5,10,10,5,0,-10,-10,5,5,10,10,5,5,-10,-10,0,10,10,10,10,0,-10,-10,10,10,10,10,10,10,-10,-10,5,0,0,0,0,5,-10,-20,-10,-10,-10,-10,-10,-10,-20],
+[0,0,0,0,0,0,0,0,5,10,10,10,10,10,10,5,-5,0,0,0,0,0,0,-5,-5,0,0,0,0,0,0,-5,-5,0,0,0,0,0,0,-5,-5,0,0,0,0,0,0,-5,-5,0,0,0,0,0,0,-5,0,0,0,5,5,0,0,0],
+[-20,-10,-10,-5,-5,-10,-10,-20,-10,0,0,0,0,0,0,-10,-10,0,5,5,5,5,0,-10,-5,0,5,5,5,5,0,-5,0,0,5,5,5,5,0,-5,-10,5,5,5,5,5,0,-10,-10,0,5,0,0,0,0,-10,-20,-10,-10,-5,-5,-10,-10,-20],
+[-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-20,-30,-30,-40,-40,-30,-30,-20,-10,-20,-20,-20,-20,-20,-20,-10,20,20,0,0,0,0,20,20,20,30,10,0,0,10,30,20]];
+const KEG=[-50,-40,-30,-20,-20,-30,-40,-50,-30,-20,-10,0,0,-10,-20,-30,-30,-10,20,30,30,20,-10,-30,-30,-10,30,40,40,30,-10,-30,-30,-10,30,40,40,30,-10,-30,-30,-10,20,30,30,20,-10,-30,-30,-30,0,0,0,0,-30,-30,-50,-30,-30,-30,-30,-30,-30,-50];
+/* angrep */
+function attacked(sq,by){
+ const o=by<<3;let a,t,d,i;
+ if(by===0){a=sq-15;if(!(a&0x88)&&B[a]===1)return true;a=sq-17;if(!(a&0x88)&&B[a]===1)return true}
+ else{a=sq+15;if(!(a&0x88)&&B[a]===9)return true;a=sq+17;if(!(a&0x88)&&B[a]===9)return true}
+ for(i=0;i<8;i++){t=sq+KN[i];if(!(t&0x88)&&B[t]===(o|2))return true}
+ for(i=0;i<8;i++){t=sq+KG[i];if(!(t&0x88)&&B[t]===(o|6))return true}
+ for(i=0;i<4;i++){d=DG[i];t=sq+d;while(!(t&0x88)){const p=B[t];if(p){if(p===(o|3)||p===(o|5))return true;break}t+=d}}
+ for(i=0;i<4;i++){d=OR[i];t=sq+d;while(!(t&0x88)){const p=B[t];if(p){if(p===(o|4)||p===(o|5))return true;break}t+=d}}
+ return false;
+}
+/* trekkgenerering. trekk = fra | til<<8 | forvandling<<16 | flagg<<20 (1 ep, 2 dobbeltbonde, 4 O-O, 8 O-O-O) */
+const MV=[],SC=[];
+for(let i=0;i<128;i++){MV.push(new Int32Array(256));SC.push(new Int32Array(256))}
+const HIST=new Int32Array(128*128);
+const KIL=[];for(let i=0;i<128;i++)KIL.push([0,0]);
+let n_=0,mvA=null,scA=null;
+function add(from,to,promo,flag){
+ const victim=flag===1?1:(B[to]&7);let s;
+ if(victim||promo){s=100000+VAL[victim]*10-VAL[B[from]&7]+(promo?VAL[promo]*10:0)+(promo?5000:0)}
+ else s=HIST[from*128+to];
+ mvA[n_]=from|(to<<8)|(promo<<16)|(flag<<20);scA[n_]=s;n_++;
+}
+function gen(ply,caps){
+ mvA=MV[ply];scA=SC[ply];n_=0;
+ const us=side,them=us^1;
+ for(let sq=0;sq<128;sq++){
+  if(sq&0x88){sq+=7;continue}
+  const p=B[sq];if(!p||(p>>3)!==us)continue;
+  const t=p&7;
+  if(t===1){
+   const dir=us===0?16:-16,r=sq>>4,pr=us===0?6:1,st=us===0?1:6;
+   for(let k=0;k<2;k++){
+    const to=sq+dir+(k?1:-1);if(to&0x88)continue;
+    const q=B[to];
+    if(q&&(q>>3)===them){
+     if(r===pr){add(sq,to,5,0);add(sq,to,4,0);add(sq,to,3,0);add(sq,to,2,0)}else add(sq,to,0,0);
+    }else if(to===ep)add(sq,to,0,1);
+   }
+   const to=sq+dir;
+   if(!(to&0x88)&&!B[to]){
+    if(r===pr){add(sq,to,5,0);if(!caps){add(sq,to,4,0);add(sq,to,3,0);add(sq,to,2,0)}}
+    else if(!caps){add(sq,to,0,0);if(r===st&&!B[to+dir])add(sq,to+dir,0,2)}
+   }
+  }else if(t===2||t===6){
+   const L=t===2?KN:KG;
+   for(let i=0;i<8;i++){
+    const to=sq+L[i];if(to&0x88)continue;
+    const q=B[to];
+    if(!q){if(!caps)add(sq,to,0,0)}
+    else if((q>>3)===them)add(sq,to,0,0);
+   }
+   if(t===6&&!caps){
+    if(us===0&&sq===4){
+     if((castle&1)&&!B[5]&&!B[6]&&B[7]===4&&!attacked(4,1)&&!attacked(5,1)&&!attacked(6,1))add(4,6,0,4);
+     if((castle&2)&&!B[3]&&!B[2]&&!B[1]&&B[0]===4&&!attacked(4,1)&&!attacked(3,1)&&!attacked(2,1))add(4,2,0,8);
+    }else if(us===1&&sq===116){
+     if((castle&4)&&!B[117]&&!B[118]&&B[119]===12&&!attacked(116,0)&&!attacked(117,0)&&!attacked(118,0))add(116,118,0,4);
+     if((castle&8)&&!B[115]&&!B[114]&&!B[113]&&B[112]===12&&!attacked(116,0)&&!attacked(115,0)&&!attacked(114,0))add(116,114,0,8);
+    }
+   }
+  }else{
+   const L=t===3?DG:(t===4?OR:KG),cnt=t===5?8:4;
+   for(let i=0;i<cnt;i++){
+    const d=L[i];let to=sq+d;
+    while(!(to&0x88)){
+     const q=B[to];
+     if(!q){if(!caps)add(sq,to,0,0)}
+     else{if((q>>3)===them)add(sq,to,0,0);break}
+     to+=d;
+    }
+   }
+  }
+ }
+ return n_;
+}
+/* gjør/angre trekk */
+const U_CAP=new Int8Array(1024),U_CAS=new Int8Array(1024),U_EP=new Int16Array(1024),U_HALF=new Int16Array(1024);let up=0;
+function zp(p,sq){hlo^=ZP[(p*128+sq)*2];hhi^=ZP[(p*128+sq)*2+1]}
+function make(m){
+ const from=m&255,to=(m>>8)&255,promo=(m>>16)&15,flag=(m>>20)&15;
+ const p=B[from],us=p>>3;
+ U_CAS[up]=castle;U_EP[up]=ep;U_HALF[up]=half;
+ let cap=B[to];
+ hlo^=ZC[castle*2];hhi^=ZC[castle*2+1];
+ if(ep>=0){hlo^=ZE[(ep&7)*2];hhi^=ZE[(ep&7)*2+1]}
+ if(flag===1){
+  const cs=to+(us===0?-16:16);cap=B[cs];B[cs]=0;zp(cap,cs);
+ }else if(cap)zp(cap,to);
+ U_CAP[up]=cap;up++;
+ zp(p,from);B[from]=0;
+ const np=promo?(us<<3)|promo:p;
+ B[to]=np;zp(np,to);
+ if(flag===4){const rf=us===0?7:119,rt=us===0?5:117,r=B[rf];B[rf]=0;zp(r,rf);B[rt]=r;zp(r,rt)}
+ else if(flag===8){const rf=us===0?0:112,rt=us===0?3:115,r=B[rf];B[rf]=0;zp(r,rf);B[rt]=r;zp(r,rt)}
+ if((p&7)===6)kg[us]=to;
+ castle&=CM[from]&CM[to];
+ hlo^=ZC[castle*2];hhi^=ZC[castle*2+1];
+ ep=flag===2?(from+to)>>1:-1;
+ if(ep>=0){hlo^=ZE[(ep&7)*2];hhi^=ZE[(ep&7)*2+1]}
+ half=((p&7)===1||cap)?0:half+1;
+ side^=1;hlo^=ZS[0];hhi^=ZS[1];
+ HL[hp]=hlo;HH[hp]=hhi;hp++;
+}
+function unmake(m){
+ const from=m&255,to=(m>>8)&255,promo=(m>>16)&15,flag=(m>>20)&15;
+ hp--;up--;
+ side^=1;const us=side;
+ hlo^=ZS[0];hhi^=ZS[1];
+ hlo^=ZC[castle*2];hhi^=ZC[castle*2+1];
+ if(ep>=0){hlo^=ZE[(ep&7)*2];hhi^=ZE[(ep&7)*2+1]}
+ castle=U_CAS[up];ep=U_EP[up];half=U_HALF[up];
+ hlo^=ZC[castle*2];hhi^=ZC[castle*2+1];
+ if(ep>=0){hlo^=ZE[(ep&7)*2];hhi^=ZE[(ep&7)*2+1]}
+ const cap=U_CAP[up],np=B[to],p=promo?(us<<3)|1:np;
+ zp(np,to);B[to]=0;
+ zp(p,from);B[from]=p;
+ if(flag===1){const cs=to+(us===0?-16:16);B[cs]=cap;zp(cap,cs)}
+ else if(cap){B[to]=cap;zp(cap,to)}
+ if(flag===4){const rf=us===0?7:119,rt=us===0?5:117,r=B[rt];B[rt]=0;zp(r,rt);B[rf]=r;zp(r,rf)}
+ else if(flag===8){const rf=us===0?0:112,rt=us===0?3:115,r=B[rt];B[rt]=0;zp(r,rt);B[rf]=r;zp(r,rf)}
+ if((p&7)===6)kg[us]=from;
+}
+/* stilling fra FEN */
+function hashFull(){
+ let lo=0,hi=0;
+ for(let sq=0;sq<128;sq++){if(sq&0x88){sq+=7;continue}const p=B[sq];if(p){lo^=ZP[(p*128+sq)*2];hi^=ZP[(p*128+sq)*2+1]}}
+ lo^=ZC[castle*2];hi^=ZC[castle*2+1];
+ if(ep>=0){lo^=ZE[(ep&7)*2];hi^=ZE[(ep&7)*2+1]}
+ if(side){lo^=ZS[0];hi^=ZS[1]}
+ return[lo,hi];
+}
+function setFen(fen){
+ B.fill(0);const f=fen.split(" ");let r=7,c=0;
+ for(const ch of f[0]){
+  if(ch==="/"){r--;c=0}
+  else if(ch>="1"&&ch<="8")c+=+ch;
+  else{const t="pnbrqk".indexOf(ch.toLowerCase())+1,col=ch===ch.toLowerCase()?1:0,sq=r*16+c;B[sq]=(col<<3)|t;if(t===6)kg[col]=sq;c++}
+ }
+ side=f[1]==="b"?1:0;castle=0;
+ const cs=f[2]||"-";
+ if(cs.includes("K"))castle|=1;if(cs.includes("Q"))castle|=2;if(cs.includes("k"))castle|=4;if(cs.includes("q"))castle|=8;
+ ep=-1;if(f[3]&&f[3]!=="-")ep=(+f[3][1]-1)*16+(f[3].charCodeAt(0)-97);
+ half=+(f[4]||0);up=0;hp=0;
+ const h=hashFull();hlo=h[0];hhi=h[1];HL[0]=hlo;HH[0]=hhi;hp=1;
+}
+const START="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+/* vurdering (sett fra den som skal trekke) */
+function evaluate(){
+ let s=0,npm=0,wb=0,bb=0,wk=4,bk=116,wp=0,bp=0;
+ for(let sq=0;sq<128;sq++){
+  if(sq&0x88){sq+=7;continue}
+  const p=B[sq];if(!p)continue;
+  const t=p&7;
+  if(t===6){if(p>>3)bk=sq;else wk=sq;continue}
+  if(t>1)npm+=VAL[t];
+  const idx=(p>>3)?(sq>>4)*8+(sq&7):(7-(sq>>4))*8+(sq&7);
+  const v=VAL[t]+PST[t][idx];
+  if(p>>3){s-=v;if(t===3)bb++;if(t===1)bp++}else{s+=v;if(t===3)wb++;if(t===1)wp++}
+ }
+ if(wb>1)s+=30;if(bb>1)s-=30;
+ const eg=npm<2600;
+ const wi=(7-(wk>>4))*8+(wk&7),bi=(bk>>4)*8+(bk&7);
+ if(eg){s+=KEG[wi]-KEG[bi]}else{s+=PST[6][wi]-PST[6][bi]}
+ /* matt-hjelp: jag kongen mot kanten når en side står klart best uten bønder */
+ if(eg&&Math.abs(s)>350&&(wp+bp)===0){
+  const win=s>0,lk=win?bk:wk,wk2=win?wk:bk;
+  const cr=Math.abs((lk>>4)-3.5)+Math.abs((lk&7)-3.5);
+  const dist=Math.abs((lk>>4)-(wk2>>4))+Math.abs((lk&7)-(wk2&7));
+  const bonus=Math.round(cr*14+(14-dist)*6);
+  s+=win?bonus:-bonus;
+ }
+ return side?-s+10:s+10;
+}
+/* tidskontroll og transposisjonstabell */
+let nodes=0,deadline=0,abort=false;
+const TS=1<<18,TK=new Int32Array(TS),TH=new Int32Array(TS),TM=new Int32Array(TS),TSC=new Int32Array(TS),TD=new Int8Array(TS),TF=new Int8Array(TS);
+function tclear(){TK.fill(0);TH.fill(0);TD.fill(-1)}
+function repeated(){
+ const lim=Math.max(0,hp-1-half);
+ for(let j=hp-3;j>=lim;j-=2)if(HL[j]===hlo&&HH[j]===hhi)return true;
+ return false;
+}
+function pick(ply,n,i){
+ const sc=SC[ply],mv=MV[ply];let b=i;
+ for(let j=i+1;j<n;j++)if(sc[j]>sc[b])b=j;
+ if(b!==i){const t=sc[i];sc[i]=sc[b];sc[b]=t;const m=mv[i];mv[i]=mv[b];mv[b]=m}
+ return mv[i];
+}
+function qs(alpha,beta,ply,qd){
+ if((++nodes&2047)===0&&Date.now()>deadline)abort=true;
+ if(abort)return 0;
+ const stand=evaluate();
+ if(stand>=beta)return stand;
+ if(stand>alpha)alpha=stand;
+ if(qd>=8||ply>=100)return stand;
+ const n=gen(ply,true),us=side;
+ for(let i=0;i<n;i++){
+  const m=pick(ply,n,i);
+  make(m);
+  if(attacked(kg[us],side)){unmake(m);continue}
+  const s=-qs(-beta,-alpha,ply+1,qd+1);
+  unmake(m);
+  if(abort)return 0;
+  if(s>=beta)return s;
+  if(s>alpha)alpha=s;
+ }
+ return alpha;
+}
+function negamax(depth,alpha,beta,ply){
+ if((++nodes&2047)===0&&Date.now()>deadline)abort=true;
+ if(abort)return 0;
+ const us=side,inChk=attacked(kg[us],us^1);
+ if(inChk&&ply<60)depth++;
+ if(depth<=0)return qs(alpha,beta,ply,0);
+ if(ply>0&&(half>=100||repeated()))return 0;
+ const slot=hlo&(TS-1);let ttm=0;
+ if(TK[slot]===hlo&&TH[slot]===hhi&&TD[slot]>=0){
+  ttm=TM[slot];
+  if(ply>0&&TD[slot]>=depth){
+   let s=TSC[slot];if(s>MATE-100)s-=ply;else if(s<-MATE+100)s+=ply;
+   const f=TF[slot];
+   if(f===0)return s;
+   if(f===1&&s>=beta)return s;
+   if(f===2&&s<=alpha)return s;
+  }
+ }
+ const n=gen(ply,false),sc=SC[ply],mv=MV[ply],k0=KIL[ply][0],k1=KIL[ply][1];
+ for(let i=0;i<n;i++){
+  const m=mv[i];
+  if(m===ttm)sc[i]=1000000;
+  else if(sc[i]<100000){if(m===k0)sc[i]=90000;else if(m===k1)sc[i]=89000}
+ }
+ let best=-INF,bestM=0,legal=0;const a0=alpha;
+ for(let i=0;i<n;i++){
+  const m=pick(ply,n,i);
+  const quiet=!(B[(m>>8)&255])&&!((m>>16)&15)&&((m>>20)&15)!==1;
+  make(m);
+  if(attacked(kg[us],side)){unmake(m);continue}
+  legal++;
+  let s;
+  if(legal>4&&depth>=3&&!inChk&&quiet){
+   s=-negamax(depth-2,-alpha-1,-alpha,ply+1);
+   if(s>alpha&&!abort)s=-negamax(depth-1,-beta,-alpha,ply+1);
+  }else s=-negamax(depth-1,-beta,-alpha,ply+1);
+  unmake(m);
+  if(abort)return 0;
+  if(s>best){best=s;bestM=m}
+  if(s>alpha){alpha=s}
+  if(alpha>=beta){
+   if(quiet){
+    if(KIL[ply][0]!==m){KIL[ply][1]=KIL[ply][0];KIL[ply][0]=m}
+    HIST[(m&255)*128+((m>>8)&255)]+=depth*depth;
+    if(HIST[(m&255)*128+((m>>8)&255)]>80000)for(let j=0;j<HIST.length;j++)HIST[j]>>=1;
+   }
+   break;
+  }
+ }
+ if(!legal)return inChk?-(MATE-ply):0;
+ let flag=0;if(best<=a0)flag=2;else if(best>=beta)flag=1;
+ let st=best;if(st>MATE-100)st+=ply;else if(st<-MATE+100)st-=ply;
+ if(TD[slot]<0||TD[slot]<=depth||TK[slot]!==hlo){TK[slot]=hlo;TH[slot]=hhi;TM[slot]=bestM;TSC[slot]=st;TD[slot]=Math.min(depth,100);TF[slot]=flag}
+ return best;
+}
+/* hjelpere for UCI */
+const sqn=s=>"abcdefgh"[s&7]+((s>>4)+1);
+const uci=m=>sqn(m&255)+sqn((m>>8)&255)+(((m>>16)&15)?"  nbrq"[(m>>16)&15].trim():"");
+function legalMoves(){
+ const us=side,out=[],n=gen(0,false);
+ const copy=MV[0].slice(0,n);
+ for(let i=0;i<n;i++){make(copy[i]);if(!attacked(kg[us],side))out.push(copy[i]);unmake(copy[i])}
+ return out;
+}
+function playUci(u){
+ const lm=legalMoves();
+ for(const m of lm)if(uci(m)===u){make(m);return true}
+ return false;
+}
+function perft(d){
+ if(d===0)return 1;
+ const us=side,n=gen(d,false),mv=MV[d].slice(0,n);let c=0;
+ for(let i=0;i<n;i++){make(mv[i]);if(!attacked(kg[us],side))c+=perft(d-1);unmake(mv[i])}
+ return c;
+}
+/* hovedinngang: h = liste med UCI-trekk fra startstilling, lv = {d,ms,noise} */
+function best(h,lv){
+ setFen(START);
+ for(const u of h)if(!playUci(u))throw new Error("ulovlig trekk "+u);
+ const roots=legalMoves();
+ if(!roots.length)return null;
+ if(roots.length===1)return uci(roots[0]);
+ tclear();HIST.fill(0);for(let i=0;i<128;i++){KIL[i][0]=0;KIL[i][1]=0}
+ nodes=0;abort=false;deadline=Date.now()+lv.ms;
+ let noise=lv.noise,d=lv.d;
+ if(h.length<8&&noise<25){noise=25;d=Math.min(d,4)}
+ if(noise>0){
+  let bm=roots[0],bs=-INF*2;
+  for(const m of roots){
+   make(m);
+   let s=-negamax(Math.max(0,d-1),-INF,INF,1);
+   unmake(m);
+   if(abort)s=0;
+   s+=(Math.random()*2-1)*noise;
+   if(s>bs){bs=s;bm=m}
+  }
+  return uci(bm);
+ }
+ let bm=roots[0];
+ for(let dd=1;dd<=d;dd++){
+  let bs=-INF,cur=0,alpha=-INF;
+  const ord=roots.slice();
+  const ix=ord.indexOf(bm);if(ix>0){ord.splice(ix,1);ord.unshift(bm)}
+  for(const m of ord){
+   make(m);
+   const s=-negamax(dd-1,-INF,-alpha,1);
+   unmake(m);
+   if(abort)break;
+   if(s>bs){bs=s;cur=m}
+   if(s>alpha)alpha=s;
+  }
+  if(abort)break;
+  bm=cur;
+  if(bs>MATE-100)break;
+ }
+ return uci(bm);
+}
+best.perft=function(fen,d){setFen(fen);return perft(d)};
+best.hashOk=function(fen,d){
+ setFen(fen);let bad=0;
+ (function rec(dd){
+  if(dd===0)return;
+  const us=side,n=gen(dd,false),mv=MV[dd].slice(0,n);
+  for(let i=0;i<n;i++){make(mv[i]);const h=hashFull();if(h[0]!==hlo||h[1]!==hhi)bad++;if(!attacked(kg[us],side))rec(dd-1);unmake(mv[i]);const g=hashFull();if(g[0]!==hlo||g[1]!==hhi)bad++}
+ })(d);
+ return bad;
+};
+best.eval=function(h){setFen(START);for(const u of h)playUci(u);return evaluate()};
+return best;
+})();
+</script>
+<script>
+const $=s=>document.getElementById(s);
+const E=new TextEncoder(),D=new TextDecoder();
+const EMO={":)":"😊",":-)":"😊",":D":"😃",";)":"😉",":(":"🙁",":P":"😛",":p":"😛","(L)":"❤️","(Y)":"👍","(N)":"👎",":O":"😮","8-)":"😎","(6)":"😈","(A)":"😇",":'(":"😢","(K)":"💋","(U)":"💔"};
+const emoji=t=>Object.keys(EMO).sort((a,b)=>b.length-a.length).reduce((s,k)=>s.split(k).join(EMO[k]),t);
+const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b)));
+const unb=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const b64u=b=>b64(b).split("+").join("-").split("/").join("_").split("=").join("");
+const unb64u=s=>unb(s.split("-").join("+").split("_").join("/")+"=".repeat((4-s.length%4)%4));
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+const LINK="https://claude.ai/artifact/C1CxEdrbsDzkjcp9jTUtL3";
+const ST={online:"on",away:"away",busy:"busy",off:"off"};
+const STC={online:"on",away:"away",busy:"busy"};
+const coarse=(()=>{try{return matchMedia("(pointer:coarse)").matches}catch(e){return false}})();
+
+let db,room,peers=[],items=new Map(),ready=false,lastTyping=0,myAv=null,cdUntil=0,cdTimer=null,dz=0,unSnap=null,tBud=null,inv=null,pushT=null,frSig="";
+let me=null,friends=new Map(),inbox=new Map(),fkeys=new Map(),profUn=new Map(),dirMap=new Map(),inboxReady=false,dirSig="";
+let mode=null,chatId=null,key=null,chatFp=null,curLink=null,col=null;
+const myId="t"+Math.random().toString(36).slice(2,10);
+
+/* ildflue */
+const FF='<svg viewBox="0 0 24 24" aria-hidden="true"><circle class="gl" cx="12" cy="16" r="8"/><ellipse class="wg" cx="8.6" cy="9" rx="3" ry="5.2" transform="rotate(-24 8.6 9)"/><ellipse class="wg" cx="15.4" cy="9" rx="3" ry="5.2" transform="rotate(24 15.4 9)"/><ellipse class="bd" cx="12" cy="11" rx="2.4" ry="5.2"/><circle class="ab" cx="12" cy="15.6" r="3"/></svg>';
+function ff(st){const s=document.createElement("span");s.className="ff "+st;s.innerHTML=FF;return s}
+$("tbi").append(ff("on"));
+(function(){const a=$("amb"),cl=["on","on","away","on","busy","on","away"];
+ [[8,18],[82,12],[16,72],[70,78],[48,8],[90,54],[30,40]].forEach((p,i)=>{const f=ff(cl[i]);f.style.left=p[0]+"%";f.style.top=p[1]+"%";f.style.animationDuration=(7+i)+"s";f.style.animationDelay=(-i*1.3)+"s";f.firstChild.style.animationDelay=(-i*.7)+"s";a.append(f)})})();
+
+try{$("nm").value=localStorage.getItem("pling_name")||localStorage.getItem("mr_name")||""}catch(e){}
+try{const a=localStorage.getItem("pling_av");if(okAv(a))myAv=a}catch(e){}
+try{if(localStorage.getItem("pling_vis")==="0")$("vis").checked=false}catch(e){}
+$("emo").innerHTML=["😊","😃","😉","🙁","😛","😮","😎","😈","😇","😢","❤️","👍","💋","🎉"].map(e=>'<button type="button">'+e+"</button>").join("");
+$("emo").onclick=e=>{if(e.target.tagName==="BUTTON"){$("tx").value+=e.target.textContent;$("tx").focus()}};
+
+/* lagring på enheten (IndexedDB): grupper, nøkler og venner */
+const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open("mr",2);
+ r.onupgradeneeded=()=>{const d=r.result;for(const [n,k] of [["c","rid"],["id","k"],["fr","fp"]])if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:k})};
+ r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+async function st(name,mode,fn){const d=await idb();return new Promise((ok,no)=>{const q=fn(d.transaction(name,mode).objectStore(name));q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}
+const dbPut=(n,v)=>st(n,"readwrite",s=>s.put(v)),dbGet=(n,k)=>st(n,"readonly",s=>s.get(k)),dbAll=n=>st(n,"readonly",s=>s.getAll()),dbDel=(n,k)=>st(n,"readwrite",s=>s.delete(k));
+
+/* kryptering */
+async function derive(name,pass){
+ const base=await crypto.subtle.importKey("raw",E.encode(pass),"PBKDF2",false,["deriveKey","deriveBits"]);
+ const p=salt=>({name:"PBKDF2",salt:E.encode(salt+name.toLowerCase()),iterations:200000,hash:"SHA-256"});
+ const k=await crypto.subtle.deriveKey(p("key:"),base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+ const bits=await crypto.subtle.deriveBits(p("room:"),base,128);
+ return {key:k,rid:hex(bits)};
+}
+async function sealK(k,obj){
+ const iv=crypto.getRandomValues(new Uint8Array(12));
+ const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},k,E.encode(JSON.stringify(obj)));
+ return {iv:b64(iv),ct:b64(ct)};
+}
+async function openK(k,d){
+ if(!k||!d)return null;
+ try{return JSON.parse(D.decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:unb(d.iv)},k,unb(d.ct))))}catch(e){return null}
+}
+
+/* identitet: et nøkkelpar som lages automatisk og blir på denne enheten */
+const canon=j=>({kty:"EC",crv:"P-256",x:j.x,y:j.y});
+async function fpOf(j){return hex(await crypto.subtle.digest("SHA-256",E.encode(JSON.stringify([j.crv,j.kty,j.x,j.y])))).slice(0,32)}
+async function initIdentity(){
+ let rec=null;try{rec=await dbGet("id","me")}catch(e){}
+ if(rec&&rec.priv&&rec.pub&&rec.fp){me=rec;return}
+ const kp=await crypto.subtle.generateKey({name:"ECDH",namedCurve:"P-256"},false,["deriveKey","deriveBits"]);
+ const pub=canon(await crypto.subtle.exportKey("jwk",kp.publicKey));
+ me={k:"me",priv:kp.privateKey,pub,fp:await fpOf(pub)};
+ try{await dbPut("id",me)}catch(e){$("msg").textContent="Nøkkelen din kunne ikke lagres i denne nettleseren. Vennene dine må legges til på nytt neste gang."}
+}
+async function safety(theirPub){
+ const a=JSON.stringify([me.pub.x,me.pub.y]),b=JSON.stringify([theirPub.x,theirPub.y]);
+ const h=new Uint8Array(await crypto.subtle.digest("SHA-256",E.encode([a,b].sort().join("|"))));
+ const out=[];for(let i=0;i<6;i++){const n=((h[i*4]<<24|h[i*4+1]<<16|h[i*4+2]<<8|h[i*4+3])>>>0)%100000;out.push(String(n).padStart(5,"0"))}
+ return out.join(" ");
+}
+async function pairOf(f){
+ if(fkeys.has(f.fp))return fkeys.get(f.fp);
+ const pk=await crypto.subtle.importKey("jwk",{...canon(f.pub),ext:true},{name:"ECDH",namedCurve:"P-256"},false,[]);
+ const k=await crypto.subtle.deriveKey({name:"ECDH",public:pk},me.priv,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+ const pid=hex(await crypto.subtle.digest("SHA-256",E.encode("pair:"+[me.fp,f.fp].sort().join(":")))).slice(0,32);
+ const r={key:k,id:pid,sn:await safety(canon(f.pub))};
+ fkeys.set(f.fp,r);return r;
+}
+
+/* lyd: pling og dobbeltpling */
+let AC;
+function ac(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state!=="running")AC.resume()}catch(e){}return AC}
+document.addEventListener("pointerdown",ac);
+function tone(f,at,dur,vol){const c=ac();if(!c)return;const t=c.currentTime+at;
+ [[1,1],[2.76,.35]].forEach(([m,v])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f*m;
+  g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol*v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.05)})}
+function pling(v=.12,at=0){tone(1318.5,at,.9,v);tone(1975.5,at+.1,.8,v*.7)}
+function dobbelt(){pling(.2,0);pling(.2,.32)}
+function stor(){const a=$("app");a.classList.remove("dp");void a.offsetWidth;a.classList.add("dp");dobbelt();try{if(navigator.vibrate)navigator.vibrate([120,50,120,50,120,50,220])}catch(e){}}
+function cd(){const l=Math.ceil((cdUntil-Date.now())/1000),b=$("dp");
+ if(l>0){b.disabled=true;b.textContent="Dobbeltpling ("+l+")"}else{b.disabled=false;b.textContent="Dobbeltpling";clearInterval(cdTimer)}}
+
+/* avatar og profil */
+function okAv(a){return typeof a==="string"&&a.startsWith("data:image/jpeg;base64,")&&a.length<12000&&/^[A-Za-z0-9+/=]*$/.test(a.slice(23))}
+function toAvatar(file){return new Promise((ok,no)=>{const u=URL.createObjectURL(file),im=new Image();
+ im.onload=()=>{const s=Math.min(im.width,im.height),c=document.createElement("canvas");c.width=c.height=64;
+  c.getContext("2d").drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,64,64);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.72))};
+ im.onerror=()=>{URL.revokeObjectURL(u);no()};im.src=u})}
+const myName=()=>$("nm").value.trim()||"Anonym";
+function hue(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return h}
+function paintAv(){const i=$("avimg"),s=$("avini"),sel=$("st");
+ if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=(myName()[0]||"?").toUpperCase()}
+ $("avwrap").className="av "+ST[sel.value];
+ $("men").textContent=myName();
+ $("mep").textContent=$("pm").value.trim()||sel.options[sel.selectedIndex].text;
+ const f=$("mef");f.textContent="";f.append(ff(ST[sel.value]))}
+function avEl(name,av,cls){const d=document.createElement("span");d.className="pav "+cls;
+ if(okAv(av)){const i=document.createElement("img");i.alt="";i.src=av;d.append(i)}else{d.textContent=(name[0]||"?").toUpperCase();d.style.background="hsl("+hue(name)+" 45% 36%)"}
+ return d}
+const note=t=>{const s=document.createElement("div");s.className="sys";s.textContent=t;$("log").append(s)};
+$("avf").onchange=async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;
+ try{myAv=await toAvatar(f);try{localStorage.setItem("pling_av",myAv)}catch(x){}paintAv();presence();pushSoon()}catch(x){$("msg").textContent="Kunne ikke bruke det bildet."}
+ e.target.value=""};
+$("meb").onclick=()=>{const p=$("prof");p.hidden=!p.hidden;$("meb").setAttribute("aria-expanded",String(!p.hidden))};
+$("addb").onclick=()=>{const a=$("add");a.hidden=!a.hidden;$("addb").setAttribute("aria-expanded",String(!a.hidden))};
+$("addf").onclick=()=>{const a=$("addfp");a.hidden=!a.hidden;$("addf").setAttribute("aria-expanded",String(!a.hidden));dirSig="";drawDir()};
+$("fs").oninput=()=>drawDir();
+
+/* nærvær: status og hvem som er her */
+function presence(){
+ try{localStorage.setItem("pling_name",$("nm").value)}catch(e){}
+ paintAv();
+ if(!room||!me)return;
+ const s=$("st").value;
+ const p=s==="off"?{fp:null,rid:null,name:null,st:null,typing:null}:{fp:me.fp,rid:mode==="room"?chatId:null,name:myName(),st:s};
+ Promise.resolve(room.presence(p)).catch(()=>{});
+}
+function statusOf(fp){let s=null;for(const p of peers){const q=p.presence;if(!q||q.fp!==fp)continue;const c=STC[q.st];if(!c)continue;if(c==="on")return"on";s=s||c}return s||"off"}
+
+/* venner */
+const myLink=()=>me?LINK+"#f."+me.fp+"."+b64u(E.encode(myName())):"";
+function updateLink(){$("myl").value=myLink()}
+function parseFriend(h){h=(h||"").trim();const i=h.indexOf("#");if(i>=0)h=h.slice(i+1);const m=/^f\.([0-9a-f]{32})\.([A-Za-z0-9_-]*)$/.exec(h);if(!m)return null;
+ let n="";try{n=D.decode(unb64u(m[2]))}catch(e){}return{fp:m[1],name:n.slice(0,24)||"Venn"}}
+async function loadFriends(){let l=[];try{l=await dbAll("fr")}catch(e){}for(const f of l)friends.set(f.fp,f)}
+async function subProf(f){
+ if(profUn.has(f.fp)||!db)return;
+ const pr=await pairOf(f);
+ const un=db.doc("pf/"+pr.id+"/who/"+f.fp).onSnapshot(async s=>{
+  if(!s.exists)return;
+  const p=await openK(pr.key,s.data());
+  if(p&&typeof p==="object"){f.prof={name:String(p.name||"").slice(0,24),pm:String(p.pm||"").slice(0,60),av:okAv(p.av)?p.av:null};drawFriends();if(mode==="dm"&&chatFp===f.fp)drawPresent()}
+ },()=>{});
+ profUn.set(f.fp,un);
+}
+async function pushProfile(){
+ if(!db||!me)return;
+ for(const f of friends.values()){if(f.state!=="ok")continue;
+  try{const pr=await pairOf(f);const s=await sealK(pr.key,{name:myName(),pm:$("pm").value.trim(),av:okAv(myAv)?myAv:null});await db.doc("pf/"+pr.id+"/who/"+me.fp).set(s)}catch(e){}}
+}
+function pushSoon(){clearTimeout(pushT);pushT=setTimeout(pushProfile,800)}
+async function addFriend(v){
+ const fe=$("ferr");fe.textContent="";
+ if(!db||!me){fe.textContent="Venner er ikke tilgjengelig her. Åpne siden innlogget på claude.ai.";return false}
+ if(v.fp===me.fp){fe.textContent="Det er din egen lenke.";return false}
+ const ex=friends.get(v.fp);
+ if(ex&&ex.state==="ok"){fe.textContent=ex.name+" er allerede vennen din.";return true}
+ try{
+  const s=await db.doc("people/"+v.fp).get();
+  const pub=s.exists&&s.data()&&s.data().pub;
+  if(!pub||await fpOf(canon(pub))!==v.fp){fe.textContent="Fant ikke vennen. Be vedkommende åpne Pling og sende lenken på nytt.";return false}
+  try{await db.doc("rm/"+v.fp+"/inbox/"+me.fp).delete()}catch(e){}
+  if(inbox.has(v.fp)){await acceptReq(v.fp);return true}
+  await db.doc("reqs/"+v.fp+"/inbox/"+me.fp).set({pub:me.pub,name:myName(),at:Date.now()});
+  const f={fp:v.fp,name:v.name,pub:canon(pub),state:"out",at:Date.now()};
+  friends.set(v.fp,f);await dbPut("fr",f);
+  fe.textContent="Forespørsel sendt til "+v.name+". Den dukker opp når vennen godtar.";
+  drawFriends();return true;
+ }catch(e){fe.textContent="Noe gikk galt: "+(e.message||e.code);return false}
+}
+async function acceptReq(fp){
+ const r=inbox.get(fp);if(!r)return;
+ try{
+  const f={fp,name:String(r.name||"Venn").slice(0,24),pub:canon(r.pub),state:"ok",at:Date.now()};
+  friends.set(fp,f);await dbPut("fr",f);
+  try{await db.doc("rm/"+fp+"/inbox/"+me.fp).delete()}catch(e){}
+  await db.doc("acc/"+fp+"/inbox/"+me.fp).set({pub:me.pub,name:myName(),at:Date.now()});
+  try{await db.doc("reqs/"+me.fp+"/inbox/"+fp).delete()}catch(e){}
+  inbox.delete(fp);
+  await subProf(f);pushSoon();drawReqs();drawFriends();
+ }catch(e){$("msg").textContent="Kunne ikke godta forespørselen: "+(e.message||e.code)}
+}
+async function declineReq(fp){try{await db.doc("reqs/"+me.fp+"/inbox/"+fp).delete()}catch(e){}inbox.delete(fp);drawReqs()}
+async function removeFriend(fp,silent){
+ const f=friends.get(fp);if(!f)return;
+ if(mode==="dm"&&chatFp===fp)closeChat();
+ try{if(profUn.has(fp)){profUn.get(fp)();profUn.delete(fp)}}catch(e){}
+ try{const pr=await pairOf(f);await db.doc("pf/"+pr.id+"/who/"+me.fp).delete()}catch(e){}
+ if(!silent){
+  try{const pr=await pairOf(f);const s=await sealK(pr.key,{rm:1,at:Date.now()});await db.doc("rm/"+fp+"/inbox/"+me.fp).set(s)}catch(e){}
+  try{await db.doc("reqs/"+fp+"/inbox/"+me.fp).delete()}catch(e){}
+ }
+ fkeys.delete(fp);friends.delete(fp);try{await dbDel("fr",fp)}catch(e){}
+ drawFriends();
+}
+const watchers=[];
+function watch(mk,fn,hb){
+ let un=null;
+ const go=()=>{try{un&&un()}catch(e){}un=null;try{un=mk().onSnapshot(fn,()=>setTimeout(go,4000))}catch(e){setTimeout(go,4000)}};
+ go();watchers.push({go,hb});
+}
+function rewatch(all){watchers.forEach(w=>{if(all||w.hb)w.go()})}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)rewatch(true)});
+addEventListener("online",()=>rewatch(true));
+addEventListener("focus",()=>rewatch(true));
+setInterval(()=>{if(!document.hidden)rewatch(false)},20000);
+function listenInbox(){
+ watch(()=>db.collection("reqs/"+me.fp+"/inbox"),async snap=>{
+  for(const ch of snap.docChanges()){
+   const fp=ch.doc.id;
+   if(ch.type==="removed"){inbox.delete(fp);continue}
+   const d=ch.doc.data();
+   if(!d||!d.pub||await fpOf(canon(d.pub))!==fp)continue;
+   const f=friends.get(fp);
+   if(f&&f.state==="ok"){
+    try{await db.doc("acc/"+fp+"/inbox/"+me.fp).set({pub:me.pub,name:myName(),at:Date.now()})}catch(e){}
+    try{await db.doc("reqs/"+me.fp+"/inbox/"+fp).delete()}catch(e){}
+    pushSoon();continue}
+   const isNew=!inbox.has(fp);inbox.set(fp,d);
+   if(isNew&&inboxReady)pling();
+   if(f&&f.state==="out")await acceptReq(fp);
+  }
+  drawReqs();inboxReady=true;
+ },true);
+ watch(()=>db.collection("rm/"+me.fp+"/inbox"),async snap=>{
+  for(const ch of snap.docChanges()){
+   if(ch.type==="removed")continue;
+   const fp=ch.doc.id,f=friends.get(fp),del=async()=>{try{await db.doc("rm/"+me.fp+"/inbox/"+fp).delete()}catch(e){}};
+   if(!f){await del();continue}
+   try{
+    const pr=await pairOf(f),p=await openK(pr.key,ch.doc.data());
+    if(!p||!p.rm)continue;
+    if(p.at>=f.at)await removeFriend(fp,true);
+    await del();
+   }catch(e){}
+  }
+ },true);
+ watch(()=>db.collection("acc/"+me.fp+"/inbox"),async snap=>{
+  for(const ch of snap.docChanges()){
+   if(ch.type==="removed")continue;
+   const fp=ch.doc.id,d=ch.doc.data(),f=friends.get(fp);
+   if(!d||!d.pub||!f||f.state!=="out")continue;
+   if(await fpOf(canon(d.pub))!==fp)continue;
+   f.state="ok";f.pub=canon(d.pub);f.name=String(d.name||f.name).slice(0,24);f.at=Date.now();
+   try{await dbPut("fr",f)}catch(e){}
+   try{await db.doc("acc/"+me.fp+"/inbox/"+fp).delete()}catch(e){}
+   fkeys.delete(fp);
+   await subProf(f);pushSoon();drawFriends();
+  }
+ },true);
+}
+async function pubPeople(){
+ if(!db||!me)return;
+ try{await db.doc("people/"+me.fp).set({pub:me.pub,name:myName(),vis:$("vis").checked,t:Date.now()})}
+ catch(e){$("msg").textContent="Kunne ikke registrere deg: "+(e.message||e.code)}
+}
+function listenDir(){
+ watch(()=>db.collection("people").limit(300),async snap=>{
+  for(const ch of snap.docChanges()){
+   const fp=ch.doc.id;
+   if(ch.type==="removed"){dirMap.delete(fp);continue}
+   const d=ch.doc.data();
+   if(!d||!d.pub||fp===me.fp||d.vis===false){dirMap.delete(fp);continue}
+   if(await fpOf(canon(d.pub))!==fp){dirMap.delete(fp);continue}
+   dirMap.set(fp,{fp,name:String(d.name||"Noen").slice(0,24),pub:canon(d.pub)});
+  }
+  drawDir();
+ },false);
+}
+function drawDir(){
+ const box=$("dir");
+ if($("addfp").hidden)return;
+ const q=$("fs").value.trim().toLowerCase();
+ const l=[...dirMap.values()].filter(p=>!q||p.name.toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name,"nb"));
+ const sig=JSON.stringify([q,l.map(p=>{const f=friends.get(p.fp);return [p.fp,p.name,f&&f.state,inbox.has(p.fp)]})]);
+ if(sig===dirSig)return;dirSig=sig;
+ box.textContent="";
+ if(!l.length){const f=document.createElement("div");f.className="fine";f.textContent=q?"Ingen treff.":"Ingen andre har åpnet Pling ennå.";box.append(f);return}
+ for(const p of l){
+  const f=friends.get(p.fp),r=document.createElement("div");r.className="bud";
+  const t=document.createElement("div"),n=document.createElement("div"),s=document.createElement("small");
+  t.className="t";n.textContent=p.name;s.textContent="…"+p.fp.slice(-4);t.append(n,s);
+  let act;
+  if(f&&f.state==="ok"){act=document.createElement("span");act.className="fine";act.textContent="Venn"}
+  else if(f&&f.state==="out"){act=document.createElement("span");act.className="fine";act.textContent="Venter"}
+  else if(inbox.has(p.fp)){act=document.createElement("button");act.type="button";act.className="sm";act.textContent="Godta";act.onclick=()=>acceptReq(p.fp)}
+  else{act=document.createElement("button");act.type="button";act.className="sm";act.textContent="Legg til";act.onclick=async()=>{act.disabled=true;await addFriend({fp:p.fp,name:p.name});drawDir()}}
+  r.append(avEl(p.name,null,"ro"),t,act);box.append(r);
+ }
+}
+function drawReqs(){
+ const box=$("reqs");box.textContent="";box.hidden=!inbox.size;
+ if(!inbox.size)return;
+ const h=document.createElement("div");h.className="grp";h.textContent="Forespørsler ("+inbox.size+")";box.append(h);
+ for(const [fp,r] of inbox){
+  const nm=String(r.name||"Noen").slice(0,24);
+  const d=document.createElement("div");d.className="req";
+  const t=document.createElement("div");t.textContent=nm+" vil bli venn med deg";
+  const row=document.createElement("div");row.className="row";
+  const a=document.createElement("button");a.type="button";a.className="sm";a.textContent="Godta";a.onclick=()=>acceptReq(fp);
+  const n=document.createElement("button");n.type="button";n.className="glass sm";n.textContent="Avslå";n.onclick=()=>declineReq(fp);
+  row.append(a,n);d.append(avEl(nm,null,"ro"),t,row);box.append(d);
+ }
+}
+function drawFriends(){
+ if(!me)return;
+ drawDir();
+ const rows=[...friends.values()].map(f=>({f,s:f.state==="ok"?statusOf(f.fp):"off"}));
+ const rank=r=>r.f.state!=="ok"?3:r.s==="on"?0:r.s==="off"?2:1;
+ rows.sort((a,b)=>rank(a)-rank(b)||String((a.f.prof&&a.f.prof.name)||a.f.name).localeCompare(String((b.f.prof&&b.f.prof.name)||b.f.name),"nb"));
+ const sig=JSON.stringify(rows.map(r=>[r.f.fp,r.f.state,r.s,r.f.name,r.f.prof&&r.f.prof.name,r.f.prof&&r.f.prof.pm,r.f.prof&&r.f.prof.av,mode==="dm"&&chatFp===r.f.fp]));
+ if(sig===frSig)return;frSig=sig;
+ const box=$("friends");box.textContent="";
+ if(!rows.length){const f=document.createElement("div");f.className="fine";f.style.padding="4px 6px";f.textContent="Ingen venner ennå. Trykk «+ Legg til venn», og send lenken din til noen.";box.append(f);return}
+ for(const {f,s} of rows){
+  const nm=(f.prof&&f.prof.name)||f.name,ok=f.state==="ok";
+  const b=document.createElement("button");b.type="button";b.className="conv"+(ok?"":" pend")+(mode==="dm"&&chatFp===f.fp?" act":"");
+  const t=document.createElement("span");t.className="t";
+  const n=document.createElement("b");n.textContent=nm;
+  const p=document.createElement("small");p.textContent=ok?((f.prof&&f.prof.pm)||""):"Venter på svar";
+  t.append(n,p);b.append(avEl(nm,f.prof&&f.prof.av,s),t,ff(s));
+  const open=()=>{if(ok)openDm(f.fp);else $("msg").textContent="Venter på at "+nm+" godtar forespørselen."};
+  b.onclick=e=>{if(coarse||e.detail===0)open()};
+  b.ondblclick=open;
+  box.append(b);
+ }
+ const h=document.createElement("div");h.className="fine";h.style.padding="4px 6px";h.textContent=coarse?"Trykk på en venn for å åpne samtalen.":"Dobbeltklikk på en venn for å åpne samtalen.";box.append(h);
+}
+
+/* samtaler */
+function teardown(){
+ try{if(unSnap)unSnap()}catch(e){}
+ soloLeave();clearInterval(tBud);unSnap=null;items.clear();ready=false;col=null;cxReset();
+ if(room)Promise.resolve(room.presence({rid:null,typing:null})).catch(()=>{});
+}
+function closeChat(){
+ teardown();mode=null;chatId=null;key=null;chatFp=null;curLink=null;
+ $("shell").classList.remove("inchat");
+ ["ch","log","typ","emo","bar","menu","cxbn","cxp","cxb"].forEach(i=>$(i).hidden=true);
+ $("empty").hidden=false;$("lock").hidden=true;$("title").textContent="";
+ frSig="";drawFriends();showSaved();
+}
+async function openChat(o){
+ teardown();
+ mode=o.mode;chatId=o.id;key=o.key;chatFp=o.fp||null;curLink=o.link||null;
+ col=db.collection("chats/"+chatId+"/msgs");
+ $("shell").classList.add("inchat");
+ $("empty").hidden=true;["ch","log","typ","bar"].forEach(i=>$(i).hidden=false);$("emo").hidden=true;$("menu").hidden=true;
+ $("mdm").hidden=mode!=="dm";$("bfr").hidden=mode!=="dm";$("bf").hidden=mode!=="room";$("bi").hidden=!(mode==="room"&&curLink);
+ $("lk").hidden=true;$("bi").textContent="Inviter";
+ $("cxb").hidden=mode!=="dm";cxLayout();
+ $("sn").textContent=o.sn||"";
+ $("title").textContent=(mode==="room"?"# ":"")+o.title;
+ $("lock").hidden=false;
+ $("fp").textContent=mode==="room"?"Avtrykk "+chatId.slice(0,8)+" · AES-256-GCM":"Privat samtale · AES-256-GCM";
+ $("log").textContent="";
+ unSnap=col.orderBy("ts","desc").limit(300).onSnapshot(async snap=>{
+  let fresh=[];
+  for(const ch of snap.docChanges()){
+   if(ch.type==="removed"){items.delete(ch.doc.id);continue}
+   const d=ch.doc.data();
+   if(d.exp&&d.exp<Date.now())continue;
+   const m=await openK(key,d);
+   if(!m)continue;
+   if(!items.has(ch.doc.id))fresh.push({...m,ts:d.ts,u:d.u,id:ch.doc.id});
+   items.set(ch.doc.id,{...m,ts:d.ts,u:d.u});
+  }
+  render();
+  if(ready)for(const m of fresh){if(m.u===myId||(m.k==="cx"&&m.a==="mv"))continue;if((m.k==="pling"||m.k==="nudge")&&Date.now()-m.ts<15000)stor();else pling()}
+  ready=true;
+ },e=>{note("Tilkoblingsproblem: "+e.message)});
+ presence();cleanup();
+ drawPresent();tBud=setInterval(drawPresent,2000);
+ frSig="";drawFriends();
+ $("tx").focus();
+}
+async function openDm(fp){
+ const f=friends.get(fp);if(!f||f.state!=="ok"||!db)return;
+ try{const pr=await pairOf(f);await openChat({mode:"dm",id:pr.id,key:pr.key,fp,title:(f.prof&&f.prof.name)||f.name,sn:pr.sn})}
+ catch(e){$("msg").textContent="Kunne ikke åpne samtalen: "+(e.message||e.code)}
+}
+async function openRoom(title,rid,k,link,saved){
+ ["go","nw","ij"].forEach(i=>$(i).disabled=false);$("ic").disabled=false;
+ if(!db){$("err").textContent="Meldinger er ikke tilgjengelig her. Åpne siden innlogget på claude.ai.";$("add").hidden=false;return}
+ if(!saved&&$("rem").checked)await saveConv({rid,title,key:k,link,at:Date.now()});
+ $("ic").value="";$("err").textContent="";$("add").hidden=true;$("addb").setAttribute("aria-expanded","false");
+ if(inv&&inv.type==="room")$("inv").hidden=true;
+ await openChat({mode:"room",id:rid,key:k,title,link});
+ showSaved();
+}
+async function join(){
+ const n=$("rn").value.trim(),p=$("pp").value;
+ if(!n||p.length<8){$("err").textContent="Skriv inn et gruppenavn og et passord på minst 8 tegn. Gruppelenker er tryggere.";return}
+ $("go").disabled=true;$("err").textContent="Lager krypteringsnøkkel …";
+ const d=await derive(n,p);await openRoom(n,d.rid,d.key,null);
+}
+function render(){
+ const log=$("log"),near=log.scrollHeight-log.scrollTop-log.clientHeight<80;
+ log.textContent="";
+ const arr=[...items.values()].sort((a,b)=>a.ts-b.ts);
+ if(!arr.length){const s=document.createElement("div");s.className="sys";s.textContent="Si hei! Alt krypteres før det forlater enheten din.";log.append(s)}
+ for(const m of arr){
+  const t=new Date(m.ts).toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"});
+  const d=document.createElement("div");
+  if(m.k==="cx"){const L=CXL[m.a];if(!L)continue;d.className="sys";d.textContent=String(m.n||"Noen")+L+" ("+t+")"}
+  else if(m.k==="pling"||m.k==="nudge"){d.className="sys";d.textContent=String(m.n||"Noen")+" sendte en dobbeltpling! ("+t+")"}
+  else{const mine=mode==="dm"&&me?m.fp===me.fp:m.u===myId;
+   d.className="m"+(mine?" mine":"");
+   const b=document.createElement("b");b.textContent=String(m.n||"Noen")+" sier:";
+   const p=document.createElement("div");p.textContent=emoji(String(m.t||""));
+   const ti=document.createElement("time");ti.textContent=t;
+   d.append(b,p,ti)}
+  log.append(d);
+ }
+ if(near||!ready)log.scrollTop=log.scrollHeight;
+ cxRefresh();
+}
+async function send(kind){
+ if(!col)return;
+ const t=$("tx").value.trim();
+ if(kind==="msg"&&!t)return;
+ if(kind==="pling"&&Date.now()<cdUntil)return;
+ const ts=Date.now(),id=ts+"-"+Math.random().toString(36).slice(2,8);
+ try{
+  const s=await sealK(key,{k:kind,n:myName(),t:kind==="msg"?t:"",fp:me?me.fp:null});
+  const days=+$("ex").value;
+  await col.doc(id).set({ts,u:myId,...s,...(days?{exp:ts+days*864e5}:{})});
+  if(kind==="msg")$("tx").value="";
+  else{stor();cdUntil=Date.now()+60000;clearInterval(cdTimer);cdTimer=setInterval(cd,500);cd()}
+  if(room)Promise.resolve(room.presence({typing:null})).catch(()=>{});
+ }catch(e){note("Kunne ikke sende: "+(e.message||e.code))}
+}
+function drawPresent(){
+ if(!mode)return;
+ const pr=$("pr"),who=$("who");pr.textContent="";who.textContent="";
+ let typers=[];
+ const typing=(q,name)=>{if(q.typing&&q.typing.r===chatId&&Date.now()-q.typing.at<4000)typers.push(name)};
+ if(mode==="room"){
+  const mine=peers.filter(p=>p.presence&&p.presence.rid===chatId);
+  mine.forEach((p,i)=>{
+   const q=p.presence,nm=String(q.name||"Noen").slice(0,24),c=STC[q.st]||"on";
+   const fr=q.fp&&friends.get(q.fp),av=(fr&&fr.prof&&fr.prof.av)||(q.fp===(me&&me.fp)?myAv:null);
+   if(i<5){const a=avEl(nm,av,c);a.title=nm+(p.sameTab?" (deg)":"");pr.append(a)}
+   const r=document.createElement("div");r.className="bud";
+   const w=document.createElement("div");w.className="t";w.textContent=nm+(p.sameTab?" (deg)":"");
+   r.append(avEl(nm,av,c),w,ff(c));who.append(r);
+   if(!p.sameTab)typing(q,nm);
+  });
+  if(mine.length>5){const m=document.createElement("span");m.className="more";m.textContent="+"+(mine.length-5);pr.append(m)}
+  if(!mine.length){const f=document.createElement("div");f.className="fine";f.textContent="Ingen er her nå. Meldinger venter, kryptert.";who.append(f)}
+ }else{
+  const f=friends.get(chatFp);if(!f)return;
+  const nm=(f.prof&&f.prof.name)||f.name,s=statusOf(f.fp),av=f.prof&&f.prof.av;
+  pr.append(avEl(nm,av,s));
+  const r=document.createElement("div");r.className="bud";
+  const w=document.createElement("div"),n=document.createElement("div"),sm=document.createElement("small");
+  w.className="t";n.textContent=nm;sm.textContent=(f.prof&&f.prof.pm)||"";w.append(n,sm);
+  r.append(avEl(nm,av,s),w,ff(s));who.append(r);
+  for(const p of peers){if(p.presence&&p.presence.fp===f.fp)typing(p.presence,nm)}
+ }
+ $("typ").textContent=typers.length?typers.join(", ")+" skriver …":"";
+}
+
+/* grupper med lenke, lagret bare på denne enheten */
+async function saveConv(c){try{await dbPut("c",c)}catch(e){}}
+async function forget(r){try{await dbDel("c",r)}catch(e){}}
+async function showSaved(){
+ const box=$("saved");box.textContent="";let l=[];
+ try{l=await dbAll("c")}catch(e){}
+ l.sort((a,b)=>(b.at||0)-(a.at||0));
+ if(!l.length){const f=document.createElement("div");f.className="fine";f.style.padding="4px 6px";f.textContent="Ingen grupper ennå.";box.append(f);return}
+ for(const c of l){
+  const b=document.createElement("button");b.type="button";b.className="conv"+(mode==="room"&&c.rid===chatId?" act":"");
+  const t=document.createElement("span");t.className="t";const n=document.createElement("b");n.textContent=c.title;t.append(n);
+  b.append(avEl(c.title,null,"ro"),t);
+  b.onclick=async()=>{await saveConv({...c,at:Date.now()});openRoom(c.title,c.rid,c.key,c.link||null,true)};
+  box.append(b)}
+}
+async function cleanup(){try{const s=await col.where("exp","<",Date.now()).get();s.docs.forEach(d=>col.doc(d.id).delete())}catch(e){}}
+function parseInvite(h){h=(h||"").trim();const i0=h.indexOf("#");if(i0>=0)h=h.slice(i0+1);const i=h.indexOf(".");if(i<20)return null;
+ try{return{s:h.slice(0,i),t:D.decode(unb64u(h.slice(i+1)))||"Gruppe",h}}catch(e){return null}}
+async function joinInvite(v){const d=await derive("invite",v.s);await openRoom(v.t,d.rid,d.key,LINK+"#"+v.h)}
+$("nw").onclick=async()=>{
+ const t=$("ct").value.trim()||"Ny gruppe",s=b64u(crypto.getRandomValues(new Uint8Array(24)));
+ $("nw").disabled=true;
+ const d=await derive("invite",s);
+ await openRoom(t,d.rid,d.key,LINK+"#"+s+"."+b64u(E.encode(t)));$("ct").value="";
+};
+$("ic").oninput=async()=>{const v=parseInvite($("ic").value);if(v){$("ic").disabled=true;await joinInvite(v)}};
+$("fc").oninput=async()=>{const v=parseFriend($("fc").value);if(v){if(await addFriend(v))$("fc").value=""}};
+$("sem").onclick=()=>{
+ const e=$("em").value.trim(),fe=$("ferr");
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){fe.textContent="Skriv inn en gyldig e-postadresse.";return}
+ const body="Hei! Jeg bruker Pling, en privat og kryptert meldingstjeneste. Trykk på lenken for å legge meg til som venn:\n\n"+myLink()+"\n\n(Du må være logget inn på Claude for å åpne den.)";
+ const a=document.createElement("a");
+ a.href="mailto:"+encodeURIComponent(e).replace(/%40/g,"@")+"?subject="+encodeURIComponent("Bli med meg på Pling")+"&body="+encodeURIComponent(body);
+ a.target="_blank";a.rel="noopener";document.body.append(a);a.click();a.remove();
+ fe.textContent="E-postprogrammet ditt åpnes med en ferdig melding. Dukker det ikke opp, bruk «Eller bruk en lenke» under.";
+ $("em").value="";
+};
+$("copyf").onclick=async()=>{const l=$("myl");l.select();try{await navigator.clipboard.writeText(l.value);$("copyf").textContent="Kopiert"}catch(e){}setTimeout(()=>{$("copyf").textContent="Kopier"},2000)};
+
+/* samtalemeny */
+$("mb").onclick=$("pr").onclick=()=>{const m=$("menu");m.hidden=!m.hidden;$("mb").setAttribute("aria-expanded",String(!m.hidden))};
+$("back").onclick=closeChat;
+$("eb").onclick=()=>{$("emo").hidden=!$("emo").hidden};
+$("bi").onclick=async()=>{if(!curLink)return;const l=$("lk");l.value=curLink;l.hidden=false;l.select();try{await navigator.clipboard.writeText(curLink);$("bi").textContent="Lenke kopiert"}catch(e){}};
+$("bd").onclick=async()=>{
+ let dl=null;try{dl=await window.claude.use("downloads")}catch(e){}
+ if(!dl){note("Nedlasting er ikke tilgjengelig her.");return}
+ const txt=[...items.values()].filter(m=>m.k!=="cx").sort((a,b)=>a.ts-b.ts).map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+((m.k==="pling"||m.k==="nudge")?m.n+" sendte en dobbeltpling":m.n+": "+m.t)).join("\n");
+ try{await dl.save({filename:"samtale.txt",data:txt})}catch(e){}
+};
+$("bx").onclick=async()=>{
+ if(!dz){dz=1;$("bx").textContent="Trykk igjen for å bekrefte";setTimeout(()=>{dz=0;$("bx").textContent="Slett for alle"},4000);return}
+ dz=0;$("bx").textContent="Slett for alle";
+ try{const s=await col.get();await Promise.all(s.docs.map(d=>col.doc(d.id).delete()));items.clear();render()}catch(e){note("Kunne ikke slette: "+(e.message||e.code))}
+};
+$("bf").onclick=async()=>{const r=chatId;await forget(r);closeChat()};
+let rz=0;
+$("bfr").onclick=async()=>{
+ if(!rz){rz=1;$("bfr").textContent="Trykk igjen for å bekrefte";setTimeout(()=>{rz=0;$("bfr").textContent="Fjern venn"},4000);return}
+ rz=0;$("bfr").textContent="Fjern venn";await removeFriend(chatFp);
+};
+
+$("go").onclick=join;
+$("pp").onkeydown=$("rn").onkeydown=e=>{if(e.key==="Enter")join()};
+$("tx").onkeydown=e=>{if(e.key==="Enter")send("msg")};
+$("tx").oninput=()=>{if(room&&mode&&Date.now()-lastTyping>2000){lastTyping=Date.now();Promise.resolve(room.presence({typing:{r:chatId,at:Date.now()}})).catch(()=>{})}};
+$("sd").onclick=()=>send("msg");$("dp").onclick=()=>send("pling");
+$("st").onchange=presence;
+$("nm").onchange=$("pm").onchange=()=>{presence();pushSoon();updateLink();pubPeople()};
+$("vis").onchange=()=>{try{localStorage.setItem("pling_vis",$("vis").checked?"1":"0")}catch(e){}pubPeople()};
+$("nm").oninput=paintAv;
+$("pm").oninput=paintAv;
+paintAv();showSaved();
+
+/* invitasjoner i adressen */
+const hashFriend=parseFriend(location.hash),hashRoom=hashFriend?null:parseInvite(location.hash);
+if(hashFriend){inv={type:"friend",...hashFriend};$("inv").hidden=false;$("invt").textContent="Legg til «"+hashFriend.name+"» som venn?";$("ij").textContent="Legg til venn"}
+else if(hashRoom){inv={type:"room",...hashRoom};$("inv").hidden=false;$("invt").textContent="Du er invitert til «"+hashRoom.t+"».";$("ij").textContent="Bli med"}
+$("ij").onclick=async()=>{
+ if(!inv)return;$("ij").disabled=true;
+ if(inv.type==="friend"){$("addfp").hidden=false;const ok=await addFriend(inv);$("ij").disabled=false;if(ok)$("inv").hidden=true}
+ else await joinInvite(inv);
+};
+
+/* sjakk: spillstatus utledes fra krypterte meldinger i samtalen */
+const CXMV=/^[a-h][1-8][a-h][1-8][qrbn]?$/;
+function cxReplay(h){
+ if(!Array.isArray(h)||h.length>700)return null;
+ const c=new Chess();
+ for(const s of h){
+  if(typeof s!=="string"||!CXMV.test(s))return null;
+  if(!c.move({from:s.slice(0,2),to:s.slice(2,4),promotion:s[4]}))return null;
+ }
+ return c;
+}
+function cxOver(c){
+ if(c.in_checkmate())return"mate";
+ if(c.in_stalemate())return"stale";
+ if(c.game_over())return"draw";
+ return null;
+}
+const cxTurn=G=>G.h.length%2===0?G.w:G.b;
+function cxCompute(arr,meFp,otherFp){
+ let G=null;
+ const ok=s=>typeof s==="string"&&s.length>0&&s.length<=40;
+ const party=f=>f===meFp||f===otherFp;
+ const oth=f=>f===meFp?otherFp:meFp;
+ const end=(type,win)=>{G.st="end";G.res={type,win:win||null};G.draw=null};
+ const early=new Map();
+ const apply=m=>{
+  const a=m.a;
+  if(a==="acc"&&G.st==="pend"&&m.fp!==G.ch)G.st="act";
+  else if(a==="dec"&&G.st==="pend"&&m.fp!==G.ch)end("decl");
+  else if(a==="can"&&G.st==="pend"&&m.fp===G.ch)end("cancel");
+  else if(a==="res"&&G.st==="act")end("resign",oth(m.fp));
+  else if(a==="dr"&&G.st==="act")G.draw=m.fp;
+  else if(a==="dra"&&G.st==="act"&&G.draw&&G.draw!==m.fp)end("agreed");
+  else if(a==="drd"&&G.st==="act"&&G.draw&&G.draw!==m.fp)G.draw=null;
+ };
+ for(const m of arr){
+  if(!m||m.k!=="cx"||!party(m.fp)||!ok(m.g))continue;
+  const a=m.a,live=G&&G.g===m.g;
+  if(a==="inv"){
+   if(G&&G.st!=="end")continue;
+   if(m.c!=="w"&&m.c!=="b")continue;
+   G={g:m.g,st:"pend",ch:m.fp,cc:m.c,w:m.c==="w"?m.fp:oth(m.fp),b:m.c==="b"?m.fp:oth(m.fp),h:[],draw:null,res:null};
+   for(const e of early.get(m.g)||[])apply(e);
+   early.delete(m.g);
+  }else if(a==="mv"){
+   if(!(party(m.w)&&party(m.b)&&m.w!==m.b))continue;
+   if(!live){
+    if(G&&G.st!=="end")continue;
+    G={g:m.g,st:"act",ch:null,cc:null,w:m.w,b:m.b,h:[],draw:null,res:null};
+   }else if(G.st==="end"||G.w!==m.w||G.b!==m.b)continue;
+   const c=cxReplay(m.h);
+   if(!c||m.h.length<=G.h.length)continue;
+   let bad=false;
+   for(let i=0;i<G.h.length;i++)if(G.h[i]!==m.h[i]){bad=true;break}
+   if(bad)continue;
+   if((m.h.length%2===1?G.w:G.b)!==m.fp)continue;
+   G.st="act";G.h=m.h.slice();G.draw=null;
+   const o=cxOver(c);
+   if(o)end(o,o==="mate"?m.fp:null);
+  }else if(live)apply(m);
+  else if(a==="acc"||a==="dec"||a==="can"){
+   if(!early.has(m.g))early.set(m.g,[]);
+   early.get(m.g).push(m);
+  }
+ }
+ return G;
+}
+
+/* sjakk: grensesnitt */
+let cxG=null,cxOpen=false,cxSel=null,cxBusy=false,cxBusyT=0,cxPromo=null,cxSig="";
+const CXPU=0;
+const CXSV={
+ p:'<circle cx="50" cy="29" r="13"/><path d="M50 41C42 49 36 62 31 76Q29 84 37 84H63Q71 84 69 76C64 62 58 49 50 41Z"/><path class="dt" d="M39 49Q50 55 61 49"/>',
+ r:'<path d="M29 13H41V22H45V13H55V22H59V13H71V35H29Z"/><path d="M34 35H66L70 72H30Z"/><path d="M25 72H75Q79 72 79 77V80Q79 84 75 84H25Q21 84 21 80V77Q21 72 25 72Z"/><path class="dt" d="M31 35H69M30 72H70"/>',
+ n:'<path d="M27 84C26 62 34 50 45 41C39 42 34 46 31 50L22 45C25 33 34 22 45 17L48 8L55 17C71 21 78 40 73 84Z"/><circle class="ey" cx="47" cy="29" r="3.4"/><path class="dt" d="M26 46Q33 52 40 49M60 34Q68 46 66 64"/>',
+ b:'<circle cx="50" cy="12" r="6"/><path d="M50 19C34 31 32 49 42 58C40 66 36 72 33 79Q32 84 38 84H62Q68 84 67 79C64 72 60 66 58 58C68 49 66 31 50 19Z"/><path class="dt" d="M52 28L62 42M37 62H63"/>',
+ q:'<circle cx="21" cy="30" r="5"/><circle cx="36" cy="22" r="5"/><circle cx="50" cy="19" r="5"/><circle cx="64" cy="22" r="5"/><circle cx="79" cy="30" r="5"/><path d="M24 36L36 56L38 28L50 54L62 28L64 56L76 36L72 78Q71 84 65 84H35Q29 84 28 78Z"/><path class="dt" d="M31 70H69"/>',
+ k:'<path d="M46 6H54V13H61V20H54V27H46V20H39V13H46Z"/><path d="M50 27C32 27 22 42 30 58C32 63 34 70 33 77Q33 84 40 84H60Q67 84 67 77C66 70 68 63 70 58C78 42 68 27 50 27Z"/><path class="dt" d="M34 70H66M39 40Q50 47 61 40"/>'
+};
+function cxSvg(t,c){return '<svg class="cs '+(c==="w"?"sw":"sb")+'" viewBox="0 0 100 100" aria-hidden="true"><ellipse class="sh" cx="50" cy="86" rx="27" ry="4.5"/>'+CXSV[t]+'</svg>'}
+
+const CXP={k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"};
+const CXN={k:"konge",q:"dronning",r:"tårn",b:"løper",n:"springer",p:"bonde"};
+const CXL={inv:" utfordret til sjakk ♟",acc:" godtok sjakkutfordringen",dec:" avslo sjakkutfordringen",can:" trakk utfordringen tilbake",res:" ga opp i sjakk",dra:" godtok remis i sjakk"};
+function cxName(fp){
+ if(me&&fp===me.fp)return"Du";
+ const f=friends.get(fp);
+ return(f&&((f.prof&&f.prof.name)||f.name))||"Vennen";
+}
+async function sendCx(a,x){
+ if(!col||mode!=="dm"||!me)return false;
+ const ts=Date.now(),id=ts+"-"+Math.random().toString(36).slice(2,8);
+ try{
+  const s=await sealK(key,{k:"cx",a,...x,n:myName(),fp:me.fp,t:""});
+  await col.doc(id).set({ts,u:myId,...s});
+  return true;
+ }catch(e){note("Kunne ikke sende: "+(e.message||e.code));return false}
+}
+function cxLayout(){
+ const on=(mode==="dm"||mode==="solo")&&cxOpen;
+ $("cxp").hidden=!on;
+ if(mode)$("log").hidden=on;
+}
+function cxReset(){cxFxReset();cxG=null;cxOpen=false;cxSel=null;cxBusy=false;clearTimeout(cxBusyT);cxPromo=null;cxSig=""}
+function cxRefresh(){
+ const dm=mode==="dm"&&me&&chatFp;
+ $("cxb").hidden=!dm;
+ if(!dm){cxG=null;$("cxbn").hidden=true;cxLayout();return}
+ const arr=[...items.values()].filter(m=>m&&m.k==="cx").sort((a,b)=>a.ts-b.ts);
+ const prev=cxG;
+ cxG=cxCompute(arr,me.fp,chatFp);
+ const G=cxG;
+ cxFx(G);
+ const sig=G?G.g+G.st+G.h.length+(G.draw||""):"";
+ if(sig!==cxSig){cxSig=sig;cxSel=null;cxPromo=null;cxBusy=false;clearTimeout(cxBusyT)}
+ if(ready&&G&&G.st==="act"&&prev&&prev.g===G.g&&prev.st==="pend")cxOpen=true;
+ const bn=$("cxbn"),t=$("cxt"),A=$("cxa"),B=$("cxd");
+ let dot=false;bn.hidden=true;
+ if(G&&G.st==="pend"){
+  const g=G.g,nm=cxName(chatFp);bn.hidden=false;
+  if(G.ch===me.fp){
+   t.textContent="Du har utfordret "+nm+" til sjakk. Venter på svar.";
+   A.textContent="Trekk tilbake";A.onclick=()=>sendCx("can",{g});B.hidden=true;
+  }else{
+   t.textContent=nm+" utfordrer deg til sjakk!";
+   A.textContent="Godta";A.onclick=()=>sendCx("acc",{g});
+   B.hidden=false;B.textContent="Avslå";B.onclick=()=>sendCx("dec",{g});dot=true;
+  }
+ }else if(G&&G.st==="act"){
+  const mine=cxTurn(G)===me.fp,nm=cxName(chatFp);
+  dot=mine;
+  if(!cxOpen){
+   bn.hidden=false;
+   t.textContent="♟︎ Sjakk mot "+nm+": "+(mine?"din tur":"venter på "+nm);
+   A.textContent="Åpne brettet";A.onclick=()=>{cxOpen=true;cxRefresh()};B.hidden=true;
+  }
+ }
+ $("cxb").classList.toggle("dot",dot);
+ cxPanel();
+}
+function cxResult(G){
+ const r=G.res,w=r.win;
+ switch(r.type){
+  case"mate":return"Sjakk matt! "+cxName(w)+" vant.";
+  case"resign":return cxName(w===me.fp?chatFp:me.fp)+" ga opp. "+cxName(w)+" vant.";
+  case"stale":return"Patt. Det ble remis.";
+  case"draw":return"Remis.";
+  case"agreed":return"Remis avtalt.";
+  case"decl":return"Utfordringen ble avslått.";
+  case"cancel":return"Utfordringen ble trukket tilbake.";
+ }
+ return"";
+}
+function cxMoves(c){
+ const h=c.history();let s="";
+ for(let i=0;i<h.length;i++)s+=(i%2===0?(i/2+1)+". ":"")+h[i]+" ";
+ return s.trim();
+}
+function cxPanel(){
+ cxLayout();
+ if(mode==="solo"){soloPanel();return}
+ if(!(mode==="dm"&&cxOpen&&me))return;
+ const G=cxG,s=$("cxs"),bt=$("cxbt"),pr=$("cxpr"),nm=cxName(chatFp);
+ bt.textContent="";pr.textContent="";pr.hidden=true;
+ const btn=(txt,fn,cls)=>{const b=document.createElement("button");b.type="button";b.className="glass sm"+(cls?" "+cls:"");b.textContent=txt;if(fn)b.onclick=fn;bt.append(b);return b};
+ const c=G&&G.h?cxReplay(G.h):null;
+ cxDrawBoard(c);
+ if(!G){
+  s.textContent="Ingen pågående parti.";
+  btn("Utfordre "+nm+" til sjakk",()=>sendCx("inv",{g:Math.random().toString(36).slice(2,10),c:Math.random()<.5?"w":"b"}),"hot");
+ }else if(G.st==="pend"){
+  s.textContent=G.ch===me.fp?"Venter på at "+nm+" svarer.":nm+" har utfordret deg. Svar i feltet over.";
+ }else if(G.st==="act"){
+  const g=G.g,mine=cxTurn(G)===me.fp;
+  s.textContent=(mine?"Din tur":nm+" sin tur")+(c&&c.in_check()?" – sjakk!":"")+" · Du spiller "+(G.w===me.fp?"hvit":"svart");
+  if(G.draw&&G.draw!==me.fp){
+   s.textContent+=" · "+nm+" tilbyr remis";
+   btn("Godta remis",()=>sendCx("dra",{g}));btn("Avslå remis",()=>sendCx("drd",{g}));
+  }else if(G.draw===me.fp)btn("Remis tilbudt …").disabled=true;
+  else btn("Tilby remis",()=>sendCx("dr",{g}));
+  const rb=btn("Gi opp",()=>{
+   if(rb.dataset.a){sendCx("res",{g});return}
+   rb.dataset.a="1";rb.textContent="Sikker? Trykk igjen";
+   setTimeout(()=>{rb.dataset.a="";rb.textContent="Gi opp"},3000);
+  });
+  if(cxPromo){
+   pr.hidden=false;
+   const l=document.createElement("span");l.className="fine";l.textContent="Forvandle til:";pr.append(l);
+   for(const p of["q","r","b","n"]){
+    const b=document.createElement("button");b.type="button";b.className="glass cxpb";b.innerHTML=cxSvg(p,cxG&&cxG.w===cxMe()?"w":"b");
+    b.setAttribute("aria-label",CXN[p]);b.onclick=()=>cxDoMove(cxPromo.from+cxPromo.to+p);pr.append(b);
+   }
+  }
+ }else{
+  s.textContent=cxResult(G);
+  btn("Ny utfordring",()=>sendCx("inv",{g:Math.random().toString(36).slice(2,10),c:Math.random()<.5?"w":"b"}),"hot");
+ }
+ $("cxmv").textContent=c?cxMoves(c):"";
+}
+function cxDrawBoard(c){
+ const box=$("cxbd"),G=cxG;box.textContent="";
+ if(!G||!c||G.st==="pend"||(G.st==="end"&&!G.h.length)){box.hidden=true;return}
+ box.hidden=false;
+ const white=G.w===cxMe(),myTurn=G.st==="act"&&cxTurn(G)===cxMe()&&!cxBusy;
+ const lm=G.h.length?G.h[G.h.length-1]:"";
+ const tg=new Map();
+ if(myTurn&&cxSel)for(const mv of c.moves({square:cxSel,verbose:true}))tg.set(mv.to,mv);
+ const hints=mode==="solo"&&G.lv!=null&&SOLO_LV[G.lv]&&SOLO_LV[G.lv].r<=800;
+ const bd=c.board(),chk=c.in_check(),bySq={};
+ for(let row=0;row<8;row++)for(let col2=0;col2<8;col2++){
+  const r=white?row:7-row,f=white?col2:7-col2;
+  const sq="abcdefgh"[f]+(8-r),p=bd[r][f];
+  const b=document.createElement("button");b.type="button";
+  b.className="sq "+((r+f)%2?"d":"l");
+  if(p){b.classList.add(p.color==="w"?"pw":"pb");const sp=document.createElement("span");sp.className="pc";sp.innerHTML=cxSvg(p.type,p.color);b.append(sp)}
+  if(sq===cxSel)b.classList.add("sel");
+  if(lm&&(sq===lm.slice(0,2)||sq===lm.slice(2,4)))b.classList.add("lm");
+  if(hints&&tg.has(sq))b.classList.add(p||/e/.test(tg.get(sq).flags)?"tc":"tg");
+  if(chk&&p&&p.type==="k"&&p.color===c.turn())b.classList.add("chk");
+  if(col2===0)b.dataset.r=String(8-r);
+  if(row===7)b.dataset.f="abcdefgh"[f];
+  b.setAttribute("aria-label",sq+(p?" "+(p.color==="w"?"hvit":"svart")+" "+CXN[p.type]:" tom"));
+  b.onclick=()=>cxClick(sq);
+  box.append(b);bySq[sq]=b;
+ }
+ cxAnimate(bySq,white,G);
+}
+function cxClick(sq){
+ const G=cxG;
+ if(!G||G.st!=="act"||cxBusy||cxTurn(G)!==cxMe())return;
+ const c=cxReplay(G.h);if(!c)return;
+ const mvs=cxSel?c.moves({square:cxSel,verbose:true}).filter(m=>m.to===sq):[];
+ if(mvs.length){
+  if(mvs.length>1){cxPromo={from:cxSel,to:sq};cxPanel();return}
+  cxDoMove(mvs[0].from+mvs[0].to);return;
+ }
+ const p=c.get(sq);
+ cxSel=(p&&p.color===c.turn()&&c.moves({square:sq}).length)?sq:null;
+ cxPromo=null;cxPanel();
+}
+async function cxDoMove(u){
+ if(mode==="solo"){soloMove(u);return}
+ const G=cxG;if(!G||G.st!=="act")return;
+ cxBusy=true;cxSel=null;cxPromo=null;cxPanel();
+ clearTimeout(cxBusyT);cxBusyT=setTimeout(()=>{cxBusy=false;cxPanel()},5000);
+ const ok=await sendCx("mv",{g:G.g,w:G.w,b:G.b,h:G.h.concat([u])});
+ if(!ok){cxBusy=false;cxPanel()}
+}
+$("cxb").onclick=()=>{cxOpen=!cxOpen;cxSel=null;cxPromo=null;cxRefresh()};
+$("cxcl").onclick=()=>{if(mode==="solo"){closeChat();return}cxOpen=false;cxRefresh()};
+
+const cxMe=()=>mode==="solo"?"me":(me&&me.fp);
+/* sjakk mot datamaskinen, med rating som lagres på enheten */
+const SOLO_LV=[{"r":200,"d":2,"ms":8000,"noise":200},{"r":450,"d":2,"ms":8000,"noise":100},{"r":650,"d":2,"ms":8000,"noise":60},{"r":800,"d":3,"ms":8000,"noise":120},{"r":1050,"d":3,"ms":8000,"noise":50},{"r":1300,"d":3,"ms":8000,"noise":20},{"r":1500,"d":4,"ms":8000,"noise":20},{"r":1600,"d":4,"ms":8000,"noise":0},{"r":1900,"d":5,"ms":5000,"noise":0},{"r":2050,"d":6,"ms":6000,"noise":0}];
+let soloOn=false,soloG=null,soloSetup=false,soloBusy=false,soloRq=0,soloW=null,soloWOk=null,soloPend=null;
+const soloOpt={opp:"auto",col:"r"};
+let soloD={r:null,n:0,w:0,d:0,l:0,game:null};
+try{const x=JSON.parse(localStorage.getItem("pling_solo")||"null");if(x&&typeof x==="object")soloD={...soloD,...x}}catch(e){}
+if(soloD.game&&!(Array.isArray(soloD.game.h)&&cxReplay(soloD.game.h)&&SOLO_LV[soloD.game.lv]))soloD.game=null;
+if(typeof soloD.r!=="number")soloD.r=null;
+function soloSave(){try{localStorage.setItem("pling_solo",JSON.stringify(soloD))}catch(e){}}
+function soloLabel(){
+ const el=$("solor");if(!el)return;
+ el.textContent=soloD.r==null?"Velg styrke og spill":"Rating "+soloD.r+" · "+soloD.n+(soloD.n===1?" parti":" partier")+(soloD.game&&soloD.game.st==="act"?" · pågår":"");
+}
+function soloLevelFor(r){let b=0,bd=1e9;SOLO_LV.forEach((l,i)=>{const d=Math.abs(l.r-r);if(d<bd){bd=d;b=i}});return b}
+function soloEnd(win,type){
+ const G=soloG;if(!G||G.st!=="act")return;
+ G.st="end";G.res={type,win};
+ const S=win==="me"?1:win==="cpu"?0:.5,Ro=SOLO_LV[G.lv].r,R=soloD.r==null?Ro:soloD.r;
+ const K=soloD.n<10?40:soloD.n<30?28:20,E=1/(1+Math.pow(10,(Ro-R)/400));
+ const R2=Math.max(100,Math.round(R+K*(S-E)));
+ G.rd={a:R,b:R2};soloD.r=R2;soloD.n++;
+ if(S===1)soloD.w++;else if(S===0)soloD.l++;else soloD.d++;
+ soloD.game=G;soloSave();soloLabel();
+}
+function soloResult(G){
+ const r=G.res;let t="";
+ if(r.type==="mate")t=r.win==="me"?"Sjakk matt! Du vant.":"Sjakk matt! Pling vant.";
+ else if(r.type==="resign")t="Du ga opp.";
+ else if(r.type==="stale")t="Patt. Det ble remis.";
+ else t="Remis.";
+ if(G.rd){const dl=G.rd.b-G.rd.a;t+=" Rating "+G.rd.a+" → "+G.rd.b+" ("+(dl>0?"+"+dl:dl<0?String(dl):"±0")+")."}
+ return t;
+}
+function soloPush(u){
+ const G=soloG;if(!G||G.st!=="act")return false;
+ const h=G.h.concat([u]),c=cxReplay(h);if(!c)return false;
+ G.h=h;cxSel=null;cxPromo=null;
+ const o=cxOver(c);
+ if(o)soloEnd(o==="mate"?(h.length%2===1?G.w:G.b):null,o);
+ else{soloD.game=G;soloSave()}
+ return true;
+}
+function soloMove(u){
+ const G=soloG;
+ if(!G||G.st!=="act"||soloBusy||cxTurn(G)!=="me")return;
+ if(soloPush(u)){soloPanel();if(G.st==="act")soloThink()}
+}
+function soloWorker(){
+ if(soloWOk===false)return null;
+ if(soloW)return soloW;
+ try{
+  const src=$("cxbot").textContent+"\nself.onmessage=function(e){var d=e.data,r=null,er=null;try{r=cxBest(d.h,d.lv)}catch(x){er=String(x)}postMessage({id:d.id,mv:r,er:er})};";
+  const w=new Worker(URL.createObjectURL(new Blob([src],{type:"text/javascript"})));
+  w.onmessage=e=>{const p=soloPend;if(!p||e.data.id!==p.id)return;clearTimeout(p.wd);soloPend=null;if(e.data.er)p.fb();else p.cb(e.data.mv)};
+  w.onerror=()=>{soloWOk=false;try{w.terminate()}catch(x){}if(soloW===w)soloW=null;const p=soloPend;soloPend=null;if(p){clearTimeout(p.wd);p.fb()}};
+  soloW=w;soloWOk=true;
+ }catch(e){soloWOk=false;soloW=null}
+ return soloW;
+}
+function soloCompute(id,h,lv,cb){
+ const fb=()=>setTimeout(()=>{let u=null;try{u=cxBest(h,lv)}catch(e){}cb(u)},80);
+ const w=soloWorker();
+ if(!w){fb();return}
+ const wd=setTimeout(()=>{
+  if(soloPend&&soloPend.id===id){soloPend=null;soloWOk=false;try{if(soloW)soloW.terminate()}catch(e){}soloW=null;fb()}
+ },lv.ms+6000);
+ soloPend={id,wd,fb,cb};
+ try{w.postMessage({id,h,lv})}catch(e){clearTimeout(wd);soloPend=null;soloWOk=false;fb()}
+}
+function soloThink(){
+ const G=soloG;
+ if(!G||G.st!=="act"||cxTurn(G)!=="cpu"||soloBusy)return;
+ soloBusy=true;
+ const id=++soloRq,h=G.h.slice(),t0=Date.now();
+ soloPanel();
+ soloCompute(id,h,SOLO_LV[G.lv],u=>{
+  setTimeout(()=>{
+   if(id!==soloRq||soloG!==G||G.st!=="act"||G.h.length!==h.length)return;
+   soloBusy=false;
+   if(!u){const c=cxReplay(h),ms=c?c.moves({verbose:true}):[];if(ms.length)u=ms[0].from+ms[0].to+(ms[0].promotion||"")}
+   if(u)soloPush(u);
+   soloPanel();
+  },Math.max(0,550-(Date.now()-t0)));
+ });
+}
+function soloStart(){
+ if(soloD.r==null)return;
+ const li=soloOpt.opp==="auto"?soloLevelFor(soloD.r):Math.min(SOLO_LV.length-1,Math.max(0,+soloOpt.opp||0));
+ const white=soloOpt.col==="r"?Math.random()<.5:soloOpt.col==="w";
+ soloG={g:Math.random().toString(36).slice(2,10),st:"act",w:white?"me":"cpu",b:white?"cpu":"me",h:[],res:null,draw:null,lv:li};
+ soloD.game=soloG;soloSave();soloSetup=false;cxSel=null;cxPromo=null;soloBusy=false;++soloRq;
+ soloLabel();soloPanel();soloThink();
+}
+function soloLeave(){
+ if(!soloOn)return;
+ soloOn=false;soloRq++;soloPend=null;soloBusy=false;soloG=null;soloSetup=false;
+ try{if(soloW)soloW.terminate()}catch(e){}soloW=null;
+ $("mb").hidden=false;$("pr").hidden=false;$("cxcl").textContent="‹ Til samtalen";
+}
+function openSolo(){
+ teardown();
+ mode="solo";chatId=null;key=null;chatFp=null;col=null;curLink=null;
+ $("shell").classList.add("inchat");
+ $("empty").hidden=true;$("ch").hidden=false;
+ ["log","typ","emo","bar","menu","cxbn"].forEach(i=>$(i).hidden=true);
+ $("mb").hidden=true;$("pr").hidden=true;$("cxb").hidden=true;$("lock").hidden=true;
+ $("title").textContent="Sjakk mot datamaskinen";
+ $("cxcl").textContent="‹ Tilbake";
+ soloOn=true;cxOpen=true;
+ soloG=soloD.game||null;soloSetup=!soloG;
+ frSig="";drawFriends();
+ soloPanel();soloThink();
+}
+function soloPromoRow(pr){
+ pr.hidden=false;
+ const l=document.createElement("span");l.className="fine";l.textContent="Forvandle til:";pr.append(l);
+ for(const p of["q","r","b","n"]){
+  const b=document.createElement("button");b.type="button";b.className="glass cxpb";b.innerHTML=cxSvg(p,cxG&&cxG.w===cxMe()?"w":"b");
+  b.setAttribute("aria-label",CXN[p]);b.onclick=()=>cxDoMove(cxPromo.from+cxPromo.to+p);pr.append(b);
+ }
+}
+function soloPanel(){
+ cxLayout();
+ if(mode!=="solo")return;
+ const s=$("cxs"),bt=$("cxbt"),pr=$("cxpr");
+ bt.textContent="";pr.textContent="";pr.hidden=true;
+ const lab=t=>{const e=document.createElement("span");e.className="fine cxlab";e.textContent=t;bt.append(e)};
+ const btn=(t,fn,cls)=>{const b=document.createElement("button");b.type="button";b.className="glass sm"+(cls?" "+cls:"");b.textContent=t;b.onclick=fn;bt.append(b);return b};
+ const G=soloG;cxG=G;cxFx(G);
+ if(soloSetup||!G){
+  cxDrawBoard(null);$("cxmv").textContent="";
+  if(soloD.r==null){
+   s.textContent="Hvor sterk er du?";
+   lab("Velg et utgangspunkt. Ratingen justeres etter hvert parti.");
+   const set=r=>()=>{soloD.r=r;soloSave();soloLabel();soloPanel()};
+   btn("Nybegynner · 600",set(600));btn("Øvet · 1000",set(1000));btn("Erfaren · 1400",set(1400));
+   return;
+  }
+  s.textContent="Nytt parti · din rating "+soloD.r;
+  lab("Motstander");
+  const mk=(t,v)=>btn(t,()=>{soloOpt.opp=v;soloPanel()},soloOpt.opp===v?"sel":"");
+  mk("Tilpasset (ca. "+SOLO_LV[soloLevelFor(soloD.r)].r+")","auto");
+  SOLO_LV.forEach((l,i)=>mk(String(l.r),String(i)));
+  lab("Farge");
+  [["Tilfeldig","r"],["Hvit","w"],["Svart","b"]].forEach(([t,v])=>btn(t,()=>{soloOpt.col=v;soloPanel()},soloOpt.col===v?"sel":""));
+  lab("");
+  btn("Start parti",soloStart,"hot");
+  return;
+ }
+ const c=cxReplay(G.h);
+ cxDrawBoard(c);
+ if(G.st==="act"){
+  const mine=cxTurn(G)==="me";
+  s.textContent=(mine?"Din tur":soloBusy?"Pling tenker …":"Pling sin tur")+(c&&c.in_check()?" – sjakk!":"")+" · Du spiller "+(G.w==="me"?"hvit":"svart")+" · Motstander ca. "+SOLO_LV[G.lv].r;
+  const rb=btn("Gi opp",()=>{
+   if(rb.dataset.a){soloEnd("cpu","resign");soloPanel();return}
+   rb.dataset.a="1";rb.textContent="Sikker? Trykk igjen";
+   setTimeout(()=>{rb.dataset.a="";rb.textContent="Gi opp"},3000);
+  });
+  if(cxPromo)soloPromoRow(pr);
+ }else{
+  s.textContent=soloResult(G);
+  btn("Nytt parti",()=>{soloSetup=true;soloPanel()},"hot");
+ }
+ $("cxmv").textContent=c?cxMoves(c):"";
+}
+$("solo").onclick=openSolo;
+soloLabel();
+
+/* sjakk: lyd og animasjon */
+let CXNB=null;
+function cxNoise(){
+ const c=ac();if(!c)return null;
+ if(!CXNB){const n=Math.floor(c.sampleRate*.25);CXNB=c.createBuffer(1,n,c.sampleRate);const d=CXNB.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1}
+ return CXNB;
+}
+function cxTok(at,vol,f,dur){
+ const c=ac(),nb=cxNoise();if(!c||!nb)return;
+ const t=c.currentTime+at,s=c.createBufferSource();s.buffer=nb;
+ const bp=c.createBiquadFilter();bp.type="bandpass";bp.frequency.value=f;bp.Q.value=1.4;
+ const g=c.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+ s.connect(bp);bp.connect(g);g.connect(c.destination);s.start(t);s.stop(t+dur+.02);
+ const o=c.createOscillator(),og=c.createGain();o.type="sine";
+ o.frequency.setValueAtTime(f/4,t);o.frequency.exponentialRampToValueAtTime(f/7,t+dur);
+ og.gain.setValueAtTime(vol*.9,t);og.gain.exponentialRampToValueAtTime(.0001,t+dur*1.2);
+ o.connect(og);og.connect(c.destination);o.start(t);o.stop(t+dur*1.3);
+}
+function cxSweep(at,f1,f2,dur,vol,type){
+ const c=ac();if(!c)return;
+ const t=c.currentTime+at,o=c.createOscillator(),g=c.createGain();
+ o.type=type||"sine";o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+dur);
+ g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+ o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.03);
+}
+function cxHit(at,vol,f0,dec,bright){
+ const c=ac(),nb=cxNoise();if(!c||!nb)return;
+ const t=c.currentTime+at,out=c.createGain();out.gain.value=vol*.5;out.connect(c.destination);
+ // klikk: kort, lys støy-transient når treet treffer
+ const s=c.createBufferSource();s.buffer=nb;s.playbackRate.value=.8+Math.random()*.4;
+ const hp=c.createBiquadFilter();hp.type="highpass";hp.frequency.value=250+bright*250;
+ const lp=c.createBiquadFilter();lp.type="lowpass";lp.frequency.value=600+bright*700;
+ const g=c.createGain();g.gain.setValueAtTime(.2*bright+.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+.014+.01*bright);
+ s.connect(hp);hp.connect(lp);lp.connect(g);g.connect(out);s.start(t);s.stop(t+.06);
+ // treets klang: dempede, uharmoniske svingninger (litt tilfeldig, slik at ingen to slag er helt like)
+ const j=1+(Math.random()-.5)*.05;
+ [[1,1,1],[1.9,.14,.45]].forEach(([m,v,d])=>{
+  const o=c.createOscillator(),og=c.createGain();o.type="sine";o.frequency.value=f0*m*j;
+  og.gain.setValueAtTime(.0001,t);og.gain.linearRampToValueAtTime(v,t+.004);og.gain.exponentialRampToValueAtTime(.0001,t+dec*d);
+  o.connect(og);og.connect(out);o.start(t);o.stop(t+dec*d+.03);
+ });
+ // brettets dunk
+ const th=c.createOscillator(),tg=c.createGain();th.type="sine";
+ th.frequency.setValueAtTime(105,t);th.frequency.exponentialRampToValueAtTime(58,t+.08);
+ tg.gain.setValueAtTime(.0001,t);tg.gain.linearRampToValueAtTime(.9,t+.004);tg.gain.exponentialRampToValueAtTime(.0001,t+.1);
+ th.connect(tg);tg.connect(out);th.start(t);th.stop(t+.12);
+}
+function cxRattle(at,vol){
+ const c=ac(),nb=cxNoise();if(!c||!nb)return;
+ const t=c.currentTime+at,s=c.createBufferSource();s.buffer=nb;
+ const bp=c.createBiquadFilter();bp.type="bandpass";bp.frequency.value=700;bp.Q.value=.6;
+ const g=c.createGain();g.gain.setValueAtTime(.0001,t);
+ for(let i=0;i<4;i++){const x=t+i*.028+Math.random()*.01;g.gain.setValueAtTime(vol*(1-i*.2),x);g.gain.exponentialRampToValueAtTime(.0001,x+.022)}
+ s.connect(bp);bp.connect(g);g.connect(c.destination);s.start(t);s.stop(t+.2);
+}
+function cxSfx(k){
+ try{
+  if(k==="move")cxHit(0,.7,190,.08,0);
+  else if(k==="cap"){cxHit(0,.9,235,.09,.3);cxRattle(.05,.025);cxHit(.12,.6,185,.08,0)}
+  else if(k==="lost"){cxHit(0,.8,210,.1,.15);cxRattle(.05,.03);cxHit(.13,.55,175,.08,0)}
+  else if(k==="check"){cxHit(.14,.55,330,.12,.1)}
+  else if(k==="win")[523.3,659.3,784,1046.5].forEach((f,i)=>tone(f,.25+i*.12,.5,.1));
+  else if(k==="lose")[392,349.2,311.1,261.6].forEach((f,i)=>tone(f,.25+i*.16,.55,.09));
+  else if(k==="draw"){tone(523.3,.25,.5,.08);tone(523.3,.5,.55,.08)}
+ }catch(e){}
+}
+const cxSnd={g:"",n:0,st:""};
+let cxAnimMv=null;
+function cxFxReset(){cxSnd.g="";cxAnimMv=null}
+function cxFx(G){
+ if(!G){cxFxReset();return}
+ const n=G.h.length;
+ if(cxSnd.g!==G.g){cxSnd.g=G.g;cxSnd.n=n;cxSnd.st=G.st;cxAnimMv=null;return}
+ if(n===cxSnd.n+1){
+  const c=cxReplay(G.h);
+  if(c){
+   const hv=c.history({verbose:true}),m=hv[hv.length-1],mine=(n%2===1?G.w:G.b)===cxMe(),r=m.color==="w"?"1":"8";
+   cxAnimMv={n,from:m.from,to:m.to,done:false,
+    cap:m.captured?{type:m.captured,sq:/e/.test(m.flags)?m.to[0]+m.from[1]:m.to,color:m.color==="w"?"b":"w"}:null,
+    rook:/k/.test(m.flags)?{from:"h"+r,to:"f"+r}:/q/.test(m.flags)?{from:"a"+r,to:"d"+r}:null};
+   cxSfx(m.captured?(mine?"cap":"lost"):"move");
+   if(c.in_check()&&!c.in_checkmate())cxSfx("check");
+  }
+ }else if(n!==cxSnd.n)cxAnimMv=null;
+ if(G.st==="end"&&cxSnd.st!=="end"&&G.res&&G.res.type!=="decl"&&G.res.type!=="cancel"){
+  const w=G.res.win;
+  cxSfx(!w?"draw":w===cxMe()?"win":"lose");
+ }
+ cxSnd.n=n;cxSnd.st=G.st;
+}
+function cxAnimate(bySq,white,G){
+ const a=cxAnimMv;
+ if(!a||a.done||a.n!==G.h.length)return;
+ a.done=true;
+ if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+ const pos=sq=>{const f="abcdefgh".indexOf(sq[0]),r=+sq[1]-1;return{c:white?f:7-f,r:white?7-r:r}};
+ const slide=(from,to)=>{
+  const b=bySq[to],sp=b&&b.querySelector(".pc:not(.ghost)");
+  if(!sp||!sp.animate)return;
+  const p1=pos(from),p2=pos(to);
+  b.classList.add("anim");
+  const an=sp.animate([{transform:"translate("+(p1.c-p2.c)*100+"%,"+(p1.r-p2.r)*100+"%) scale(1.08)"},{transform:"translate(0,0) scale(1)"}],{duration:260,easing:"cubic-bezier(.22,.8,.28,1)"});
+  an.onfinish=an.oncancel=()=>b.classList.remove("anim");
+ };
+ slide(a.from,a.to);
+ if(a.rook)slide(a.rook.from,a.rook.to);
+ if(a.cap){
+  const b=bySq[a.cap.sq];
+  if(b&&b.animate){
+   const g=document.createElement("span");
+   g.className="pc ghost "+(a.cap.color==="w"?"gw":"gb");g.innerHTML=cxSvg(a.cap.type,a.cap.color);
+   b.prepend(g);
+   g.animate([{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(.55)"}],{duration:260,easing:"ease-out"}).onfinish=()=>g.remove();
+  }
+ }
+}
+
+/* oppstart */
+(async()=>{
+ try{
+  const [d,r,u]=await Promise.all([window.claude.use("db"),window.claude.use("room"),window.claude.use("user")]);
+  db=d;room=r;
+  if(u){const m=await u.me();if(!$("nm").value&&m.name){$("nm").value=m.name;paintAv()}}
+ }catch(e){}
+ if(!db)$("msg").textContent="Logg inn på claude.ai for å bruke Pling.";
+ try{await initIdentity()}catch(e){$("msg").textContent="Kunne ikke lage nøkler i denne nettleseren."}
+ if(!me)return;
+ await loadFriends();
+ updateLink();
+ if(db){
+  await pubPeople();
+  listenDir();
+  listenInbox();
+  for(const f of friends.values())if(f.state==="ok")subProf(f);
+ }
+ if(room){room.onPeers(c=>{peers=c.peers;drawFriends();drawPresent()});peers=room.peers()}
+ presence();drawFriends();drawReqs();
+ if(inv&&inv.type==="friend"&&(inv.fp===me.fp||(friends.get(inv.fp)&&friends.get(inv.fp).state!=="out"&&friends.get(inv.fp).state==="ok")))$("inv").hidden=true;
+})();
+</script>

@@ -12,6 +12,9 @@ Status: version 0.x, test phase. Not for general use yet.
 | Path | What |
 | --- | --- |
 | `index.html` | The whole app as one generated file (HTML, CSS and JS inlined). Served by GitHub Pages. |
+| `app/` | Sources and the build script that generates `index.html` (`npm run build`). |
+| `tests/` | Browser tests with a fake Supabase client (`npm test`). |
+| `.github/workflows/ci.yml` | Builds, checks that `index.html` is up to date, and runs the tests on every push. |
 | `lib/` | Third-party code that is inlined into the build (QR code generator, with its license). |
 | `supabase/` | Backend as code: schema migration and edge functions. See `supabase/README.md`. |
 | `ARCHITECTURE.md` | How the pieces fit together and how the encryption works. |
@@ -21,6 +24,14 @@ Status: version 0.x, test phase. Not for general use yet.
 
 Open `index.html` in a browser, or serve the folder with any static server. It talks to the Supabase
 project configured inside the file (URL and the public anon key; the anon key is meant to be public).
+
+## Developing
+
+```
+npm install && npx playwright install chromium
+npm run build   # regenerate index.html from app/
+npm test        # run the browser tests
+```
 
 ## Security model in one paragraph
 

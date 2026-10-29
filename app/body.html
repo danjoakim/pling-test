@@ -1,0 +1,70 @@
+<div class="win" id="app">
+ <div class="tb"><span id="tbi"></span><span class="tbn" data-prk="tbl"></span><span class="lock" id="lock" hidden title="Meldingene krypteres i nettleseren med AES-256-GCM">Kryptert</span></div>
+ <div class="scr" id="scr"><div class="sc"></div></div>
+ <div class="shell" id="shell" hidden>
+  <section class="home" id="home">
+   <div class="mewrap">
+   <button class="me" id="meb" type="button" aria-expanded="false" title="Min profil">
+    <span class="av on" id="avwrap"><img id="avimg" alt="Ditt bilde" hidden><span id="avini">?</span></span>
+    <span class="t"><b id="men">…</b><small id="mep">Pålogget</small><small id="mewarn" class="warn" hidden>Lag gjenopprettingskode</small></span>
+    <span id="mef"></span>
+   </button>
+   <input id="pm" class="mepi" placeholder="&lt;Skriv en personlig melding&gt;" maxlength="60" autocomplete="off" aria-label="Personlig melding">
+   </div>
+   <div class="prof" id="prof" hidden>
+    <input id="pnm" placeholder="Visningsnavn" maxlength="24" aria-label="Visningsnavn">
+    <select id="st" aria-label="Status"><option value="online">Pålogget</option><option value="away">Borte</option><option value="busy">Opptatt</option><option value="off">Vis meg som frakoblet</option></select>
+    <select id="thm" aria-label="Utseende"><option value="auto">Utseende: automatisk</option><option value="lys">Utseende: lys (dag)</option><option value="natt">Utseende: mørk (kveld)</option></select>
+    <select id="lpv" aria-label="Forhåndsvisning av lenker" title="Når du sender en lenke, henter en tjeneste hos oss tittel og bilde. Mottakeren kontakter aldri nettstedet."><option value="on">Forhåndsvisning av lenker: på</option><option value="off">Forhåndsvisning av lenker: av</option></select>
+    <label class="lbl" title="Bildet vises bare for kompisene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
+    <div class="grp">Sikkerhet</div>
+    <div id="seccard" class="seccard"></div>
+    <div class="grp" id="bgrp" hidden>Blokkerte</div>
+    <div id="blist"></div>
+    <button class="glass sm" id="infob" type="button">Personvern og hjelp</button>
+    <button class="glass sm" id="outb" type="button">Logg ut</button>
+   </div>
+   <div class="fine err msg" id="msg" role="status"></div>
+   <div class="hs">
+    <div id="pairbox"></div>
+    <div id="reqs" hidden></div>
+    <div class="homebar"><span class="grp">Kompiser</span><button class="glass" id="addf" type="button" aria-expanded="false">+ Legg til kompis</button></div>
+    <div class="add" id="addfp" hidden>
+     <div class="fine">Skriv e-posten til en kompis som har laget konto i Prek!. Personen får en forespørsel som kan godtas eller avslås.</div>
+     <div class="row"><input id="fe" type="email" placeholder="Kompis' e-post" autocomplete="off" aria-label="Kompis' e-postadresse"><button class="glass sm" id="fadd" type="button">Legg til</button></div>
+     <div class="fine err" id="ferr" role="status"></div>
+     <div class="invbox" id="invbox"></div>
+    </div>
+    <div class="list" id="friends"></div>
+   </div>
+  </section>
+
+  <section class="chatpane" id="chatpane">
+   <div class="empty" id="empty"><div class="amb" id="amb" aria-hidden="true"></div><div class="in"><h1 data-prk="xl"></h1><div class="fine" id="emptyh">Dobbeltklikk på en kompis for å preke.</div></div></div>
+   <div class="ch" id="ch" hidden>
+    <button class="glass back" id="back" type="button" aria-label="Lukk samtalen">‹</button>
+    <div class="ti" id="title"></div>
+    <div class="pr" id="pr" title="Hvem som er her"></div>
+    <button class="glass" id="mb" type="button" aria-expanded="false" aria-label="Innstillinger for samtalen">⋯</button>
+   </div>
+   <div class="menu" id="menu" hidden>
+    <div><div class="grp">Her nå</div><div class="who" id="who"></div></div>
+    <div><div class="grp">Sikkerhetsnummer</div><div class="sn" id="sn"></div><div class="fine">Sammenlign nummeret med kompisen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.</div></div>
+    <div><div class="fine" style="margin-bottom:4px">Utløp for nye meldinger i samtalen (gjelder begge)</div>
+     <select id="ex" aria-label="Utløp for nye meldinger i samtalen (gjelder begge)"><option value="0">Utløper ikke</option><option value="1">Etter 1 dag</option><option value="7">Etter 7 dager</option><option value="30">Etter 30 dager</option></select></div>
+    <div class="row"><button class="glass" id="bd" type="button">Last ned</button><button class="glass" id="bx" type="button">Slett mine meldinger</button><button class="glass" id="bfr" type="button">Fjern kompis</button><button class="glass" id="bmu" type="button">Demp</button><button class="glass" id="bbl" type="button">Blokker</button></div>
+    <div class="fine" id="fp"></div>
+   </div>
+   <div class="expn" id="expn" hidden></div>
+   <div id="log" hidden></div>
+   <div class="typing" id="typ" hidden></div>
+   <div class="epv" id="epv" hidden aria-hidden="true"></div>
+   <div class="emo" id="emo" hidden></div>
+   <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="Vis emoji">☺</button><button class="glass eb" id="ab" type="button" aria-label="Send et bilde" title="Send et bilde">📎</button><button class="glass eb" id="cb" type="button" aria-label="Ta bilde med kameraet" title="Ta bilde med kameraet">📷</button><input class="vh" id="af" type="file" accept="image/*" tabindex="-1"><input class="vh" id="cf" type="file" accept="image/*" capture="environment" tabindex="-1"><input id="tx" placeholder="Skriv en melding …" maxlength="1000" autocomplete="off" aria-label="Melding"><button id="sd" type="button">Send</button><button id="dp" class="hot" type="button" title="Spiller to plinger og vibrerer hos mottakeren">Dobbeltpling</button></div>
+  </section>
+ </div>
+</div>
+<div class="lb" id="lb" hidden></div>
+<div class="cam" id="cam" hidden></div>
+<div class="info" id="info" hidden></div>
+<div id="toast" role="status"></div>
