@@ -58,7 +58,7 @@ Schema, functions and policies are in `supabase/migrations/`. Principles:
 The app is one generated page. Texts come from the language file `src/i18n/nb-NO.ts` through `tr("key")` (migration in progress: see
 `TYPESCRIPT-PLAN.md`). The cryptography is TypeScript in `src/crypto.ts` (pure functions, no
 app state), bundled by esbuild and inlined; `app/crypto-glue.js` connects it to browser storage, app state
-and Supabase. The rest is still plain JavaScript: `app/main.js`, `app/body.html`, `app/extra.css` and `app/anim.js` are the
+and Supabase. The rest is still plain JavaScript: `app/main.js`, `app/views.js` (sign-in and key screens), `app/body.html` (static page; texts as `{{key}}`), `app/extra.css` and `app/anim.js` are the
 sources; `app/build.py` inlines them into `index.html`. The builder still patches two legacy base files in
 `app/base/` (`messenger.html`, `old-index.html`); replacing that with plain source files is part of the
 TypeScript transition. Always run `npm run build` and commit the regenerated `index.html`; CI fails if it

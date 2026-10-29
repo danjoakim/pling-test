@@ -898,7 +898,133 @@ var PrekI18n = (() => {
     "cam.retake": "Ta p\xE5 nytt",
     // leftovers (round 3)
     "invite.invitedBy": " har invitert deg til Prek!. Lag en konto eller logg p\xE5, s\xE5 blir dere kompiser.",
-    "img.missing": "(bildet finnes ikke lenger eller kan ikke \xE5pnes)"
+    "img.missing": "(bildet finnes ikke lenger eller kan ikke \xE5pnes)",
+    // sign-in and key screens: auth (round 4)
+    "auth.emailPlaceholder": "E-post",
+    "auth.passwordPlaceholder": "Passord (minst 10 tegn)",
+    "auth.codePlaceholder": "Kode fra e-posten",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.signUp": "Ny konto",
+    // sign-in and key screens: auth (round 4)
+    "auth.accountCreated": "Konto laget. Sjekk e-posten din for bekreftelse, og logg inn etterp\xE5.",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.signIn": "Innlogging",
+    "ctx.sendCode": "Send kode",
+    // sign-in and key screens: auth (round 4)
+    "auth.emailSent": "E-post sendt. Skriv inn koden (eller trykk p\xE5 lenken i e-posten).",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.verifyCode": "Bekreft kode",
+    // sign-in and key screens: auth (round 4)
+    "auth.statusLabel": "Logg p\xE5 som",
+    "auth.showOffline": "Vis meg som frakoblet",
+    "auth.signupTagline": "Lag en konto. Samtalene dine blir kryptert i nettleseren.",
+    "auth.tagline": "n\xE5 prek\xE6r vi!",
+    "auth.emailLabel": "E-postadresse:",
+    "auth.passwordLabel": "Passord:",
+    "auth.statusColon": "Status:",
+    "auth.remember": " Husk e-postadressen min",
+    "auth.verify": "Bekreft",
+    "auth.createAccount": "Lag konto",
+    "auth.login": "Logg p\xE5",
+    "auth.sendOtp": "Send engangskode i stedet",
+    "auth.haveAccount": "Jeg har en konto",
+    "auth.newAccount": "Ny konto",
+    "auth.e2eNote": "Ende-til-ende-kryptert \xB7 ",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.fetchProfile": "Hente profil",
+    // sign-in and key screens: setup (round 4)
+    "setup.displayName": "Visningsnavn",
+    "setup.enterName": "Skriv et navn",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.createProfile": "Lage profil",
+    // sign-in and key screens: setup (round 4)
+    "setup.welcome": "Velkommen",
+    "setup.explain": "Velg navnet kompisene dine skal se. N\xF8kkelen som krypterer samtalene lages n\xE5, og blir liggende i denne nettleseren.",
+    "setup.continue": "Fortsett",
+    // sign-in and key screens: nokey (round 4)
+    "nokey.title": "N\xF8kkelen finnes ikke her",
+    "nokey.explain": "Du har en konto, men denne nettleseren har ikke krypteringsn\xF8kkelen din. Hent den tilbake p\xE5 en av disse m\xE5tene:",
+    "nokey.option1": "1. Be en annen enhet om n\xF8kkelen",
+    "nokey.option1Hint": "Krever at du er innlogget p\xE5 en annen enhet som har n\xF8kkelen, for eksempel telefonen eller laptopen din.",
+    "nokey.ask": "Be om n\xF8kkelen",
+    "nokey.option2": "2. Gjenopprettingskode",
+    "nokey.option2Hint": "Koden du fikk da du lagde kontoen.",
+    "nokey.restored": "N\xF8kkelen er tilbake",
+    "nokey.restore": "Gjenopprett",
+    // sign-in and key screens: common (round 4)
+    "common.logout": "Logg ut",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.askKey": "Be om n\xF8kkel",
+    // sign-in and key screens: pairing (round 4)
+    "pairing.title": "Venter p\xE5 godkjenning",
+    "pairing.explain": "\xC5pne Prek! p\xE5 en enhet der du allerede er innlogget. Der kommer det opp en foresp\xF8rsel du kan godkjenne. Sjekk at koden er den samme:",
+    "pairing.scan": "Eller skann denne med kameraet p\xE5 telefonen din (den \xE5pner Prek!):",
+    "pairing.rejected": "Foresp\xF8rselen ble avvist eller utl\xF8p",
+    "pairing.cannotOpen": "Kunne ikke \xE5pne n\xF8kkelen",
+    // sign-in and key screens: recovery (round 4)
+    "recovery.retype": "Skriv koden p\xE5 nytt for \xE5 bekrefte",
+    "recovery.mismatch": "Koden stemmer ikke. Sjekk at du har skrevet den av riktig.",
+    "recovery.activated": "Gjenopprettingskoden er aktivert",
+    "recovery.lastStep": "Siste steg: gjenopprettingskode",
+    "recovery.newCode": "Ny gjenopprettingskode",
+    "recovery.explain": "Denne koden er den eneste m\xE5ten \xE5 f\xE5 tilbake samtalene dine p\xE5 hvis du mister alle enhetene dine. Ikke engang vi kan hjelpe deg uten den.",
+    "recovery.copied": "Kopiert",
+    "recovery.copyFailed": "Kunne ikke kopiere. Marker koden og kopier selv.",
+    "recovery.fileContent": "Prek! gjenopprettingskode\n\n{code}\n\nOppbevar denne trygt. Alle med koden og passordet ditt kan \xE5pne samtalene dine.\n",
+    "recovery.saveAdvice": "Lagre den i passordbehandleren din eller skriv den ned og oppbevar den trygt.",
+    "recovery.saved": "Jeg har lagret den",
+    "recovery.skip": "Hopp over",
+    // static page text (round 4); substituted into body.html at build time as {{key}}
+    "html.lock.title": "Meldingene krypteres i nettleseren med AES-256-GCM",
+    "html.lock.text": "Kryptert",
+    "html.meb.title": "Min profil",
+    "html.avimg.alt": "Ditt bilde",
+    "html.mewarn.text": "Lag gjenopprettingskode",
+    "html.pm.placeholder": "<Skriv en personlig melding>",
+    "html.pm.aria": "Personlig melding",
+    "html.pnm.placeholder": "Visningsnavn",
+    "html.pnm.aria": "Visningsnavn",
+    "html.st.aria": "Status",
+    "html.st.optoff": "Vis meg som frakoblet",
+    "html.thm.aria": "Utseende",
+    "html.thm.optauto": "Utseende: automatisk",
+    "html.thm.optlys": "Utseende: lys (dag)",
+    "html.thm.optnatt": "Utseende: m\xF8rk (kveld)",
+    "html.lpv.aria": "Forh\xE5ndsvisning av lenker",
+    "html.lpv.title": "N\xE5r du sender en lenke, henter en tjeneste hos oss tittel og bilde. Mottakeren kontakter aldri nettstedet.",
+    "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
+    "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
+    "html.addf.text": "+ Legg til kompis",
+    "html.fe.placeholder": "Kompis' e-post",
+    "html.fe.aria": "Kompis' e-postadresse",
+    "html.fadd.text": "Legg til",
+    "html.emptyh.text": "Dobbeltklikk p\xE5 en kompis for \xE5 preke.",
+    "html.back.aria": "Lukk samtalen",
+    "html.pr.title": "Hvem som er her",
+    "html.mb.aria": "Innstillinger for samtalen",
+    "html.ex.aria": "Utl\xF8p for nye meldinger i samtalen (gjelder begge)",
+    "html.ex.opt0": "Utl\xF8per ikke",
+    "html.ex.opt1": "Etter 1 dag",
+    "html.ex.opt7": "Etter 7 dager",
+    "html.ex.opt30": "Etter 30 dager",
+    "html.eb.aria": "Vis emoji",
+    "html.ab.aria": "Send et bilde",
+    "html.ab.title": "Send et bilde",
+    "html.cb.aria": "Ta bilde med kameraet",
+    "html.cb.title": "Ta bilde med kameraet",
+    "html.tx.placeholder": "Skriv en melding \u2026",
+    "html.tx.aria": "Melding",
+    "html.dp.title": "Spiller to plinger og vibrerer hos mottakeren",
+    "html.profile.security": "Sikkerhet",
+    "html.home.friendsHeading": "Kompiser",
+    "html.add.explain": "Skriv e-posten til en kompis som har laget konto i Prek!. Personen f\xE5r en foresp\xF8rsel som kan godtas eller avsl\xE5s.",
+    "html.menu.hereNow": "Her n\xE5",
+    "html.menu.safetyNumber": "Sikkerhetsnummer",
+    "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
+    "html.menu.expiryLabel": "Utl\xF8p for nye meldinger i samtalen (gjelder begge)",
+    "html.profile.blocked": "Blokkerte",
+    "html.profile.changePhoto": "Bytt bilde",
+    "html.profile.photoHint": "Bildet vises bare for kompisene dine"
   };
 
   // src/i18n/index.ts
@@ -1101,26 +1227,26 @@ function showShell(){$("#scr").hidden=true;$("#shell").hidden=false;$("#lock").h
 /* ---------- innlogging ---------- */
 function viewLogin(){
   const app=scrHost();
-  const email=el("input",{type:"email",placeholder:"E-post",autocomplete:"email",id:"em"});
-  const pw=el("input",{type:"password",placeholder:"Passord (minst 10 tegn)",autocomplete:S.mode==="up"?"new-password":"current-password",id:"pw"});
-  const code=el("input",{type:"text",placeholder:"Kode fra e-posten",inputmode:"numeric",id:"cd",autocomplete:"one-time-code"});
+  const email=el("input",{type:"email",placeholder:tr("auth.emailPlaceholder"),autocomplete:"email",id:"em"});
+  const pw=el("input",{type:"password",placeholder:tr("auth.passwordPlaceholder"),autocomplete:S.mode==="up"?"new-password":"current-password",id:"pw"});
+  const code=el("input",{type:"text",placeholder:tr("auth.codePlaceholder"),inputmode:"numeric",id:"cd",autocomplete:"one-time-code"});
   const go=async()=>{
     try{
       if(S.mode==="up"){
-        const d=await q(sb.auth.signUp({email:email.value.trim(),password:pw.value}),"Ny konto");
-        if(!d.session)toast("Konto laget. Sjekk e-posten din for bekreftelse, og logg inn etterpå.");
+        const d=await q(sb.auth.signUp({email:email.value.trim(),password:pw.value}),tr("ctx.signUp"));
+        if(!d.session)toast(tr("auth.accountCreated"));
       }else{
-        await q(sb.auth.signInWithPassword({email:email.value.trim(),password:pw.value}),"Innlogging");
+        await q(sb.auth.signInWithPassword({email:email.value.trim(),password:pw.value}),tr("ctx.signIn"));
       }
     }catch(e){fail(e)}
   };
-  const sendCode=async()=>{try{await q(sb.auth.signInWithOtp({email:email.value.trim(),options:{emailRedirectTo:location.origin+location.pathname}}),"Send kode");S.needCode=true;toast("E-post sendt. Skriv inn koden (eller trykk på lenken i e-posten).");viewLogin()}catch(e){fail(e)}};
-  const verify=async()=>{try{await q(sb.auth.verifyOtp({email:email.value.trim(),token:code.value.trim(),type:"email"}),"Bekreft kode")}catch(e){fail(e)}};
+  const sendCode=async()=>{try{await q(sb.auth.signInWithOtp({email:email.value.trim(),options:{emailRedirectTo:location.origin+location.pathname}}),tr("ctx.sendCode"));S.needCode=true;toast(tr("auth.emailSent"));viewLogin()}catch(e){fail(e)}};
+  const verify=async()=>{try{await q(sb.auth.verifyOtp({email:email.value.trim(),token:code.value.trim(),type:"email"}),tr("ctx.verifyCode"))}catch(e){fail(e)}};
   app.classList.add("lgn");
   let remMail="";try{remMail=localStorage.getItem("pling_remember_email")||""}catch(e){}
   if(remMail&&!email.value)email.value=remMail;
   const rem=el("input",{type:"checkbox",id:"rem"});rem.checked=!!remMail;
-  const lst=el("select",{id:"lst","aria-label":"Logg på som"},el("option",{value:"online"},"Pålogget"),el("option",{value:"busy"},"Opptatt"),el("option",{value:"away"},"Borte"),el("option",{value:"off"},"Vis meg som frakoblet"));
+  const lst=el("select",{id:"lst","aria-label":tr("auth.statusLabel")},el("option",{value:"online"},tr("status.on")),el("option",{value:"busy"},tr("status.busy")),el("option",{value:"away"},tr("status.away")),el("option",{value:"off"},tr("auth.showOffline")));
   const go0=go;
   const goW=async()=>{try{localStorage.setItem("pling_st_next",lst.value);if(rem.checked)localStorage.setItem("pling_remember_email",email.value.trim());else{localStorage.removeItem("pling_remember_email");localStorage.removeItem("pling_last_av")}}catch(e){}await go0()};
   const fr=el("div",{class:"lpic"});let lastAv=null;try{lastAv=remMail?localStorage.getItem("pling_last_av"):null}catch(e){}if(lastAv&&okAv(lastAv)){fr.classList.add("hasav");fr.append(el("img",{src:lastAv,alt:""}))}else fr.append(ico("lgi"));
@@ -1129,17 +1255,17 @@ function viewLogin(){
     fr,
     el("div",{class:"lh"},prk("lgn")),
     el("div",{class:"invb",id:"invb",hidden:true}),
-    el("div",{class:"dim lc"},S.mode==="up"?"Lag en konto. Samtalene dine blir kryptert i nettleseren.":"nå prekær vi!"),
-    el("label",{for:"em",class:"ll"},"E-postadresse:"),email,
-    el("label",{for:"pw",class:"ll"},"Passord:"),pw,
-    el("div",{class:"lrow"},el("label",{for:"lst",class:"ll"},"Status:"),lst),
-    el("label",{class:"lchk"},rem," Husk e-postadressen min"),
-    ...(S.needCode?[el("div",{class:"row"},code,el("button",{id:"vf",onclick:verify},"Bekreft"))]:[]),
-    el("button",{id:"go",class:"lgo",onclick:goW},S.mode==="up"?"Lag konto":"Logg på"),
+    el("div",{class:"dim lc"},S.mode==="up"?tr("auth.signupTagline"):tr("auth.tagline")),
+    el("label",{for:"em",class:"ll"},tr("auth.emailLabel")),email,
+    el("label",{for:"pw",class:"ll"},tr("auth.passwordLabel")),pw,
+    el("div",{class:"lrow"},el("label",{for:"lst",class:"ll"},tr("auth.statusColon")),lst),
+    el("label",{class:"lchk"},rem,tr("auth.remember")),
+    ...(S.needCode?[el("div",{class:"row"},code,el("button",{id:"vf",onclick:verify},tr("auth.verify")))]:[]),
+    el("button",{id:"go",class:"lgo",onclick:goW},S.mode==="up"?tr("auth.createAccount"):tr("auth.login")),
     el("div",{class:"llinks"},
-      el("button",{class:"llink",id:"otp",type:"button",onclick:sendCode},"Send engangskode i stedet"),
-      el("button",{class:"llink",type:"button",onclick:()=>{S.mode=S.mode==="up"?"in":"up";viewLogin()}},S.mode==="up"?"Jeg har en konto":"Ny konto")),
-    el("div",{class:"fine lc"},"Ende-til-ende-kryptert · ",el("button",{class:"llink",type:"button",onclick:showInfo},"Personvern og hjelp")),
+      el("button",{class:"llink",id:"otp",type:"button",onclick:sendCode},tr("auth.sendOtp")),
+      el("button",{class:"llink",type:"button",onclick:()=>{S.mode=S.mode==="up"?"in":"up";viewLogin()}},S.mode==="up"?tr("auth.haveAccount"):tr("auth.newAccount"))),
+    el("div",{class:"fine lc"},tr("auth.e2eNote"),el("button",{class:"llink",type:"button",onclick:showInfo},tr("info.title"))),
     wm);
   pw.addEventListener("keydown",e=>{if(e.key==="Enter")goW()});
   showInviteBanner();
@@ -1148,7 +1274,7 @@ function viewLogin(){
 /* ---------- oppsett av profil ---------- */
 async function afterLogin(user){
   S.user=user;
-  const rows=await q(sb.from("profiles").select("*").eq("id",user.id),"Hente profil");
+  const rows=await q(sb.from("profiles").select("*").eq("id",user.id),tr("ctx.fetchProfile"));
   S.profile=rows[0]||null;S.id=loadIdentity(user.id);
   if(S.profile&&!S.id){viewNoKey();return}
   if(!S.profile){viewSetup();return}
@@ -1158,30 +1284,30 @@ async function afterLogin(user){
 }
 function viewSetup(){
   const app=scrHost();
-  const name=el("input",{type:"text",placeholder:"Visningsnavn",maxlength:"40",id:"nm"});
+  const name=el("input",{type:"text",placeholder:tr("setup.displayName"),maxlength:"40",id:"nm"});
   const go=async()=>{
-    const n=name.value.trim();if(!n)return toast("Skriv et navn",true);
+    const n=name.value.trim();if(!n)return toast(tr("setup.enterName"),true);
     try{
       const id=S.id||await makeIdentity(S.user.id);S.id=id;
       const fp=await fpOf(id.pub);
-      await q(sb.from("profiles").insert({id:S.user.id,fp,name:n,pub:id.pub}),"Lage profil");
+      await q(sb.from("profiles").insert({id:S.user.id,fp,name:n,pub:id.pub}),tr("ctx.createProfile"));
       S.profile={id:S.user.id,fp,name:n,pub:id.pub};showRecovery(true);
     }catch(e){fail(e)}
   };
-  app.append(el("h1",{},"Velkommen"),el("div",{class:"card"},
-    el("p",{},"Velg navnet kompisene dine skal se. Nøkkelen som krypterer samtalene lages nå, og blir liggende i denne nettleseren."),
-    el("p",{},name),el("button",{id:"mk",onclick:go},"Fortsett")));
+  app.append(el("h1",{},tr("setup.welcome")),el("div",{class:"card"},
+    el("p",{},tr("setup.explain")),
+    el("p",{},name),el("button",{id:"mk",onclick:go},tr("setup.continue"))));
 }
 function viewNoKey(){
   const app=scrHost();
   const code=el("input",{type:"text",placeholder:"XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",id:"rc",autocapitalize:"characters",autocomplete:"off"});
-  app.append(el("h1",{},"Nøkkelen finnes ikke her"),
-    el("div",{class:"card"},el("p",{},"Du har en konto, men denne nettleseren har ikke krypteringsnøkkelen din. Hent den tilbake på en av disse måtene:")),
-    el("div",{class:"card"},el("strong",{},"1. Be en annen enhet om nøkkelen"),el("p",{class:"dim"},"Krever at du er innlogget på en annen enhet som har nøkkelen, for eksempel telefonen eller laptopen din."),
-      el("button",{id:"pair",onclick:startPairing},"Be om nøkkelen")),
-    el("div",{class:"card"},el("strong",{},"2. Gjenopprettingskode"),el("p",{class:"dim"},"Koden du fikk da du lagde kontoen."),
-      el("div",{class:"row"},code,el("button",{id:"rcgo",onclick:async()=>{try{await adoptIdentity(await restoreFromCode(code.value));toast("Nøkkelen er tilbake");await start()}catch(e){fail(e)}}},"Gjenopprett"))),
-    el("button",{class:"glass",onclick:doLogout},"Logg ut"));
+  app.append(el("h1",{},tr("nokey.title")),
+    el("div",{class:"card"},el("p",{},tr("nokey.explain"))),
+    el("div",{class:"card"},el("strong",{},tr("nokey.option1")),el("p",{class:"dim"},tr("nokey.option1Hint")),
+      el("button",{id:"pair",onclick:startPairing},tr("nokey.ask"))),
+    el("div",{class:"card"},el("strong",{},tr("nokey.option2")),el("p",{class:"dim"},tr("nokey.option2Hint")),
+      el("div",{class:"row"},code,el("button",{id:"rcgo",onclick:async()=>{try{await adoptIdentity(await restoreFromCode(code.value));toast(tr("nokey.restored"));await start()}catch(e){fail(e)}}},tr("nokey.restore")))),
+    el("button",{class:"glass",onclick:doLogout},tr("common.logout")));
 }
 async function startPairing(){
   const app=scrHost();
@@ -1189,28 +1315,28 @@ async function startPairing(){
   const cancel=async()=>{stop=true;if(id)try{await sb.from("key_transfers").delete().eq("id",id)}catch(e){}viewNoKey()};
   try{
     const e=await ephPair();id=crypto.randomUUID();
-    await q(sb.from("key_transfers").insert({id,user_id:S.user.id,eph_pub:e.pub}),"Be om nøkkel");
+    await q(sb.from("key_transfers").insert({id,user_id:S.user.id,eph_pub:e.pub}),tr("ctx.askKey"));
     const code=await pairCode(e.pub),url=location.origin+location.pathname+"#godkjenn";
     const box=el("div",{class:"qr",id:"qrbox"});box.innerHTML=qrSvg(url);
-    app.append(el("h1",{},"Venter på godkjenning"),
+    app.append(el("h1",{},tr("pairing.title")),
       el("div",{class:"card"},
-        el("p",{},"Åpne Pling på en enhet der du allerede er innlogget. Der kommer det opp en forespørsel du kan godkjenne. Sjekk at koden er den samme:"),
+        el("p",{},tr("pairing.explain")),
         el("div",{class:"code",id:"pcode"},code),
-        el("p",{class:"dim"},"Eller skann denne med kameraet på telefonen din (den åpner Pling):"),box,
-        el("p",{},el("button",{class:"glass",id:"pcancel",onclick:cancel},"Avbryt"))));
+        el("p",{class:"dim"},tr("pairing.scan")),box,
+        el("p",{},el("button",{class:"glass",id:"pcancel",onclick:cancel},tr("cam.cancel")))));
     const t0=Date.now();
     const poll=async()=>{
       if(stop)return;
       try{
         const rows=await q(sb.from("key_transfers").select("*").eq("id",id)),r=rows[0];
-        if(!r){stop=true;toast("Forespørselen ble avvist eller utløp",true);viewNoKey();return}
+        if(!r){stop=true;toast(tr("pairing.rejected"),true);viewNoKey();return}
         if(r.status==="approved"){
           stop=true;
           const key=await aesFrom(e.priv,r.sender_pub),o=await open(key,r.iv,r.ct);
-          if(!o)throw new Error("Kunne ikke åpne nøkkelen");
+          if(!o)throw new Error(tr("pairing.cannotOpen"));
           await adoptIdentity({priv:o.priv,pub:o.pub});
           await sb.from("key_transfers").delete().eq("id",id);
-          toast("Nøkkelen er tilbake");await start();return;
+          toast(tr("nokey.restored"));await start();return;
         }
         if(Date.now()-t0>10*60*1000){stop=true;await cancel();return}
       }catch(err){stop=true;fail(err);viewNoKey();return}
@@ -1223,21 +1349,21 @@ async function startPairing(){
 function showRecovery(first){
   const app=scrHost();
   const code=newCode();
-  const typed=el("input",{type:"text",placeholder:"Skriv koden på nytt for å bekrefte",id:"rcv",autocapitalize:"characters",autocomplete:"off"});
+  const typed=el("input",{type:"text",placeholder:tr("recovery.retype"),id:"rcv",autocapitalize:"characters",autocomplete:"off"});
   const go=async()=>{
-    if(normCode(typed.value)!==normCode(code))return toast("Koden stemmer ikke. Sjekk at du har skrevet den av riktig.",true);
-    try{await saveBackup(code);toast("Gjenopprettingskoden er aktivert");await start()}catch(e){fail(e)}
+    if(normCode(typed.value)!==normCode(code))return toast(tr("recovery.mismatch"),true);
+    try{await saveBackup(code);toast(tr("recovery.activated"));await start()}catch(e){fail(e)}
   };
-  app.append(el("h1",{},first?"Siste steg: gjenopprettingskode":"Ny gjenopprettingskode"),
+  app.append(el("h1",{},first?tr("recovery.lastStep"):tr("recovery.newCode")),
     el("div",{class:"card"},
-      el("p",{},"Denne koden er den eneste måten å få tilbake samtalene dine på hvis du mister alle enhetene dine. Ikke engang vi kan hjelpe deg uten den."),
+      el("p",{},tr("recovery.explain")),
       el("div",{class:"code",id:"rccode"},code),
       el("div",{class:"row",style:"margin-top:10px"},
-        el("button",{class:"glass sm",id:"cp",onclick:async()=>{try{await navigator.clipboard.writeText(code);toast("Kopiert")}catch(e){toast("Kunne ikke kopiere. Marker koden og kopier selv.",true)}}},"Kopier"),
-        el("button",{class:"glass sm",id:"dl",onclick:()=>download("pling-gjenopprettingskode.txt","Pling gjenopprettingskode\n\n"+code+"\n\nOppbevar denne trygt. Alle med koden og passordet ditt kan åpne samtalene dine.\n")},"Last ned")),
-      el("p",{class:"warn"},"Lagre den i passordbehandleren din eller skriv den ned og oppbevar den trygt.")),
-    el("div",{class:"card"},el("p",{},typed),el("div",{class:"row"},el("button",{id:"rcgo",onclick:go},"Jeg har lagret den"),
-      el("button",{class:"glass sm",id:"skip",onclick:()=>{if(first)start();else showShell()}},first?"Hopp over":"Avbryt"))));
+        el("button",{class:"glass sm",id:"cp",onclick:async()=>{try{await navigator.clipboard.writeText(code);toast(tr("recovery.copied"))}catch(e){toast(tr("recovery.copyFailed"),true)}}},tr("common.copy")),
+        el("button",{class:"glass sm",id:"dl",onclick:()=>download("prek-gjenopprettingskode.txt",tr("recovery.fileContent",{code}))},tr("img.download"))),
+      el("p",{class:"warn"},tr("recovery.saveAdvice"))),
+    el("div",{class:"card"},el("p",{},typed),el("div",{class:"row"},el("button",{id:"rcgo",onclick:go},tr("recovery.saved")),
+      el("button",{class:"glass sm",id:"skip",onclick:()=>{if(first)start();else showShell()}},first?tr("recovery.skip"):tr("cam.cancel")))));
 }
 
 /* ---------- godkjenne ny enhet (på enheten som har nøkkelen) ---------- */
@@ -2044,7 +2170,7 @@ function picEl(img){
 function lightbox(u,gif){
   const b=$("#lb");b.textContent="";
   b.append(el("img",{src:u,alt:"Bilde"}),el("div",{class:"row"},
-    el("a",{class:"btnlink",href:u,download:gif?"pling.gif":"pling-bilde.jpg"},tr("img.download")),el("button",{class:"glass",type:"button",onclick:()=>{b.hidden=true;b.textContent=""}},tr("common.close"))));
+    el("a",{class:"btnlink",href:u,download:gif?"prek.gif":"prek-bilde.jpg"},tr("img.download")),el("button",{class:"glass",type:"button",onclick:()=>{b.hidden=true;b.textContent=""}},tr("common.close"))));
   b.hidden=false;
 }
 
@@ -2144,7 +2270,7 @@ function wire(){
   sure($("#bbl"),tr("chat.block"),async()=>{try{await q(sb.rpc("block_user",{p_other:S.chat.other}),tr("ctx.block"));closeChat();toast(tr("block.done"));refresh()}catch(e){fail(e)}});
   $("#bd").addEventListener("click",()=>{
     const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?"(dobbeltpling)":m.img?"(bilde)":m.ok?m.t:"(kan ikke dekrypteres)")).join("\n");
-    download("pling-samtale.txt",t+"\n");
+    download("prek-samtale.txt",t+"\n");
   });
   const tx=$("#tx");
   const send=async()=>{

@@ -22,6 +22,8 @@ Short records of choices that are not obvious from the code. Newest last.
     them to the user as they are.
 11. **Version 0.x.y until release.**
 12. **Name:** the app is called Prek! (domain prek.es). Internal names (repo, storage keys, job names) still
-    say "pling"; renaming them touches stored keys and needs a migration plan.
+    say "pling"; renaming them touches stored keys and needs a migration plan. Exception (2026-10-29): visible texts and download file names that
+    said "Pling" now say "Prek!". The string `pling-safety:` that goes into the safety number hash must
+    never change, or every safety number changes.
 13. **Skipped for now:** file sharing in the UI, nicknames, custom smileys, GIF search, e-mail sender,
     push notifications, screenshot protection, video.

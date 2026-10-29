@@ -42,8 +42,10 @@ in the database for now; for an English version they become error codes that the
 Tests fail if the app uses a text key that does not exist or if a key is unused.
 
 Progress: the mechanism (`src/i18n/`, `tr("key",{params})`) and all notifications and thrown errors in
-`main.js` and `crypto-glue.js` are moved. Rounds 2 and 3 moved the privacy and help dialog and the labels, headings and status texts in `main.js`. Still to move:
-the static HTML in `body.html`, and the sign-in screens that `build.py` takes from the old base file.
+`main.js` and `crypto-glue.js` are moved. Rounds 2 and 3 moved the privacy and help dialog and the labels, headings and status texts in `main.js`. Round 4 moved the sign-in and key screens (now a normal source file, `app/views.js`, instead of being cut
+out of the old base file by `build.py`) and the static page text in `body.html` (written as `{{key}}` and filled
+in by `build.py`). Still to move: a few texts in `anim.js`, `build.py` and the emoji/sound code that is still
+taken from the old base file `app/base/messenger.html`.
 
 ## Step 3 - Backend access layer
 

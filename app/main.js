@@ -822,7 +822,7 @@ function picEl(img){
 function lightbox(u,gif){
   const b=$("#lb");b.textContent="";
   b.append(el("img",{src:u,alt:"Bilde"}),el("div",{class:"row"},
-    el("a",{class:"btnlink",href:u,download:gif?"pling.gif":"pling-bilde.jpg"},tr("img.download")),el("button",{class:"glass",type:"button",onclick:()=>{b.hidden=true;b.textContent=""}},tr("common.close"))));
+    el("a",{class:"btnlink",href:u,download:gif?"prek.gif":"prek-bilde.jpg"},tr("img.download")),el("button",{class:"glass",type:"button",onclick:()=>{b.hidden=true;b.textContent=""}},tr("common.close"))));
   b.hidden=false;
 }
 
@@ -922,7 +922,7 @@ function wire(){
   sure($("#bbl"),tr("chat.block"),async()=>{try{await q(sb.rpc("block_user",{p_other:S.chat.other}),tr("ctx.block"));closeChat();toast(tr("block.done"));refresh()}catch(e){fail(e)}});
   $("#bd").addEventListener("click",()=>{
     const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?"(dobbeltpling)":m.img?"(bilde)":m.ok?m.t:"(kan ikke dekrypteres)")).join("\n");
-    download("pling-samtale.txt",t+"\n");
+    download("prek-samtale.txt",t+"\n");
   });
   const tx=$("#tx");
   const send=async()=>{

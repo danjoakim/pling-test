@@ -1,37 +1,37 @@
 <div class="win" id="app">
- <div class="tb"><span id="tbi"></span><span class="tbn" data-prk="tbl"></span><span class="lock" id="lock" hidden title="Meldingene krypteres i nettleseren med AES-256-GCM">Kryptert</span></div>
+ <div class="tb"><span id="tbi"></span><span class="tbn" data-prk="tbl"></span><span class="lock" id="lock" hidden title="{{html.lock.title}}">{{html.lock.text}}</span></div>
  <div class="scr" id="scr"><div class="sc"></div></div>
  <div class="shell" id="shell" hidden>
   <section class="home" id="home">
    <div class="mewrap">
-   <button class="me" id="meb" type="button" aria-expanded="false" title="Min profil">
-    <span class="av on" id="avwrap"><img id="avimg" alt="Ditt bilde" hidden><span id="avini">?</span></span>
-    <span class="t"><b id="men">…</b><small id="mep">Pålogget</small><small id="mewarn" class="warn" hidden>Lag gjenopprettingskode</small></span>
+   <button class="me" id="meb" type="button" aria-expanded="false" title="{{html.meb.title}}">
+    <span class="av on" id="avwrap"><img id="avimg" alt="{{html.avimg.alt}}" hidden><span id="avini">?</span></span>
+    <span class="t"><b id="men">…</b><small id="mep">{{status.on}}</small><small id="mewarn" class="warn" hidden>{{html.mewarn.text}}</small></span>
     <span id="mef"></span>
    </button>
-   <input id="pm" class="mepi" placeholder="&lt;Skriv en personlig melding&gt;" maxlength="60" autocomplete="off" aria-label="Personlig melding">
+   <input id="pm" class="mepi" placeholder="{{html.pm.placeholder}}" maxlength="60" autocomplete="off" aria-label="{{html.pm.aria}}">
    </div>
    <div class="prof" id="prof" hidden>
-    <input id="pnm" placeholder="Visningsnavn" maxlength="24" aria-label="Visningsnavn">
-    <select id="st" aria-label="Status"><option value="online">Pålogget</option><option value="away">Borte</option><option value="busy">Opptatt</option><option value="off">Vis meg som frakoblet</option></select>
-    <select id="thm" aria-label="Utseende"><option value="auto">Utseende: automatisk</option><option value="lys">Utseende: lys (dag)</option><option value="natt">Utseende: mørk (kveld)</option></select>
-    <select id="lpv" aria-label="Forhåndsvisning av lenker" title="Når du sender en lenke, henter en tjeneste hos oss tittel og bilde. Mottakeren kontakter aldri nettstedet."><option value="on">Forhåndsvisning av lenker: på</option><option value="off">Forhåndsvisning av lenker: av</option></select>
-    <label class="lbl" title="Bildet vises bare for kompisene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
-    <div class="grp">Sikkerhet</div>
+    <input id="pnm" placeholder="{{html.pnm.placeholder}}" maxlength="24" aria-label="{{html.pnm.aria}}">
+    <select id="st" aria-label="{{html.st.aria}}"><option value="online">{{status.on}}</option><option value="away">{{status.away}}</option><option value="busy">{{status.busy}}</option><option value="off">{{html.st.optoff}}</option></select>
+    <select id="thm" aria-label="{{html.thm.aria}}"><option value="auto">{{html.thm.optauto}}</option><option value="lys">{{html.thm.optlys}}</option><option value="natt">{{html.thm.optnatt}}</option></select>
+    <select id="lpv" aria-label="{{html.lpv.aria}}" title="{{html.lpv.title}}"><option value="on">{{html.lpv.opton}}</option><option value="off">{{html.lpv.optoff}}</option></select>
+    <label class="lbl" title="{{html.profile.photoHint}}">{{html.profile.changePhoto}}<input class="vh" id="avf" type="file" accept="image/*"></label>
+    <div class="grp">{{html.profile.security}}</div>
     <div id="seccard" class="seccard"></div>
-    <div class="grp" id="bgrp" hidden>Blokkerte</div>
+    <div class="grp" id="bgrp" hidden>{{html.profile.blocked}}</div>
     <div id="blist"></div>
-    <button class="glass sm" id="infob" type="button">Personvern og hjelp</button>
-    <button class="glass sm" id="outb" type="button">Logg ut</button>
+    <button class="glass sm" id="infob" type="button">{{info.title}}</button>
+    <button class="glass sm" id="outb" type="button">{{common.logout}}</button>
    </div>
    <div class="fine err msg" id="msg" role="status"></div>
    <div class="hs">
     <div id="pairbox"></div>
     <div id="reqs" hidden></div>
-    <div class="homebar"><span class="grp">Kompiser</span><button class="glass" id="addf" type="button" aria-expanded="false">+ Legg til kompis</button></div>
+    <div class="homebar"><span class="grp">{{html.home.friendsHeading}}</span><button class="glass" id="addf" type="button" aria-expanded="false">{{html.addf.text}}</button></div>
     <div class="add" id="addfp" hidden>
-     <div class="fine">Skriv e-posten til en kompis som har laget konto i Prek!. Personen får en forespørsel som kan godtas eller avslås.</div>
-     <div class="row"><input id="fe" type="email" placeholder="Kompis' e-post" autocomplete="off" aria-label="Kompis' e-postadresse"><button class="glass sm" id="fadd" type="button">Legg til</button></div>
+     <div class="fine">{{html.add.explain}}</div>
+     <div class="row"><input id="fe" type="email" placeholder="{{html.fe.placeholder}}" autocomplete="off" aria-label="{{html.fe.aria}}"><button class="glass sm" id="fadd" type="button">{{html.fadd.text}}</button></div>
      <div class="fine err" id="ferr" role="status"></div>
      <div class="invbox" id="invbox"></div>
     </div>
@@ -40,19 +40,19 @@
   </section>
 
   <section class="chatpane" id="chatpane">
-   <div class="empty" id="empty"><div class="amb" id="amb" aria-hidden="true"></div><div class="in"><h1 data-prk="xl"></h1><div class="fine" id="emptyh">Dobbeltklikk på en kompis for å preke.</div></div></div>
+   <div class="empty" id="empty"><div class="amb" id="amb" aria-hidden="true"></div><div class="in"><h1 data-prk="xl"></h1><div class="fine" id="emptyh">{{html.emptyh.text}}</div></div></div>
    <div class="ch" id="ch" hidden>
-    <button class="glass back" id="back" type="button" aria-label="Lukk samtalen">‹</button>
+    <button class="glass back" id="back" type="button" aria-label="{{html.back.aria}}">‹</button>
     <div class="ti" id="title"></div>
-    <div class="pr" id="pr" title="Hvem som er her"></div>
-    <button class="glass" id="mb" type="button" aria-expanded="false" aria-label="Innstillinger for samtalen">⋯</button>
+    <div class="pr" id="pr" title="{{html.pr.title}}"></div>
+    <button class="glass" id="mb" type="button" aria-expanded="false" aria-label="{{html.mb.aria}}">⋯</button>
    </div>
    <div class="menu" id="menu" hidden>
-    <div><div class="grp">Her nå</div><div class="who" id="who"></div></div>
-    <div><div class="grp">Sikkerhetsnummer</div><div class="sn" id="sn"></div><div class="fine">Sammenlign nummeret med kompisen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.</div></div>
-    <div><div class="fine" style="margin-bottom:4px">Utløp for nye meldinger i samtalen (gjelder begge)</div>
-     <select id="ex" aria-label="Utløp for nye meldinger i samtalen (gjelder begge)"><option value="0">Utløper ikke</option><option value="1">Etter 1 dag</option><option value="7">Etter 7 dager</option><option value="30">Etter 30 dager</option></select></div>
-    <div class="row"><button class="glass" id="bd" type="button">Last ned</button><button class="glass" id="bx" type="button">Slett mine meldinger</button><button class="glass" id="bfr" type="button">Fjern kompis</button><button class="glass" id="bmu" type="button">Demp</button><button class="glass" id="bbl" type="button">Blokker</button></div>
+    <div><div class="grp">{{html.menu.hereNow}}</div><div class="who" id="who"></div></div>
+    <div><div class="grp">{{html.menu.safetyNumber}}</div><div class="sn" id="sn"></div><div class="fine">{{html.menu.safetyHint}}</div></div>
+    <div><div class="fine" style="margin-bottom:4px">{{html.menu.expiryLabel}}</div>
+     <select id="ex" aria-label="{{html.ex.aria}}"><option value="0">{{html.ex.opt0}}</option><option value="1">{{html.ex.opt1}}</option><option value="7">{{html.ex.opt7}}</option><option value="30">{{html.ex.opt30}}</option></select></div>
+    <div class="row"><button class="glass" id="bd" type="button">{{img.download}}</button><button class="glass" id="bx" type="button">{{chat.deleteMine}}</button><button class="glass" id="bfr" type="button">{{chat.removeFriend}}</button><button class="glass" id="bmu" type="button">{{mute.muteButton}}</button><button class="glass" id="bbl" type="button">{{chat.block}}</button></div>
     <div class="fine" id="fp"></div>
    </div>
    <div class="expn" id="expn" hidden></div>
@@ -60,7 +60,7 @@
    <div class="typing" id="typ" hidden></div>
    <div class="epv" id="epv" hidden aria-hidden="true"></div>
    <div class="emo" id="emo" hidden></div>
-   <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="Vis emoji">☺</button><button class="glass eb" id="ab" type="button" aria-label="Send et bilde" title="Send et bilde">📎</button><button class="glass eb" id="cb" type="button" aria-label="Ta bilde med kameraet" title="Ta bilde med kameraet">📷</button><input class="vh" id="af" type="file" accept="image/*" tabindex="-1"><input class="vh" id="cf" type="file" accept="image/*" capture="environment" tabindex="-1"><input id="tx" placeholder="Skriv en melding …" maxlength="1000" autocomplete="off" aria-label="Melding"><button id="sd" type="button">Send</button><button id="dp" class="hot" type="button" title="Spiller to plinger og vibrerer hos mottakeren">Dobbeltpling</button></div>
+   <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="{{html.eb.aria}}">☺</button><button class="glass eb" id="ab" type="button" aria-label="{{html.ab.aria}}" title="{{html.ab.title}}">📎</button><button class="glass eb" id="cb" type="button" aria-label="{{html.cb.aria}}" title="{{html.cb.title}}">📷</button><input class="vh" id="af" type="file" accept="image/*" tabindex="-1"><input class="vh" id="cf" type="file" accept="image/*" capture="environment" tabindex="-1"><input id="tx" placeholder="{{html.tx.placeholder}}" maxlength="1000" autocomplete="off" aria-label="{{html.tx.aria}}"><button id="sd" type="button">{{common.send}}</button><button id="dp" class="hot" type="button" title="{{html.dp.title}}">{{chat.dp}}</button></div>
   </section>
  </div>
 </div>

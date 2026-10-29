@@ -17,6 +17,7 @@ const esbuild=require("esbuild");
  const dir=path.join(__dirname,"../app");
  const src=fs.readdirSync(dir).filter(f=>f.endsWith(".js")||f.endsWith(".html")||f.endsWith(".py")).map(f=>fs.readFileSync(path.join(dir,f),"utf8")).join("\n");
  const used=new Set([...src.matchAll(/\btr\("([\w.]+)"/g)].map(m=>m[1]));
+ for(const m of src.matchAll(/\{\{([a-z]+\.[\w.]+)\}\}/g))used.add(m[1]); // static page text in body.html
  ok("every key used in the app exists in the language file",()=>{
   const missing=[...used].filter(k=>!(k in messages));assert.deepStrictEqual(missing,[])});
  ok("no unused keys in the language file",()=>{

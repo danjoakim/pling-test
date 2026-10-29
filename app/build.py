@@ -1,4 +1,5 @@
 import os
+import json
 HERE=os.path.dirname(os.path.abspath(__file__))
 import re
 P=open(HERE+'/base/messenger.html',encoding='utf8').read().split('\n')
@@ -71,22 +72,19 @@ head=head.replace('document.getElementById("app").textContent=','document.body.t
 import subprocess
 bundle=subprocess.run(['node',HERE+'/bundle.js'],check=True,capture_output=True,text=True).stdout
 crypto='/* ---------- src/ (bundled TypeScript) ---------- */\n'+bundle+'\n'+open(HERE+'/crypto-glue.js',encoding='utf8').read()
-views='\n'.join(old[oidx('/* ---------- innlogging'):oidx('/* ---------- godkjenne')])
-views=views.replace('const app=$("#app");app.textContent="";','const app=scrHost();')
-views=views.replace("vennene dine","kompisene dine")
-views=views.replace('{if(first)start();else{viewMain();refresh()}}','{if(first)start();else showShell()}')
-assert 'onclick:()=>sb.auth.signOut()' in views
-views=views.replace('onclick:()=>sb.auth.signOut()','onclick:doLogout')
-views=views.replace('class:"small"','class:"glass sm"').replace('class:"ghost small"','class:"glass sm"').replace('class:"ghost"','class:"glass"')
-# viewSetup must not use pm; keep. 
-NEWLOGIN='  app.classList.add("lgn");\n  let remMail="";try{remMail=localStorage.getItem("pling_remember_email")||""}catch(e){}\n  if(remMail&&!email.value)email.value=remMail;\n  const rem=el("input",{type:"checkbox",id:"rem"});rem.checked=!!remMail;\n  const lst=el("select",{id:"lst","aria-label":"Logg på som"},el("option",{value:"online"},"Pålogget"),el("option",{value:"busy"},"Opptatt"),el("option",{value:"away"},"Borte"),el("option",{value:"off"},"Vis meg som frakoblet"));\n  const go0=go;\n  const goW=async()=>{try{localStorage.setItem("pling_st_next",lst.value);if(rem.checked)localStorage.setItem("pling_remember_email",email.value.trim());else{localStorage.removeItem("pling_remember_email");localStorage.removeItem("pling_last_av")}}catch(e){}await go0()};\n  const fr=el("div",{class:"lpic"});let lastAv=null;try{lastAv=remMail?localStorage.getItem("pling_last_av"):null}catch(e){}if(lastAv&&okAv(lastAv)){fr.classList.add("hasav");fr.append(el("img",{src:lastAv,alt:""}))}else fr.append(ico("lgi"));\n  const wm=el("div",{class:"lwm","aria-hidden":"true"});wm.hidden=true;\n  app.append(\n    fr,\n    el("div",{class:"lh"},prk("lgn")),\n    el("div",{class:"invb",id:"invb",hidden:true}),\n    el("div",{class:"dim lc"},S.mode==="up"?"Lag en konto. Samtalene dine blir kryptert i nettleseren.":"nå prekær vi!"),\n    el("label",{for:"em",class:"ll"},"E-postadresse:"),email,\n    el("label",{for:"pw",class:"ll"},"Passord:"),pw,\n    el("div",{class:"lrow"},el("label",{for:"lst",class:"ll"},"Status:"),lst),\n    el("label",{class:"lchk"},rem," Husk e-postadressen min"),\n    ...(S.needCode?[el("div",{class:"row"},code,el("button",{id:"vf",onclick:verify},"Bekreft"))]:[]),\n    el("button",{id:"go",class:"lgo",onclick:goW},S.mode==="up"?"Lag konto":"Logg på"),\n    el("div",{class:"llinks"},\n      el("button",{class:"llink",id:"otp",type:"button",onclick:sendCode},"Send engangskode i stedet"),\n      el("button",{class:"llink",type:"button",onclick:()=>{S.mode=S.mode==="up"?"in":"up";viewLogin()}},S.mode==="up"?"Jeg har en konto":"Ny konto")),\n    el("div",{class:"fine lc"},"Ende-til-ende-kryptert \u00b7 ",el("button",{class:"llink",type:"button",onclick:showInfo},"Personvern og hjelp")),\n    wm);\n  pw.addEventListener("keydown",e=>{if(e.key==="Enter")goW()});\n  showInviteBanner();\n'
-_m=re.search(r'  app\.append\(\n    el\("h1",\{\},"Pling · testside"\).*?pw\.addEventListener\("keydown",e=>\{if\(e\.key==="Enter"\)go\(\)\}\);\n',views,re.S)
-assert _m, "viewLogin block not found"
-views=views[:_m.start()]+NEWLOGIN+views[_m.end():]
+# Sign-in and key screens. Originally taken from the old base file and patched here; now a normal source file.
+views=open(HERE+'/views.js',encoding='utf8').read()
 main=open(HERE+'/main.js',encoding='utf8').read().replace('/*@@PROTO@@*/',proto+'\n'+open(HERE+'/anim.js',encoding='utf8').read()).replace('//@@VIEWS@@',views)
 css='\n'.join(P[3:135])
 extra=open(HERE+'/extra.css',encoding='utf8').read()
 body=open(HERE+'/body.html',encoding='utf8').read()
+# Static page text comes from the language file: {{key}} in body.html is replaced here (HTML-escaped).
+_msgs=json.loads(subprocess.run(['node',HERE+'/bundle.js','--messages'],check=True,capture_output=True,text=True).stdout)
+def _esc(t): return t.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;')
+def _fill(m):
+    assert m.group(1) in _msgs,"missing text key: "+m.group(1)
+    return _esc(_msgs[m.group(1)])
+body=re.sub(r'\{\{([\w.]+)\}\}',_fill,body)
 html=f'''<!doctype html>
 <html lang="nb">
 <head>
