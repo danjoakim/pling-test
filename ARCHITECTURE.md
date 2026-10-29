@@ -55,13 +55,19 @@ Schema, functions and policies are in `supabase/migrations/`. Principles:
 
 ## Front end, build and tests
 
-The app is one generated page. `app/main.js`, `app/body.html`, `app/extra.css` and `app/anim.js` are the
+The app is one generated page. The cryptography is TypeScript in `src/crypto.ts` (pure functions, no
+app state), bundled by esbuild and inlined; `app/crypto-glue.js` connects it to browser storage, app state
+and Supabase. The rest is still plain JavaScript: `app/main.js`, `app/body.html`, `app/extra.css` and `app/anim.js` are the
 sources; `app/build.py` inlines them into `index.html`. The builder still patches two legacy base files in
 `app/base/` (`messenger.html`, `old-index.html`); replacing that with plain source files is part of the
 TypeScript transition. Always run `npm run build` and commit the regenerated `index.html`; CI fails if it
 is out of date.
 
-`tests/` holds browser tests (Node + Playwright) that run the built page against a fake Supabase client
+`tests/crypto-unit.js` tests the crypto module in Node against `tests/fixtures/crypto-vectors.json`, which
+was produced by the pre-TypeScript code, so it proves old messages and key backups stay readable. Never
+regenerate that file with new code.
+
+`tests/` also holds browser tests (Node + Playwright) that run the built page against a fake Supabase client
 (`tests/mock.js`). `npm test` runs them all. They cover login and sign-up, friends and blocking, muting, the
 smiley preview, reactions, personal messages, the recovery code, device transfer and the key-missing screen.
 Some tests only print what they see and fail on crashes or page errors, not on every wrong value.

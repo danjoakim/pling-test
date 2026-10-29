@@ -14,6 +14,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: npm install --no-audit --no-fund
+      - run: npm run typecheck
       - run: npx playwright install --with-deps chromium
       # The committed index.html must be exactly what the sources build to.
       - name: Check that index.html is up to date

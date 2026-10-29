@@ -576,62 +576,165 @@ const fail=(e,ctx)=>{console.error(ctx,e);toast((ctx?ctx+": ":"")+(e&&e.message|
 if(!window.supabase){document.body.textContent="Klarte ikke å laste Supabase-biblioteket (nettverk blokkert?).";throw new Error("supabase mangler")}
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 
-/* ---------- kryptering (samme prinsipp som i Pling) ---------- */
+/* ---------- src/crypto.ts (bundled) ---------- */
+"use strict";
+var PrekCrypto = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // src/crypto.ts
+  var crypto_exports = {};
+  __export(crypto_exports, {
+    BACKUP_ITERATIONS: () => BACKUP_ITERATIONS,
+    aesFrom: () => aesFrom,
+    b64: () => b64,
+    deriveChatKey: () => deriveChatKey,
+    ephPair: () => ephPair,
+    fpOf: () => fpOf,
+    generateIdentity: () => generateIdentity,
+    makeBackup: () => makeBackup,
+    newCode: () => newCode,
+    normCode: () => normCode,
+    open: () => open,
+    pairCode: () => pairCode,
+    restoreBackup: () => restoreBackup,
+    seal: () => seal,
+    ub64: () => ub64
+  });
+  var enc = new TextEncoder();
+  var dec = new TextDecoder();
+  var ECDH = { name: "ECDH", namedCurve: "P-256" };
+  var subtle = () => globalThis.crypto.subtle;
+  var BACKUP_ITERATIONS = 6e5;
+  function b64(u) {
+    const b = u instanceof Uint8Array ? u : new Uint8Array(u);
+    let s = "";
+    for (let i = 0; i < b.length; i += 32768) s += String.fromCharCode(...b.subarray(i, i + 32768));
+    return btoa(s);
+  }
+  function ub64(s) {
+    return Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  }
+  var bytes = (u) => u;
+  var pubOf = (j) => ({ crv: j.crv, kty: j.kty, x: j.x, y: j.y });
+  async function fpOf(pub) {
+    const c = JSON.stringify({ crv: pub.crv, kty: pub.kty, x: pub.x, y: pub.y });
+    const h = await subtle().digest("SHA-256", enc.encode(c));
+    return [...new Uint8Array(h)].map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 32);
+  }
+  async function generateIdentity() {
+    const kp = await subtle().generateKey(ECDH, true, ["deriveKey"]);
+    const priv = await subtle().exportKey("jwk", kp.privateKey);
+    const pub = await subtle().exportKey("jwk", kp.publicKey);
+    return { priv, pub: pubOf(pub) };
+  }
+  async function deriveChatKey(myPriv, theirPub) {
+    const priv = await subtle().importKey("jwk", myPriv, ECDH, false, ["deriveKey"]);
+    return aesFrom(priv, theirPub);
+  }
+  async function aesFrom(priv, theirPub) {
+    const pk = await subtle().importKey("jwk", theirPub, ECDH, false, []);
+    return subtle().deriveKey({ name: "ECDH", public: pk }, priv, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+  }
+  async function seal(key, obj) {
+    const iv = globalThis.crypto.getRandomValues(new Uint8Array(12));
+    const ct = await subtle().encrypt({ name: "AES-GCM", iv: bytes(iv) }, key, enc.encode(JSON.stringify(obj)));
+    return { iv: b64(iv), ct: b64(ct) };
+  }
+  async function open(key, iv, ct) {
+    try {
+      return JSON.parse(dec.decode(await subtle().decrypt({ name: "AES-GCM", iv: bytes(ub64(iv)) }, key, bytes(ub64(ct)))));
+    } catch {
+      return null;
+    }
+  }
+  async function ephPair() {
+    const kp = await subtle().generateKey(ECDH, false, ["deriveKey"]);
+    const pub = await subtle().exportKey("jwk", kp.publicKey);
+    return { priv: kp.privateKey, pub: pubOf(pub) };
+  }
+  async function pairCode(pub) {
+    const h = new Uint8Array(await subtle().digest("SHA-256", enc.encode(pub.x + "." + pub.y)));
+    return String(((h[0] << 24 | h[1] << 16 | h[2] << 8 | h[3]) >>> 0) % 1e4).padStart(4, "0");
+  }
+  var B32 = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+  function newCode() {
+    const r = globalThis.crypto.getRandomValues(new Uint8Array(25));
+    let t = "";
+    for (const b of r) t += B32[b & 31];
+    return t.match(/.{5}/g).join("-");
+  }
+  var normCode = (c) => c.toUpperCase().replace(/O/g, "0").replace(/[IL]/g, "1").replace(/[^0-9A-Z]/g, "");
+  async function codeKey(code, salt, iter) {
+    const base = await subtle().importKey("raw", enc.encode(normCode(code)), "PBKDF2", false, ["deriveKey"]);
+    return subtle().deriveKey({ name: "PBKDF2", salt: bytes(salt), iterations: iter, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+  }
+  async function makeBackup(code, id) {
+    const salt = globalThis.crypto.getRandomValues(new Uint8Array(16));
+    const key = await codeKey(code, salt, BACKUP_ITERATIONS);
+    const s = await seal(key, { v: 1, priv: id.priv, pub: id.pub });
+    return { salt: b64(salt), iv: s.iv, ct: s.ct, iter: BACKUP_ITERATIONS };
+  }
+  async function restoreBackup(code, b) {
+    const key = await codeKey(code, ub64(b.salt), b.iter);
+    const o = await open(key, b.iv, b.ct);
+    return o ? { priv: o.priv, pub: o.pub } : null;
+  }
+  return __toCommonJS(crypto_exports);
+})();
+
+/* ---------- kryptering ----------
+   The cryptography itself lives in src/crypto.ts (bundled into PrekCrypto by build.py).
+   This file only connects it to the app: browser storage (key per user), app state (S) and Supabase. */
 const enc=new TextEncoder(),dec=new TextDecoder();
-const b64=u=>btoa(String.fromCharCode(...new Uint8Array(u)));
-const ub64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-const ECDH={name:"ECDH",namedCurve:"P-256"};
-async function fpOf(pub){const c=JSON.stringify({crv:pub.crv,kty:pub.kty,x:pub.x,y:pub.y});const h=await crypto.subtle.digest("SHA-256",enc.encode(c));return[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("").slice(0,32)}
+const {b64,ub64,fpOf,newCode,normCode,pairCode,ephPair,aesFrom,seal,open}=PrekCrypto;
 const keyName=uid=>"pling_test_key_"+uid;
 function loadIdentity(uid){try{const j=JSON.parse(localStorage.getItem(keyName(uid))||"null");return j}catch(e){return null}}
 async function makeIdentity(uid){
-  const kp=await crypto.subtle.generateKey(ECDH,true,["deriveKey"]);
-  const priv=await crypto.subtle.exportKey("jwk",kp.privateKey),pub=await crypto.subtle.exportKey("jwk",kp.publicKey);
-  const id={priv,pub:{crv:pub.crv,kty:pub.kty,x:pub.x,y:pub.y}};
+  const id=await PrekCrypto.generateIdentity();
   localStorage.setItem(keyName(uid),JSON.stringify(id));return id;
 }
 const pairCache=new Map();
 async function pairKey(theirPub){
   const k=JSON.stringify(theirPub);if(pairCache.has(k))return pairCache.get(k);
-  const priv=await crypto.subtle.importKey("jwk",S.id.priv,ECDH,false,["deriveKey"]);
-  const pub=await crypto.subtle.importKey("jwk",theirPub,ECDH,false,[]);
-  const key=await crypto.subtle.deriveKey({name:"ECDH",public:pub},priv,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+  const key=await PrekCrypto.deriveChatKey(S.id.priv,theirPub);
   pairCache.set(k,key);return key;
 }
-async function seal(key,obj){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,enc.encode(JSON.stringify(obj)));return{iv:b64(iv),ct:b64(ct)}}
-async function open(key,iv,ct){try{return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub64(iv)},key,ub64(ct))))}catch(e){return null}}
 
 /* ---------- gjenopprettingskode og enhetsoverføring ---------- */
-const B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ";
-function newCode(){const r=crypto.getRandomValues(new Uint8Array(25));let t="";for(const b of r)t+=B32[b&31];return t.match(/.{5}/g).join("-")}
-const normCode=c=>c.toUpperCase().replace(/O/g,"0").replace(/[IL]/g,"1").replace(/[^0-9A-Z]/g,"");
-async function codeKey(code,salt,iter){
-  const base=await crypto.subtle.importKey("raw",enc.encode(normCode(code)),"PBKDF2",false,["deriveKey"]);
-  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
-}
 async function makeBackup(code){
-  const salt=crypto.getRandomValues(new Uint8Array(16)),iter=600000;
-  const key=await codeKey(code,salt,iter);
-  const s=await seal(key,{v:1,priv:S.id.priv,pub:S.id.pub});
-  return{user_id:S.user.id,salt:b64(salt),iv:s.iv,ct:s.ct,iter,updated_at:new Date().toISOString()};
+  const b=await PrekCrypto.makeBackup(code,S.id);
+  return{user_id:S.user.id,salt:b.salt,iv:b.iv,ct:b.ct,iter:b.iter,updated_at:new Date().toISOString()};
 }
 async function saveBackup(code){await q(sb.from("key_backups").upsert(await makeBackup(code)),"Lagre sikkerhetskopi");S.backup={updated_at:new Date().toISOString()}}
 async function restoreFromCode(code){
   const rows=await q(sb.from("key_backups").select("*").eq("user_id",S.user.id),"Hente sikkerhetskopi");
   if(!rows.length)throw new Error("Det finnes ingen sikkerhetskopi på denne kontoen");
-  const r=rows[0],key=await codeKey(code,ub64(r.salt),r.iter),o=await open(key,r.iv,r.ct);
-  if(!o)throw new Error("Koden stemmer ikke");
-  return{priv:o.priv,pub:o.pub};
+  const id=await PrekCrypto.restoreBackup(code,rows[0]);
+  if(!id)throw new Error("Koden stemmer ikke");
+  return id;
 }
 async function adoptIdentity(id){
   const fp=await fpOf(id.pub);
   if(fp!==S.profile.fp)throw new Error("Nøkkelen passer ikke til denne kontoen");
   localStorage.setItem(keyName(S.user.id),JSON.stringify(id));S.id=id;pairCache.clear();
 }
-const pairCode=async pub=>{const h=new Uint8Array(await crypto.subtle.digest("SHA-256",enc.encode(pub.x+"."+pub.y)));return String(((h[0]<<24|h[1]<<16|h[2]<<8|h[3])>>>0)%10000).padStart(4,"0")};
 const pairFresh=r=>Date.now()-new Date(r.created_at).getTime()<10*60*1000;
-async function ephPair(){const kp=await crypto.subtle.generateKey(ECDH,false,["deriveKey"]);const pub=await crypto.subtle.exportKey("jwk",kp.publicKey);return{priv:kp.privateKey,pub:{crv:pub.crv,kty:pub.kty,x:pub.x,y:pub.y}}}
-async function aesFrom(priv,theirPub){const pk=await crypto.subtle.importKey("jwk",theirPub,ECDH,false,[]);return crypto.subtle.deriveKey({name:"ECDH",public:pk},priv,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
 function qrSvg(text){const qr=qrcode(0,"M");qr.addData(text);qr.make();return qr.createSvgTag({cellSize:5,margin:0,scalable:true})}
 const download=(name,text)=>{const a=el("a",{href:URL.createObjectURL(new Blob([text],{type:"text/plain"})),download:name});document.body.append(a);a.click();a.remove()};
 
