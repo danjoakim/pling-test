@@ -28,8 +28,10 @@ New changes go in new files named `YYYYMMDDHHMMSS_description.sql`. Never edit t
 
 ## Known differences and open points
 
-- Production still has default table grants for `anon` on `blocks` and `reactions`. RLS stops any use, but
-  the baseline revokes them. Fixing production needs an explicit approval.
+- The anon role (signed-out visitors) had default table grants on `blocks` and `reactions` in production. Fixed on
+  2026-10-30 by `20261030100000_revoke_anon_blocks_reactions.sql`; production now matches the baseline (no table
+  privileges for `anon`). The security advisor still lists `peek_invite()` as callable by `anon`: that is on purpose,
+  the sign-in page shows who invited you before you have an account.
 - `linkpreview` has no rate limit.
 - The realtime policies and `presence_topic_ok()` are unused since presence became a table. Can be dropped.
 - Error messages from the SQL functions are Norwegian on purpose: the app shows them to the user as they
