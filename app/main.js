@@ -78,7 +78,7 @@ function drawInvite(){
       const link=location.origin+location.pathname+"#inv="+tok;
       box.textContent="";
       const q1=el("div",{class:"qr",id:"invqr"});q1.innerHTML=qrSvg(link);
-      const inp=el("input",{id:"invlink",readonly:true,value:link,"aria-label":"Invitasjonslenke"});
+      const inp=el("input",{id:"invlink",readonly:true,value:link,"aria-label":tr("invite.linkAria")});
       inp.addEventListener("focus",()=>inp.select());
       const row=el("div",{class:"row"},
         el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast(tr("invite.copied"))}catch(e){inp.select();toast(tr("invite.selectToCopy"),true)}}},tr("common.copy")));
@@ -421,7 +421,7 @@ function drawTyping(){
   const t=$("#typ");
   if(!S.chat){t.hidden=true;return}
   const x=S.typ.get(S.chat.other),on=x&&x.c===S.chat.id&&Date.now()-x.seen<3000&&S.pres.has(S.chat.other);
-  t.hidden=false;t.textContent=on?nameOf(S.chat.other)+" skriver …":"";
+  t.hidden=false;t.textContent=on?tr("chat.typing",{name:nameOf(S.chat.other)}):"";
   if(on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,3100-(Date.now()-x.seen))}
 }
 const PAGE=50;
@@ -946,7 +946,7 @@ function wire(){
   const put=t=>{const v=tx.value,pre=v&&!/\s$/.test(v)?" ":"";tx.value=v+pre+t+" ";drawPv();tx.focus()};
   const FIGS=[[":)","smile"],[":D","grin"],[";)","wink"],[":(","sad"],[":P","tongue"],[":O","surprised"],[":'(","cry"],["xD","xd"],["(lol)","lol"],[":L","rofl"],["(Y)","yes"],["(N)","no"],[":-@","angry"],["(H)","cool"],["8-)","glasses"],["(6)","devil"],["(A)","angel"],["(K)","kiss"],["<3","heart"],["(U)","broken"],["(b)","beer"],["(*)","star"],["(brb)","hourglass"]];
   const pf=el("div",{class:"eg"}),pe=el("div",{class:"eg",hidden:true});
-  for(const[c,id]of FIGS){const b=el("button",{type:"button",class:"ef",title:c+" ("+AN_FIG[id][0]+")","aria-label":AN_FIG[id][0]+", skriver "+c,onclick:()=>put(c)});b.append(anEl(id));pf.append(b)}
+  for(const[c,id]of FIGS){const b=el("button",{type:"button",class:"ef",title:c+" ("+AN_FIG[id][0]+")","aria-label":tr("emo.pickAria",{name:AN_FIG[id][0],code:c}),onclick:()=>put(c)});b.append(anEl(id));pf.append(b)}
   for(const e of ["😊","😃","😉","🙁","😛","❤️","👍","👎","😮","😎","😈","😇","😢","💋","💔","🎉"]){
     pe.append(el("button",{type:"button",class:"ef",onclick:()=>{tx.value+=e;drawPv();tx.focus()}},e));
   }

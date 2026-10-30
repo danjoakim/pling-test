@@ -68,6 +68,9 @@ def oidx(prefix):
     raise Exception(prefix)
 head='\n'.join(old[oidx('const SB_URL'):oidx('const sb=')+1])
 head=head.replace('document.getElementById("app").textContent=','document.body.textContent=')
+OLD_NOSB='"Klarte ikke å laste Supabase-biblioteket (nettverk blokkert?)."'
+assert OLD_NOSB in head
+head=head.replace(OLD_NOSB,'"{{boot.noSupabase}}"') # filled from the language file below
 # The cryptography is TypeScript (src/crypto.ts), bundled by esbuild; crypto-glue.js connects it to the app.
 import subprocess
 bundle=subprocess.run(['node',HERE+'/bundle.js'],check=True,capture_output=True,text=True).stdout
@@ -90,7 +93,7 @@ html=f'''<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Prek! testside</title>
+<title>{{{{html.title}}}}</title>
 <script>(function(){{var t="auto";try{{t=localStorage.getItem("pling_theme")||"auto"}}catch(e){{}}
 var mq=matchMedia("(prefers-color-scheme: light)");
 function ap(){{document.documentElement.classList.toggle("lys",t==="lys"||(t==="auto"&&mq.matches))}}
@@ -119,5 +122,9 @@ ap();if(mq.addEventListener)mq.addEventListener("change",ap)}})()</script>
 # HVORFOR: dobbeltpling skal riste vinduet voldsomt i 2,5 s (Dan Joakim 25. okt); var 0,6 s og ±10 px.
 assert '.win.dp{animation:sh .6s,glimt .9s}' in html  # HVORFOR hele selektoren: .win.dp, ikke bare .dp (en delvis erstatning ødela regelen i 37d7494)
 html=html.replace('.win.dp{animation:sh .6s,glimt .9s}','@keyframes sh2{0.0%{transform:none}3.3%{transform:translate(25px,13px) rotate(-2.4deg)}6.7%{transform:translate(-19px,-15px) rotate(-1.3deg)}10.0%{transform:translate(20px,-9px) rotate(1.4deg)}13.3%{transform:translate(-25px,-13px) rotate(1.4deg)}16.7%{transform:translate(-16px,-10px) rotate(-2.0deg)}20.0%{transform:translate(21px,-9px) rotate(-1.8deg)}23.3%{transform:translate(-21px,-12px) rotate(2.3deg)}26.7%{transform:translate(22px,11px) rotate(-2.3deg)}30.0%{transform:translate(-16px,12px) rotate(2.2deg)}33.3%{transform:translate(22px,-9px) rotate(1.5deg)}36.7%{transform:translate(17px,11px) rotate(-2.3deg)}40.0%{transform:translate(19px,13px) rotate(1.4deg)}43.3%{transform:translate(-25px,14px) rotate(-1.4deg)}46.7%{transform:translate(22px,10px) rotate(2.5deg)}50.0%{transform:translate(16px,11px) rotate(-1.9deg)}53.3%{transform:translate(-24px,-14px) rotate(1.8deg)}56.7%{transform:translate(16px,11px) rotate(2.4deg)}60.0%{transform:translate(25px,14px) rotate(2.2deg)}63.3%{transform:translate(26px,-9px) rotate(-1.6deg)}66.7%{transform:translate(-16px,-10px) rotate(-1.5deg)}70.0%{transform:translate(22px,16px) rotate(-1.9deg)}73.3%{transform:translate(18px,8px) rotate(1.2deg)}76.7%{transform:translate(-20px,7px) rotate(1.6deg)}80.0%{transform:translate(-10px,-8px) rotate(1.4deg)}83.3%{transform:translate(-14px,5px) rotate(1.4deg)}86.7%{transform:translate(9px,-7px) rotate(0.9deg)}90.0%{transform:translate(5px,-5px) rotate(0.6deg)}93.3%{transform:translate(-5px,-3px) rotate(0.3deg)}96.7%{transform:translate(-3px,2px) rotate(-0.2deg)}100.0%{transform:none}} .win.dp{animation:sh2 2.5s linear,glimt .9s}')
+assert '{{boot.noSupabase}}' in html
+html=html.replace('{{boot.noSupabase}}',json.dumps(_msgs['boot.noSupabase'],ensure_ascii=False)[1:-1])
+assert '{{html.title}}' in html
+html=html.replace('{{html.title}}',_esc(_msgs['html.title']),1)
 open(HERE+'/../index.html','w',encoding='utf8').write(html)
 print(len(html))
