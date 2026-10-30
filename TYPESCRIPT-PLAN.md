@@ -89,9 +89,9 @@ first, or nothing there can be typed.
   at Dan Joakim's request: `initial()` takes the first whole character (also used for the profile picture slot in the main window).
 - **Round 4 (done):** the GIF encoder (`gifQuant`, `gifLzw`, `gifEncode`), `readGif` and `GIF_MAX` are `src/gif.ts` (bundled as `PrekGif`).
   Locked byte for byte by `tests/fixtures/gif-vectors.json` (13 frame sets incl. transparency and dictionary resets, made by the old code;
-  SHA-256 of every output, full file when small) and `tests/gif-unit.js`; `tests/gif.js` still sends GIFs end to end. `shrinkGif()` (browser decoding)
-  stays in `main.js` and moves together with `shrink()` in the next round.
-- **Rounds 5+, the remaining parts to TypeScript one at a time (image and GIF shrinking in the browser, sound, link preview, reactions):** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
+  SHA-256 of every output, full file when small) and `tests/gif-unit.js`; `tests/gif.js` still sends GIFs end to end.
+- **Round 5 done: image and GIF shrinking in the browser (`src/shrink.ts`, bundled as `PrekShrink`, glue `app/shrink.js`).** No fixture from the old code is possible (canvas and ImageDecoder), so `tests/shrink.js` locks the behavior in the built page: it passed against the old JavaScript first and then against the TypeScript, and mutations (size, white background, quality steps, frame skipping, delays, limits) are caught.
+- **Rounds 6+, the remaining parts to TypeScript one at a time (sound, link preview, reactions):** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
   reactions logic. Little DOM, easy to test in Node.
 - **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).
 - **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered

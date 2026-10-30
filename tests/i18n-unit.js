@@ -15,7 +15,10 @@ const esbuild=require("esbuild");
  ok("unknown key throws",()=>assert.throws(()=>tr("no.such.key"),/Unknown text key/));
 
  const dir=path.join(__dirname,"../app");
- const src=fs.readdirSync(dir).filter(f=>f.endsWith(".js")||f.endsWith(".html")||f.endsWith(".py")).map(f=>fs.readFileSync(path.join(dir,f),"utf8")).join("\n");
+ // texts are also used by the TypeScript modules in src/ (not the language files themselves)
+ const sdir=path.join(__dirname,"../src");
+ const src=[...fs.readdirSync(dir).filter(f=>f.endsWith(".js")||f.endsWith(".html")||f.endsWith(".py")).map(f=>fs.readFileSync(path.join(dir,f),"utf8")),
+  ...fs.readdirSync(sdir).filter(f=>f.endsWith(".ts")).map(f=>fs.readFileSync(path.join(sdir,f),"utf8"))].join("\n");
  const used=new Set([...src.matchAll(/\btr\("([\w.]+)"/g)].map(m=>m[1]));
  for(const m of src.matchAll(/\{\{([a-z]+\.[\w.]+)\}\}/g))used.add(m[1]); // static page text in body.html
  ok("every key used in the app exists in the language file",()=>{

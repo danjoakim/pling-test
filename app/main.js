@@ -636,64 +636,6 @@ async function sendMsg(payload,file){
 
 /* ---------- bilder (krypteres før opplasting) ---------- */
 const picCache=new Map();
-async function shrink(file){
-  const MAX=1920,toBlob=(c,qual)=>new Promise(r=>c.toBlob(r,"image/jpeg",qual));
-  let src,w,h,close=()=>{};
-  try{
-    /* sparer minne: nettleseren skalerer ned mens bildet leses inn */
-    const probe=await createImageBitmap(file),pw=probe.width,ph=probe.height;probe.close();
-    const k=Math.min(1,MAX/Math.max(pw,ph));w=Math.max(1,Math.round(pw*k));h=Math.max(1,Math.round(ph*k));
-    src=await createImageBitmap(file,k<1?{resizeWidth:w,resizeHeight:h,resizeQuality:"high"}:undefined);close=()=>src.close();
-  }catch(e){
-    src=await new Promise((ok,no)=>{const u=URL.createObjectURL(file),im=new Image();
-      im.onload=()=>{URL.revokeObjectURL(u);ok(im)};im.onerror=()=>{URL.revokeObjectURL(u);no(new Error(tr("img.notReadable")))};im.src=u});
-    const k=Math.min(1,MAX/Math.max(src.width,src.height));w=Math.max(1,Math.round(src.width*k));h=Math.max(1,Math.round(src.height*k));
-  }
-  const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");
-  x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(src,0,0,w,h);close();
-  let qual=.85,b=await toBlob(c,qual);
-  while(b&&b.size>2.5*1024*1024&&qual>.5){qual=qual>.7?.7:.55;b=await toBlob(c,qual)}
-  if(!b)throw new Error(tr("img.readFailed"));
-  return{blob:b,w,h};
-}
-/* HVORFOR: GIF-er sendes uendret (ellers blir de stillbilder via canvas/JPEG i shrink()).
-   Bucket-grensen er 3 MB; for store GIF-er gjøres mindre av shrinkGif() (aldri stillbilde). */
-/* ---------- GIF: gjør for store GIF-er mindre (beholder animasjonen) ---------- */
-/* HVORFOR egen koder: ingen lib kan hentes inn (CDN er ikke tilgjengelig for bygget, og færre eksterne filer er bedre for en krypterende app).
-   Dekoding gjøres av nettleseren (ImageDecoder), som gir ferdig sammensatte bilder. Vi koder på nytt med lokal fargetabell per bilde. */
-async function shrinkGif(file,limit,onStep){
-  if(typeof ImageDecoder==="undefined")throw new Error(tr("gif.noDecoder"));
-  if(file.size>40*1024*1024)throw new Error(tr("gif.tooLarge"));
-  const dec=new ImageDecoder({data:await file.arrayBuffer(),type:"image/gif"});
-  await dec.tracks.ready;await dec.completed;
-  const n=dec.tracks.selectedTrack.frameCount;
-  const f0=(await dec.decode({frameIndex:0})).image,W=f0.displayWidth,H=f0.displayHeight;f0.close();
-  const cap=Math.min(1,480/Math.max(W,H)),minStep=Math.max(1,Math.ceil(n/200));
-  const tries=[[1,1],[.75,1],[.6,1],[.5,1],[.5,2],[.4,2],[.3,2],[.3,3],[.25,3],[.2,4]];
-  for(let t=0;t<tries.length;t++){
-    const[sc,st0]=tries[t],st=Math.max(st0,minStep),k=cap*sc,w=Math.max(1,Math.round(W*k)),h=Math.max(1,Math.round(H*k));
-    if(onStep)onStep(t+1,tries.length);
-    await new Promise(r=>setTimeout(r,0));
-    const c=document.createElement("canvas");c.width=w;c.height=h;
-    const x=c.getContext("2d",{willReadFrequently:true});x.imageSmoothingQuality="high";
-    const frames=[];
-    for(let i=0;i<n;i++){
-      const vf=(await dec.decode({frameIndex:i})).image,dur=(vf.duration||100000)/1000;
-      if(i%st===0){
-        x.clearRect(0,0,w,h);x.drawImage(vf,0,0,w,h);
-        const px=x.getImageData(0,0,w,h).data;let hasT=false;
-        for(let p=3;p<px.length;p+=4)if(px[p]<128){hasT=true;break}
-        frames.push({rgba:px,hasT,delay:dur});
-      }else frames[frames.length-1].delay+=dur;
-      vf.close();
-    }
-    const bytes=gifEncode(frames,w,h);
-    if(bytes.length<=limit){dec.close();return{bytes,w,h}}
-  }
-  dec.close();
-  throw new Error(tr("gif.cannotShrink"));
-}
-
 async function sendImage(file){
   if(!S.chat||!file)return;
   if(!/^image\//.test(file.type||"")){toast(tr("img.onlyImages"),true);return}
