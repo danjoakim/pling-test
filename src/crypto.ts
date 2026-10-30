@@ -76,6 +76,44 @@ export async function open<T = any>(key: CryptoKey, iv: string, ct: string): Pro
   }
 }
 
+/** Encrypts raw bytes (images, GIFs) for a chat. Result layout: 12-byte IV, then ciphertext + GCM tag. */
+export async function encryptBytes(key: CryptoKey, data: Uint8Array): Promise<Uint8Array> {
+  const iv = globalThis.crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await subtle().encrypt({ name: "AES-GCM", iv: bytes(iv) }, key, bytes(data)));
+  const out = new Uint8Array(iv.length + ct.length);
+  out.set(iv, 0);
+  out.set(ct, iv.length);
+  return out;
+}
+
+/** Reverse of encryptBytes. Throws if the key is wrong or the data was changed (the caller shows "missing"). */
+export async function decryptBytes(key: CryptoKey, blob: Uint8Array): Promise<ArrayBuffer> {
+  return subtle().decrypt({ name: "AES-GCM", iv: bytes(blob.slice(0, 12)) }, key, bytes(blob.slice(12)));
+}
+
+const hexOf = (u8: Uint8Array): string => [...u8].map((b) => b.toString(16).padStart(2, "0")).join("");
+
+/**
+ * SHA-256 (lowercase hex, 64 characters) of an invite token. Only this hash is sent to the server, so a leak
+ * from the database gives no usable links.
+ */
+export async function inviteHash(token: string): Promise<string> {
+  return hexOf(new Uint8Array(await subtle().digest("SHA-256", enc.encode(token))));
+}
+
+/**
+ * The safety number two friends compare: six groups of five digits from SHA-256 over the sorted
+ * fingerprints. Display only, never stored. The prefix "pling-safety:" is part of the number: changing it
+ * changes every number on every screen (see DECISIONS.md), so it stays even though the app is called Prek!.
+ */
+export async function safetyNumber(myFp: string, otherFp: string): Promise<string> {
+  const a = [myFp, otherFp].sort().join(":");
+  const h = new Uint8Array(await subtle().digest("SHA-256", enc.encode("pling-safety:" + a)));
+  const g: string[] = [];
+  for (let i = 0; i < 6; i++) g.push(String(((h[i * 3] << 16) | (h[i * 3 + 1] << 8) | h[i * 3 + 2]) % 100000).padStart(5, "0"));
+  return g.join(" ");
+}
+
 /** Ephemeral key pair for device transfer. The private key cannot be exported. */
 export async function ephPair(): Promise<{ priv: CryptoKey; pub: PublicJwk }> {
   const kp = await subtle().generateKey(ECDH, false, ["deriveKey"]);

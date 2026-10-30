@@ -44,8 +44,13 @@ Tests fail if the app uses a text key that does not exist or if a key is unused.
 Progress: the mechanism (`src/i18n/`, `tr("key",{params})`) and all notifications and thrown errors in
 `main.js` and `crypto-glue.js` are moved. Rounds 2 and 3 moved the privacy and help dialog and the labels, headings and status texts in `main.js`. Round 4 moved the sign-in and key screens (now a normal source file, `app/views.js`, instead of being cut
 out of the old base file by `build.py`) and the static page text in `body.html` (written as `{{key}}` and filled
-in by `build.py`). Still to move: a few texts in `anim.js`, `build.py` and the emoji/sound code that is still
-taken from the old base file `app/base/messenger.html`.
+in by `build.py`). Round 5 moved the last texts (figure names, typing line, error prefixes, page title, boot error). A scan of the built page finds no
+Norwegian text left outside the language file; the old base file `app/base/messenger.html` had none in the parts that are used.
+Step 2 is done.
+
+Step 1 follow-up (2026-10-30): file encryption (`encryptBytes`/`decryptBytes`), the safety number (`safetyNumber`) and the invite
+hash (`inviteHash`) moved into `src/crypto.ts`. `main.js` no longer calls `crypto.subtle` at all. New fixtures for them were made
+from the old expressions before the move; `tests/img.js` sends an image between two users end to end.
 
 ## Step 3 - Backend access layer
 

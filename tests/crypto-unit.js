@@ -57,6 +57,29 @@ const esbuild=require("esbuild");
   assert.deepStrictEqual({priv:got.priv,pub:got.pub},V.A);
   assert.strictEqual(await C.pairCode(nu.pub),await C.pairCode(nu.pub))});
 
+ await ok("safety number and invite hash match the old code",async()=>{
+  assert.strictEqual(await C.safetyNumber(V.safety.fpA,V.safety.fpB),V.safety.number);
+  assert.strictEqual(await C.safetyNumber(V.safety.fpB,V.safety.fpA),V.safety.numberSwapped);
+  assert.strictEqual(await C.inviteHash(V.invite.token),V.invite.hash)});
+
+ await ok("reads the image blob the old code encrypted, and its own blobs are readable by the old expression",async()=>{
+  const kB=await C.deriveChatKey(V.B.priv,V.A.pub),kA=await C.deriveChatKey(V.A.priv,V.B.pub);
+  const old=new Uint8Array(Buffer.from(V.file.blobB64,"base64"));
+  const want=new Uint8Array(2500).map((_,i)=>(i*31+7)&255);
+  assert.deepStrictEqual(new Uint8Array(await C.decryptBytes(kB,old)),want);
+  const fresh=await C.encryptBytes(kA,want),fresh2=await C.encryptBytes(kA,want);
+  assert.strictEqual(fresh.length,12+want.length+16);assert.notDeepStrictEqual(fresh.slice(0,12),fresh2.slice(0,12));
+  // the old reader: IV is the first 12 bytes, the rest is ciphertext
+  const back=new Uint8Array(await globalThis.crypto.subtle.decrypt({name:"AES-GCM",iv:fresh.slice(0,12)},kB,fresh.slice(12)));
+  assert.deepStrictEqual(back,want)});
+
+ await ok("changed or foreign image data throws instead of returning garbage",async()=>{
+  const kB=await C.deriveChatKey(V.B.priv,V.A.pub),other=await C.generateIdentity();
+  const old=new Uint8Array(Buffer.from(V.file.blobB64,"base64")),bad=old.slice();bad[100]^=1;
+  await assert.rejects(()=>C.decryptBytes(kB,bad));
+  const kX=await C.deriveChatKey(other.priv,V.A.pub);
+  await assert.rejects(()=>C.decryptBytes(kX,old))});
+
  await ok("new identities are valid and agree on a shared key",async()=>{
   const a=await C.generateIdentity(),b=await C.generateIdentity();
   assert.ok(/^[0-9a-f]{32}$/.test(await C.fpOf(a.pub)));assert.deepStrictEqual(Object.keys(a.pub).sort(),["crv","kty","x","y"]);

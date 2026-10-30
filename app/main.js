@@ -73,7 +73,7 @@ function drawInvite(){
   const box=$("#invbox");if(!box)return;box.textContent="";
   const mk=el("button",{class:"glass sm",id:"mkinv",type:"button",onclick:async()=>{
     try{
-      const tok=b64u(crypto.getRandomValues(new Uint8Array(16))),hs=hex(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(tok))));
+      const tok=b64u(crypto.getRandomValues(new Uint8Array(16))),hs=await PrekCrypto.inviteHash(tok);
       await q(sb.rpc("create_invite",{p_hash:hs}),tr("ctx.createInvite"));
       const link=location.origin+location.pathname+"#inv="+tok;
       box.textContent="";
@@ -412,10 +412,7 @@ function drawChatHead(){
   $("#fp").textContent=o?tr("chat.fingerprint",{fp:o.fp.match(/.{4}/g).join(" ")}):"";
 }
 async function safety(otherFp){
-  const a=[S.profile.fp,otherFp].sort().join(":");
-  const h=new Uint8Array(await crypto.subtle.digest("SHA-256",enc.encode("pling-safety:"+a)));
-  const g=[];for(let i=0;i<6;i++)g.push(String(((h[i*3]<<16|h[i*3+1]<<8|h[i*3+2])>>>0)%100000).padStart(5,"0"));
-  return g.join(" ");
+  return PrekCrypto.safetyNumber(S.profile.fp,otherFp);
 }
 function drawTyping(){
   const t=$("#typ");
@@ -792,10 +789,9 @@ async function sendImage(file){
       }else({w,h,bytes}=gif);
       t="image/gif";
     }else{const r=await shrink(file);w=r.w;h=r.h;bytes=new Uint8Array(await r.blob.arrayBuffer())}
-    const key=await pairKey(other.pub),iv=crypto.getRandomValues(new Uint8Array(12));
-    const ct=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},key,bytes));
+    const key=await pairKey(other.pub),blob=await PrekCrypto.encryptBytes(key,bytes);
     path=cid+"/"+crypto.randomUUID();
-    const up=await sb.storage.from(BUCKET).upload(path,new Blob([iv,ct],{type:"application/octet-stream"}),{contentType:"application/octet-stream"});
+    const up=await sb.storage.from(BUCKET).upload(path,new Blob([blob],{type:"application/octet-stream"}),{contentType:"application/octet-stream"});
     if(up.error)throw new Error(tr("img.uploadFailed",{msg:up.error.message}));
     const ok=await sendMsg({img:t?{p:path,w,h,t}:{p:path,w,h},ts:Date.now()},path);
     if(!ok){await sb.storage.from(BUCKET).remove([path]);return}
@@ -813,7 +809,7 @@ function picEl(img){
     try{
       const r=await sb.storage.from(BUCKET).download(img.p);if(r.error)throw r.error;
       const buf=new Uint8Array(await r.data.arrayBuffer()),key=await pairKey(other.pub);
-      const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},key,buf.slice(12));
+      const pt=await PrekCrypto.decryptBytes(key,buf);
       const u=URL.createObjectURL(new Blob([pt],{type:gifT?"image/gif":"image/jpeg"}));picCache.set(img.p,u);show(u);
     }catch(e){box.textContent=tr("img.missing")}
   })();
