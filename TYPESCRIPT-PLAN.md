@@ -65,10 +65,27 @@ the app never touches the Supabase client except to create `api` in `main.js`. T
 the bucket name, the channel name and the tables it listens to, and forbids `sb.` anywhere in the app. Step 3 is done.
 The types are written by hand and checked by that test; they are not generated (no Supabase CLI in the build environment).
 
-## Step 4 - State and screens, one at a time
+## Step 4 - The rest of the code, round by round
 
-Convert the remaining code to TypeScript piece by piece: state (`S`), friends/requests, chat view,
-presence, settings, animations. Order by risk, lowest first. Stop whenever it stops paying off.
+Agreed 2026-10-30 (rollback tag `rollback-before-step4` = faf99e4, the state checked by Dan Joakim in the app).
+Sound, emoji tables, avatar helpers and 133 lines of CSS are not normal source files: they are cut out of the old
+prototype `app/base/messenger.html` or live as strings in `build.py`, which patches them with 18 `replace` calls. That has to go
+first, or nothing there can be typed.
+
+- **Round 0 (done):** the missing safety net. `tests/gif.js` (small GIF unchanged and animated, stored file encrypted, big GIF
+  shrunk under 3 MB and still animated, fake GIF rejected), `tests/sound.js` (message sound and double ping rendered offline and
+  measured), `tests/nudge.js` (double ping really shakes the window, banner, flash, title blink, fires once). No app change.
+- **Round 1:** extract the old pieces into normal source files (`style.css`, `emoji.js`, `sound.js`, `avatar.js`, start-up code)
+  and delete `app/base/` (this is old step 5, done first). The built `index.html` must be byte-identical.
+- **Rounds 2+, pure parts to TypeScript one at a time:** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
+  reactions logic. Little DOM, easy to test in Node.
+- **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).
+- **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered
+  only by mocked browser tests. Decide when we get there whether it is worth converting now, or whether it should wait for the planned
+  move to Vite and a UI framework (the same screens would be rewritten again).
+
+Every round: its own commit, typecheck and all tests green, Dan Joakim's yes before push, green CI, his check in the app
+after publishing. Rollback is the previous commit (or the tag).
 
 ## Step 5 - Remove the legacy base files
 
