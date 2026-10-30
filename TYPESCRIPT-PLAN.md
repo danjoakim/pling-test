@@ -57,6 +57,11 @@ from the old expressions before the move; `tests/img.js` sends an image between 
 One typed module for every Supabase call (tables and `rpc` functions), with types generated from the
 database schema. Replaces calls spread around `main.js`.
 
+Progress (2026-10-30): round 1 moved the 15 server-function (`rpc`) calls into `src/api.ts` (`createApi`, one typed function
+per database function). `tests/api-unit.js` checks every call against the SQL in `supabase/migrations/` and fails if the app calls
+`sb.rpc()` directly. Next rounds: sign-in (`sb.auth`), table calls (`from`), then storage, realtime and the edge function.
+The types are written by hand and checked by that test; they are not generated (no Supabase CLI in the build environment).
+
 ## Step 4 - State and screens, one at a time
 
 Convert the remaining code to TypeScript piece by piece: state (`S`), friends/requests, chat view,

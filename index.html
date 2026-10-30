@@ -1115,6 +1115,60 @@ var PrekI18n = (() => {
   return __toCommonJS(index_exports);
 })();
 
+"use strict";
+var PrekApi = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // src/api.ts
+  var api_exports = {};
+  __export(api_exports, {
+    createApi: () => createApi
+  });
+  function createApi(c) {
+    const call = (name, args) => c.rpc(name, args);
+    return {
+      // friends and requests
+      findByEmail: (email) => call("find_by_email", { p_email: email }),
+      /** Returns "friends" when the other side had already asked, otherwise "sent". */
+      sendRequest: (to) => call("send_request", { p_to: to }),
+      acceptRequest: (from) => call("accept_request", { p_from: from }),
+      removeFriend: (other) => call("remove_friend", { p_other: other }),
+      // blocking
+      blockUser: (other) => call("block_user", { p_other: other }),
+      unblockUser: (other) => call("unblock_user", { p_other: other }),
+      // chats
+      openDm: (other) => call("open_dm", { p_other: other }),
+      setChatExpiry: (chat, days) => call("set_chat_expiry", { p_chat: chat, p_days: days }),
+      markRead: (chat, id) => call("mark_read", { p_chat: chat, p_id: id }),
+      // presence
+      setPresence: (status, typing) => call("set_presence", { p_st: status, p_typ: typing }),
+      getPresence: () => call("get_presence"),
+      // invitations (only the hash of the token is stored on the server)
+      createInvite: (hash) => call("create_invite", { p_hash: hash }),
+      peekInvite: (token) => call("peek_invite", { p_token: token }),
+      redeemInvite: (token) => call("redeem_invite", { p_token: token }),
+      revokeInvites: () => call("revoke_invites")
+    };
+  }
+  return __toCommonJS(api_exports);
+})();
+
 /* ---------- kryptering ----------
    The cryptography itself lives in src/crypto.ts (bundled into PrekCrypto by build.py).
    This file only connects it to the app: browser storage (key per user), app state (S) and Supabase. */
@@ -1288,6 +1342,7 @@ document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest
 /* ---------- tilstand ---------- */
 const S={backup:null,user:null,profile:null,id:null,profiles:new Map(),av:new Map(),friends:[],reqIn:[],reqOut:[],chat:null,msgs:[],mode:"in",needCode:false,
   status:"online",last:new Map(),exp:new Map(),reads:new Map(),older:[],more:false,unread:new Map(),dm:new Map(),firstRef:true,pres:new Map(),typ:new Map(),seen:new Map(),cdUntil:0,nref:0};
+const api=PrekApi.createApi(sb); // typed server functions, src/api.ts
 const q=async(p,ctx)=>{const r=await p;if(r.error)throw new Error((ctx?ctx+": ":"")+r.error.message);return r.data};
 /* logo: «Prek!» tegnet som former (ikke tekst), så den ser lik ut uten skriften Inter. Prikken følger statusen (CSS-variabelen --dot), fargen på bokstavene følger temaet (--lgc). Se claude/utseende.md. */
 const PRK='<svg class="prk" viewBox="-20 -20 2621 991" overflow="visible" role="img" aria-label="prek!" xmlns="http://www.w3.org/2000/svg"><g style="fill:var(--dot,#43d65a)"><circle cx="2433.0" cy="602" r="150" opacity=".07"/><circle cx="2433.0" cy="602" r="185" opacity=".07"/><circle cx="2433.0" cy="602" r="220" opacity=".07"/><circle cx="2433.0" cy="602" r="254" opacity=".07"/><circle cx="2433.0" cy="602" r="289" opacity=".07"/><circle cx="2433.0" cy="602" r="324" opacity=".07"/></g><path d="M46.9 931.0H243.0V637.2H246.0C268.4 692.8 320.6 733.8 397.2 733.8C513.8 733.8 611.9 643.1 611.9 454.7C611.9 257.1 507.0 174.7 399.2 174.7C318.2 174.7 267.0 221.5 246.0 277.1H241.1V181.5H46.9ZM325.0 583.6C271.3 583.6 238.2 533.8 238.2 454.7C238.2 373.7 271.3 325.0 325.0 325.0C379.2 325.0 409.9 373.7 409.9 454.7C409.9 535.2 379.2 583.6 325.0 583.6ZM656.1 727.0H852.3V442.8C852.3 380.3 894.8 339.3 952.9 339.3C972.9 339.3 1005.7 342.2 1025.2 349.1V182.1C1009.6 177.2 992.5 174.3 975.4 174.3C917.3 174.3 871.9 208.4 852.3 285.6H846.5V181.1H656.1ZM1289.1 736.8C1428.3 736.8 1520.1 675.2 1547.9 577.1L1375.1 551.7C1363.3 582.0 1333.1 599.1 1293.0 599.1C1238.8 599.1 1202.7 566.8 1200.2 499.5H1555.7V454.5C1555.7 280.7 1449.3 174.3 1284.2 174.3C1115.3 174.3 1007.9 286.6 1007.9 455.5C1007.9 632.3 1113.8 736.8 1289.1 736.8ZM1201.7 392.0C1207.6 340.3 1236.4 312.0 1286.2 312.0C1336.0 312.0 1364.8 340.3 1370.7 392.0ZM1602.8 727.0H1799.1V571.7L1828.4 534.6L1939.8 727.0H2163.4L1973.0 420.4L2158.5 181.1H1937.8L1806.0 364.7H1799.1V-0.5H1602.8Z" style="fill:var(--lgc,#1b5fb8);stroke:var(--lgc,#1b5fb8)" stroke-width="37" stroke-linejoin="round"/><path d="M2315.8 33.9Q2313.0 0.0 2347.0 0.0L2519.0 0.0Q2553.0 0.0 2550.2 33.9L2521.8 377.1Q2519.0 411.0 2485.0 411.0L2381.0 411.0Q2347.0 411.0 2344.2 377.1Z" style="fill:var(--lgc,#1b5fb8)"/><g style="fill:var(--dot,#43d65a)"><circle cx="2433.0" cy="602" r="125"/></g><circle cx="2433.0" cy="602" r="125" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="14"/></svg>';
@@ -1483,14 +1538,14 @@ async function redeemPending(){
   if(!t)return;
   try{localStorage.removeItem("pling_inv")}catch(e){}
   try{
-    const r=await q(sb.rpc("redeem_invite",{p_token:t}),tr("ctx.invitation")),f=r&&r[0];
+    const r=await q(api.redeemInvite(t),tr("ctx.invitation")),f=r&&r[0];
     toast(tr("invite.nowFriends",{name:f?f.name:tr("invite.fallbackName")}));await refresh();
   }catch(e){toast(tr("invite.failed"),true)}
 }
 async function showInviteBanner(){
   const box=$("#invb");if(!box)return;let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
   if(!t)return;
-  try{const r=await sb.rpc("peek_invite",{p_token:t});box.textContent="";
+  try{const r=await api.peekInvite(t);box.textContent="";
     if(r.data)box.append(el("b",{},r.data),tr("invite.invitedBy"));
     else box.append(tr("invite.expiredBanner"));
     box.hidden=false}catch(e){}
@@ -1500,7 +1555,7 @@ function drawInvite(){
   const mk=el("button",{class:"glass sm",id:"mkinv",type:"button",onclick:async()=>{
     try{
       const tok=b64u(crypto.getRandomValues(new Uint8Array(16))),hs=await PrekCrypto.inviteHash(tok);
-      await q(sb.rpc("create_invite",{p_hash:hs}),tr("ctx.createInvite"));
+      await q(api.createInvite(hs),tr("ctx.createInvite"));
       const link=location.origin+location.pathname+"#inv="+tok;
       box.textContent="";
       const q1=el("div",{class:"qr",id:"invqr"});q1.innerHTML=qrSvg(link);
@@ -1510,7 +1565,7 @@ function drawInvite(){
         el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast(tr("invite.copied"))}catch(e){inp.select();toast(tr("invite.selectToCopy"),true)}}},tr("common.copy")));
       if(navigator.share)row.append(el("button",{class:"glass sm",type:"button",onclick:()=>navigator.share({title:"Prek!",text:tr("invite.shareText"),url:link}).catch(()=>{})},tr("invite.share")));
       box.append(q1,inp,row,el("div",{class:"fine"},tr("invite.validity")),
-        el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(sb.rpc("revoke_invites"),tr("ctx.revokeInvites"));toast(tr("invite.revoked",{n}));drawInvite()}catch(e){fail(e)}}},tr("invite.revokeAll")));
+        el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(api.revokeInvites(),tr("ctx.revokeInvites"));toast(tr("invite.revoked",{n}));drawInvite()}catch(e){fail(e)}}},tr("invite.revokeAll")));
     }catch(e){fail(e)}
   }},tr("invite.create"));
   box.append(el("div",{class:"fine"},tr("invite.orSendLink")),mk);
@@ -1551,7 +1606,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#info").hidden)
 
 /* Logg ut. supabase-js sin signOut() avbryter uten å gjøre noe hvis kallet mot serveren feiler (nett, utløpt økt, uventet svar), og da ble brukeren stående på skjermen. Derfor: prøv vanlig utlogging, ellers lokalt, ellers fjern økten for hånd og last siden på nytt. */
 async function doLogout(){
-  try{if(S.user&&S.id)await Promise.race([sb.rpc("set_presence",{p_st:"off",p_typ:null}),new Promise(r=>setTimeout(r,2000))])}catch(e){}
+  try{if(S.user&&S.id)await Promise.race([api.setPresence("off",null),new Promise(r=>setTimeout(r,2000))])}catch(e){}
   let bad=false;
   try{const r=await Promise.race([sb.auth.signOut(),new Promise(r=>setTimeout(()=>r({error:1}),4000))]);bad=!!(r&&r.error)}catch(e){bad=true}
   await new Promise(r=>setTimeout(r,50));
@@ -1610,7 +1665,7 @@ function trackMe(force){
     return}
   S.lastTrack=now;
   const typ=S.myTyp&&now-S.myTyp.n<3000?S.myTyp.c:null;
-  sb.rpc("set_presence",{p_st:S.status,p_typ:typ}).then(()=>{},()=>{});
+  api.setPresence(S.status,typ).then(()=>{},()=>{});
 }
 let prT=0,prBusy=false,prAgain=false;const typAt=new Map();
 function presSoon(){clearTimeout(prT);prT=setTimeout(pullPresence,250)}
@@ -1632,7 +1687,7 @@ async function pullPresence(){
   if(prBusy){prAgain=true;return}
   prBusy=true;
   try{
-    const r=await sb.rpc("get_presence");if(r.error||!S.user)return;
+    const r=await api.getPresence();if(r.error||!S.user)return;
     const m=new Map(),now=Date.now();
     for(const p of r.data||[]){
       if(!ST[p.st]||p.st==="off"||p.age_s==null||p.age_s>PRES_STALE)continue;
@@ -1678,10 +1733,10 @@ async function refresh(){
 function drawBlocks(){
   const c=$("#blist");if(!c)return;c.textContent="";const bl=S.blocks||[];$("#bgrp").hidden=!bl.length;
   for(const b of bl)c.append(el("div",{class:"brow"},el("span",{},b.name||tr("common.unknown")),el("button",{class:"glass sm",type:"button",onclick:async()=>{
-    try{await q(sb.rpc("unblock_user",{p_other:b.blocked}),tr("ctx.unblock"));toast(tr("block.removed"));refresh()}catch(e){fail(e)}}},tr("block.remove"))))}
+    try{await q(api.unblockUser(b.blocked),tr("ctx.unblock"));toast(tr("block.removed"));refresh()}catch(e){fail(e)}}},tr("block.remove"))))}
 const readKey=cid=>"pling_read_"+S.user.id+"_"+cid;
 const getRead=cid=>S.reads.get(cid)||0;
-const setRead=(cid,id)=>{if(id>getRead(cid)){S.reads.set(cid,id);sb.rpc("mark_read",{p_chat:cid,p_id:id}).then(()=>{},()=>{})}};
+const setRead=(cid,id)=>{if(id>getRead(cid)){S.reads.set(cid,id);api.markRead(cid,id).then(()=>{},()=>{})}};
 async function loadPreviews(){
   const [cm,cs,rr]=await Promise.all([q(sb.from("chat_members").select("chat_id,user_id"),tr("ctx.chats")),q(sb.from("chats").select("id,exp_days"),tr("ctx.chats")),q(sb.from("chat_reads").select("chat_id,last_id"),tr("ctx.read"))]);
   for(const c of cs)S.exp.set(c.id,c.exp_days||0);
@@ -1785,7 +1840,7 @@ function drawReqs(){
   for(const id of S.reqIn){
     box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til"),
       el("div",{class:"row"},
-        el("button",{class:"sm",onclick:async()=>{try{await q(sb.rpc("accept_request",{p_from:id}),tr("friends.accept"));refresh()}catch(e){fail(e)}}},tr("friends.accept")),
+        el("button",{class:"sm",onclick:async()=>{try{await q(api.acceptRequest(id),tr("friends.accept"));refresh()}catch(e){fail(e)}}},tr("friends.accept")),
         el("button",{class:"glass sm",onclick:async()=>{try{await q(sb.from("friend_requests").delete().eq("from_id",id).eq("to_id",S.user.id),tr("friends.decline"));refresh()}catch(e){fail(e)}}},tr("friends.decline")))));
   }
 }
@@ -1807,7 +1862,7 @@ function closeChat(){
 }
 async function openChat(otherId){
   try{
-    const cid=await q(sb.rpc("open_dm",{p_other:otherId}),tr("ctx.openChat"));
+    const cid=await q(api.openDm(otherId),tr("ctx.openChat"));
     S.chat={id:cid,other:otherId};S.msgs=[];S.older=[];S.more=false;S.sig=null;S.first=true;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
     $("#shell").classList.add("inchat");
     $("#empty").hidden=true;for(const i of ["ch","log","bar"])$("#"+i).hidden=false;
@@ -2315,9 +2370,9 @@ function wire(){
   const add=async()=>{
     const v=$("#fe").value.trim(),err=$("#ferr");err.textContent="";if(!v)return;
     try{
-      const f=await q(sb.rpc("find_by_email",{p_email:v}),tr("ctx.search"));
+      const f=await q(api.findByEmail(v),tr("ctx.search"));
       if(!f.length){err.textContent=tr("friend.notFound");return}
-      const r=await q(sb.rpc("send_request",{p_to:f[0].id}),tr("ctx.request"));
+      const r=await q(api.sendRequest(f[0].id),tr("ctx.request"));
       toast(r==="friends"?tr("friend.nowFriends"):tr("friend.requestSent",{name:f[0].name}));$("#fe").value="";$("#addfp").hidden=true;$("#addf").setAttribute("aria-expanded","false");refresh();
     }catch(e){fail(e)}
   };
@@ -2329,7 +2384,7 @@ function wire(){
   $("#pr").addEventListener("click",()=>$("#mb").click());
   $("#ex").addEventListener("change",async()=>{
     if(!S.chat)return;const v=+$("#ex").value,cid=S.chat.id;
-    try{await q(sb.rpc("set_chat_expiry",{p_chat:cid,p_days:v}),tr("ctx.changeExpiry"));S.exp.set(cid,v);drawExp();toast(v?tr("exp.on",{when:dagTxt(v)}):tr("exp.off"))}
+    try{await q(api.setChatExpiry(cid,v),tr("ctx.changeExpiry"));S.exp.set(cid,v);drawExp();toast(v?tr("exp.on",{when:dagTxt(v)}):tr("exp.off"))}
     catch(e){fail(e);drawExp()}
   });
   const sure=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
@@ -2339,9 +2394,9 @@ function wire(){
     const mine=S.msgs.filter(m=>m.mine&&m.img).map(m=>m.img.p);
     if(mine.length)await sb.storage.from(BUCKET).remove(mine);
     await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),tr("ctx.delete"));S.sig=null;toast(tr("msg.mineDeleted"));refreshSoon()}catch(e){fail(e)}});
-  sure($("#bfr"),tr("chat.removeFriend"),async()=>{try{await q(sb.rpc("remove_friend",{p_other:S.chat.other}),tr("ctx.removeFriend"));closeChat();refresh()}catch(e){fail(e)}});
+  sure($("#bfr"),tr("chat.removeFriend"),async()=>{try{await q(api.removeFriend(S.chat.other),tr("ctx.removeFriend"));closeChat();refresh()}catch(e){fail(e)}});
   $("#bmu").addEventListener("click",()=>{if(!S.chat)return;const id=S.chat.other,on=!muted(id);setMuted(id,on);drawMute();drawFriends();toast(on?tr("mute.on"):tr("mute.off"))});
-  sure($("#bbl"),tr("chat.block"),async()=>{try{await q(sb.rpc("block_user",{p_other:S.chat.other}),tr("ctx.block"));closeChat();toast(tr("block.done"));refresh()}catch(e){fail(e)}});
+  sure($("#bbl"),tr("chat.block"),async()=>{try{await q(api.blockUser(S.chat.other),tr("ctx.block"));closeChat();toast(tr("block.done"));refresh()}catch(e){fail(e)}});
   $("#bd").addEventListener("click",()=>{
     const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?tr("chat.dlDp"):m.img?tr("chat.dlImage"):m.ok?m.t:tr("chat.undecryptable"))).join("\n");
     download("prek-samtale.txt",t+"\n");
