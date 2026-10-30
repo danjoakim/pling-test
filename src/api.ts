@@ -8,9 +8,22 @@
 
 export type Result<T> = { data: T | null; error: { message: string } | null };
 
-/** The one method of the Supabase client this module needs. */
+/** What this module needs from the Supabase client: server functions and sign-in. */
 export interface RpcClient {
   rpc(name: string, args?: Record<string, unknown>): PromiseLike<Result<any>>;
+  auth: AuthClient;
+}
+
+export interface Session { access_token: string; user: { id: string; email?: string } }
+/** The parts of supabase.auth used here. Results are passed through unchanged. */
+export interface AuthClient {
+  signUp(a: { email: string; password: string }): PromiseLike<Result<{ session: Session | null }>>;
+  signInWithPassword(a: { email: string; password: string }): PromiseLike<Result<unknown>>;
+  signInWithOtp(a: { email: string; options: { emailRedirectTo: string } }): PromiseLike<Result<unknown>>;
+  verifyOtp(a: { email: string; token: string; type: "email" }): PromiseLike<Result<unknown>>;
+  signOut(a?: { scope: "local" }): PromiseLike<{ error: unknown }>;
+  getSession(): PromiseLike<{ data: { session: Session | null } }>;
+  onAuthStateChange(cb: (event: string, session: Session | null) => void): unknown;
 }
 
 export interface FoundUser { id: string; name: string; fp: string; pub: unknown }
@@ -22,6 +35,16 @@ export interface RedeemedInvite { id: string; name: string }
 export function createApi(c: RpcClient) {
   const call = <T>(name: string, args?: Record<string, unknown>) => c.rpc(name, args) as PromiseLike<Result<T>>;
   return {
+    // sign-in. The link in the e-mail brings the user back to this page (same origin and path).
+    signUp: (email: string, password: string) => c.auth.signUp({ email, password }),
+    signIn: (email: string, password: string) => c.auth.signInWithPassword({ email, password }),
+    sendLoginCode: (email: string, redirectTo: string) =>
+      c.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } }),
+    verifyLoginCode: (email: string, token: string) => c.auth.verifyOtp({ email, token, type: "email" }),
+    /** Callers must not rely on this alone: see doLogout() in main.js for why. */
+    signOut: (localOnly = false) => (localOnly ? c.auth.signOut({ scope: "local" }) : c.auth.signOut()),
+    getSession: () => c.auth.getSession(),
+    onAuthChange: (cb: (event: string, session: Session | null) => void) => c.auth.onAuthStateChange(cb),
     // friends and requests
     findByEmail: (email: string) => call<FoundUser[]>("find_by_email", { p_email: email }),
     /** Returns "friends" when the other side had already asked, otherwise "sent". */

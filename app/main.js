@@ -128,10 +128,10 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#info").hidden)
 async function doLogout(){
   try{if(S.user&&S.id)await Promise.race([api.setPresence("off",null),new Promise(r=>setTimeout(r,2000))])}catch(e){}
   let bad=false;
-  try{const r=await Promise.race([sb.auth.signOut(),new Promise(r=>setTimeout(()=>r({error:1}),4000))]);bad=!!(r&&r.error)}catch(e){bad=true}
+  try{const r=await Promise.race([api.signOut(),new Promise(r=>setTimeout(()=>r({error:1}),4000))]);bad=!!(r&&r.error)}catch(e){bad=true}
   await new Promise(r=>setTimeout(r,50));
   if(S.user){
-    try{await sb.auth.signOut({scope:"local"})}catch(e){}
+    try{await api.signOut(true)}catch(e){}
     await new Promise(r=>setTimeout(r,50));
     if(S.user){try{Object.keys(localStorage).filter(k=>/^sb-.*-auth-token/.test(k)).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()}
   }
@@ -975,9 +975,9 @@ function cdTick(){const l=Math.ceil((S.cdUntil-Date.now())/1000),b=$("#dp");
   const a=$("#amb"),cl=["on","on","away","on","busy","on","away"];
   [[8,18],[82,12],[16,72],[70,78],[48,8],[90,54],[30,40]].forEach((p,i)=>{const f=ff(cl[i]);f.style.left=p[0]+"%";f.style.top=p[1]+"%";f.style.animationDuration=(7+i)+"s";f.style.animationDelay=(-i*1.3)+"s";f.firstChild.style.animationDelay=(-i*.7)+"s";a.append(f)});
 })();
-sb.auth.onAuthStateChange((ev,session)=>{
+api.onAuthChange((ev,session)=>{
   S.tok=session&&session.access_token||null;
   if(session&&session.user){if(!S.user||S.user.id!==session.user.id)setTimeout(()=>afterLogin(session.user).catch(e=>fail(e)),0)}
   else{S.user=null;S.profile=null;S.id=null;S.chat=null;S.pres=new Map();S.reads=new Map();S.last=new Map();S.unread=new Map();S.exp=new Map();S.av=new Map();S.profiles=new Map();S.firstRef=true;S.older=[];clearInterval(S.poll);clearInterval(S.pp);clearInterval(S.pbT);clearInterval(S.pfT);S.pairId=null;sb.removeAllChannels();S.pch=null;myAv=null;viewLogin()}
 });
-sb.auth.getSession().then(({data})=>{if(!data.session)viewLogin()});
+api.getSession().then(({data})=>{if(!data.session)viewLogin()});

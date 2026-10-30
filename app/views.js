@@ -7,15 +7,15 @@ function viewLogin(){
   const go=async()=>{
     try{
       if(S.mode==="up"){
-        const d=await q(sb.auth.signUp({email:email.value.trim(),password:pw.value}),tr("ctx.signUp"));
+        const d=await q(api.signUp(email.value.trim(),pw.value),tr("ctx.signUp"));
         if(!d.session)toast(tr("auth.accountCreated"));
       }else{
-        await q(sb.auth.signInWithPassword({email:email.value.trim(),password:pw.value}),tr("ctx.signIn"));
+        await q(api.signIn(email.value.trim(),pw.value),tr("ctx.signIn"));
       }
     }catch(e){fail(e)}
   };
-  const sendCode=async()=>{try{await q(sb.auth.signInWithOtp({email:email.value.trim(),options:{emailRedirectTo:location.origin+location.pathname}}),tr("ctx.sendCode"));S.needCode=true;toast(tr("auth.emailSent"));viewLogin()}catch(e){fail(e)}};
-  const verify=async()=>{try{await q(sb.auth.verifyOtp({email:email.value.trim(),token:code.value.trim(),type:"email"}),tr("ctx.verifyCode"))}catch(e){fail(e)}};
+  const sendCode=async()=>{try{await q(api.sendLoginCode(email.value.trim(),location.origin+location.pathname),tr("ctx.sendCode"));S.needCode=true;toast(tr("auth.emailSent"));viewLogin()}catch(e){fail(e)}};
+  const verify=async()=>{try{await q(api.verifyLoginCode(email.value.trim(),code.value.trim()),tr("ctx.verifyCode"))}catch(e){fail(e)}};
   app.classList.add("lgn");
   let remMail="";try{remMail=localStorage.getItem("pling_remember_email")||""}catch(e){}
   if(remMail&&!email.value)email.value=remMail;
