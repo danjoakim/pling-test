@@ -1,0 +1,777 @@
+{
+ "note": "Made by the JavaScript in app/main.js before loadReacts moved to src/reactions.ts. Never regenerate with new code.",
+ "ids": [
+  "rofl",
+  "thumbup",
+  "heart",
+  "surprised",
+  "cry",
+  "thumbdown"
+ ],
+ "cases": {
+  "empty": {
+   "rows": [],
+   "list": {
+    "data": []
+   },
+   "listThrows": false,
+   "result": {
+    "map": [],
+    "sig": ""
+   }
+  },
+  "one": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": 1,
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [
+     [
+      1,
+      [
+       [
+        "u1",
+        "rofl"
+       ]
+      ]
+     ]
+    ],
+    "sig": "1:u1:rofl"
+   }
+  },
+  "two_users_same_message": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": 1,
+      "u": "u1"
+     }
+    },
+    {
+     "msg_id": 1,
+     "user_id": "u2",
+     "iv": "iv1",
+     "ct": "ct1",
+     "p": {
+      "r": "heart",
+      "m": 1,
+      "u": "u2"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [
+     [
+      1,
+      [
+       [
+        "u1",
+        "rofl"
+       ],
+       [
+        "u2",
+        "heart"
+       ]
+      ]
+     ]
+    ],
+    "sig": "1:u1:rofl|1:u2:heart"
+   }
+  },
+  "same_user_twice_last_wins": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": 1,
+      "u": "u1"
+     }
+    },
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv1",
+     "ct": "ct1",
+     "p": {
+      "r": "cry",
+      "m": 1,
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [
+     [
+      1,
+      [
+       [
+        "u1",
+        "cry"
+       ]
+      ]
+     ]
+    ],
+    "sig": "1:u1:cry|1:u1:rofl"
+   }
+  },
+  "two_messages": {
+   "rows": [
+    {
+     "msg_id": 2,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "cry",
+      "m": 2,
+      "u": "u1"
+     }
+    },
+    {
+     "msg_id": 1,
+     "user_id": "u2",
+     "iv": "iv1",
+     "ct": "ct1",
+     "p": {
+      "r": "thumbup",
+      "m": 1,
+      "u": "u2"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [
+     [
+      2,
+      [
+       [
+        "u1",
+        "cry"
+       ]
+      ]
+     ],
+     [
+      1,
+      [
+       [
+        "u2",
+        "thumbup"
+       ]
+      ]
+     ]
+    ],
+    "sig": "1:u2:thumbup|2:u1:cry"
+   }
+  },
+  "sort_is_text_order": {
+   "rows": [
+    {
+     "msg_id": 10,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": 10,
+      "u": "u1"
+     }
+    },
+    {
+     "msg_id": 9,
+     "user_id": "u1",
+     "iv": "iv1",
+     "ct": "ct1",
+     "p": {
+      "r": "rofl",
+      "m": 9,
+      "u": "u1"
+     }
+    },
+    {
+     "msg_id": 2,
+     "user_id": "b",
+     "iv": "iv2",
+     "ct": "ct2",
+     "p": {
+      "r": "heart",
+      "m": 2,
+      "u": "b"
+     }
+    },
+    {
+     "msg_id": 2,
+     "user_id": "a",
+     "iv": "iv3",
+     "ct": "ct3",
+     "p": {
+      "r": "heart",
+      "m": 2,
+      "u": "a"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [
+     [
+      10,
+      [
+       [
+        "u1",
+        "rofl"
+       ]
+      ]
+     ],
+     [
+      9,
+      [
+       [
+        "u1",
+        "rofl"
+       ]
+      ]
+     ],
+     [
+      2,
+      [
+       [
+        "b",
+        "heart"
+       ],
+       [
+        "a",
+        "heart"
+       ]
+      ]
+     ]
+    ],
+    "sig": "10:u1:rofl|2:a:heart|2:b:heart|9:u1:rofl"
+   }
+  },
+  "message_id_as_text_is_accepted": {
+   "rows": [
+    {
+     "msg_id": 5,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": "5",
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [
+     [
+      5,
+      [
+       [
+        "u1",
+        "rofl"
+       ]
+      ]
+     ]
+    ],
+    "sig": "5:u1:rofl"
+   }
+  },
+  "message_id_text_in_row": {
+   "rows": [
+    {
+     "msg_id": "5",
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": 5,
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [
+     [
+      "5",
+      [
+       [
+        "u1",
+        "rofl"
+       ]
+      ]
+     ]
+    ],
+    "sig": "5:u1:rofl"
+   }
+  },
+  "message_id_moved": {
+   "rows": [
+    {
+     "msg_id": 2,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": 1,
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [],
+    "sig": ""
+   }
+  },
+  "user_forged": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": 1,
+      "u": "u2"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [],
+    "sig": ""
+   }
+  },
+  "empty_reaction_means_removed": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "",
+      "m": 1,
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [],
+    "sig": ""
+   }
+  },
+  "unknown_reaction": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "zzz",
+      "m": 1,
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [],
+    "sig": ""
+   }
+  },
+  "reaction_not_string": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": 5,
+      "m": 1,
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [],
+    "sig": ""
+   }
+  },
+  "reaction_missing": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "m": 1,
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [],
+    "sig": ""
+   }
+  },
+  "not_decryptable_null": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": null
+    },
+    {
+     "msg_id": 1,
+     "user_id": "u2",
+     "iv": "iv1",
+     "ct": "ct1",
+     "p": {
+      "r": "heart",
+      "m": 1,
+      "u": "u2"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [
+     [
+      1,
+      [
+       [
+        "u2",
+        "heart"
+       ]
+      ]
+     ]
+    ],
+    "sig": "1:u2:heart"
+   }
+  },
+  "not_decryptable_undefined": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": "__undefined__"
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [],
+    "sig": ""
+   }
+  },
+  "m_missing": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [],
+    "sig": ""
+   }
+  },
+  "m_nan_equals_nan_never": {
+   "rows": [
+    {
+     "msg_id": "x",
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": "x",
+      "u": "u1"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [],
+    "sig": ""
+   }
+  },
+  "open_throws_gives_null": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u1",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": 1,
+      "u": "u1"
+     }
+    },
+    {
+     "msg_id": 2,
+     "user_id": "u1",
+     "iv": "iv1",
+     "ct": "ct1",
+     "p": "__throw__"
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": null
+  },
+  "api_error": {
+   "rows": [],
+   "list": {
+    "error": {
+     "message": "x"
+    },
+    "data": null
+   },
+   "listThrows": false,
+   "result": null
+  },
+  "api_error_with_data": {
+   "rows": [],
+   "list": {
+    "error": {
+     "message": "x"
+    },
+    "data": []
+   },
+   "listThrows": false,
+   "result": null
+  },
+  "api_null": {
+   "rows": [],
+   "list": null,
+   "listThrows": false,
+   "result": null
+  },
+  "api_undefined": {
+   "rows": [],
+   "list": "__undefined__",
+   "listThrows": false,
+   "result": null
+  },
+  "data_not_array": {
+   "rows": [],
+   "list": {
+    "data": {
+     "a": 1
+    }
+   },
+   "listThrows": false,
+   "result": null
+  },
+  "data_null": {
+   "rows": [],
+   "list": {
+    "data": null
+   },
+   "listThrows": false,
+   "result": null
+  },
+  "api_throws": {
+   "rows": [],
+   "list": "__rows__",
+   "listThrows": true,
+   "result": null
+  },
+  "all_kinds": {
+   "rows": [
+    {
+     "msg_id": 1,
+     "user_id": "u0",
+     "iv": "iv0",
+     "ct": "ct0",
+     "p": {
+      "r": "rofl",
+      "m": 1,
+      "u": "u0"
+     }
+    },
+    {
+     "msg_id": 2,
+     "user_id": "u1",
+     "iv": "iv1",
+     "ct": "ct1",
+     "p": {
+      "r": "thumbup",
+      "m": 2,
+      "u": "u1"
+     }
+    },
+    {
+     "msg_id": 3,
+     "user_id": "u2",
+     "iv": "iv2",
+     "ct": "ct2",
+     "p": {
+      "r": "heart",
+      "m": 3,
+      "u": "u2"
+     }
+    },
+    {
+     "msg_id": 4,
+     "user_id": "u3",
+     "iv": "iv3",
+     "ct": "ct3",
+     "p": {
+      "r": "surprised",
+      "m": 4,
+      "u": "u3"
+     }
+    },
+    {
+     "msg_id": 5,
+     "user_id": "u4",
+     "iv": "iv4",
+     "ct": "ct4",
+     "p": {
+      "r": "cry",
+      "m": 5,
+      "u": "u4"
+     }
+    },
+    {
+     "msg_id": 6,
+     "user_id": "u5",
+     "iv": "iv5",
+     "ct": "ct5",
+     "p": {
+      "r": "thumbdown",
+      "m": 6,
+      "u": "u5"
+     }
+    }
+   ],
+   "list": "__rows__",
+   "listThrows": false,
+   "result": {
+    "map": [
+     [
+      1,
+      [
+       [
+        "u0",
+        "rofl"
+       ]
+      ]
+     ],
+     [
+      2,
+      [
+       [
+        "u1",
+        "thumbup"
+       ]
+      ]
+     ],
+     [
+      3,
+      [
+       [
+        "u2",
+        "heart"
+       ]
+      ]
+     ],
+     [
+      4,
+      [
+       [
+        "u3",
+        "surprised"
+       ]
+      ]
+     ],
+     [
+      5,
+      [
+       [
+        "u4",
+        "cry"
+       ]
+      ]
+     ],
+     [
+      6,
+      [
+       [
+        "u5",
+        "thumbdown"
+       ]
+      ]
+     ]
+    ],
+    "sig": "1:u0:rofl|2:u1:thumbup|3:u2:heart|4:u3:surprised|5:u4:cry|6:u5:thumbdown"
+   }
+  }
+ }
+}

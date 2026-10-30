@@ -101,7 +101,12 @@ first, or nothing there can be typed.
   There was no test for links before, so `tests/links.js` (two users: preview card, setting off, failing and slow preview, shrunk picture, hostile preview
   from the sender, several links) was written first and passed against the old code. `tests/links-unit.js` compares the pure functions with
   `tests/fixtures/links-vectors.json` (made by the old code: 61 texts, 33 link cards incl. the exact 2000 and 90000 character limits). Thirteen deliberate changes were caught.
-- **Round 8+, the remaining pure part:** reactions logic. Little DOM, easy to test in Node.
+- **Round 8 (done):** the logic behind reactions is `src/reactions.ts` (`loadReactions`, `groupReactions`, `applyReaction`, `reactionPayload`, `menuPosition`;
+  bundled as `PrekReactions`). `app/reactions.js` gives `loadReacts()` its old name and passes in the api call, the decryption and the list of kinds (`RX_OK`,
+  which stays in `main.js` next to the texts). `tests/rx.js` only printed things, so `tests/reactions.js` (two users: choose, same kind counts 2, replace, remove,
+  order, ciphertext only, moved/forged/unknown/wrong-type reactions ignored, menu inside a narrow screen) was written first and passed against the old code.
+  `tests/reactions-unit.js` compares `loadReactions` with `tests/fixtures/reactions-vectors.json` (made by the old code: 27 situations). Of 14 deliberate changes, 12 were
+  caught; the other two (`""` and non-text kinds) are double checks that cannot change the result because neither is ever in the list of valid kinds.
 - **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).
 - **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered
   only by mocked browser tests. Decide when we get there whether it is worth converting now, or whether it should wait for the planned

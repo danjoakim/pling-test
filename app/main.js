@@ -484,25 +484,9 @@ function drawLog(keepPos){
 /* ---------- reaksjoner (kryptert som meldinger; se claude/reaksjoner.md) ---------- */
 const RX=[["rofl",tr("rx.name.rofl")],["thumbup",tr("rx.name.thumbup")],["heart",tr("rx.name.heart")],["surprised",tr("rx.name.surprised")],["cry",tr("rx.name.cry")],["thumbdown",tr("rx.name.thumbdown")]];
 const RX_OK=new Set(RX.map(x=>x[0]));
-async function loadReacts(cid,key){
-  try{
-    const r=await api.listReactions(cid);
-    if(!r||r.error||!Array.isArray(r.data))return null;
-    const map=new Map(),parts=[];
-    for(const x of r.data){
-      const p=await open(key,x.iv,x.ct);
-      /* meldings-id og avsender ligger også inne i det krypterte, så serveren ikke kan flytte en reaksjon til en annen melding eller person */
-      if(!p||typeof p.r!=="string"||Number(p.m)!==Number(x.msg_id)||p.u!==x.user_id)continue;
-      if(p.r===""||!RX_OK.has(p.r))continue;
-      let mp=map.get(x.msg_id);if(!mp){mp=new Map();map.set(x.msg_id,mp)}
-      mp.set(x.user_id,p.r);parts.push(x.msg_id+":"+x.user_id+":"+p.r);
-    }
-    parts.sort();return{map,sig:parts.join("|")};
-  }catch(e){return null}
-}
 function rxChips(m){
   const mp=S.rx.get(m.id);if(!mp||!mp.size)return null;
-  const g=new Map();for(const[u,r]of mp)g.set(r,(g.get(r)||[]).concat(u));
+  const g=groupReactions(mp);
   const w=el("div",{class:"rxs"});
   for(const[r,us]of g){
     const mine=us.includes(S.user.id),nm=AN_FIG[r][0];
@@ -524,7 +508,7 @@ function openRx(m,anchor){
   if(m.ok&&m.t!=null&&!m.img)p.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();copyText(String(m.t))}},tr("common.copy")));
   document.body.append(p);rxPop=p;
   const a=anchor.getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight;
-  let x=Math.min(Math.max(8,a.right-w),innerWidth-w-8),y=a.top-h-6;if(y<8)y=a.bottom+6;
+  const{x,y}=menuPosition(a,w,h,innerWidth);
   p.style.left=x+"px";p.style.top=y+"px";
 }
 async function copyText(t){
@@ -559,12 +543,11 @@ async function setReact(mid,r){
   if(!S.chat)return;
   const cid=S.chat.id,other=S.profiles.get(S.chat.other);if(!other)return;
   try{
-    const key=await pairKey(other.pub),s=await seal(key,{r:r||"",m:mid,u:S.user.id});
+    const key=await pairKey(other.pub),s=await seal(key,reactionPayload(r,mid,S.user.id));
     const res=await api.saveReaction({msg_id:mid,chat_id:cid,user_id:S.user.id,iv:s.iv,ct:s.ct});
     if(res&&res.error)throw res.error;
     if(!S.chat||S.chat.id!==cid)return;
-    let mp=S.rx.get(mid);if(!mp){mp=new Map();S.rx.set(mid,mp)}
-    if(r)mp.set(S.user.id,r);else mp.delete(S.user.id);
+    applyReaction(S.rx,mid,S.user.id,r);
     drawLog(true);refreshSoon();
   }catch(e){fail(e)}
 }
