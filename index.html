@@ -1340,6 +1340,76 @@ var PrekEmoji = (() => {
   return __toCommonJS(emoji_exports);
 })();
 
+"use strict";
+var PrekAvatar = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // src/avatar.ts
+  var avatar_exports = {};
+  __export(avatar_exports, {
+    avEl: () => avEl,
+    hue: () => hue,
+    okAv: () => okAv,
+    toAvatar: () => toAvatar
+  });
+  function okAv(a) {
+    return typeof a === "string" && a.startsWith("data:image/jpeg;base64,") && a.length < 12e3 && /^[A-Za-z0-9+/=]*$/.test(a.slice(23));
+  }
+  function toAvatar(file) {
+    return new Promise((ok, no) => {
+      const u = URL.createObjectURL(file), im = new Image();
+      im.onload = () => {
+        const s = Math.min(im.width, im.height), c = document.createElement("canvas");
+        c.width = c.height = 64;
+        c.getContext("2d").drawImage(im, (im.width - s) / 2, (im.height - s) / 2, s, s, 0, 0, 64, 64);
+        URL.revokeObjectURL(u);
+        ok(c.toDataURL("image/jpeg", 0.72));
+      };
+      im.onerror = () => {
+        URL.revokeObjectURL(u);
+        no();
+      };
+      im.src = u;
+    });
+  }
+  function hue(s) {
+    let h = 0;
+    for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360;
+    return h;
+  }
+  function avEl(name, av, cls) {
+    const d = document.createElement("span");
+    d.className = "pav " + cls;
+    if (okAv(av)) {
+      const i = document.createElement("img");
+      i.alt = "";
+      i.src = av;
+      d.append(i);
+    } else {
+      d.textContent = (name[0] || "?").toUpperCase();
+      d.style.background = "hsl(" + hue(name) + " 45% 36%)";
+    }
+    return d;
+  }
+  return __toCommonJS(avatar_exports);
+})();
+
 /* ---------- kryptering ----------
    The cryptography itself lives in src/crypto.ts (bundled into PrekCrypto by build.py).
    This file only connects it to the app: browser storage (key per user), app state (S) and Supabase. */
@@ -1412,15 +1482,7 @@ function ringing(v){const c=ac();if(!c)return;const bus=marimbaBus(c),t0=c.curre
    o.connect(g);g.connect(bus);o.start(t0+s);o.stop(t0+s+len+.4)}))})}
 function dobbelt(){ringing(.34)}
 function stor(){const a=$("#app");a.classList.remove("dp");void a.offsetWidth;a.classList.add("dp");dobbelt();try{if(navigator.vibrate)navigator.vibrate([200,60,200,60,200,60,200,60,300])}catch(e){}}
-function okAv(a){return typeof a==="string"&&a.startsWith("data:image/jpeg;base64,")&&a.length<12000&&/^[A-Za-z0-9+/=]*$/.test(a.slice(23))}
-function toAvatar(file){return new Promise((ok,no)=>{const u=URL.createObjectURL(file),im=new Image();
- im.onload=()=>{const s=Math.min(im.width,im.height),c=document.createElement("canvas");c.width=c.height=64;
-  c.getContext("2d").drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,64,64);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.72))};
- im.onerror=()=>{URL.revokeObjectURL(u);no()};im.src=u})}
-function hue(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return h}
-function avEl(name,av,cls){const d=document.createElement("span");d.className="pav "+cls;
- if(okAv(av)){const i=document.createElement("img");i.alt="";i.src=av;d.append(i)}else{d.textContent=(name[0]||"?").toUpperCase();d.style.background="hsl("+hue(name)+" 45% 36%)"}
- return d}
+const {okAv,toAvatar,hue,avEl}=PrekAvatar;
 /* ---------- animerte smilefjes (tegneserie-stil, Dan Joakim 26. okt) ----------
    HVORFOR: MSN hadde animerte smilefjes. Våre er tegnet i kode (SVG + CSS), helt egne figurer (ikke MSNs grafikk), ligger i selve appen og krever ingen forespørsel til tredjepart.
    I meldingen sendes bare koden (for eksempel «:)»); mottakeren tegner figuren selv. Se claude/emoji.md.

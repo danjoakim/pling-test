@@ -82,7 +82,12 @@ first, or nothing there can be typed.
   Locked by `tests/fixtures/emoji-vectors.json` (made by the old JavaScript: all tables, both regular expressions, 775 texts) and
   `tests/emoji-unit.js`; `tests/emo.js` also checks the built page. Checked once by hand: `linkify()` output with animated figures is
   identical before and after on all 775 texts.
-- **Rounds 3+, the remaining pure parts to TypeScript one at a time (image and avatar helpers, GIF encoder, sound, link preview, reactions):** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
+- **Round 3 (done):** avatar helpers are `src/avatar.ts` (`okAv`, `toAvatar`, `hue`, `avEl`; bundled as `PrekAvatar`). `okAv` and `hue`
+  are locked by `tests/fixtures/avatar-vectors.json` (made by the old code) and `tests/avatar-unit.js`; `tests/avatar.js` checks the element,
+  the centered 64x64 crop and the whole choose-a-picture flow in a browser. Compared once by hand against the old build in a browser:
+  identical elements and a byte-identical JPEG. A pre-existing quirk was found and left as it was: a name that starts with an emoji gets half
+  a character as its initial (`name[0]`); fixing it is a visible change and needs a yes.
+- **Rounds 4+, the remaining pure parts to TypeScript one at a time (image shrinking, GIF encoder, sound, link preview, reactions):** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
   reactions logic. Little DOM, easy to test in Node.
 - **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).
 - **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered
