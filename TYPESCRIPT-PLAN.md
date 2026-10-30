@@ -87,7 +87,11 @@ first, or nothing there can be typed.
   the centered 64x64 crop and the whole choose-a-picture flow in a browser. Compared once by hand against the old build in a browser:
   identical elements and a byte-identical JPEG. A pre-existing bug was found (a name that starts with an emoji got half a character as its initial) and fixed in a separate commit
   at Dan Joakim's request: `initial()` takes the first whole character (also used for the profile picture slot in the main window).
-- **Rounds 4+, the remaining pure parts to TypeScript one at a time (image shrinking, GIF encoder, sound, link preview, reactions):** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
+- **Round 4 (done):** the GIF encoder (`gifQuant`, `gifLzw`, `gifEncode`), `readGif` and `GIF_MAX` are `src/gif.ts` (bundled as `PrekGif`).
+  Locked byte for byte by `tests/fixtures/gif-vectors.json` (13 frame sets incl. transparency and dictionary resets, made by the old code;
+  SHA-256 of every output, full file when small) and `tests/gif-unit.js`; `tests/gif.js` still sends GIFs end to end. `shrinkGif()` (browser decoding)
+  stays in `main.js` and moves together with `shrink()` in the next round.
+- **Rounds 5+, the remaining parts to TypeScript one at a time (image and GIF shrinking in the browser, sound, link preview, reactions):** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
   reactions logic. Little DOM, easy to test in Node.
 - **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).
 - **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered

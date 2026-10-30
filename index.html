@@ -1424,6 +1424,190 @@ var PrekAvatar = (() => {
   return __toCommonJS(avatar_exports);
 })();
 
+"use strict";
+var PrekGif = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // src/gif.ts
+  var gif_exports = {};
+  __export(gif_exports, {
+    GIF_MAX: () => GIF_MAX,
+    gifEncode: () => gifEncode,
+    gifLzw: () => gifLzw,
+    gifQuant: () => gifQuant,
+    readGif: () => readGif
+  });
+  var GIF_MAX = 3e6;
+  function gifQuant(rgba, n, hasT) {
+    const hist = new Uint32Array(32768);
+    for (let i = 0; i < n; i++) {
+      const o = i * 4;
+      if (rgba[o + 3] >= 128) hist[rgba[o] >> 3 << 10 | rgba[o + 1] >> 3 << 5 | rgba[o + 2] >> 3]++;
+    }
+    const keys = [];
+    for (let k = 0; k < 32768; k++) if (hist[k]) keys.push(k);
+    const max = hasT ? 255 : 256;
+    const mk = (ks) => {
+      let c = 0, r0 = 31, r1 = 0, g0 = 31, g1 = 0, b0 = 31, b1 = 0;
+      for (const k of ks) {
+        c += hist[k];
+        const r = k >> 10, g = k >> 5 & 31, b = k & 31;
+        if (r < r0) r0 = r;
+        if (r > r1) r1 = r;
+        if (g < g0) g0 = g;
+        if (g > g1) g1 = g;
+        if (b < b0) b0 = b;
+        if (b > b1) b1 = b;
+      }
+      return { ks, c, rg: [r1 - r0, g1 - g0, b1 - b0] };
+    };
+    const boxes = keys.length ? [mk(keys)] : [];
+    while (boxes.length < max) {
+      let bi = -1, best = -1;
+      for (let i = 0; i < boxes.length; i++) {
+        const b2 = boxes[i];
+        if (b2.ks.length > 1 && b2.c > best) {
+          best = b2.c;
+          bi = i;
+        }
+      }
+      if (bi < 0) break;
+      const b = boxes[bi], ch = b.rg[0] >= b.rg[1] && b.rg[0] >= b.rg[2] ? 0 : b.rg[1] >= b.rg[2] ? 1 : 2;
+      const v = ch === 0 ? (k) => k >> 10 : ch === 1 ? (k) => k >> 5 & 31 : (k) => k & 31;
+      const s = b.ks.slice().sort((x, y) => v(x) - v(y));
+      let acc = 0, cut = 1;
+      for (let i = 0; i < s.length - 1; i++) {
+        acc += hist[s[i]];
+        cut = i + 1;
+        if (acc * 2 >= b.c) break;
+      }
+      boxes[bi] = mk(s.slice(0, cut));
+      boxes.push(mk(s.slice(cut)));
+    }
+    const pal = [], map = new Uint8Array(32768);
+    boxes.forEach((b, i) => {
+      let r = 0, g = 0, bl = 0;
+      for (const k of b.ks) {
+        const c = hist[k];
+        r += (k >> 10) * c;
+        g += (k >> 5 & 31) * c;
+        bl += (k & 31) * c;
+        map[k] = i;
+      }
+      const e = (v) => {
+        v = Math.round(v / b.c);
+        return v << 3 | v >> 2;
+      };
+      pal.push(e(r), e(g), e(bl));
+    });
+    const nCol = boxes.length, tIdx = hasT ? nCol : -1, total = nCol + (hasT ? 1 : 0);
+    let bits = 1;
+    while (1 << bits < total) bits++;
+    const idx = new Uint8Array(n);
+    for (let i = 0; i < n; i++) {
+      const o = i * 4;
+      idx[i] = rgba[o + 3] < 128 ? tIdx < 0 ? 0 : tIdx : map[rgba[o] >> 3 << 10 | rgba[o + 1] >> 3 << 5 | rgba[o + 2] >> 3];
+    }
+    const table = new Uint8Array((1 << bits) * 3);
+    table.set(pal);
+    return { idx, table, bits, tIdx };
+  }
+  function gifLzw(idx, minBits) {
+    const out = [], clear = 1 << minBits, eoi = clear + 1;
+    let size = minBits + 1, next = eoi + 1, dict = /* @__PURE__ */ new Map(), buf = 0, nb = 0;
+    const emit = (c) => {
+      buf |= c << nb;
+      nb += size;
+      while (nb >= 8) {
+        out.push(buf & 255);
+        buf >>>= 8;
+        nb -= 8;
+      }
+    };
+    emit(clear);
+    let cur = idx[0];
+    for (let i = 1; i < idx.length; i++) {
+      const k = idx[i], key = cur << 8 | k, hit = dict.get(key);
+      if (hit !== void 0) {
+        cur = hit;
+        continue;
+      }
+      emit(cur);
+      if (next > (1 << size) - 1 && size < 12) size++;
+      if (next < 4096) {
+        dict.set(key, next++);
+      } else {
+        emit(clear);
+        dict = /* @__PURE__ */ new Map();
+        size = minBits + 1;
+        next = eoi + 1;
+      }
+      cur = k;
+    }
+    emit(cur);
+    if (next > (1 << size) - 1 && size < 12) size++;
+    emit(eoi);
+    if (nb > 0) out.push(buf & 255);
+    return out;
+  }
+  function gifEncode(frames, w, h) {
+    const o = [];
+    const u16 = (v) => o.push(v & 255, v >> 8 & 255);
+    for (const c of "GIF89a") o.push(c.charCodeAt(0));
+    u16(w);
+    u16(h);
+    o.push(112, 0, 0);
+    o.push(33, 255, 11);
+    for (const c of "NETSCAPE2.0") o.push(c.charCodeAt(0));
+    o.push(3, 1, 0, 0, 0);
+    for (const f of frames) {
+      const q = gifQuant(f.rgba, w * h, f.hasT);
+      const d = Math.max(2, Math.min(65535, Math.round(f.delay / 10)));
+      o.push(33, 249, 4, f.hasT ? 2 << 2 | 1 : 1 << 2, d & 255, d >> 8, q.tIdx < 0 ? 0 : q.tIdx, 0);
+      o.push(44);
+      u16(0);
+      u16(0);
+      u16(w);
+      u16(h);
+      o.push(128 | q.bits - 1);
+      for (const b of q.table) o.push(b);
+      const mb = Math.max(2, q.bits);
+      o.push(mb);
+      const data = gifLzw(q.idx, mb);
+      for (let i = 0; i < data.length; i += 255) {
+        const n = Math.min(255, data.length - i);
+        o.push(n);
+        for (let j = 0; j < n; j++) o.push(data[i + j]);
+      }
+      o.push(0);
+    }
+    o.push(59);
+    return Uint8Array.from(o);
+  }
+  async function readGif(file) {
+    const b = new Uint8Array(await file.arrayBuffer());
+    if (b.length < 10 || String.fromCharCode(b[0], b[1], b[2], b[3]) !== "GIF8") return null;
+    return { bytes: b, w: b[6] | b[7] << 8, h: b[8] | b[9] << 8 };
+  }
+  return __toCommonJS(gif_exports);
+})();
+
 /* ---------- kryptering ----------
    The cryptography itself lives in src/crypto.ts (bundled into PrekCrypto by build.py).
    This file only connects it to the app: browser storage (key per user), app state (S) and Supabase. */
@@ -1497,6 +1681,7 @@ function ringing(v){const c=ac();if(!c)return;const bus=marimbaBus(c),t0=c.curre
 function dobbelt(){ringing(.34)}
 function stor(){const a=$("#app");a.classList.remove("dp");void a.offsetWidth;a.classList.add("dp");dobbelt();try{if(navigator.vibrate)navigator.vibrate([200,60,200,60,200,60,200,60,300])}catch(e){}}
 const {okAv,toAvatar,hue,avEl,initial}=PrekAvatar;
+const {GIF_MAX,gifEncode,readGif}=PrekGif;
 /* ---------- animerte smilefjes (tegneserie-stil, Dan Joakim 26. okt) ----------
    HVORFOR: MSN hadde animerte smilefjes. Våre er tegnet i kode (SVG + CSS), helt egne figurer (ikke MSNs grafikk), ligger i selve appen og krever ingen forespørsel til tredjepart.
    I meldingen sendes bare koden (for eksempel «:)»); mottakeren tegner figuren selv. Se claude/emoji.md.
@@ -2375,86 +2560,9 @@ async function shrink(file){
 }
 /* HVORFOR: GIF-er sendes uendret (ellers blir de stillbilder via canvas/JPEG i shrink()).
    Bucket-grensen er 3 MB; for store GIF-er gjøres mindre av shrinkGif() (aldri stillbilde). */
-const GIF_MAX=3000000;
-async function readGif(file){
-  const b=new Uint8Array(await file.arrayBuffer());
-  if(b.length<10||String.fromCharCode(b[0],b[1],b[2],b[3])!=="GIF8")return null;
-  return{bytes:b,w:b[6]|b[7]<<8,h:b[8]|b[9]<<8};
-}
 /* ---------- GIF: gjør for store GIF-er mindre (beholder animasjonen) ---------- */
 /* HVORFOR egen koder: ingen lib kan hentes inn (CDN er ikke tilgjengelig for bygget, og færre eksterne filer er bedre for en krypterende app).
    Dekoding gjøres av nettleseren (ImageDecoder), som gir ferdig sammensatte bilder. Vi koder på nytt med lokal fargetabell per bilde. */
-function gifQuant(rgba,n,hasT){
-  const hist=new Uint32Array(32768);
-  for(let i=0;i<n;i++){const o=i*4;if(rgba[o+3]>=128)hist[((rgba[o]>>3)<<10)|((rgba[o+1]>>3)<<5)|(rgba[o+2]>>3)]++}
-  const keys=[];for(let k=0;k<32768;k++)if(hist[k])keys.push(k);
-  const max=hasT?255:256;
-  const mk=ks=>{let c=0,r0=31,r1=0,g0=31,g1=0,b0=31,b1=0;
-    for(const k of ks){c+=hist[k];const r=k>>10,g=(k>>5)&31,b=k&31;
-      if(r<r0)r0=r;if(r>r1)r1=r;if(g<g0)g0=g;if(g>g1)g1=g;if(b<b0)b0=b;if(b>b1)b1=b}
-    return{ks,c,rg:[r1-r0,g1-g0,b1-b0]}};
-  const boxes=keys.length?[mk(keys)]:[];
-  while(boxes.length<max){
-    let bi=-1,best=-1;
-    for(let i=0;i<boxes.length;i++){const b=boxes[i];if(b.ks.length>1&&b.c>best){best=b.c;bi=i}}
-    if(bi<0)break;
-    const b=boxes[bi],ch=b.rg[0]>=b.rg[1]&&b.rg[0]>=b.rg[2]?0:b.rg[1]>=b.rg[2]?1:2;
-    const v=ch===0?k=>k>>10:ch===1?k=>(k>>5)&31:k=>k&31;
-    const s=b.ks.slice().sort((x,y)=>v(x)-v(y));
-    let acc=0,cut=1;for(let i=0;i<s.length-1;i++){acc+=hist[s[i]];cut=i+1;if(acc*2>=b.c)break}
-    boxes[bi]=mk(s.slice(0,cut));boxes.push(mk(s.slice(cut)));
-  }
-  const pal=[],map=new Uint8Array(32768);
-  boxes.forEach((b,i)=>{let r=0,g=0,bl=0;
-    for(const k of b.ks){const c=hist[k];r+=(k>>10)*c;g+=((k>>5)&31)*c;bl+=(k&31)*c;map[k]=i}
-    const e=v=>{v=Math.round(v/b.c);return(v<<3)|(v>>2)};pal.push(e(r),e(g),e(bl))});
-  const nCol=boxes.length,tIdx=hasT?nCol:-1,total=nCol+(hasT?1:0);
-  let bits=1;while((1<<bits)<total)bits++;
-  const idx=new Uint8Array(n);
-  for(let i=0;i<n;i++){const o=i*4;idx[i]=rgba[o+3]<128?(tIdx<0?0:tIdx):map[((rgba[o]>>3)<<10)|((rgba[o+1]>>3)<<5)|(rgba[o+2]>>3)]}
-  const table=new Uint8Array((1<<bits)*3);table.set(pal);
-  return{idx,table,bits,tIdx};
-}
-function gifLzw(idx,minBits){
-  const out=[],clear=1<<minBits,eoi=clear+1;
-  let size=minBits+1,next=eoi+1,dict=new Map(),buf=0,nb=0;
-  const emit=c=>{buf|=c<<nb;nb+=size;while(nb>=8){out.push(buf&255);buf>>>=8;nb-=8}};
-  emit(clear);
-  let cur=idx[0];
-  for(let i=1;i<idx.length;i++){
-    const k=idx[i],key=(cur<<8)|k,hit=dict.get(key);
-    if(hit!==undefined){cur=hit;continue}
-    emit(cur);
-    if(next>(1<<size)-1&&size<12)size++;
-    if(next<4096){dict.set(key,next++)}
-    else{emit(clear);dict=new Map();size=minBits+1;next=eoi+1}
-    cur=k;
-  }
-  emit(cur);
-  if(next>(1<<size)-1&&size<12)size++; /* som i vanlige koder: bredden kan øke før slutt-koden */
-  emit(eoi);
-  if(nb>0)out.push(buf&255);
-  return out;
-}
-function gifEncode(frames,w,h){
-  const o=[];const u16=v=>o.push(v&255,(v>>8)&255);
-  for(const c of"GIF89a")o.push(c.charCodeAt(0));
-  u16(w);u16(h);o.push(0x70,0,0);
-  o.push(0x21,0xFF,0x0B);for(const c of"NETSCAPE2.0")o.push(c.charCodeAt(0));o.push(3,1,0,0,0);
-  for(const f of frames){
-    const q=gifQuant(f.rgba,w*h,f.hasT);
-    const d=Math.max(2,Math.min(65535,Math.round(f.delay/10)));
-    o.push(0x21,0xF9,4,(f.hasT?(2<<2)|1:(1<<2)),d&255,d>>8,q.tIdx<0?0:q.tIdx,0);
-    o.push(0x2C);u16(0);u16(0);u16(w);u16(h);o.push(0x80|(q.bits-1));
-    for(const b of q.table)o.push(b);
-    const mb=Math.max(2,q.bits);o.push(mb);
-    const data=gifLzw(q.idx,mb);
-    for(let i=0;i<data.length;i+=255){const n=Math.min(255,data.length-i);o.push(n);for(let j=0;j<n;j++)o.push(data[i+j])}
-    o.push(0);
-  }
-  o.push(0x3B);
-  return Uint8Array.from(o);
-}
 async function shrinkGif(file,limit,onStep){
   if(typeof ImageDecoder==="undefined")throw new Error(tr("gif.noDecoder"));
   if(file.size>40*1024*1024)throw new Error(tr("gif.tooLarge"));
