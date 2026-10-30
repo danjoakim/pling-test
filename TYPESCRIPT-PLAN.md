@@ -107,7 +107,11 @@ first, or nothing there can be typed.
   order, ciphertext only, moved/forged/unknown/wrong-type reactions ignored, menu inside a narrow screen) was written first and passed against the old code.
   `tests/reactions-unit.js` compares `loadReactions` with `tests/fixtures/reactions-vectors.json` (made by the old code: 27 situations). Of 14 deliberate changes, 12 were
   caught; the other two (`""` and non-text kinds) are double checks that cannot change the result because neither is ever in the list of valid kinds.
-- **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).
+- **Round 9 (done), the foundation, part 1:** the page helpers `$`, `el`, `toast`, `fail` and `q` are `src/dom.ts` (bundled as `PrekDom`; `app/dom.js` gives
+  them their old names and comes first in the script). They behave exactly as before, odd corners included (see the note at the top of the file).
+  `tests/dom.js` calls them in the built page and pins that behavior; the final version passed against the old code (checked in a separate checkout of the
+  previous commit) and then against the new. Of 14 deliberate changes, 13 were caught; the other one (`klasse`) gives the same result by another route.
+- **Next, the foundation, part 2:** a typed state `S` (`app/main.js` line 3, about 47 fields used across the app).
 - **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered
   only by mocked browser tests. Decide when we get there whether it is worth converting now, or whether it should wait for the planned
   move to Vite and a UI framework (the same screens would be rewritten again).
