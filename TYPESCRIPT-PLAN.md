@@ -96,7 +96,12 @@ first, or nothing there can be typed.
   `tests/sound-unit.js` compares every call on a recording audio context (oscillators, frequencies, envelopes, connections, times) with
   `tests/fixtures/sound-vectors.json`, made by the old JavaScript; `tests/sound.js` still renders and measures in a browser and `tests/nudge.js` checks the shake.
   Seven deliberate changes to the numbers were all caught.
-- **Rounds 7+, the remaining pure parts, one at a time:** link preview, reactions logic. Little DOM, easy to test in Node.
+- **Round 7 (done):** links and link previews are `src/links.ts` (`cutUrl`, `okHttp`, `firstUrl`, `splitLinks`, `validLk`, `thumb`, `fetchPreview`; bundled as
+  `PrekLinks`). `app/links.js` keeps what touches the page: `linkify()` (builds the elements from `splitLinks`), `lkCard()`, the `LP_ON()` setting.
+  There was no test for links before, so `tests/links.js` (two users: preview card, setting off, failing and slow preview, shrunk picture, hostile preview
+  from the sender, several links) was written first and passed against the old code. `tests/links-unit.js` compares the pure functions with
+  `tests/fixtures/links-vectors.json` (made by the old code: 61 texts, 33 link cards incl. the exact 2000 and 90000 character limits). Thirteen deliberate changes were caught.
+- **Round 8+, the remaining pure part:** reactions logic. Little DOM, easy to test in Node.
 - **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).
 - **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered
   only by mocked browser tests. Decide when we get there whether it is worth converting now, or whether it should wait for the planned

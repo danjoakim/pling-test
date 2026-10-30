@@ -2357,6 +2357,122 @@ var PrekSound = (() => {
   return __toCommonJS(sound_exports);
 })();
 
+"use strict";
+var PrekLinks = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // src/links.ts
+  var links_exports = {};
+  __export(links_exports, {
+    cutUrl: () => cutUrl,
+    fetchPreview: () => fetchPreview,
+    firstUrl: () => firstUrl,
+    okHttp: () => okHttp,
+    splitLinks: () => splitLinks,
+    thumb: () => thumb,
+    validLk: () => validLk
+  });
+  var cutUrl = (u) => {
+    let t = "";
+    while (/[.,;:!?)\]»”]$/.test(u)) {
+      t = u.slice(-1) + t;
+      u = u.slice(0, -1);
+    }
+    return [u, t];
+  };
+  var okHttp = (u) => {
+    try {
+      const x = new URL(u);
+      return x.protocol === "http:" || x.protocol === "https:";
+    } catch {
+      return false;
+    }
+  };
+  function firstUrl(t) {
+    const r = /https?:\/\/[^\s<>"']+/i.exec(t);
+    if (!r) return null;
+    const u = cutUrl(r[0])[0];
+    return okHttp(u) && u.length <= 2e3 ? u : null;
+  }
+  function splitLinks(t) {
+    const out = [], re = /https?:\/\/[^\s<>"']+/gi;
+    let last = 0, r;
+    while (r = re.exec(t)) {
+      const [u, tail] = cutUrl(r[0]);
+      if (!okHttp(u)) continue;
+      if (r.index > last) out.push({ text: t.slice(last, r.index) });
+      out.push({ url: u, tail });
+      last = r.index + r[0].length;
+    }
+    if (last < t.length) out.push({ text: t.slice(last) });
+    return out;
+  }
+  function validLk(x) {
+    const v = x;
+    if (!v || typeof v !== "object" || typeof v.u !== "string" || v.u.length > 2e3 || !okHttp(v.u)) return null;
+    const s = (val, n) => typeof val === "string" ? val.slice(0, n) : "";
+    const o = { u: v.u, ti: s(v.ti, 140), d: s(v.d, 240), s: s(v.s, 60) };
+    if (typeof v.i === "string" && v.i.length <= 9e4 && /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(v.i)) o.i = v.i;
+    return o;
+  }
+  async function thumb(ct, b64) {
+    try {
+      const bin = atob(b64), u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      const bm = await createImageBitmap(new Blob([u8], { type: ct }));
+      for (const [W, qq] of [[360, 0.72], [300, 0.6], [220, 0.55]]) {
+        const sc = Math.min(1, W / bm.width), c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(bm.width * sc));
+        c.height = Math.max(1, Math.round(bm.height * sc));
+        const x = c.getContext("2d");
+        x.fillStyle = "#fff";
+        x.fillRect(0, 0, c.width, c.height);
+        x.drawImage(bm, 0, 0, c.width, c.height);
+        const d = c.toDataURL("image/jpeg", qq);
+        if (d.length <= 6e4) {
+          bm.close();
+          return d;
+        }
+      }
+      bm.close();
+    } catch {
+    }
+    return "";
+  }
+  async function fetchPreview(call, u, timeoutMs = 8e3) {
+    try {
+      const r = await Promise.race([call(u), new Promise((_, j) => setTimeout(() => j(new Error("tid")), timeoutMs))]);
+      const d = r && r.data;
+      if (!d || !d.ok) return null;
+      const lk = { u, ti: String(d.ti || "").slice(0, 140), d: String(d.d || "").slice(0, 240), s: String(d.s || "").slice(0, 60) };
+      if (d.img && /^image\/(jpeg|png|webp|gif)$/.test(d.img.ct) && typeof d.img.b64 === "string") {
+        const i = await thumb(d.img.ct, d.img.b64);
+        if (i) lk.i = i;
+      }
+      return validLk(lk);
+    } catch {
+      return null;
+    }
+  }
+  return __toCommonJS(links_exports);
+})();
+
 /* ---------- kryptering ----------
    The cryptography itself lives in src/crypto.ts (bundled into PrekCrypto by build.py).
    This file only connects it to the app: browser storage (key per user), app state (S) and Supabase. */
@@ -2410,6 +2526,23 @@ function stor(){const a=$("#app");a.classList.remove("dp");void a.offsetWidth;a.
 const {okAv,toAvatar,hue,avEl,initial}=PrekAvatar;
 const {GIF_MAX,gifEncode,readGif}=PrekGif;
 const {shrink,shrinkGif}=PrekShrink;
+const {firstUrl,validLk}=PrekLinks;
+const LP_ON=()=>{try{return localStorage.getItem("pling_lp")!=="0"}catch(e){return true}};
+function linkify(t){
+  const out=[];
+  for(const p of PrekLinks.splitLinks(t)){
+    if("url" in p){out.push(el("a",{class:"ulink",href:p.url,target:"_blank",rel:"noopener noreferrer nofollow"},p.url));if(p.tail)out.push(p.tail)}
+    else out.push(...emojiNodes(p.text));
+  }
+  return out;
+}
+function lkCard(l){
+  const a=el("a",{class:"lkc",href:l.u,target:"_blank",rel:"noopener noreferrer nofollow"});
+  if(l.i)a.append(el("img",{class:"lki",src:l.i,alt:""}));
+  a.append(el("span",{class:"lkb"},el("small",{},l.s||""),el("b",{},l.ti||l.u),l.d?el("span",{class:"lkd"},l.d):null));
+  return a;
+}
+const fetchPreview=u=>PrekLinks.fetchPreview(api.linkPreview,u);
 /* ---------- animerte smilefjes (tegneserie-stil, Dan Joakim 26. okt) ----------
    HVORFOR: MSN hadde animerte smilefjes. Våre er tegnet i kode (SVG + CSS), helt egne figurer (ikke MSNs grafikk), ligger i selve appen og krever ingen forespørsel til tredjepart.
    I meldingen sendes bare koden (for eksempel «:)»); mottakeren tegner figuren selv. Se claude/emoji.md.
@@ -3050,61 +3183,7 @@ function drawTyping(){
   if(on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,3100-(Date.now()-x.seen))}
 }
 const PAGE=50;
-/* ---------- lenker og forhåndsvisning ----------
-   HVORFOR avsenderen henter forhåndsvisningen: mottakeren skal aldri kontakte nettstedet (da ville det sett hvem som leste lenken).
-   Avsenderens klient ber funksjonen «linkpreview» på Supabase hente tittel, tekst og bilde. Resultatet legges i meldingen og krypteres sammen med den.
-   Avsenderen er ikke tillitsfull for mottakeren: alt som kommer i `lk` valideres før visning (bare http/https, bare jpeg-bilde som data-URL, kuttet lengde). */
-const LP_ON=()=>{try{return localStorage.getItem("pling_lp")!=="0"}catch(e){return true}};
-const URL_RE=/https?:\/\/[^\s<>"']+/gi;
-const cutUrl=u=>{let t="";while(/[.,;:!?)\]»”]$/.test(u)){t=u.slice(-1)+t;u=u.slice(0,-1)}return[u,t]};
-const okHttp=u=>{try{const x=new URL(u);return x.protocol==="http:"||x.protocol==="https:"}catch(e){return false}};
-function firstUrl(t){URL_RE.lastIndex=0;const r=URL_RE.exec(t);if(!r)return null;const u=cutUrl(r[0])[0];return okHttp(u)&&u.length<=2000?u:null}
-function linkify(t){
-  const out=[];let last=0;URL_RE.lastIndex=0;let r;
-  while((r=URL_RE.exec(t))){
-    const[u,tail]=cutUrl(r[0]);if(!okHttp(u))continue;
-    if(r.index>last)out.push(...emojiNodes(t.slice(last,r.index)));
-    out.push(el("a",{class:"ulink",href:u,target:"_blank",rel:"noopener noreferrer nofollow"},u));
-    if(tail)out.push(tail);last=r.index+r[0].length;
-  }
-  if(last<t.length)out.push(...emojiNodes(t.slice(last)));
-  return out;
-}
-function validLk(x){
-  if(!x||typeof x!=="object"||typeof x.u!=="string"||x.u.length>2000||!okHttp(x.u))return null;
-  const s=(v,n)=>typeof v==="string"?v.slice(0,n):"";
-  const o={u:x.u,ti:s(x.ti,140),d:s(x.d,240),s:s(x.s,60)};
-  if(typeof x.i==="string"&&x.i.length<=90000&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(x.i))o.i=x.i;
-  return o;
-}
-function lkCard(l){
-  const a=el("a",{class:"lkc",href:l.u,target:"_blank",rel:"noopener noreferrer nofollow"});
-  if(l.i)a.append(el("img",{class:"lki",src:l.i,alt:""}));
-  a.append(el("span",{class:"lkb"},el("small",{},l.s||""),el("b",{},l.ti||l.u),l.d?el("span",{class:"lkd"},l.d):null));
-  return a;
-}
-async function thumb(ct,b64){
-  try{
-    const bin=atob(b64),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
-    const bm=await createImageBitmap(new Blob([u8],{type:ct}));
-    for(const[W,qq]of[[360,.72],[300,.6],[220,.55]]){
-      const sc=Math.min(1,W/bm.width),c=document.createElement("canvas");c.width=Math.max(1,Math.round(bm.width*sc));c.height=Math.max(1,Math.round(bm.height*sc));
-      const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(bm,0,0,c.width,c.height);
-      const d=c.toDataURL("image/jpeg",qq);if(d.length<=60000){bm.close&&bm.close();return d}
-    }
-    bm.close&&bm.close();
-  }catch(e){}
-  return "";
-}
-async function fetchPreview(u){
-  try{
-    const r=await Promise.race([api.linkPreview(u),new Promise((_,j)=>setTimeout(()=>j(new Error("tid")),8000))]);
-    const d=r&&r.data;if(!d||!d.ok)return null;
-    const lk={u,ti:String(d.ti||"").slice(0,140),d:String(d.d||"").slice(0,240),s:String(d.s||"").slice(0,60)};
-    if(d.img&&/^image\/(jpeg|png|webp|gif)$/.test(d.img.ct)&&typeof d.img.b64==="string"){const i=await thumb(d.img.ct,d.img.b64);if(i)lk.i=i}
-    return validLk(lk);
-  }catch(e){return null}
-}
+/* ---------- lenker og forhåndsvisning: src/links.ts, glue i app/links.js ---------- */
 async function decodeRows(rows,key){
   const out=[];
   for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),img:(m&&m.img&&typeof m.img.p==="string")?m.img:null,lk:validLk(m&&m.lk),ok:!!m,ts:r.created_at})}

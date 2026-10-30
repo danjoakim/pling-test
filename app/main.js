@@ -420,61 +420,7 @@ function drawTyping(){
   if(on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,3100-(Date.now()-x.seen))}
 }
 const PAGE=50;
-/* ---------- lenker og forhåndsvisning ----------
-   HVORFOR avsenderen henter forhåndsvisningen: mottakeren skal aldri kontakte nettstedet (da ville det sett hvem som leste lenken).
-   Avsenderens klient ber funksjonen «linkpreview» på Supabase hente tittel, tekst og bilde. Resultatet legges i meldingen og krypteres sammen med den.
-   Avsenderen er ikke tillitsfull for mottakeren: alt som kommer i `lk` valideres før visning (bare http/https, bare jpeg-bilde som data-URL, kuttet lengde). */
-const LP_ON=()=>{try{return localStorage.getItem("pling_lp")!=="0"}catch(e){return true}};
-const URL_RE=/https?:\/\/[^\s<>"']+/gi;
-const cutUrl=u=>{let t="";while(/[.,;:!?)\]»”]$/.test(u)){t=u.slice(-1)+t;u=u.slice(0,-1)}return[u,t]};
-const okHttp=u=>{try{const x=new URL(u);return x.protocol==="http:"||x.protocol==="https:"}catch(e){return false}};
-function firstUrl(t){URL_RE.lastIndex=0;const r=URL_RE.exec(t);if(!r)return null;const u=cutUrl(r[0])[0];return okHttp(u)&&u.length<=2000?u:null}
-function linkify(t){
-  const out=[];let last=0;URL_RE.lastIndex=0;let r;
-  while((r=URL_RE.exec(t))){
-    const[u,tail]=cutUrl(r[0]);if(!okHttp(u))continue;
-    if(r.index>last)out.push(...emojiNodes(t.slice(last,r.index)));
-    out.push(el("a",{class:"ulink",href:u,target:"_blank",rel:"noopener noreferrer nofollow"},u));
-    if(tail)out.push(tail);last=r.index+r[0].length;
-  }
-  if(last<t.length)out.push(...emojiNodes(t.slice(last)));
-  return out;
-}
-function validLk(x){
-  if(!x||typeof x!=="object"||typeof x.u!=="string"||x.u.length>2000||!okHttp(x.u))return null;
-  const s=(v,n)=>typeof v==="string"?v.slice(0,n):"";
-  const o={u:x.u,ti:s(x.ti,140),d:s(x.d,240),s:s(x.s,60)};
-  if(typeof x.i==="string"&&x.i.length<=90000&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(x.i))o.i=x.i;
-  return o;
-}
-function lkCard(l){
-  const a=el("a",{class:"lkc",href:l.u,target:"_blank",rel:"noopener noreferrer nofollow"});
-  if(l.i)a.append(el("img",{class:"lki",src:l.i,alt:""}));
-  a.append(el("span",{class:"lkb"},el("small",{},l.s||""),el("b",{},l.ti||l.u),l.d?el("span",{class:"lkd"},l.d):null));
-  return a;
-}
-async function thumb(ct,b64){
-  try{
-    const bin=atob(b64),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
-    const bm=await createImageBitmap(new Blob([u8],{type:ct}));
-    for(const[W,qq]of[[360,.72],[300,.6],[220,.55]]){
-      const sc=Math.min(1,W/bm.width),c=document.createElement("canvas");c.width=Math.max(1,Math.round(bm.width*sc));c.height=Math.max(1,Math.round(bm.height*sc));
-      const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(bm,0,0,c.width,c.height);
-      const d=c.toDataURL("image/jpeg",qq);if(d.length<=60000){bm.close&&bm.close();return d}
-    }
-    bm.close&&bm.close();
-  }catch(e){}
-  return "";
-}
-async function fetchPreview(u){
-  try{
-    const r=await Promise.race([api.linkPreview(u),new Promise((_,j)=>setTimeout(()=>j(new Error("tid")),8000))]);
-    const d=r&&r.data;if(!d||!d.ok)return null;
-    const lk={u,ti:String(d.ti||"").slice(0,140),d:String(d.d||"").slice(0,240),s:String(d.s||"").slice(0,60)};
-    if(d.img&&/^image\/(jpeg|png|webp|gif)$/.test(d.img.ct)&&typeof d.img.b64==="string"){const i=await thumb(d.img.ct,d.img.b64);if(i)lk.i=i}
-    return validLk(lk);
-  }catch(e){return null}
-}
+/* ---------- lenker og forhåndsvisning: src/links.ts, glue i app/links.js ---------- */
 async function decodeRows(rows,key){
   const out=[];
   for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),img:(m&&m.img&&typeof m.img.p==="string")?m.img:null,lk:validLk(m&&m.lk),ok:!!m,ts:r.created_at})}
