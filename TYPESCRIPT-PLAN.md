@@ -91,7 +91,12 @@ first, or nothing there can be typed.
   Locked byte for byte by `tests/fixtures/gif-vectors.json` (13 frame sets incl. transparency and dictionary resets, made by the old code;
   SHA-256 of every output, full file when small) and `tests/gif-unit.js`; `tests/gif.js` still sends GIFs end to end.
 - **Round 5 (done):** image and GIF shrinking in the browser is `src/shrink.ts` (bundled as `PrekShrink`, glue `app/shrink.js`). No fixture from the old code is possible (canvas and ImageDecoder), so `tests/shrink.js` locks the behavior in the built page: it passed against the old JavaScript first and then against the TypeScript, and mutations (size, white background, quality steps, frame skipping, delays, limits) are caught.
-- **Rounds 6+, the remaining pure parts, one at a time:** sound, link preview, reactions logic. Little DOM, easy to test in Node.
+- **Round 6 (done):** the sounds are `src/sound.ts` (bundled as `PrekSound`; every function takes the audio context). `app/sound.js` keeps the
+  shared `AC`, the first-touch start, the old names and `stor()` (shakes the window). The unused old `tone()` was dropped.
+  `tests/sound-unit.js` compares every call on a recording audio context (oscillators, frequencies, envelopes, connections, times) with
+  `tests/fixtures/sound-vectors.json`, made by the old JavaScript; `tests/sound.js` still renders and measures in a browser and `tests/nudge.js` checks the shake.
+  Seven deliberate changes to the numbers were all caught.
+- **Rounds 7+, the remaining pure parts, one at a time:** link preview, reactions logic. Little DOM, easy to test in Node.
 - **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).
 - **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered
   only by mocked browser tests. Decide when we get there whether it is worth converting now, or whether it should wait for the planned
