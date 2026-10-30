@@ -22,9 +22,9 @@ async function makeBackup(code){
   const b=await PrekCrypto.makeBackup(code,S.id);
   return{user_id:S.user.id,salt:b.salt,iv:b.iv,ct:b.ct,iter:b.iter,updated_at:new Date().toISOString()};
 }
-async function saveBackup(code){await q(sb.from("key_backups").upsert(await makeBackup(code)),tr("ctx.saveBackup"));S.backup={updated_at:new Date().toISOString()}}
+async function saveBackup(code){await q(api.saveKeyBackup(await makeBackup(code)),tr("ctx.saveBackup"));S.backup={updated_at:new Date().toISOString()}}
 async function restoreFromCode(code){
-  const rows=await q(sb.from("key_backups").select("*").eq("user_id",S.user.id),tr("ctx.fetchBackup"));
+  const rows=await q(api.getKeyBackup(S.user.id),tr("ctx.fetchBackup"));
   if(!rows.length)throw new Error(tr("key.noBackup"));
   const id=await PrekCrypto.restoreBackup(code,rows[0]);
   if(!id)throw new Error(tr("key.wrongCode"));

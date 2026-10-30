@@ -54,13 +54,15 @@ from the old expressions before the move; `tests/img.js` sends an image between 
 
 ## Step 3 - Backend access layer
 
-One typed module for every Supabase call (tables and `rpc` functions), with types generated from the
+One typed module for every Supabase call (tables and `rpc` functions), with types written by hand from the
 database schema. Replaces calls spread around `main.js`.
 
 Progress (2026-10-30): round 1 moved the 15 server-function (`rpc`) calls into `src/api.ts` (`createApi`, one typed function
 per database function). `tests/api-unit.js` checks every call against the SQL in `supabase/migrations/` and fails if the app calls
 `sb.rpc()` directly. Round 2 moved sign-in and sign-out (`sb.auth`: sign up, password, e-mail code, session, auth-state listener) into the same module; the test
-checks the arguments that reach `supabase.auth` and forbids `sb.auth` in the app. `doLogout()` keeps its fallbacks. Next rounds: table calls (`from`), then storage, realtime and the edge function.
+checks the arguments that reach `supabase.auth` and forbids `sb.auth` in the app. `doLogout()` keeps its fallbacks. Round 3 moved the rest: all table calls (`from`), encrypted-file storage, the link-preview edge function and the live channel. After it
+the app never touches the Supabase client except to create `api` in `main.js`. The test checks every table and column against the SQL,
+the bucket name, the channel name and the tables it listens to, and forbids `sb.` anywhere in the app. Step 3 is done.
 The types are written by hand and checked by that test; they are not generated (no Supabase CLI in the build environment).
 
 ## Step 4 - State and screens, one at a time

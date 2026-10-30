@@ -48,7 +48,7 @@ function viewLogin(){
 /* ---------- oppsett av profil ---------- */
 async function afterLogin(user){
   S.user=user;
-  const rows=await q(sb.from("profiles").select("*").eq("id",user.id),tr("ctx.fetchProfile"));
+  const rows=await q(api.getProfile(user.id),tr("ctx.fetchProfile"));
   S.profile=rows[0]||null;S.id=loadIdentity(user.id);
   if(S.profile&&!S.id){viewNoKey();return}
   if(!S.profile){viewSetup();return}
@@ -64,7 +64,7 @@ function viewSetup(){
     try{
       const id=S.id||await makeIdentity(S.user.id);S.id=id;
       const fp=await fpOf(id.pub);
-      await q(sb.from("profiles").insert({id:S.user.id,fp,name:n,pub:id.pub}),tr("ctx.createProfile"));
+      await q(api.createProfile({id:S.user.id,fp,name:n,pub:id.pub}),tr("ctx.createProfile"));
       S.profile={id:S.user.id,fp,name:n,pub:id.pub};showRecovery(true);
     }catch(e){fail(e)}
   };
@@ -86,10 +86,10 @@ function viewNoKey(){
 async function startPairing(){
   const app=scrHost();
   let stop=false,id=null;
-  const cancel=async()=>{stop=true;if(id)try{await sb.from("key_transfers").delete().eq("id",id)}catch(e){}viewNoKey()};
+  const cancel=async()=>{stop=true;if(id)try{await api.deleteTransfer(id)}catch(e){}viewNoKey()};
   try{
     const e=await ephPair();id=crypto.randomUUID();
-    await q(sb.from("key_transfers").insert({id,user_id:S.user.id,eph_pub:e.pub}),tr("ctx.askKey"));
+    await q(api.askTransfer({id,user_id:S.user.id,eph_pub:e.pub}),tr("ctx.askKey"));
     const code=await pairCode(e.pub),url=location.origin+location.pathname+"#godkjenn";
     const box=el("div",{class:"qr",id:"qrbox"});box.innerHTML=qrSvg(url);
     app.append(el("h1",{},tr("pairing.title")),
@@ -102,14 +102,14 @@ async function startPairing(){
     const poll=async()=>{
       if(stop)return;
       try{
-        const rows=await q(sb.from("key_transfers").select("*").eq("id",id)),r=rows[0];
+        const rows=await q(api.getTransfer(id)),r=rows[0];
         if(!r){stop=true;toast(tr("pairing.rejected"),true);viewNoKey();return}
         if(r.status==="approved"){
           stop=true;
           const key=await aesFrom(e.priv,r.sender_pub),o=await open(key,r.iv,r.ct);
           if(!o)throw new Error(tr("pairing.cannotOpen"));
           await adoptIdentity({priv:o.priv,pub:o.pub});
-          await sb.from("key_transfers").delete().eq("id",id);
+          await api.deleteTransfer(id);
           toast(tr("nokey.restored"));await start();return;
         }
         if(Date.now()-t0>10*60*1000){stop=true;await cancel();return}

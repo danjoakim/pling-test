@@ -22,8 +22,8 @@ function showShell(){$("#scr").hidden=true;$("#shell").hidden=false;$("#lock").h
 /* ---------- godkjenne ny enhet (på enheten som har nøkkelen) ---------- */
 async function checkTransfers(){
   if(!S.user||!S.id||!S.profile)return;
-  let rows;try{rows=await q(sb.from("key_transfers").select("*").eq("status","pending"))}catch(e){return}
-  for(const r of rows.filter(r=>!pairFresh(r)))sb.from("key_transfers").delete().eq("id",r.id).then(()=>{},()=>{});
+  let rows;try{rows=await q(api.pendingTransfers())}catch(e){return}
+  for(const r of rows.filter(r=>!pairFresh(r)))api.deleteTransfer(r.id).then(()=>{},()=>{});
   const r=rows.filter(pairFresh)[0]||null,box=$("#pairbox");
   if(!box)return;
   if(!r){if(S.pairId){S.pairId=null;box.textContent=""}return}
@@ -37,9 +37,9 @@ async function checkTransfers(){
     el("div",{class:"row"},
       el("button",{id:"papprove",onclick:async()=>{try{
         const e=await ephPair(),key=await aesFrom(e.priv,r.eph_pub),sl=await seal(key,{v:1,priv:S.id.priv,pub:S.id.pub});
-        await q(sb.from("key_transfers").update({status:"approved",sender_pub:e.pub,iv:sl.iv,ct:sl.ct}).eq("id",r.id),tr("ctx.approve"));
+        await q(api.approveTransfer(r.id,{sender_pub:e.pub,iv:sl.iv,ct:sl.ct}),tr("ctx.approve"));
         toast(tr("device.sent"));S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Godkjenn"),
-      el("button",{class:"glass",id:"pdeny",onclick:async()=>{try{await q(sb.from("key_transfers").delete().eq("id",r.id),tr("ctx.reject"));S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Avvis"))));
+      el("button",{class:"glass",id:"pdeny",onclick:async()=>{try{await q(api.deleteTransfer(r.id),tr("ctx.reject"));S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Avvis"))));
 }
 
 /* ---------- invitasjonslenker ----------
@@ -139,7 +139,7 @@ async function doLogout(){
 /* ---------- hovedvindu ---------- */
 let wired=false;
 async function start(){
-  try{const bk=await q(sb.from("key_backups").select("user_id,updated_at").eq("user_id",S.user.id));S.backup=bk[0]||null}catch(e){S.backup=null}
+  try{const bk=await q(api.getKeyBackupInfo(S.user.id));S.backup=bk[0]||null}catch(e){S.backup=null}
   showShell();
   try{const a=localStorage.getItem("pling_av_"+S.user.id);if(okAv(a)){myAv=a;localStorage.setItem("pling_last_av",a)}}catch(e){}
   S.status="online";
@@ -151,13 +151,10 @@ async function start(){
   await refresh();
   drawInvite();await redeemPending();
   startPresence();
-  sb.channel("pling-live")
-    .on("postgres_changes",{event:"*",schema:"public",table:"messages"},p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id&&S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}refreshSoon()})
-    .on("postgres_changes",{event:"*",schema:"public",table:"reactions"},()=>refreshSoon())
-    .on("postgres_changes",{event:"*",schema:"public",table:"friend_requests"},()=>refreshSoon())
-    .on("postgres_changes",{event:"*",schema:"public",table:"friends"},()=>refreshSoon())
-    .on("postgres_changes",{event:"*",schema:"public",table:"presence"},p=>presEvt(p))
-    .subscribe();
+  api.subscribeLive({
+    onMessage:p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id&&S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}refreshSoon()},
+    onChange:()=>refreshSoon(),
+    onPresence:p=>presEvt(p)});
   clearInterval(S.poll);S.poll=setInterval(()=>{if(S.user&&!document.hidden)refresh()},8000);
   clearInterval(S.pp);S.pp=setInterval(()=>{if(!document.hidden)checkTransfers()},3000);checkTransfers();
   paintAvAll();
@@ -234,17 +231,17 @@ function stOf(id){return S.pres.get(id)||"off"}
 async function refresh(){
   if(!S.user||!S.profile)return;
   try{
-    const [fr,rq]=await Promise.all([q(sb.from("friends").select("*"),tr("ctx.friends")),q(sb.from("friend_requests").select("*"),tr("ctx.requests"))]);
+    const [fr,rq]=await Promise.all([q(api.listFriends(),tr("ctx.friends")),q(api.listRequests(),tr("ctx.requests"))]);
     const ids=new Set();
     S.friends=fr.map(r=>r.a===S.user.id?r.b:r.a);S.friends.forEach(i=>ids.add(i));
     S.reqIn=rq.filter(r=>r.to_id===S.user.id).map(r=>r.from_id);S.reqIn.forEach(i=>ids.add(i));
     S.reqOut=rq.filter(r=>r.from_id===S.user.id).map(r=>r.to_id);S.reqOut.forEach(i=>ids.add(i));
-    if(ids.size){const ps=await q(sb.from("profiles").select("id,name,fp,pub,pm").in("id",[...ids]),tr("ctx.profiles"));ps.forEach(p=>S.profiles.set(p.id,p))}
+    if(ids.size){const ps=await q(api.getProfiles([...ids]),tr("ctx.profiles"));ps.forEach(p=>S.profiles.set(p.id,p))}
     if(S.nref++%5===0&&S.friends.length){
-      try{const as=await q(sb.from("avatars").select("id,data").in("id",S.friends));for(const a of as)if(okAv(a.data))S.av.set(a.id,a.data)}catch(e){}
+      try{const as=await q(api.getAvatars(S.friends));for(const a of as)if(okAv(a.data))S.av.set(a.id,a.data)}catch(e){}
     }
     if(S.chat&&!S.friends.includes(S.chat.other))closeChat();
-    try{S.blocks=await q(sb.from("blocks").select("blocked,name"),tr("ctx.blocked"))}catch(e){S.blocks=S.blocks||[]}
+    try{S.blocks=await q(api.listBlocks(),tr("ctx.blocked"))}catch(e){S.blocks=S.blocks||[]}
     await loadPreviews();
     drawReqs();drawFriends();drawSec();drawBlocks();
     if(S.chat){drawExp();drawChatHead();await loadMsgs()}
@@ -258,7 +255,7 @@ const readKey=cid=>"pling_read_"+S.user.id+"_"+cid;
 const getRead=cid=>S.reads.get(cid)||0;
 const setRead=(cid,id)=>{if(id>getRead(cid)){S.reads.set(cid,id);api.markRead(cid,id).then(()=>{},()=>{})}};
 async function loadPreviews(){
-  const [cm,cs,rr]=await Promise.all([q(sb.from("chat_members").select("chat_id,user_id"),tr("ctx.chats")),q(sb.from("chats").select("id,exp_days"),tr("ctx.chats")),q(sb.from("chat_reads").select("chat_id,last_id"),tr("ctx.read"))]);
+  const [cm,cs,rr]=await Promise.all([q(api.listChatMembers(),tr("ctx.chats")),q(api.listChats(),tr("ctx.chats")),q(api.listReads(),tr("ctx.read"))]);
   for(const c of cs)S.exp.set(c.id,c.exp_days||0);
   const hasSrv=new Set();
   for(const r of rr){hasSrv.add(r.chat_id);S.reads.set(r.chat_id,Math.max(S.reads.get(r.chat_id)||0,+r.last_id))}
@@ -270,7 +267,7 @@ async function loadPreviews(){
   S.dm=dm;let more=false;
   await Promise.all([...dm].map(async([fid,cid])=>{
     const p=S.profiles.get(fid);if(!p)return;
-    const rows=await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(20),tr("ctx.messages"));
+    const rows=await q(api.latestMessages(cid,20),tr("ctx.messages"));
     if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
     const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
     S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:m?(m.dp?tr("chat.dp"):m.img?(m.img.t==="image/gif"?"GIF":tr("chat.previewImage")):String(m.t==null?"":m.t)):tr("chat.undecryptable")});
@@ -319,7 +316,7 @@ function paintMe(){
 }
 function paintAvAll(){paintMe()}
 async function saveProfile(patch){
-  try{await q(sb.from("profiles").update(patch).eq("id",S.user.id),tr("ctx.saveProfile"));Object.assign(S.profile,patch);paintMe();drawChatHead()}catch(e){fail(e)}
+  try{await q(api.updateProfile(S.user.id,patch),tr("ctx.saveProfile"));Object.assign(S.profile,patch);paintMe();drawChatHead()}catch(e){fail(e)}
 }
 
 /* ---------- kompislisten ---------- */
@@ -361,7 +358,7 @@ function drawReqs(){
     box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til"),
       el("div",{class:"row"},
         el("button",{class:"sm",onclick:async()=>{try{await q(api.acceptRequest(id),tr("friends.accept"));refresh()}catch(e){fail(e)}}},tr("friends.accept")),
-        el("button",{class:"glass sm",onclick:async()=>{try{await q(sb.from("friend_requests").delete().eq("from_id",id).eq("to_id",S.user.id),tr("friends.decline"));refresh()}catch(e){fail(e)}}},tr("friends.decline")))));
+        el("button",{class:"glass sm",onclick:async()=>{try{await q(api.declineRequest(id,S.user.id),tr("friends.decline"));refresh()}catch(e){fail(e)}}},tr("friends.decline")))));
   }
 }
 function drawSec(){
@@ -471,7 +468,7 @@ async function thumb(ct,b64){
 }
 async function fetchPreview(u){
   try{
-    const r=await Promise.race([sb.functions.invoke("linkpreview",{body:{url:u}}),new Promise((_,j)=>setTimeout(()=>j(new Error("tid")),8000))]);
+    const r=await Promise.race([api.linkPreview(u),new Promise((_,j)=>setTimeout(()=>j(new Error("tid")),8000))]);
     const d=r&&r.data;if(!d||!d.ok)return null;
     const lk={u,ti:String(d.ti||"").slice(0,140),d:String(d.d||"").slice(0,240),s:String(d.s||"").slice(0,60)};
     if(d.img&&/^image\/(jpeg|png|webp|gif)$/.test(d.img.ct)&&typeof d.img.b64==="string"){const i=await thumb(d.img.ct,d.img.b64);if(i)lk.i=i}
@@ -486,7 +483,7 @@ async function decodeRows(rows,key){
 async function loadMsgs(){
   if(!S.chat)return;
   const cid=S.chat.id,other=S.profiles.get(S.chat.other);if(!other)return;
-  const rows=(await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(PAGE),tr("ctx.messages"))).reverse();
+  const rows=(await q(api.latestMessages(cid,PAGE),tr("ctx.messages"))).reverse();
   if(!S.chat||S.chat.id!==cid)return;
   const key=await pairKey(other.pub),latest=await decodeRows(rows,key);
   const rxr=await loadReacts(cid,key);
@@ -511,7 +508,7 @@ async function loadOlder(){
   if(!S.chat||!S.msgs.length)return;
   const cid=S.chat.id,other=S.profiles.get(S.chat.other),oldest=S.msgs[0].id,log=$("#log");
   try{
-    const rows=(await q(sb.from("messages").select("*").eq("chat_id",cid).lt("id",oldest).order("id",{ascending:false}).limit(PAGE),tr("ctx.olderMessages"))).reverse();
+    const rows=(await q(api.olderMessages(cid,oldest,PAGE),tr("ctx.olderMessages"))).reverse();
     if(!S.chat||S.chat.id!==cid)return;
     const dec=await decodeRows(rows,await pairKey(other.pub));
     S.older=[...dec,...S.older];S.more=rows.length>=PAGE;
@@ -543,7 +540,7 @@ const RX=[["rofl",tr("rx.name.rofl")],["thumbup",tr("rx.name.thumbup")],["heart"
 const RX_OK=new Set(RX.map(x=>x[0]));
 async function loadReacts(cid,key){
   try{
-    const r=await sb.from("reactions").select("msg_id,user_id,iv,ct").eq("chat_id",cid);
+    const r=await api.listReactions(cid);
     if(!r||r.error||!Array.isArray(r.data))return null;
     const map=new Map(),parts=[];
     for(const x of r.data){
@@ -617,7 +614,7 @@ async function setReact(mid,r){
   const cid=S.chat.id,other=S.profiles.get(S.chat.other);if(!other)return;
   try{
     const key=await pairKey(other.pub),s=await seal(key,{r:r||"",m:mid,u:S.user.id});
-    const res=await sb.from("reactions").upsert({msg_id:mid,chat_id:cid,user_id:S.user.id,iv:s.iv,ct:s.ct},{onConflict:"msg_id,user_id"});
+    const res=await api.saveReaction({msg_id:mid,chat_id:cid,user_id:S.user.id,iv:s.iv,ct:s.ct});
     if(res&&res.error)throw res.error;
     if(!S.chat||S.chat.id!==cid)return;
     let mp=S.rx.get(mid);if(!mp){mp=new Map();S.rx.set(mid,mp)}
@@ -632,13 +629,13 @@ async function sendMsg(payload,file){
     const key=await pairKey(other.pub),s=await seal(key,payload);
     const row={chat_id:S.chat.id,sender:S.user.id,iv:s.iv,ct:s.ct};
     if(file)row.file=file;
-    await q(sb.from("messages").insert(row),tr("ctx.send"));
+    await q(api.sendMessage(row),tr("ctx.send"));
     S.justSent=true;S.myTyp=null;trackMe(true);refreshSoon();return true;
   }catch(e){fail(e);return false}
 }
 
 /* ---------- bilder (krypteres før opplasting) ---------- */
-const BUCKET="chat-files",picCache=new Map();
+const picCache=new Map();
 async function shrink(file){
   const MAX=1920,toBlob=(c,qual)=>new Promise(r=>c.toBlob(r,"image/jpeg",qual));
   let src,w,h,close=()=>{};
@@ -792,12 +789,12 @@ async function sendImage(file){
     }else{const r=await shrink(file);w=r.w;h=r.h;bytes=new Uint8Array(await r.blob.arrayBuffer())}
     const key=await pairKey(other.pub),blob=await PrekCrypto.encryptBytes(key,bytes);
     path=cid+"/"+crypto.randomUUID();
-    const up=await sb.storage.from(BUCKET).upload(path,new Blob([blob],{type:"application/octet-stream"}),{contentType:"application/octet-stream"});
+    const up=await api.uploadFile(path,blob);
     if(up.error)throw new Error(tr("img.uploadFailed",{msg:up.error.message}));
     const ok=await sendMsg({img:t?{p:path,w,h,t}:{p:path,w,h},ts:Date.now()},path);
-    if(!ok){await sb.storage.from(BUCKET).remove([path]);return}
+    if(!ok){await api.removeFiles([path]);return}
     toast(tr("img.sent"))
-  }catch(e){fail(e);if(path)sb.storage.from(BUCKET).remove([path]).then(()=>{},()=>{})}
+  }catch(e){fail(e);if(path)api.removeFiles([path]).then(()=>{},()=>{})}
 }
 function picEl(img){
   const box=el("span",{class:"pic-box",style:"width:"+Math.min(img.w||240,240)+"px;aspect-ratio:"+(img.w||4)+"/"+(img.h||3)});
@@ -808,7 +805,7 @@ function picEl(img){
   const other=S.profiles.get(S.chat.other);
   (async()=>{
     try{
-      const r=await sb.storage.from(BUCKET).download(img.p);if(r.error)throw r.error;
+      const r=await api.downloadFile(img.p);if(r.error)throw r.error;
       const buf=new Uint8Array(await r.data.arrayBuffer()),key=await pairKey(other.pub);
       const pt=await PrekCrypto.decryptBytes(key,buf);
       const u=URL.createObjectURL(new Blob([pt],{type:gifT?"image/gif":"image/jpeg"}));picCache.set(img.p,u);show(u);
@@ -881,7 +878,7 @@ function wire(){
     const f=e.target.files[0];e.target.value="";if(!f)return;
     try{
       const a=await toAvatar(f);if(!okAv(a))throw new Error(tr("img.avatarTooBig"));
-      await q(sb.from("avatars").upsert({id:S.user.id,data:a,updated_at:new Date().toISOString()}),tr("ctx.saveAvatar"));
+      await q(api.saveAvatar({id:S.user.id,data:a,updated_at:new Date().toISOString()}),tr("ctx.saveAvatar"));
       myAv=a;try{localStorage.setItem("pling_av_"+S.user.id,a);localStorage.setItem("pling_last_av",a)}catch(x){}
       paintMe();drawChatHead();toast(tr("avatar.saved"));
     }catch(err){fail(err)}
@@ -912,8 +909,8 @@ function wire(){
     clearTimeout(t);s=false;btn.textContent=label;fn()})};
   sure($("#bx"),tr("chat.deleteMine"),async()=>{try{
     const mine=S.msgs.filter(m=>m.mine&&m.img).map(m=>m.img.p);
-    if(mine.length)await sb.storage.from(BUCKET).remove(mine);
-    await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),tr("ctx.delete"));S.sig=null;toast(tr("msg.mineDeleted"));refreshSoon()}catch(e){fail(e)}});
+    if(mine.length)await api.removeFiles(mine);
+    await q(api.deleteMyMessages(S.chat.id,S.user.id),tr("ctx.delete"));S.sig=null;toast(tr("msg.mineDeleted"));refreshSoon()}catch(e){fail(e)}});
   sure($("#bfr"),tr("chat.removeFriend"),async()=>{try{await q(api.removeFriend(S.chat.other),tr("ctx.removeFriend"));closeChat();refresh()}catch(e){fail(e)}});
   $("#bmu").addEventListener("click",()=>{if(!S.chat)return;const id=S.chat.other,on=!muted(id);setMuted(id,on);drawMute();drawFriends();toast(on?tr("mute.on"):tr("mute.off"))});
   sure($("#bbl"),tr("chat.block"),async()=>{try{await q(api.blockUser(S.chat.other),tr("ctx.block"));closeChat();toast(tr("block.done"));refresh()}catch(e){fail(e)}});
@@ -978,6 +975,6 @@ function cdTick(){const l=Math.ceil((S.cdUntil-Date.now())/1000),b=$("#dp");
 api.onAuthChange((ev,session)=>{
   S.tok=session&&session.access_token||null;
   if(session&&session.user){if(!S.user||S.user.id!==session.user.id)setTimeout(()=>afterLogin(session.user).catch(e=>fail(e)),0)}
-  else{S.user=null;S.profile=null;S.id=null;S.chat=null;S.pres=new Map();S.reads=new Map();S.last=new Map();S.unread=new Map();S.exp=new Map();S.av=new Map();S.profiles=new Map();S.firstRef=true;S.older=[];clearInterval(S.poll);clearInterval(S.pp);clearInterval(S.pbT);clearInterval(S.pfT);S.pairId=null;sb.removeAllChannels();S.pch=null;myAv=null;viewLogin()}
+  else{S.user=null;S.profile=null;S.id=null;S.chat=null;S.pres=new Map();S.reads=new Map();S.last=new Map();S.unread=new Map();S.exp=new Map();S.av=new Map();S.profiles=new Map();S.firstRef=true;S.older=[];clearInterval(S.poll);clearInterval(S.pp);clearInterval(S.pbT);clearInterval(S.pfT);S.pairId=null;api.closeLive();S.pch=null;myAv=null;viewLogin()}
 });
 api.getSession().then(({data})=>{if(!data.session)viewLogin()});
