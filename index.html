@@ -1055,7 +1055,28 @@ var PrekI18n = (() => {
     "invite.linkAria": "Invitasjonslenke",
     "emo.pickAria": "{name}, skriver {code}",
     "html.title": "Prek! testside",
-    "boot.noSupabase": "Klarte ikke \xE5 laste Supabase-biblioteket (nettverk blokkert?)."
+    "boot.noSupabase": "Klarte ikke \xE5 laste Supabase-biblioteket (nettverk blokkert?).",
+    "ctx.approve": "Godkjenne",
+    "ctx.reject": "Avvise",
+    "ctx.invitation": "Invitasjon",
+    "ctx.profiles": "Profiler",
+    "ctx.blocked": "Blokkerte",
+    "ctx.chats": "Samtaler",
+    "ctx.read": "Lest",
+    "ctx.messages": "Meldinger",
+    "ctx.send": "Sende",
+    "ctx.delete": "Slette",
+    "ctx.saveBackup": "Lagre sikkerhetskopi",
+    "ctx.fetchBackup": "Hente sikkerhetskopi",
+    "common.unknown": "Ukjent",
+    "chat.previewImage": "\u{1F4F7} Bilde",
+    "chat.undecryptable": "(kan ikke dekrypteres)",
+    "chat.dlDp": "(dobbeltpling)",
+    "chat.dlImage": "(bilde)",
+    "chat.mutedTitle": "Dempet",
+    "img.alt": "Bilde",
+    "emo.tabFigures": "Figurer",
+    "emo.tabEmoji": "Emoji"
   };
 
   // src/i18n/index.ts
@@ -1092,9 +1113,9 @@ async function makeBackup(code){
   const b=await PrekCrypto.makeBackup(code,S.id);
   return{user_id:S.user.id,salt:b.salt,iv:b.iv,ct:b.ct,iter:b.iter,updated_at:new Date().toISOString()};
 }
-async function saveBackup(code){await q(sb.from("key_backups").upsert(await makeBackup(code)),"Lagre sikkerhetskopi");S.backup={updated_at:new Date().toISOString()}}
+async function saveBackup(code){await q(sb.from("key_backups").upsert(await makeBackup(code)),tr("ctx.saveBackup"));S.backup={updated_at:new Date().toISOString()}}
 async function restoreFromCode(code){
-  const rows=await q(sb.from("key_backups").select("*").eq("user_id",S.user.id),"Hente sikkerhetskopi");
+  const rows=await q(sb.from("key_backups").select("*").eq("user_id",S.user.id),tr("ctx.fetchBackup"));
   if(!rows.length)throw new Error(tr("key.noBackup"));
   const id=await PrekCrypto.restoreBackup(code,rows[0]);
   if(!id)throw new Error(tr("key.wrongCode"));
@@ -1415,9 +1436,9 @@ async function checkTransfers(){
     el("div",{class:"row"},
       el("button",{id:"papprove",onclick:async()=>{try{
         const e=await ephPair(),key=await aesFrom(e.priv,r.eph_pub),sl=await seal(key,{v:1,priv:S.id.priv,pub:S.id.pub});
-        await q(sb.from("key_transfers").update({status:"approved",sender_pub:e.pub,iv:sl.iv,ct:sl.ct}).eq("id",r.id),"Godkjenne");
+        await q(sb.from("key_transfers").update({status:"approved",sender_pub:e.pub,iv:sl.iv,ct:sl.ct}).eq("id",r.id),tr("ctx.approve"));
         toast(tr("device.sent"));S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Godkjenn"),
-      el("button",{class:"glass",id:"pdeny",onclick:async()=>{try{await q(sb.from("key_transfers").delete().eq("id",r.id),"Avvise");S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Avvis"))));
+      el("button",{class:"glass",id:"pdeny",onclick:async()=>{try{await q(sb.from("key_transfers").delete().eq("id",r.id),tr("ctx.reject"));S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Avvis"))));
 }
 
 /* ---------- invitasjonslenker ----------
@@ -1436,7 +1457,7 @@ async function redeemPending(){
   if(!t)return;
   try{localStorage.removeItem("pling_inv")}catch(e){}
   try{
-    const r=await q(sb.rpc("redeem_invite",{p_token:t}),"Invitasjon"),f=r&&r[0];
+    const r=await q(sb.rpc("redeem_invite",{p_token:t}),tr("ctx.invitation")),f=r&&r[0];
     toast(tr("invite.nowFriends",{name:f?f.name:tr("invite.fallbackName")}));await refresh();
   }catch(e){toast(tr("invite.failed"),true)}
 }
@@ -1617,12 +1638,12 @@ async function refresh(){
     S.friends=fr.map(r=>r.a===S.user.id?r.b:r.a);S.friends.forEach(i=>ids.add(i));
     S.reqIn=rq.filter(r=>r.to_id===S.user.id).map(r=>r.from_id);S.reqIn.forEach(i=>ids.add(i));
     S.reqOut=rq.filter(r=>r.from_id===S.user.id).map(r=>r.to_id);S.reqOut.forEach(i=>ids.add(i));
-    if(ids.size){const ps=await q(sb.from("profiles").select("id,name,fp,pub,pm").in("id",[...ids]),"Profiler");ps.forEach(p=>S.profiles.set(p.id,p))}
+    if(ids.size){const ps=await q(sb.from("profiles").select("id,name,fp,pub,pm").in("id",[...ids]),tr("ctx.profiles"));ps.forEach(p=>S.profiles.set(p.id,p))}
     if(S.nref++%5===0&&S.friends.length){
       try{const as=await q(sb.from("avatars").select("id,data").in("id",S.friends));for(const a of as)if(okAv(a.data))S.av.set(a.id,a.data)}catch(e){}
     }
     if(S.chat&&!S.friends.includes(S.chat.other))closeChat();
-    try{S.blocks=await q(sb.from("blocks").select("blocked,name"),"Blokkerte")}catch(e){S.blocks=S.blocks||[]}
+    try{S.blocks=await q(sb.from("blocks").select("blocked,name"),tr("ctx.blocked"))}catch(e){S.blocks=S.blocks||[]}
     await loadPreviews();
     drawReqs();drawFriends();drawSec();drawBlocks();
     if(S.chat){drawExp();drawChatHead();await loadMsgs()}
@@ -1630,13 +1651,13 @@ async function refresh(){
 }
 function drawBlocks(){
   const c=$("#blist");if(!c)return;c.textContent="";const bl=S.blocks||[];$("#bgrp").hidden=!bl.length;
-  for(const b of bl)c.append(el("div",{class:"brow"},el("span",{},b.name||"Ukjent"),el("button",{class:"glass sm",type:"button",onclick:async()=>{
+  for(const b of bl)c.append(el("div",{class:"brow"},el("span",{},b.name||tr("common.unknown")),el("button",{class:"glass sm",type:"button",onclick:async()=>{
     try{await q(sb.rpc("unblock_user",{p_other:b.blocked}),tr("ctx.unblock"));toast(tr("block.removed"));refresh()}catch(e){fail(e)}}},tr("block.remove"))))}
 const readKey=cid=>"pling_read_"+S.user.id+"_"+cid;
 const getRead=cid=>S.reads.get(cid)||0;
 const setRead=(cid,id)=>{if(id>getRead(cid)){S.reads.set(cid,id);sb.rpc("mark_read",{p_chat:cid,p_id:id}).then(()=>{},()=>{})}};
 async function loadPreviews(){
-  const [cm,cs,rr]=await Promise.all([q(sb.from("chat_members").select("chat_id,user_id"),"Samtaler"),q(sb.from("chats").select("id,exp_days"),"Samtaler"),q(sb.from("chat_reads").select("chat_id,last_id"),"Lest")]);
+  const [cm,cs,rr]=await Promise.all([q(sb.from("chat_members").select("chat_id,user_id"),tr("ctx.chats")),q(sb.from("chats").select("id,exp_days"),tr("ctx.chats")),q(sb.from("chat_reads").select("chat_id,last_id"),tr("ctx.read"))]);
   for(const c of cs)S.exp.set(c.id,c.exp_days||0);
   const hasSrv=new Set();
   for(const r of rr){hasSrv.add(r.chat_id);S.reads.set(r.chat_id,Math.max(S.reads.get(r.chat_id)||0,+r.last_id))}
@@ -1648,10 +1669,10 @@ async function loadPreviews(){
   S.dm=dm;let more=false;
   await Promise.all([...dm].map(async([fid,cid])=>{
     const p=S.profiles.get(fid);if(!p)return;
-    const rows=await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(20),"Meldinger");
+    const rows=await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(20),tr("ctx.messages"));
     if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
     const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
-    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:m?(m.dp?"Dobbeltpling":m.img?(m.img.t==="image/gif"?"GIF":"📷 Bilde"):String(m.t==null?"":m.t)):"(kan ikke dekrypteres)"});
+    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:m?(m.dp?tr("chat.dp"):m.img?(m.img.t==="image/gif"?"GIF":tr("chat.previewImage")):String(m.t==null?"":m.t)):tr("chat.undecryptable")});
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
@@ -1718,7 +1739,7 @@ function drawFriends(){
   for(const r of rows){
     const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
-      el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:"Dempet"}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
+      el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
       el("span",{class:"rt"},S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
     if(S.unread.get(r.id))b.classList.add("unread");
     b.addEventListener("dblclick",()=>openChat(r.id));
@@ -1867,7 +1888,7 @@ async function decodeRows(rows,key){
 async function loadMsgs(){
   if(!S.chat)return;
   const cid=S.chat.id,other=S.profiles.get(S.chat.other);if(!other)return;
-  const rows=(await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(PAGE),"Meldinger")).reverse();
+  const rows=(await q(sb.from("messages").select("*").eq("chat_id",cid).order("id",{ascending:false}).limit(PAGE),tr("ctx.messages"))).reverse();
   if(!S.chat||S.chat.id!==cid)return;
   const key=await pairKey(other.pub),latest=await decodeRows(rows,key);
   const rxr=await loadReacts(cid,key);
@@ -1879,7 +1900,7 @@ async function loadMsgs(){
   if(sig===S.sig){if(rxChanged)drawLog(true);return}S.sig=sig;
   const maxSeen=S.seen.get(cid)||0,fresh=S.first?[]:out.filter(m=>!m.mine&&m.id>maxSeen);
   S.seen.set(cid,out.length?out[out.length-1].id:0);
-  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?"Dobbeltpling":l.img?(l.img.t==="image/gif"?"GIF":"📷 Bilde"):(l.ok?l.t||"":"(kan ikke dekrypteres)")});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
+  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?tr("chat.dp"):l.img?(l.img.t==="image/gif"?"GIF":tr("chat.previewImage")):(l.ok?l.t||"":tr("chat.undecryptable"))});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   if(S.first)for(const x of out)S.anSeen.set(String(x.id),0);
   S.first=false;S.msgs=out;drawLog();
   if(fresh.length){
@@ -1910,7 +1931,7 @@ function drawLog(keepPos){
     if(m.dp){log.append(el("div",{class:"sys"},tr("chat.sentDp",{who:m.mine?tr("chat.you"):nameOf(S.chat.other),time:tm(m.ts)})));continue}
     const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")});d.dataset.mid=m.id;
     if(m.img)d.append(picEl(m.img));else
-    if(m.ok)d.append(...linkify(m.t==null?"":m.t));else d.append("(kan ikke dekrypteres)");
+    if(m.ok)d.append(...linkify(m.t==null?"":m.t));else d.append(tr("chat.undecryptable"));
     if(m.lk)d.append(lkCard(m.lk));
     d.append(el("br"),el("time",{},tm(m.ts)));
     if(m.ok||m.img){const ch=rxChips(m);if(ch)d.append(ch);d.append(el("button",{type:"button",class:"rxb","aria-label":tr("rx.ariaReact"),title:tr("rx.react"),onclick:e=>{e.stopPropagation();openRx(m,e.currentTarget)}},"☺"))}
@@ -2013,7 +2034,7 @@ async function sendMsg(payload,file){
     const key=await pairKey(other.pub),s=await seal(key,payload);
     const row={chat_id:S.chat.id,sender:S.user.id,iv:s.iv,ct:s.ct};
     if(file)row.file=file;
-    await q(sb.from("messages").insert(row),"Sende");
+    await q(sb.from("messages").insert(row),tr("ctx.send"));
     S.justSent=true;S.myTyp=null;trackMe(true);refreshSoon();return true;
   }catch(e){fail(e);return false}
 }
@@ -2184,7 +2205,7 @@ async function sendImage(file){
 function picEl(img){
   const box=el("span",{class:"pic-box",style:"width:"+Math.min(img.w||240,240)+"px;aspect-ratio:"+(img.w||4)+"/"+(img.h||3)});
   const gifT=img.t==="image/gif"; /* HVORFOR: avsenderens felt, så bare nøyaktig denne verdien godtas */
-  const show=u=>{const i=el("img",{alt:gifT?"GIF":"Bilde",src:u,tabindex:"0"});i.addEventListener("click",()=>lightbox(u,gifT));i.addEventListener("keydown",e=>{if(e.key==="Enter")lightbox(u,gifT)});box.textContent="";box.append(i)};
+  const show=u=>{const i=el("img",{alt:gifT?"GIF":tr("img.alt"),src:u,tabindex:"0"});i.addEventListener("click",()=>lightbox(u,gifT));i.addEventListener("keydown",e=>{if(e.key==="Enter")lightbox(u,gifT)});box.textContent="";box.append(i)};
   if(picCache.has(img.p)){show(picCache.get(img.p));return box}
   box.textContent=tr("img.loading");
   const other=S.profiles.get(S.chat.other);
@@ -2200,7 +2221,7 @@ function picEl(img){
 }
 function lightbox(u,gif){
   const b=$("#lb");b.textContent="";
-  b.append(el("img",{src:u,alt:"Bilde"}),el("div",{class:"row"},
+  b.append(el("img",{src:u,alt:tr("img.alt")}),el("div",{class:"row"},
     el("a",{class:"btnlink",href:u,download:gif?"prek.gif":"prek-bilde.jpg"},tr("img.download")),el("button",{class:"glass",type:"button",onclick:()=>{b.hidden=true;b.textContent=""}},tr("common.close"))));
   b.hidden=false;
 }
@@ -2295,12 +2316,12 @@ function wire(){
   sure($("#bx"),tr("chat.deleteMine"),async()=>{try{
     const mine=S.msgs.filter(m=>m.mine&&m.img).map(m=>m.img.p);
     if(mine.length)await sb.storage.from(BUCKET).remove(mine);
-    await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),"Slette");S.sig=null;toast(tr("msg.mineDeleted"));refreshSoon()}catch(e){fail(e)}});
+    await q(sb.from("messages").delete().eq("chat_id",S.chat.id).eq("sender",S.user.id),tr("ctx.delete"));S.sig=null;toast(tr("msg.mineDeleted"));refreshSoon()}catch(e){fail(e)}});
   sure($("#bfr"),tr("chat.removeFriend"),async()=>{try{await q(sb.rpc("remove_friend",{p_other:S.chat.other}),tr("ctx.removeFriend"));closeChat();refresh()}catch(e){fail(e)}});
   $("#bmu").addEventListener("click",()=>{if(!S.chat)return;const id=S.chat.other,on=!muted(id);setMuted(id,on);drawMute();drawFriends();toast(on?tr("mute.on"):tr("mute.off"))});
   sure($("#bbl"),tr("chat.block"),async()=>{try{await q(sb.rpc("block_user",{p_other:S.chat.other}),tr("ctx.block"));closeChat();toast(tr("block.done"));refresh()}catch(e){fail(e)}});
   $("#bd").addEventListener("click",()=>{
-    const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?"(dobbeltpling)":m.img?"(bilde)":m.ok?m.t:"(kan ikke dekrypteres)")).join("\n");
+    const t=S.msgs.map(m=>"["+new Date(m.ts).toLocaleString("nb-NO")+"] "+(m.mine?S.profile.name:nameOf(S.chat.other))+": "+(m.dp?tr("chat.dlDp"):m.img?tr("chat.dlImage"):m.ok?m.t:tr("chat.undecryptable"))).join("\n");
     download("prek-samtale.txt",t+"\n");
   });
   const tx=$("#tx");
@@ -2329,7 +2350,7 @@ function wire(){
   for(const e of ["😊","😃","😉","🙁","😛","❤️","👍","👎","😮","😎","😈","😇","😢","💋","💔","🎉"]){
     pe.append(el("button",{type:"button",class:"ef",onclick:()=>{tx.value+=e;drawPv();tx.focus()}},e));
   }
-  const t1=el("button",{type:"button",class:"etab on"},"Figurer"),t2=el("button",{type:"button",class:"etab"},"Emoji");
+  const t1=el("button",{type:"button",class:"etab on"},tr("emo.tabFigures")),t2=el("button",{type:"button",class:"etab"},tr("emo.tabEmoji"));
   const tab=n=>{pf.hidden=n!==1;pe.hidden=n!==2;t1.classList.toggle("on",n===1);t2.classList.toggle("on",n===2)};
   t1.onclick=()=>tab(1);t2.onclick=()=>tab(2);
   emo.append(el("div",{class:"etabs"},t1,t2),pf,pe);
