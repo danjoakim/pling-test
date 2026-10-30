@@ -15,6 +15,11 @@ const esbuild=require("esbuild");
  console.log("ok   okAv gives the same answer as before for",n,"inputs");
  for(const [s,want] of V.hue)assert.strictEqual(A.hue(s),want,"hue("+JSON.stringify(s).slice(0,30)+")");
  console.log("ok   hue gives the same color as before for",V.hue.length,"names");
+ // The initial is the first whole character (fix of 30 Oct; before, name[0] gave half an emoji).
+ const ini=[["Alice","A"],["bob","B"],["","?"],["åse","Å"],["😊 Dan","😊"],["🇳🇴 Norge","🇳🇴"],["👨‍👩‍👧 Familie","👨‍👩‍👧"],["e\u0301mile","E\u0301"],["𝒜lpha","𝒜"],[" x"," "],["ß","SS"]];
+ for(const [name,want] of ini)assert.strictEqual(A.initial(name),want,"initial("+JSON.stringify(name)+")");
+ for(const [name] of ini)if(name)assert.ok(!/[\ud800-\udbff]$/.test(A.initial(name))&&!/^[\udc00-\udfff]/.test(A.initial(name)),"no broken half character for "+name);
+ console.log("ok   initial is a whole character for",ini.length,"names");
  // hand-checked: the limit is under 12000 characters, JPEG only, base64 characters only
  assert.strictEqual(A.okAv(P+"A".repeat(11976)),true);assert.strictEqual(A.okAv(P+"A".repeat(11977)),false);
  assert.strictEqual(A.okAv("data:image/png;base64,AAAA"),false);assert.strictEqual(A.okAv(P+"<script>"),false);assert.strictEqual(A.okAv(null),false);

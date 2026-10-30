@@ -307,7 +307,7 @@ const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
 /* ---------- min profil ---------- */
 function paintMe(){
   const i=$("#avimg"),s=$("#avini"),nm=S.profile.name;
-  if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=(nm[0]||"?").toUpperCase()}
+  if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=initial(nm)}
   $("#avwrap").className="av "+ST[S.status];
   document.documentElement.style.setProperty("--dot",DOT[ST[S.status]]||DOT.on);
   $("#men").textContent=nm;

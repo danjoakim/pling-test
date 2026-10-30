@@ -1365,6 +1365,7 @@ var PrekAvatar = (() => {
   __export(avatar_exports, {
     avEl: () => avEl,
     hue: () => hue,
+    initial: () => initial,
     okAv: () => okAv,
     toAvatar: () => toAvatar
   });
@@ -1393,6 +1394,19 @@ var PrekAvatar = (() => {
     for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360;
     return h;
   }
+  function initial(name) {
+    const seg = Intl.Segmenter;
+    let first = "";
+    if (seg) {
+      for (const part of new seg(void 0, { granularity: "grapheme" }).segment(name)) {
+        first = part.segment;
+        break;
+      }
+    } else {
+      first = Array.from(name)[0] || "";
+    }
+    return (first || "?").toUpperCase();
+  }
   function avEl(name, av, cls) {
     const d = document.createElement("span");
     d.className = "pav " + cls;
@@ -1402,7 +1416,7 @@ var PrekAvatar = (() => {
       i.src = av;
       d.append(i);
     } else {
-      d.textContent = (name[0] || "?").toUpperCase();
+      d.textContent = initial(name);
       d.style.background = "hsl(" + hue(name) + " 45% 36%)";
     }
     return d;
@@ -1482,7 +1496,7 @@ function ringing(v){const c=ac();if(!c)return;const bus=marimbaBus(c),t0=c.curre
    o.connect(g);g.connect(bus);o.start(t0+s);o.stop(t0+s+len+.4)}))})}
 function dobbelt(){ringing(.34)}
 function stor(){const a=$("#app");a.classList.remove("dp");void a.offsetWidth;a.classList.add("dp");dobbelt();try{if(navigator.vibrate)navigator.vibrate([200,60,200,60,200,60,200,60,300])}catch(e){}}
-const {okAv,toAvatar,hue,avEl}=PrekAvatar;
+const {okAv,toAvatar,hue,avEl,initial}=PrekAvatar;
 /* ---------- animerte smilefjes (tegneserie-stil, Dan Joakim 26. okt) ----------
    HVORFOR: MSN hadde animerte smilefjes. Våre er tegnet i kode (SVG + CSS), helt egne figurer (ikke MSNs grafikk), ligger i selve appen og krever ingen forespørsel til tredjepart.
    I meldingen sendes bare koden (for eksempel «:)»); mottakeren tegner figuren selv. Se claude/emoji.md.
@@ -2010,7 +2024,7 @@ const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
 /* ---------- min profil ---------- */
 function paintMe(){
   const i=$("#avimg"),s=$("#avini"),nm=S.profile.name;
-  if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=(nm[0]||"?").toUpperCase()}
+  if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=initial(nm)}
   $("#avwrap").className="av "+ST[S.status];
   document.documentElement.style.setProperty("--dot",DOT[ST[S.status]]||DOT.on);
   $("#men").textContent=nm;

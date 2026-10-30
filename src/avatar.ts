@@ -5,9 +5,8 @@
  * only a small JPEG data URL made of base64 characters is accepted. Anything else (another type, a link, a script URL,
  * something big) is ignored and the initial letter is shown instead.
  *
-
- * Known quirk, kept as it was: the initial is `name[0]`, which is half a character for a name that starts with an emoji.
- * Fixing it (take the first code point) is a visible change, so it needs Dan Joakim's yes.
+ * The initial is the first whole character of the name (30 Oct, Dan Joakim: fix). Before, it was `name[0]`, which is half a character
+ * for a name that starts with an emoji and showed as a broken sign.
  *
  * tests/avatar-unit.js compares `okAv` and `hue` with tests/fixtures/avatar-vectors.json, made by the JavaScript this
  * replaced; tests/avatar.js compares the picture and the element in a browser.
@@ -41,6 +40,21 @@ export function hue(s: string): number {
   return h;
 }
 
+/**
+ * The first whole character of a name, in capitals, or "?" for an empty name. A letter with a combining mark, an emoji or a flag
+ * counts as one character (Intl.Segmenter); where that is missing it falls back to the first code point.
+ */
+export function initial(name: string): string {
+  const seg = (Intl as { Segmenter?: new (l?: string, o?: { granularity: "grapheme" }) => { segment(s: string): Iterable<{ segment: string }> } }).Segmenter;
+  let first = "";
+  if (seg) {
+    for (const part of new seg(undefined, { granularity: "grapheme" }).segment(name)) { first = part.segment; break; }
+  } else {
+    first = Array.from(name)[0] || "";
+  }
+  return (first || "?").toUpperCase();
+}
+
 /** The avatar circle: the picture when it passes `okAv`, otherwise the first letter on a color made from the name. */
 export function avEl(name: string, av: unknown, cls: string): HTMLSpanElement {
   const d = document.createElement("span");
@@ -51,7 +65,7 @@ export function avEl(name: string, av: unknown, cls: string): HTMLSpanElement {
     i.src = av;
     d.append(i);
   } else {
-    d.textContent = (name[0] || "?").toUpperCase();
+    d.textContent = initial(name);
     d.style.background = "hsl(" + hue(name) + " 45% 36%)";
   }
   return d;

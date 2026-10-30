@@ -85,8 +85,8 @@ first, or nothing there can be typed.
 - **Round 3 (done):** avatar helpers are `src/avatar.ts` (`okAv`, `toAvatar`, `hue`, `avEl`; bundled as `PrekAvatar`). `okAv` and `hue`
   are locked by `tests/fixtures/avatar-vectors.json` (made by the old code) and `tests/avatar-unit.js`; `tests/avatar.js` checks the element,
   the centered 64x64 crop and the whole choose-a-picture flow in a browser. Compared once by hand against the old build in a browser:
-  identical elements and a byte-identical JPEG. A pre-existing quirk was found and left as it was: a name that starts with an emoji gets half
-  a character as its initial (`name[0]`); fixing it is a visible change and needs a yes.
+  identical elements and a byte-identical JPEG. A pre-existing bug was found (a name that starts with an emoji got half a character as its initial) and fixed in a separate commit
+  at Dan Joakim's request: `initial()` takes the first whole character (also used for the profile picture slot in the main window).
 - **Rounds 4+, the remaining pure parts to TypeScript one at a time (image shrinking, GIF encoder, sound, link preview, reactions):** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
   reactions logic. Little DOM, easy to test in Node.
 - **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).

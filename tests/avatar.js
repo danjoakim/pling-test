@@ -1,7 +1,7 @@
 // Avatars in the browser: the avatar element looks as before (picture only when the stored string passes okAv, otherwise the initial
 // on a color from the name), a chosen picture becomes a centered 64x64 JPEG, a file that is not a picture is refused, and the whole
 // flow works for a user (choose picture -> stored -> shown). Expected element strings were recorded from the code this replaced.
-// (A name that starts with an emoji is left out on purpose: the initial is half a character, a known quirk noted in src/avatar.ts.)
+// The initial is the first whole character (fix of 30 Oct): names that start with an emoji or a flag are checked in step 1b.
 const {chromium}=require("playwright");
 const http=require("http"),fs=require("fs"),path=require("path"),assert=require("assert");
 const DIR=path.resolve(__dirname,"..")+"/",MOCK=fs.readFileSync(__dirname+"/mock.js","utf8");
@@ -22,6 +22,10 @@ const EXPECTED=[
  const el=await p.evaluate(P=>[["Alice",null,"x"],["bob",P,"y"],["",undefined,"z"],["Åse","data:image/png;base64,AAAA","q"],["Dan Joakim",P,"me big"]].map(a=>avEl(...a).outerHTML),P);
  assert.deepStrictEqual(el,EXPECTED);
  console.log("1 avatar elements look as before");
+ // 1b. names starting with an emoji or a flag show that whole character (they used to show half of it)
+ const ini=await p.evaluate(()=>["😊 smil","🇳🇴 Norge","åse","","Dan"].map(n=>avEl(n,null,"").textContent));
+ assert.deepStrictEqual(ini,["😊","🇳🇴","Å","?","D"]);
+ console.log("1b initials are whole characters:",ini.join(" "));
 
  // 2. a picture is cut to its centered square and scaled to 64x64: a 200x100 picture, red left half and blue right half
  const px=await p.evaluate(async()=>{
@@ -39,7 +43,8 @@ const EXPECTED=[
  console.log("3 non-picture refused");
 
  // 4. the flow: sign up, choose a profile picture, it is stored (small JPEG) and shown
- await p.click("text=Ny konto");await p.fill("#em","alice@x.test");await p.fill("#pw","hemmelig1");await p.click("#go");await p.fill("#nm","Alice");await p.click("#mk");await p.waitForSelector("#skip");await p.click("#skip");await p.waitForSelector("#men");
+ await p.click("text=Ny konto");await p.fill("#em","alice@x.test");await p.fill("#pw","hemmelig1");await p.click("#go");await p.fill("#nm","😊 Alice");await p.click("#mk");await p.waitForSelector("#skip");await p.click("#skip");await p.waitForSelector("#men");
+ assert.strictEqual(await p.textContent("#avini"),"😊","own initial is the whole emoji");
  const png=await p.evaluate(()=>{const c=document.createElement("canvas");c.width=120;c.height=80;const g=c.getContext("2d");g.fillStyle="#2a7";g.fillRect(0,0,120,80);return c.toDataURL("image/png").split(",")[1]});
  await p.setInputFiles("#avf",{name:"me.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
  await p.waitForFunction(()=>Object.keys(localStorage).some(k=>/^pling_av_/.test(k)),null,{timeout:8000});
