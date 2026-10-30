@@ -58,9 +58,9 @@ Schema, functions and policies are in `supabase/migrations/`. Principles:
 The app is one generated page. Texts come from the language file `src/i18n/nb-NO.ts` through `tr("key")` (all user-visible text is there). All cryptography is TypeScript in `src/crypto.ts` (messages, files, keys, recovery code, safety number, invite hash; pure functions, no
 app state; `main.js` never calls `crypto.subtle` itself), bundled by esbuild and inlined; `app/crypto-glue.js` connects it to browser storage, app state
 and Supabase. Every call to Supabase (tables, server functions, sign-in, file storage, live channel, edge function) goes through the typed module `src/api.ts` (`PrekApi.createApi(sb)`); `tests/api-unit.js` checks them against the SQL. The rest is still plain JavaScript: `app/main.js`, `app/views.js` (sign-in and key screens), `app/body.html` (static page; texts as `{{key}}`), `app/extra.css` and `app/anim.js` are the
-sources; `app/build.py` inlines them into `index.html`. The builder still patches two legacy base files in
-`app/base/` (`messenger.html`, `old-index.html`); replacing that with plain source files is part of the
-TypeScript transition. Always run `npm run build` and commit the regenerated `index.html`; CI fails if it
+sources; `app/build.py` inlines them into `index.html`. The old prototype files that the builder used to cut up and patch are gone: emoji tables
+(`emoji.js`), the status icon (`icon.js`), sound (`sound.js`), avatar helpers (`avatar.js`), the start of the page script (`boot.js`) and the base CSS
+(`style.css`) are normal source files now. Lines starting with `//#` (or `/*#` in CSS) at the top of a source file are developer notes that the builder leaves out. Always run `npm run build` and commit the regenerated `index.html`; CI fails if it
 is out of date.
 
 `tests/crypto-unit.js` tests the crypto module in Node against `tests/fixtures/crypto-vectors.json`, which

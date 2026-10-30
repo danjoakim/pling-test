@@ -75,8 +75,9 @@ first, or nothing there can be typed.
 - **Round 0 (done):** the missing safety net. `tests/gif.js` (small GIF unchanged and animated, stored file encrypted, big GIF
   shrunk under 3 MB and still animated, fake GIF rejected), `tests/sound.js` (message sound and double ping rendered offline and
   measured), `tests/nudge.js` (double ping really shakes the window, banner, flash, title blink, fires once). No app change.
-- **Round 1:** extract the old pieces into normal source files (`style.css`, `emoji.js`, `sound.js`, `avatar.js`, start-up code)
-  and delete `app/base/` (this is old step 5, done first). The built `index.html` must be byte-identical.
+- **Round 1 (done):** the old pieces are now normal source files (`style.css`, `emoji.js`, `icon.js`, `sound.js`, `avatar.js`, `boot.js`)
+  and `app/base/` is deleted (this is old step 5, done first). The built `index.html` is byte-identical to the one before; `build.py` has no
+  `replace` patching of legacy code left. The "why" comments that lived in `build.py` moved into the files as `//#` notes.
 - **Rounds 2+, pure parts to TypeScript one at a time:** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
   reactions logic. Little DOM, easy to test in Node.
 - **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).
@@ -89,8 +90,7 @@ after publishing. Rollback is the previous commit (or the tag).
 
 ## Step 5 - Remove the legacy base files
 
-`app/base/messenger.html` and `old-index.html` are still patched by `build.py`. Once the code they
-contain lives in `src/`, delete them and make the build plain.
+Done in step 4, round 1 (2026-10-30).
 
 ## Not part of this
 
