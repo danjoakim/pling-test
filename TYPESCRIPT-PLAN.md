@@ -78,7 +78,11 @@ first, or nothing there can be typed.
 - **Round 1 (done):** the old pieces are now normal source files (`style.css`, `emoji.js`, `icon.js`, `sound.js`, `avatar.js`, `boot.js`)
   and `app/base/` is deleted (this is old step 5, done first). The built `index.html` is byte-identical to the one before; `build.py` has no
   `replace` patching of legacy code left. The "why" comments that lived in `build.py` moved into the files as `//#` notes.
-- **Rounds 2+, pure parts to TypeScript one at a time:** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
+- **Round 2 (done):** emoji codes and conversion are `src/emoji.ts` (bundled as `PrekEmoji`; `app/emoji.js` only gives the old names).
+  Locked by `tests/fixtures/emoji-vectors.json` (made by the old JavaScript: all tables, both regular expressions, 775 texts) and
+  `tests/emoji-unit.js`; `tests/emo.js` also checks the built page. Checked once by hand: `linkify()` output with animated figures is
+  identical before and after on all 775 texts.
+- **Rounds 3+, the remaining pure parts to TypeScript one at a time (image and avatar helpers, GIF encoder, sound, link preview, reactions):** emoji, image and avatar helpers, the GIF encoder, sound, link preview,
   reactions logic. Little DOM, easy to test in Node.
 - **Then the foundation:** a typed state `S` and the DOM helpers (`$`, `el`, `toast`, `fail`, `q`).
 - **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered

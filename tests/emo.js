@@ -18,4 +18,9 @@ for(const [n,t] of cases)console.log(n+":",await p.evaluate(t=>emoji(t),t));
 // lenker: sjekk at linkify ikke rører URL-en
 const out=await p.evaluate(t=>{const d=document.createElement("div");d.append(...linkify(t));return d.innerHTML},cases[5][1]);
 console.log("linkify:",out);
+// In the built page (not just the module): every sample text from the fixture made by the old code must convert the same way
+const V=JSON.parse(fs.readFileSync(__dirname+"/fixtures/emoji-vectors.json","utf8"));
+const bad=await p.evaluate(cs=>cs.filter(([t,w])=>emoji(t)!==w).map(([t])=>t),V.cases);
+if(bad.length){console.log("TESTFEIL emoji() differs from the old code for:",JSON.stringify(bad.slice(0,5)));process.exit(1)}
+console.log("emoji() in the built page matches the old code for",V.cases.length,"texts");
 console.log("feil:",errs.length?errs:"ingen");await br.close();srv.close()})();

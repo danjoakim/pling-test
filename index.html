@@ -1226,6 +1226,120 @@ var PrekApi = (() => {
   return __toCommonJS(api_exports);
 })();
 
+"use strict";
+var PrekEmoji = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // src/emoji.ts
+  var emoji_exports = {};
+  __export(emoji_exports, {
+    EMO: () => EMO,
+    EMO_CS: () => EMO_CS,
+    EMO_CS_RE: () => EMO_CS_RE,
+    EMO_LC: () => EMO_LC,
+    EMO_RE: () => EMO_RE,
+    emoji: () => emoji
+  });
+  var EMO = { ":)": "\u{1F60A}", ":-)": "\u{1F60A}", ":D": "\u{1F603}", ";)": "\u{1F609}", ":(": "\u{1F641}", ":P": "\u{1F61B}", ":p": "\u{1F61B}", "(L)": "\u2764\uFE0F", "(Y)": "\u{1F44D}", "(N)": "\u{1F44E}", ":O": "\u{1F62E}", "8-)": "\u{1F60E}", "(6)": "\u{1F608}", "(A)": "\u{1F607}", ":'(": "\u{1F622}", "(K)": "\u{1F48B}", "(U)": "\u{1F494}" };
+  var EMO2 = {
+    ":-D": "\u{1F603}",
+    ":-P": "\u{1F61B}",
+    ":-(": "\u{1F641}",
+    ";-)": "\u{1F609}",
+    ":-O": "\u{1F62E}",
+    ":-@": "\u{1F620}",
+    ":@": "\u{1F620}",
+    ":-#": "\u{1F910}",
+    ":-|": "\u{1F610}",
+    ":|": "\u{1F610}",
+    ":-$": "\u{1F633}",
+    ":$": "\u{1F633}",
+    ":-S": "\u{1F615}",
+    ":S": "\u{1F615}",
+    ":-*": "\u{1F618}",
+    ":*": "\u{1F618}",
+    ":-]": "\u{1F60D}",
+    ":]": "\u{1F60D}",
+    ":-[": "\u{1F608}",
+    "*-)": "\u{1F914}",
+    "+o(": "\u{1F922}",
+    "|-)": "\u{1F634}",
+    "8-|": "\u{1F913}",
+    "8o|": "\u{1F62C}",
+    ":8)": "\u{1F47D}",
+    ":}": "\u{1F478}",
+    "<3": "\u2764\uFE0F",
+    "(@)": "\u{1F431}",
+    "(&)": "\u{1F436}",
+    "(*)": "\u2B50",
+    "(#)": "\u2600\uFE0F",
+    "(^)": "\u{1F382}",
+    "(||)": "\u{1F35C}",
+    "(~)": "\u{1F3AC}",
+    "('.')": "\u{1F430}",
+    "(b)": "\u{1F37A}",
+    "(d)": "\u{1F378}",
+    "(f)": "\u{1F339}",
+    "(g)": "\u{1F381}",
+    "(t)": "\u{1F4DE}",
+    "(R)": "\u{1F308}",
+    "(w)": "\u{1F940}",
+    "(brb)": "\u23F3",
+    "(h)": "\u{1F60E}",
+    ":L": "\u{1F923}",
+    "(lol)": "\u{1F602}",
+    "(rotfl)": "\u{1F923}",
+    "(boo)": "\u{1F47B}",
+    "(ap)": "\u2708\uFE0F",
+    "(au)": "\u{1F697}",
+    "(bah)": "\u{1F411}",
+    "(bus)": "\u{1F68C}",
+    "(co)": "\u{1F4BB}",
+    "(ip)": "\u{1F3DD}\uFE0F",
+    "(li)": "\u26A1",
+    "(mo)": "\u{1F4B0}",
+    "(mp)": "\u{1F4F1}",
+    "(nah)": "\u{1F410}",
+    "(nnh)": "\u{1F410}",
+    "(pi)": "\u{1F355}",
+    "(pl)": "\u{1F37D}\uFE0F",
+    "(pu)": "\u261D\uFE0F",
+    "(sn)": "\u{1F40C}",
+    "(so)": "\u26BD",
+    "(st)": "\u26C8\uFE0F",
+    "(tu)": "\u{1F422}",
+    "(um)": "\u2602\uFE0F",
+    "(wo)": "\u{1F4BC}",
+    "(xo)": "\u{1F618}",
+    "(yn)": "\u{1F91E}",
+    "(h5)": "\u{1F64C}",
+    "(xx)": "\u{1F3AE}"
+  };
+  for (const k in EMO2) if (!(k in EMO)) EMO[k] = EMO2[k];
+  var EMO_LC = new Map(Object.keys(EMO).map((k) => [k.toLowerCase(), EMO[k]]));
+  var EMO_RE = new RegExp(Object.keys(EMO).sort((a, b) => b.length - a.length).map((k) => k.replace(/[^a-z0-9]/gi, (c) => String.fromCharCode(92) + c) + (/[a-z0-9]$/i.test(k) ? "(?![a-z0-9])" : "")).join("|"), "gi");
+  var EMO_CS = /* @__PURE__ */ new Map([["xD", "\u{1F606}"], ["XD", "\u{1F606}"], ["o_O", "\u{1F633}"], ["O_o", "\u{1F633}"], ["T_T", "\u{1F62D}"], ["^^", "\u{1F60A}"], ["-_-", "\u{1F611}"], [">:(", "\u{1F620}"]]);
+  var EMO_CS_RE = new RegExp("(^|[^A-Za-z0-9])(xD|XD|o_O|O_o|T_T)(?![A-Za-z0-9])|()(" + String.fromCharCode(92) + "^" + String.fromCharCode(92) + "^|-_-|>:" + String.fromCharCode(92) + "()", "g");
+  var emoji = (t) => t.replace(EMO_CS_RE, (_m, a, b, _c, d) => (b ? a : "") + String(EMO_CS.get(b || d))).replace(EMO_RE, (m) => EMO_LC.get(m.toLowerCase()) || m);
+  return __toCommonJS(emoji_exports);
+})();
+
 /* ---------- kryptering ----------
    The cryptography itself lives in src/crypto.ts (bundled into PrekCrypto by build.py).
    This file only connects it to the app: browser storage (key per user), app state (S) and Supabase. */
@@ -1267,17 +1381,7 @@ const pairFresh=r=>Date.now()-new Date(r.created_at).getTime()<10*60*1000;
 function qrSvg(text){const qr=qrcode(0,"M");qr.addData(text);qr.make();return qr.createSvgTag({cellSize:5,margin:0,scalable:true})}
 const download=(name,text)=>{const a=el("a",{href:URL.createObjectURL(new Blob([text],{type:"text/plain"})),download:name});document.body.append(a);a.click();a.remove()};
 
-const EMO={":)":"😊",":-)":"😊",":D":"😃",";)":"😉",":(":"🙁",":P":"😛",":p":"😛","(L)":"❤️","(Y)":"👍","(N)":"👎",":O":"😮","8-)":"😎","(6)":"😈","(A)":"😇",":'(":"😢","(K)":"💋","(U)":"💔"};
-const EMO2={":-D":"😃",":-P":"😛",":-(":"🙁",";-)":"😉",":-O":"😮",":-@":"😠",":@":"😠",":-#":"🤐",":-|":"😐",":|":"😐",":-$":"😳",":$":"😳",":-S":"😕",":S":"😕",":-*":"😘",":*":"😘",":-]":"😍",":]":"😍",":-[":"😈","*-)":"🤔","+o(":"🤢","|-)":"😴","8-|":"🤓","8o|":"😬",":8)":"👽",":}":"👸","<3":"❤️","(@)":"🐱","(&)":"🐶","(*)":"⭐","(#)":"☀️","(^)":"🎂","(||)":"🍜","(~)":"🎬","('.')":"🐰",
-"(b)":"🍺","(d)":"🍸","(f)":"🌹","(g)":"🎁","(t)":"📞","(R)":"🌈","(w)":"🥀",
-"(brb)":"⏳","(h)":"😎",":L":"🤣","(lol)":"😂","(rotfl)":"🤣","(boo)":"👻","(ap)":"✈️","(au)":"🚗","(bah)":"🐑","(bus)":"🚌","(co)":"💻","(ip)":"🏝️","(li)":"⚡","(mo)":"💰","(mp)":"📱","(nah)":"🐐","(nnh)":"🐐","(pi)":"🍕","(pl)":"🍽️","(pu)":"☝️","(sn)":"🐌","(so)":"⚽","(st)":"⛈️","(tu)":"🐢","(um)":"☂️","(wo)":"💼","(xo)":"😘","(yn)":"🤞","(h5)":"🙌","(xx)":"🎮"};
-for(const k in EMO2)if(!(k in EMO))EMO[k]=EMO2[k];
-const EMO_LC=new Map(Object.keys(EMO).map(k=>[k.toLowerCase(),EMO[k]]));
-const EMO_RE=new RegExp(Object.keys(EMO).sort((a,b)=>b.length-a.length).map(k=>k.replace(/[^a-z0-9]/gi,c=>String.fromCharCode(92)+c)+(/[a-z0-9]$/i.test(k)?"(?![a-z0-9])":"")).join("|"),"gi");
-/* Vanlige internett-smileys som ikke var i MSN (26. okt, Dan Joakim: «xD»). Skiller mellom store og små bokstaver, og må stå alene (ikke midt i et ord). Ingen lookbehind (eldre iPhone). */
-const EMO_CS=new Map([["xD","😆"],["XD","😆"],["o_O","😳"],["O_o","😳"],["T_T","😭"],["^^","😊"],["-_-","😑"],[">:(","😠"]]);
-const EMO_CS_RE=new RegExp("(^|[^A-Za-z0-9])(xD|XD|o_O|O_o|T_T)(?![A-Za-z0-9])|()("+String.fromCharCode(92)+"^"+String.fromCharCode(92)+"^|-_-|>:"+String.fromCharCode(92)+"()","g");
-const emoji=t=>t.replace(EMO_CS_RE,(m,a,b,c,d)=>(b?a:"")+EMO_CS.get(b||d)).replace(EMO_RE,m=>EMO_LC.get(m.toLowerCase())||m);
+const {EMO,EMO_LC,EMO_RE,EMO_CS,EMO_CS_RE,emoji}=PrekEmoji;
 const FF='<svg viewBox="0 0 24 24" aria-hidden="true"><circle class="gl" cx="12" cy="17.5" r="6.5"/><path class="bd" d="M8.5 2.8Q8.4 1.6 9.6 1.6L14.4 1.6Q15.6 1.6 15.5 2.8L14.5 13.4Q14.4 14.6 13.2 14.6L10.8 14.6Q9.6 14.6 9.5 13.4Z"/><circle class="ab" cx="12" cy="18.2" r="3.1"/></svg>';
 function ff(st){const s=document.createElement("span");s.className="ff "+st;s.innerHTML=FF;return s}
 let AC;
