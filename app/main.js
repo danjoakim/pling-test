@@ -230,11 +230,9 @@ async function refresh(){
   if(!S.user||!S.profile)return;
   try{
     const [fr,rq]=await Promise.all([q(api.listFriends(),tr("ctx.friends")),q(api.listRequests(),tr("ctx.requests"))]);
-    const ids=new Set();
-    S.friends=fr.map(r=>r.a===S.user.id?r.b:r.a);S.friends.forEach(i=>ids.add(i));
-    S.reqIn=rq.filter(r=>r.to_id===S.user.id).map(r=>r.from_id);S.reqIn.forEach(i=>ids.add(i));
-    S.reqOut=rq.filter(r=>r.from_id===S.user.id).map(r=>r.to_id);S.reqOut.forEach(i=>ids.add(i));
-    if(ids.size){const ps=await q(api.getProfiles([...ids]),tr("ctx.profiles"));ps.forEach(p=>S.profiles.set(p.id,p))}
+    const rel=relations(S.user.id,fr,rq),ids=rel.ids;
+    S.friends=rel.friends;S.reqIn=rel.reqIn;S.reqOut=rel.reqOut;
+    if(ids.length){const ps=await q(api.getProfiles(ids),tr("ctx.profiles"));ps.forEach(p=>S.profiles.set(p.id,p))}
     if(S.nref++%5===0&&S.friends.length){
       try{const as=await q(api.getAvatars(S.friends));for(const a of as)if(okAv(a.data))S.av.set(a.id,a.data)}catch(e){}
     }
@@ -318,7 +316,6 @@ async function saveProfile(patch){
 }
 
 /* ---------- kompislisten ---------- */
-const ORD={on:0,away:1,busy:1,off:2};
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
 function prev(id){return listLine(S.last.get(id))}
 function drawTitle(){
@@ -330,7 +327,7 @@ function drawFriends(){
   if(S.chat&&$("#title")&&$("#title").dataset.k!==((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)){$("#title").dataset.k=((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other);drawTitle()}
   const box=$("#friends");if(!box)return;box.textContent="";
   const rows=S.friends.map(id=>({id,st:ST[stOf(id)]||"off"}));
-  rows.sort((a,b)=>ORD[a.st]-ORD[b.st]||nameOf(a.id).localeCompare(nameOf(b.id),"nb"));
+  sortFriendRows(rows,nameOf);
   const word={on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")};
   for(const r of rows){
     const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":""),type:"button","data-id":r.id});

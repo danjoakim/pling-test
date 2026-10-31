@@ -1,0 +1,1141 @@
+{
+ "note": "Answers of the old inline code (app/main.js at 3c6d58c, refresh and drawFriends) for relations / sortFriendRows. Never regenerate with new code.",
+ "me": "me",
+ "names": {
+  "a": "Åse",
+  "b": "Øyvind",
+  "c": "Æsir",
+  "d": "Zoe",
+  "e": "anna",
+  "f": "Anna",
+  "g": "Bjørn",
+  "h": "bjørn",
+  "i": "…",
+  "j": "Ola",
+  "k": "ola",
+  "l": "Ægir",
+  "m": "Aaron",
+  "n": "Östen",
+  "o": "Ève",
+  "p": "",
+  "q": "10",
+  "r": "9"
+ },
+ "relations": [
+  {
+   "fr": [],
+   "rq": [],
+   "out": {
+    "friends": [],
+    "reqIn": [],
+    "reqOut": [],
+    "ids": []
+   }
+  },
+  {
+   "fr": [
+    {
+     "a": "me",
+     "b": "x"
+    }
+   ],
+   "rq": [],
+   "out": {
+    "friends": [
+     "x"
+    ],
+    "reqIn": [],
+    "reqOut": [],
+    "ids": [
+     "x"
+    ]
+   }
+  },
+  {
+   "fr": [
+    {
+     "a": "x",
+     "b": "me"
+    }
+   ],
+   "rq": [],
+   "out": {
+    "friends": [
+     "x"
+    ],
+    "reqIn": [],
+    "reqOut": [],
+    "ids": [
+     "x"
+    ]
+   }
+  },
+  {
+   "fr": [
+    {
+     "a": "me",
+     "b": "x"
+    },
+    {
+     "a": "y",
+     "b": "me"
+    },
+    {
+     "a": "me",
+     "b": "z"
+    }
+   ],
+   "rq": [],
+   "out": {
+    "friends": [
+     "x",
+     "y",
+     "z"
+    ],
+    "reqIn": [],
+    "reqOut": [],
+    "ids": [
+     "x",
+     "y",
+     "z"
+    ]
+   }
+  },
+  {
+   "fr": [],
+   "rq": [
+    {
+     "from_id": "a",
+     "to_id": "me"
+    }
+   ],
+   "out": {
+    "friends": [],
+    "reqIn": [
+     "a"
+    ],
+    "reqOut": [],
+    "ids": [
+     "a"
+    ]
+   }
+  },
+  {
+   "fr": [],
+   "rq": [
+    {
+     "from_id": "me",
+     "to_id": "b"
+    }
+   ],
+   "out": {
+    "friends": [],
+    "reqIn": [],
+    "reqOut": [
+     "b"
+    ],
+    "ids": [
+     "b"
+    ]
+   }
+  },
+  {
+   "fr": [],
+   "rq": [
+    {
+     "from_id": "a",
+     "to_id": "me"
+    },
+    {
+     "from_id": "me",
+     "to_id": "b"
+    },
+    {
+     "from_id": "c",
+     "to_id": "me"
+    }
+   ],
+   "out": {
+    "friends": [],
+    "reqIn": [
+     "a",
+     "c"
+    ],
+    "reqOut": [
+     "b"
+    ],
+    "ids": [
+     "a",
+     "c",
+     "b"
+    ]
+   }
+  },
+  {
+   "fr": [
+    {
+     "a": "me",
+     "b": "x"
+    }
+   ],
+   "rq": [
+    {
+     "from_id": "x",
+     "to_id": "me"
+    }
+   ],
+   "out": {
+    "friends": [
+     "x"
+    ],
+    "reqIn": [
+     "x"
+    ],
+    "reqOut": [],
+    "ids": [
+     "x"
+    ]
+   }
+  },
+  {
+   "fr": [
+    {
+     "a": "me",
+     "b": "x"
+    }
+   ],
+   "rq": [
+    {
+     "from_id": "me",
+     "to_id": "x"
+    }
+   ],
+   "out": {
+    "friends": [
+     "x"
+    ],
+    "reqIn": [],
+    "reqOut": [
+     "x"
+    ],
+    "ids": [
+     "x"
+    ]
+   }
+  },
+  {
+   "fr": [
+    {
+     "a": "me",
+     "b": "x"
+    },
+    {
+     "a": "x",
+     "b": "me"
+    }
+   ],
+   "rq": [],
+   "out": {
+    "friends": [
+     "x",
+     "x"
+    ],
+    "reqIn": [],
+    "reqOut": [],
+    "ids": [
+     "x"
+    ]
+   }
+  },
+  {
+   "fr": [
+    {
+     "a": "p",
+     "b": "q"
+    }
+   ],
+   "rq": [
+    {
+     "from_id": "p",
+     "to_id": "q"
+    }
+   ],
+   "out": {
+    "friends": [
+     "p"
+    ],
+    "reqIn": [],
+    "reqOut": [],
+    "ids": [
+     "p"
+    ]
+   }
+  },
+  {
+   "fr": [
+    {
+     "a": "me",
+     "b": "me"
+    }
+   ],
+   "rq": [
+    {
+     "from_id": "me",
+     "to_id": "me"
+    }
+   ],
+   "out": {
+    "friends": [
+     "me"
+    ],
+    "reqIn": [
+     "me"
+    ],
+    "reqOut": [
+     "me"
+    ],
+    "ids": [
+     "me"
+    ]
+   }
+  },
+  {
+   "fr": [
+    {
+     "a": "me",
+     "b": "x"
+    }
+   ],
+   "rq": [
+    {
+     "from_id": "me",
+     "to_id": "y"
+    },
+    {
+     "from_id": "z",
+     "to_id": "me"
+    },
+    {
+     "from_id": "me",
+     "to_id": "x"
+    },
+    {
+     "from_id": "x",
+     "to_id": "me"
+    }
+   ],
+   "out": {
+    "friends": [
+     "x"
+    ],
+    "reqIn": [
+     "z",
+     "x"
+    ],
+    "reqOut": [
+     "y",
+     "x"
+    ],
+    "ids": [
+     "x",
+     "z",
+     "y"
+    ]
+   }
+  }
+ ],
+ "sort": [
+  {
+   "rows": [
+    {
+     "id": "a",
+     "st": "on"
+    },
+    {
+     "id": "b",
+     "st": "away"
+    },
+    {
+     "id": "c",
+     "st": "busy"
+    },
+    {
+     "id": "d",
+     "st": "off"
+    },
+    {
+     "id": "e",
+     "st": "on"
+    },
+    {
+     "id": "f",
+     "st": "away"
+    },
+    {
+     "id": "g",
+     "st": "busy"
+    },
+    {
+     "id": "h",
+     "st": "off"
+    },
+    {
+     "id": "i",
+     "st": "on"
+    },
+    {
+     "id": "j",
+     "st": "away"
+    },
+    {
+     "id": "k",
+     "st": "busy"
+    },
+    {
+     "id": "l",
+     "st": "off"
+    },
+    {
+     "id": "m",
+     "st": "on"
+    },
+    {
+     "id": "n",
+     "st": "away"
+    },
+    {
+     "id": "o",
+     "st": "busy"
+    },
+    {
+     "id": "p",
+     "st": "off"
+    },
+    {
+     "id": "q",
+     "st": "on"
+    },
+    {
+     "id": "r",
+     "st": "away"
+    }
+   ],
+   "out": [
+    {
+     "id": "i",
+     "st": "on"
+    },
+    {
+     "id": "q",
+     "st": "on"
+    },
+    {
+     "id": "e",
+     "st": "on"
+    },
+    {
+     "id": "m",
+     "st": "on"
+    },
+    {
+     "id": "a",
+     "st": "on"
+    },
+    {
+     "id": "r",
+     "st": "away"
+    },
+    {
+     "id": "f",
+     "st": "away"
+    },
+    {
+     "id": "g",
+     "st": "busy"
+    },
+    {
+     "id": "o",
+     "st": "busy"
+    },
+    {
+     "id": "k",
+     "st": "busy"
+    },
+    {
+     "id": "j",
+     "st": "away"
+    },
+    {
+     "id": "c",
+     "st": "busy"
+    },
+    {
+     "id": "n",
+     "st": "away"
+    },
+    {
+     "id": "b",
+     "st": "away"
+    },
+    {
+     "id": "p",
+     "st": "off"
+    },
+    {
+     "id": "h",
+     "st": "off"
+    },
+    {
+     "id": "d",
+     "st": "off"
+    },
+    {
+     "id": "l",
+     "st": "off"
+    }
+   ]
+  },
+  {
+   "rows": [
+    {
+     "id": "a",
+     "st": "off"
+    },
+    {
+     "id": "b",
+     "st": "off"
+    },
+    {
+     "id": "c",
+     "st": "off"
+    },
+    {
+     "id": "d",
+     "st": "off"
+    },
+    {
+     "id": "e",
+     "st": "off"
+    },
+    {
+     "id": "f",
+     "st": "off"
+    },
+    {
+     "id": "g",
+     "st": "off"
+    },
+    {
+     "id": "h",
+     "st": "off"
+    },
+    {
+     "id": "i",
+     "st": "off"
+    },
+    {
+     "id": "j",
+     "st": "off"
+    },
+    {
+     "id": "k",
+     "st": "off"
+    },
+    {
+     "id": "l",
+     "st": "off"
+    },
+    {
+     "id": "m",
+     "st": "off"
+    },
+    {
+     "id": "n",
+     "st": "off"
+    },
+    {
+     "id": "o",
+     "st": "off"
+    },
+    {
+     "id": "p",
+     "st": "off"
+    },
+    {
+     "id": "q",
+     "st": "off"
+    },
+    {
+     "id": "r",
+     "st": "off"
+    }
+   ],
+   "out": [
+    {
+     "id": "p",
+     "st": "off"
+    },
+    {
+     "id": "i",
+     "st": "off"
+    },
+    {
+     "id": "q",
+     "st": "off"
+    },
+    {
+     "id": "r",
+     "st": "off"
+    },
+    {
+     "id": "e",
+     "st": "off"
+    },
+    {
+     "id": "f",
+     "st": "off"
+    },
+    {
+     "id": "h",
+     "st": "off"
+    },
+    {
+     "id": "g",
+     "st": "off"
+    },
+    {
+     "id": "o",
+     "st": "off"
+    },
+    {
+     "id": "k",
+     "st": "off"
+    },
+    {
+     "id": "j",
+     "st": "off"
+    },
+    {
+     "id": "d",
+     "st": "off"
+    },
+    {
+     "id": "l",
+     "st": "off"
+    },
+    {
+     "id": "c",
+     "st": "off"
+    },
+    {
+     "id": "n",
+     "st": "off"
+    },
+    {
+     "id": "b",
+     "st": "off"
+    },
+    {
+     "id": "m",
+     "st": "off"
+    },
+    {
+     "id": "a",
+     "st": "off"
+    }
+   ]
+  },
+  {
+   "rows": [
+    {
+     "id": "r",
+     "st": "on"
+    },
+    {
+     "id": "q",
+     "st": "off"
+    },
+    {
+     "id": "p",
+     "st": "busy"
+    },
+    {
+     "id": "o",
+     "st": "away"
+    },
+    {
+     "id": "n",
+     "st": "on"
+    },
+    {
+     "id": "m",
+     "st": "off"
+    },
+    {
+     "id": "l",
+     "st": "busy"
+    },
+    {
+     "id": "k",
+     "st": "away"
+    },
+    {
+     "id": "j",
+     "st": "on"
+    },
+    {
+     "id": "i",
+     "st": "off"
+    },
+    {
+     "id": "h",
+     "st": "busy"
+    },
+    {
+     "id": "g",
+     "st": "away"
+    },
+    {
+     "id": "f",
+     "st": "on"
+    },
+    {
+     "id": "e",
+     "st": "off"
+    },
+    {
+     "id": "d",
+     "st": "busy"
+    },
+    {
+     "id": "c",
+     "st": "away"
+    },
+    {
+     "id": "b",
+     "st": "on"
+    },
+    {
+     "id": "a",
+     "st": "off"
+    }
+   ],
+   "out": [
+    {
+     "id": "r",
+     "st": "on"
+    },
+    {
+     "id": "f",
+     "st": "on"
+    },
+    {
+     "id": "j",
+     "st": "on"
+    },
+    {
+     "id": "n",
+     "st": "on"
+    },
+    {
+     "id": "b",
+     "st": "on"
+    },
+    {
+     "id": "p",
+     "st": "busy"
+    },
+    {
+     "id": "h",
+     "st": "busy"
+    },
+    {
+     "id": "g",
+     "st": "away"
+    },
+    {
+     "id": "o",
+     "st": "away"
+    },
+    {
+     "id": "k",
+     "st": "away"
+    },
+    {
+     "id": "d",
+     "st": "busy"
+    },
+    {
+     "id": "l",
+     "st": "busy"
+    },
+    {
+     "id": "c",
+     "st": "away"
+    },
+    {
+     "id": "i",
+     "st": "off"
+    },
+    {
+     "id": "q",
+     "st": "off"
+    },
+    {
+     "id": "e",
+     "st": "off"
+    },
+    {
+     "id": "m",
+     "st": "off"
+    },
+    {
+     "id": "a",
+     "st": "off"
+    }
+   ]
+  },
+  {
+   "rows": [
+    {
+     "id": "zz",
+     "st": "on"
+    },
+    {
+     "id": "yy",
+     "st": "on"
+    },
+    {
+     "id": "xx",
+     "st": "away"
+    }
+   ],
+   "out": [
+    {
+     "id": "zz",
+     "st": "on"
+    },
+    {
+     "id": "yy",
+     "st": "on"
+    },
+    {
+     "id": "xx",
+     "st": "away"
+    }
+   ]
+  },
+  {
+   "rows": [],
+   "out": []
+  },
+  {
+   "rows": [
+    {
+     "id": "a",
+     "st": "busy"
+    }
+   ],
+   "out": [
+    {
+     "id": "a",
+     "st": "busy"
+    }
+   ]
+  },
+  {
+   "rows": [
+    {
+     "id": "a",
+     "st": "away"
+    },
+    {
+     "id": "b",
+     "st": "away"
+    },
+    {
+     "id": "c",
+     "st": "away"
+    },
+    {
+     "id": "d",
+     "st": "away"
+    },
+    {
+     "id": "e",
+     "st": "away"
+    },
+    {
+     "id": "f",
+     "st": "away"
+    },
+    {
+     "id": "g",
+     "st": "away"
+    },
+    {
+     "id": "h",
+     "st": "away"
+    },
+    {
+     "id": "i",
+     "st": "away"
+    },
+    {
+     "id": "j",
+     "st": "away"
+    },
+    {
+     "id": "k",
+     "st": "away"
+    },
+    {
+     "id": "l",
+     "st": "away"
+    },
+    {
+     "id": "m",
+     "st": "away"
+    },
+    {
+     "id": "n",
+     "st": "away"
+    },
+    {
+     "id": "o",
+     "st": "away"
+    },
+    {
+     "id": "p",
+     "st": "away"
+    },
+    {
+     "id": "q",
+     "st": "away"
+    },
+    {
+     "id": "r",
+     "st": "away"
+    },
+    {
+     "id": "a2",
+     "st": "busy"
+    },
+    {
+     "id": "b2",
+     "st": "busy"
+    },
+    {
+     "id": "c2",
+     "st": "busy"
+    },
+    {
+     "id": "d2",
+     "st": "busy"
+    },
+    {
+     "id": "e2",
+     "st": "busy"
+    },
+    {
+     "id": "f2",
+     "st": "busy"
+    },
+    {
+     "id": "g2",
+     "st": "busy"
+    },
+    {
+     "id": "h2",
+     "st": "busy"
+    },
+    {
+     "id": "i2",
+     "st": "busy"
+    },
+    {
+     "id": "j2",
+     "st": "busy"
+    },
+    {
+     "id": "k2",
+     "st": "busy"
+    },
+    {
+     "id": "l2",
+     "st": "busy"
+    },
+    {
+     "id": "m2",
+     "st": "busy"
+    },
+    {
+     "id": "n2",
+     "st": "busy"
+    },
+    {
+     "id": "o2",
+     "st": "busy"
+    },
+    {
+     "id": "p2",
+     "st": "busy"
+    },
+    {
+     "id": "q2",
+     "st": "busy"
+    },
+    {
+     "id": "r2",
+     "st": "busy"
+    }
+   ],
+   "out": [
+    {
+     "id": "p",
+     "st": "away"
+    },
+    {
+     "id": "i",
+     "st": "away"
+    },
+    {
+     "id": "a2",
+     "st": "busy"
+    },
+    {
+     "id": "b2",
+     "st": "busy"
+    },
+    {
+     "id": "c2",
+     "st": "busy"
+    },
+    {
+     "id": "d2",
+     "st": "busy"
+    },
+    {
+     "id": "e2",
+     "st": "busy"
+    },
+    {
+     "id": "f2",
+     "st": "busy"
+    },
+    {
+     "id": "g2",
+     "st": "busy"
+    },
+    {
+     "id": "h2",
+     "st": "busy"
+    },
+    {
+     "id": "i2",
+     "st": "busy"
+    },
+    {
+     "id": "j2",
+     "st": "busy"
+    },
+    {
+     "id": "k2",
+     "st": "busy"
+    },
+    {
+     "id": "l2",
+     "st": "busy"
+    },
+    {
+     "id": "m2",
+     "st": "busy"
+    },
+    {
+     "id": "n2",
+     "st": "busy"
+    },
+    {
+     "id": "o2",
+     "st": "busy"
+    },
+    {
+     "id": "p2",
+     "st": "busy"
+    },
+    {
+     "id": "q2",
+     "st": "busy"
+    },
+    {
+     "id": "r2",
+     "st": "busy"
+    },
+    {
+     "id": "q",
+     "st": "away"
+    },
+    {
+     "id": "r",
+     "st": "away"
+    },
+    {
+     "id": "e",
+     "st": "away"
+    },
+    {
+     "id": "f",
+     "st": "away"
+    },
+    {
+     "id": "h",
+     "st": "away"
+    },
+    {
+     "id": "g",
+     "st": "away"
+    },
+    {
+     "id": "o",
+     "st": "away"
+    },
+    {
+     "id": "k",
+     "st": "away"
+    },
+    {
+     "id": "j",
+     "st": "away"
+    },
+    {
+     "id": "d",
+     "st": "away"
+    },
+    {
+     "id": "l",
+     "st": "away"
+    },
+    {
+     "id": "c",
+     "st": "away"
+    },
+    {
+     "id": "n",
+     "st": "away"
+    },
+    {
+     "id": "b",
+     "st": "away"
+    },
+    {
+     "id": "m",
+     "st": "away"
+    },
+    {
+     "id": "a",
+     "st": "away"
+    }
+   ]
+  }
+ ]
+}
