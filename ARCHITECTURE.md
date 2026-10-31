@@ -76,3 +76,6 @@ The page loads no code from the internet when it starts. `lib/supabase.js` (supa
 
 ## Links and the desktop app
 Links that other people open (invitation, e-mail link, QR code for linking a device) are built with `appBase` (`src/helpers.ts`): the page's own address on the web, the public web address (`PUBLIC_URL`) inside the desktop app, where the page's address is `tauri://localhost` or `http://tauri.localhost`. Change `PUBLIC_URL` when the web version moves.
+
+## Content-Security-Policy
+`app/build.py` puts a policy in the page (a `<meta http-equiv>` tag): only our own files and the two inline scripts (listed by their SHA-256, worked out from the finished page) may run; no `unsafe-eval`, no inline event attributes; the page may talk only to itself and to our Supabase project (https and wss). If something managed to put a `<script>` into the page, the browser would refuse to run it. `tests/csp.js` checks that the hashes match, that the page starts without violations and that injected scripts and foreign servers are refused; all other browser tests run under the policy too. Styles still allow inline (`style-src 'unsafe-inline'`) because the page sets style attributes.

@@ -68,5 +68,19 @@ assert '{{boot.noSupabase}}' in html
 html=html.replace('{{boot.noSupabase}}',json.dumps(_msgs['boot.noSupabase'],ensure_ascii=False)[1:-1])
 assert '{{html.title}}' in html
 html=html.replace('{{html.title}}',_esc(_msgs['html.title']),1)
+# Content-Security-Policy: the browser then runs only our own files and the inline scripts listed here by hash, and talks only to
+# Supabase. If someone managed to get a <script> into a message, the browser would refuse to run it. The hashes are worked out here, from
+# the finished page, so they always match. (Tests in tests/csp.js check that the page works under this policy and that foreign
+# scripts are refused.)
+import hashlib,base64
+_inline=re.findall(r'<script>(.*?)</script>',html,re.S)
+assert len(_inline)==2,"expected two inline scripts, found %d"%len(_inline)
+_hashes=' '.join("'sha256-"+base64.b64encode(hashlib.sha256(t.encode('utf8')).digest()).decode()+"'" for t in _inline)
+_sb='frvnbcltyvcnyympmjua.supabase.co'
+csp=("default-src 'self'; script-src 'self' "+_hashes+"; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; "
+  "connect-src 'self' blob: https://"+_sb+" wss://"+_sb+" ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'")
+assert _sb in open(HERE+'/boot.js',encoding='utf8').read()
+assert '<meta charset="utf-8">\n' in html
+html=html.replace('<meta charset="utf-8">\n','<meta charset="utf-8">\n<meta http-equiv="Content-Security-Policy" content="'+csp+'">\n',1)
 open(HERE+'/../index.html','w',encoding='utf8').write(html)
 print(len(html))
