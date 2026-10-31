@@ -108,6 +108,10 @@ export const nb = {
   // device transfer (round 3)
   "device.requestTitle": "En ny enhet ber om nøkkelen din",
   "device.codeShouldBe": "Koden på den nye enheten skal være: ",
+  "device.approveButton": "Godkjenn",
+  "device.denyButton": "Avvis",
+  "dp.banner": "🔔 {name} vil ha tak i deg!",
+  "dp.titleRinging": "🔔 {name} ringer!",
   "device.approveWarning": "Godkjenn bare hvis det er deg, og koden stemmer med den du ser på den nye enheten.",
   // invitations (round 3)
   "invite.expiredBanner": "Invitasjonen er utløpt eller brukt. Du kan fortsatt lage en konto og legge til kompiser med e-post.",
@@ -137,6 +141,8 @@ export const nb = {
   "recovery.make": "Lag kode",
   "recovery.newDeviceHint": "Ny enhet? Logg inn der og velg «Be om nøkkelen». Her kommer det da en forespørsel du godkjenner.",
   // expiry (round 3)
+  "exp.oneDay": "1 dag",
+  "exp.days": "{n} dager",
   "exp.chatNote": "Nye meldinger i denne samtalen slettes etter {when}. Gjelder for begge.",
   // chat (round 3)
   "chat.youPrefix": "Du: ",

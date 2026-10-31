@@ -36,8 +36,8 @@ async function checkTransfers(){
       el("button",{id:"papprove",onclick:async()=>{try{
         const e=await ephPair(),key=await aesFrom(e.priv,r.eph_pub),sl=await seal(key,{v:1,priv:S.id.priv,pub:S.id.pub});
         await q(api.approveTransfer(r.id,{sender_pub:e.pub,iv:sl.iv,ct:sl.ct}),tr("ctx.approve"));
-        toast(tr("device.sent"));S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Godkjenn"),
-      el("button",{class:"glass",id:"pdeny",onclick:async()=>{try{await q(api.deleteTransfer(r.id),tr("ctx.reject"));S.pairId=null;box.textContent=""}catch(err){fail(err)}}},"Avvis"))));
+        toast(tr("device.sent"));S.pairId=null;box.textContent=""}catch(err){fail(err)}}},tr("device.approveButton")),
+      el("button",{class:"glass",id:"pdeny",onclick:async()=>{try{await q(api.deleteTransfer(r.id),tr("ctx.reject"));S.pairId=null;box.textContent=""}catch(err){fail(err)}}},tr("device.denyButton")))));
 }
 
 /* ---------- invitasjonslenker ----------
@@ -45,12 +45,10 @@ async function checkTransfers(){
    så en lekkasje fra databasen ikke gir brukbare lenker. En lenke kan brukes én gang og varer i 7 dager. Den som åpner den blir kompis med den som inviterte (ingen forespørsel å godta),
    så lenken skal bare deles med den man vil ha som kompis. Tokenet lagres i nettleseren til personen har logget inn og har profil (pling_inv), og slettes når den er brukt. */
 (function(){try{
-  const h=new URLSearchParams(location.hash.replace(/^#/,"")),t=h.get("inv");
-  if(t&&/^[A-Za-z0-9_-]{16,64}$/.test(t)){localStorage.setItem("pling_inv",t);S.mode="up"}
-  if(h.has("inv")){h.delete("inv");const r=h.toString();history.replaceState(null,"",location.pathname+location.search+(r?"#"+r:""))}
+  const iv=inviteFromHash(location.hash);
+  if(iv.token){localStorage.setItem("pling_inv",iv.token);S.mode="up"}
+  if(iv.rest!==null)history.replaceState(null,"",location.pathname+location.search+(iv.rest?"#"+iv.rest:""))
 }catch(e){}})();
-const b64u=u8=>btoa(String.fromCharCode(...u8)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-const hex=u8=>[...u8].map(b=>b.toString(16).padStart(2,"0")).join("");
 async function redeemPending(){
   let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
   if(!t)return;
@@ -72,7 +70,7 @@ function drawInvite(){
   const box=$("#invbox");if(!box)return;box.textContent="";
   const mk=el("button",{class:"glass sm",id:"mkinv",type:"button",onclick:async()=>{
     try{
-      const tok=b64u(crypto.getRandomValues(new Uint8Array(16))),hs=await PrekCrypto.inviteHash(tok);
+      const tok=b64url(crypto.getRandomValues(new Uint8Array(16))),hs=await PrekCrypto.inviteHash(tok);
       await q(api.createInvite(hs),tr("ctx.createInvite"));
       const link=location.origin+location.pathname+"#inv="+tok;
       box.textContent="";
@@ -208,8 +206,8 @@ window.addEventListener("pagehide",()=>{
 });
 /* demp: lagres bare på denne enheten (ingenting sendes til serveren, avsenderen får ikke vite det) */
 const muteKey=()=>"pling_mute_"+S.user.id;
-function muted(id){try{return JSON.parse(localStorage.getItem(muteKey())||"[]").includes(id)}catch(e){return false}}
-function setMuted(id,on){let l=[];try{l=JSON.parse(localStorage.getItem(muteKey())||"[]")}catch(e){}l=l.filter(x=>x!==id);if(on)l.push(id);try{localStorage.setItem(muteKey(),JSON.stringify(l))}catch(e){}}
+function muted(id){let raw=null;try{raw=localStorage.getItem(muteKey())}catch(e){}return isMuted(raw,id)}
+function setMuted(id,on){let raw=null;try{raw=localStorage.getItem(muteKey())}catch(e){}const v=withMuted(raw,id,on);try{localStorage.setItem(muteKey(),v)}catch(e){}}
 function drawMute(){const b=$("#bmu");if(!b||!S.chat)return;b.textContent=muted(S.chat.other)?tr("mute.unmuteButton"):tr("mute.muteButton")}
 function stOf(id){return S.pres.get(id)||"off"}
 
@@ -277,11 +275,11 @@ function alertDp(fid,id,ts){
   stor();
   dpFlash.add(fid);drawFriends();setTimeout(()=>{dpFlash.delete(fid);drawFriends()},10000);
   const old=$("#dpb");if(old)old.remove();
-  const b=el("button",{id:"dpb",class:"dpb",type:"button"},"🔔 "+nameOf(fid)+" vil ha tak i deg!");
+  const b=el("button",{id:"dpb",class:"dpb",type:"button"},tr("dp.banner",{name:nameOf(fid)}));
   b.addEventListener("click",()=>{b.remove();openChat(fid)});
   document.body.append(b);setTimeout(()=>{if(b.isConnected)b.remove()},12000);
   clearInterval(dpT);let n=0;const nm=nameOf(fid);
-  dpT=setInterval(()=>{n++;document.title=n%2?"🔔 "+nm+" ringer!":tr("app.pageTitle");if(n>=20){clearInterval(dpT);setTitle()}},700);
+  dpT=setInterval(()=>{n++;document.title=n%2?tr("dp.titleRinging",{name:nm}):tr("app.pageTitle");if(n>=20){clearInterval(dpT);setTitle()}},700);
 }
 function setTitle(){document.title=pageTitle(S.unread.values())}
 const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
@@ -371,11 +369,10 @@ async function openChat(otherId){
     if(!narrow())$("#tx").focus();
   }catch(e){fail(e)}
 }
-const dagTxt=d=>d===1?"1 dag":d+" dager";
 function drawExp(){
   if(!S.chat)return;drawMute();const d=S.exp.get(S.chat.id)||0,n=$("#expn");
   $("#ex").value=String(d);n.hidden=!d;
-  n.textContent=d?tr("exp.chatNote",{when:dagTxt(d)}):"";
+  n.textContent=d?tr("exp.chatNote",{when:daysText(d)}):"";
 }
 function drawChatHead(){
   if(!S.chat)return;const id=S.chat.other,st=ST[stOf(id)]||"off";
@@ -676,7 +673,7 @@ function wire(){
   $("#pr").addEventListener("click",()=>$("#mb").click());
   $("#ex").addEventListener("change",async()=>{
     if(!S.chat)return;const v=+$("#ex").value,cid=S.chat.id;
-    try{await q(api.setChatExpiry(cid,v),tr("ctx.changeExpiry"));S.exp.set(cid,v);drawExp();toast(v?tr("exp.on",{when:dagTxt(v)}):tr("exp.off"))}
+    try{await q(api.setChatExpiry(cid,v),tr("ctx.changeExpiry"));S.exp.set(cid,v);drawExp();toast(v?tr("exp.on",{when:daysText(v)}):tr("exp.off"))}
     catch(e){fail(e);drawExp()}
   });
   const sure=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
