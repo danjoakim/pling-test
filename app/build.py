@@ -52,7 +52,7 @@ ap();if(mq.addEventListener)mq.addEventListener("change",ap)}})()</script>
 </head>
 <body>
 {body}
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="lib/supabase.js"></script>
 <script src="lib/qrcode.js"></script>
 <script>
 "use strict";

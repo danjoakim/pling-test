@@ -9,11 +9,25 @@
  * - `isMuted` / `withMuted`: the mute list is a JSON list of friend ids in browser storage, this device only. They take and give
  *   the stored text. Odd stored values behave as before: `isMuted` says no when it cannot read it; `withMuted` throws when the
  *   stored value is valid JSON but not a list (the old code did too, outside its `try`).
+ * - `appBase`: the address links point to (the page's own address on the web, the public address inside the desktop app).
  * - `daysText`: "1 dag" or "N dager".
  *
  * tests/helpers-unit.js compares all of this with the old code.
  */
 import { tr } from "./i18n";
+
+/**
+ * The public address of the web version. Links that other people open (invitations, the e-mail link, the QR code that links a new
+ * device) must point here when the app runs inside the desktop app, where the page's own address is `tauri://localhost` or
+ * `http://tauri.localhost` and means nothing to anyone else. Change this when the web version moves (for example to prek.es).
+ */
+export const PUBLIC_URL = "https://danjoakim.github.io/pling-test/";
+
+/** The address that links should point to: the page's own address on the web (as before), PUBLIC_URL inside the desktop app. */
+export function appBase(loc: { protocol: string; hostname: string; origin: string; pathname: string }): string {
+  const inApp = loc.protocol === "tauri:" || loc.hostname === "tauri.localhost";
+  return inApp ? PUBLIC_URL : loc.origin + loc.pathname;
+}
 
 const TOKEN_RE = /^[A-Za-z0-9_-]{16,64}$/;
 

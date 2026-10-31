@@ -15,7 +15,7 @@ const EXPECTED=[
  '<span class="pav me big"><img alt="" src="data:image/jpeg;base64,AAAA"></span>'];
 (async()=>{
  const br=await chromium.launch();const ctx=await br.newContext({viewport:{width:1000,height:760}});
- await ctx.route("**/supabase.min.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
+ await ctx.route("**/lib/supabase.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
  const p=await ctx.newPage();p.errs=[];p.on("pageerror",e=>p.errs.push(e.message));p.on("console",m=>{if(m.type()==="error")p.errs.push(m.text())});await p.goto("http://localhost:8781/");await p.waitForTimeout(500);
 
  // 1. the element

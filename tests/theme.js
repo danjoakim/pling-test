@@ -5,7 +5,7 @@ const srv=http.createServer((q,r)=>{const f=DIR+(q.url==="/"?"index.html":q.url.
 (async()=>{const br=await chromium.launch();
 for(const sch of ["light","dark"]){
 const ctx=await br.newContext({viewport:{width:1000,height:700},colorScheme:sch});
-await ctx.route("**/supabase.min.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
+await ctx.route("**/lib/supabase.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
 const A=await ctx.newPage();await A.goto("http://localhost:8777/");
 console.log(sch,"lys-klasse:",await A.evaluate(()=>document.documentElement.classList.contains("lys")));
 await A.click("text=Ny konto");await A.fill("#em","alice@x.test");await A.fill("#pw","hemmelig1234");await A.click("#go");await A.fill("#nm","Alice");await A.click("#mk");await A.waitForSelector("#rccode",{timeout:5000}).catch(()=>{});

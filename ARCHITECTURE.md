@@ -70,3 +70,9 @@ regenerate that file with new code.
 (`tests/mock.js`). `npm test` runs them all. They cover login and sign-up, friends and blocking, muting, the
 smiley preview, reactions, personal messages, the recovery code, device transfer and the key-missing screen.
 Some tests only print what they see and fail on crashes or page errors, not on every wrong value.
+
+## Code from others (`lib/`)
+The page loads no code from the internet when it starts. `lib/supabase.js` (supabase-js 2.45.4, unchanged from npm, MIT) and `lib/qrcode.js` are copied into the repo; `lib/README.md` has the version and the SHA-256 so they can be checked. Until 31 Oct 2026 the Supabase library came from the jsdelivr CDN.
+
+## Links and the desktop app
+Links that other people open (invitation, e-mail link, QR code for linking a device) are built with `appBase` (`src/helpers.ts`): the page's own address on the web, the public web address (`PUBLIC_URL`) inside the desktop app, where the page's address is `tauri://localhost` or `http://tauri.localhost`. Change `PUBLIC_URL` when the web version moves.

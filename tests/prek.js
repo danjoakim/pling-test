@@ -6,7 +6,7 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  const br=await chromium.launch();
  for(const scheme of ["light","dark"]){
   const ctx=await br.newContext({viewport:{width:1000,height:760},colorScheme:scheme});
-  await ctx.route("**/supabase.min.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
+  await ctx.route("**/lib/supabase.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
   const p=await ctx.newPage();p.errs=[];p.on("pageerror",e=>p.errs.push(e.message));
   await p.goto("http://localhost:8806/");await p.waitForSelector(".lh svg");
   console.log(scheme,"tittel:",await p.title(),"| logo på innlogging:",await p.locator(".lh svg.prk").count());

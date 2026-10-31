@@ -4,7 +4,7 @@ const DIR=require("path").resolve(__dirname,"..")+"/",MOCK=fs.readFileSync(__dir
 const srv=http.createServer((q,r)=>{const f=DIR+(q.url==="/"?"index.html":q.url.slice(1));try{const b=fs.readFileSync(f);r.setHeader("content-type",f.endsWith(".js")?"application/javascript":"text/html; charset=utf-8");r.end(b)}catch(e){r.statusCode=404;r.end()}}).listen(8766);
 (async()=>{
  const br=await chromium.launch();const ctx=await br.newContext({viewport:{width:900,height:900}});
- await ctx.route("**/supabase.min.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
+ await ctx.route("**/lib/supabase.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
  const errs=[];const mk=async()=>{const p=await ctx.newPage();p.on("pageerror",e=>errs.push(e.message));p.on("console",m=>{if(m.type()==="error")errs.push(m.text())});await p.goto("http://localhost:8766/");return p};
  const A=await mk(),B=await mk();
  const reg=async(p,em,name)=>{await p.click("text=Ny konto");await p.fill("#em",em);await p.fill("#pw","hemmelig1");await p.click("#go");await p.fill("#nm",name);await p.click("#mk");await p.waitForSelector("#rccode")};

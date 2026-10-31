@@ -4,7 +4,7 @@ const DIR=require("path").resolve(__dirname,"..")+"/",MOCK=fs.readFileSync(__dir
 const srv=http.createServer((q,r)=>{const f=DIR+(q.url==="/"?"index.html":q.url.split("#")[0].slice(1));try{const b=fs.readFileSync(f);r.setHeader("content-type",f.endsWith(".js")?"application/javascript":"text/html; charset=utf-8");r.end(b)}catch(e){r.statusCode=404;r.end()}}).listen(8768);
 (async()=>{
  const br=await chromium.launch();const ctx=await br.newContext({viewport:{width:900,height:900}});
- await ctx.route("**/supabase.min.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
+ await ctx.route("**/lib/supabase.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
  const errs=[];
  const mk=async(dev)=>{const p=await ctx.newPage();p.on("pageerror",e=>errs.push(e.message));p.on("console",m=>{if(m.type()==="error")errs.push(m.text())});
   if(dev){ // enhet B: egen nøkkellagring

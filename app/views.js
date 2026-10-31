@@ -14,7 +14,7 @@ function viewLogin(){
       }
     }catch(e){fail(e)}
   };
-  const sendCode=async()=>{try{await q(api.sendLoginCode(email.value.trim(),location.origin+location.pathname),tr("ctx.sendCode"));S.needCode=true;toast(tr("auth.emailSent"));viewLogin()}catch(e){fail(e)}};
+  const sendCode=async()=>{try{await q(api.sendLoginCode(email.value.trim(),appUrl()),tr("ctx.sendCode"));S.needCode=true;toast(tr("auth.emailSent"));viewLogin()}catch(e){fail(e)}};
   const verify=async()=>{try{await q(api.verifyLoginCode(email.value.trim(),code.value.trim()),tr("ctx.verifyCode"))}catch(e){fail(e)}};
   app.classList.add("lgn");
   let remMail="";try{remMail=localStorage.getItem("pling_remember_email")||""}catch(e){}
@@ -90,7 +90,7 @@ async function startPairing(){
   try{
     const e=await ephPair();id=crypto.randomUUID();
     await q(api.askTransfer({id,user_id:S.user.id,eph_pub:e.pub}),tr("ctx.askKey"));
-    const code=await pairCode(e.pub),url=location.origin+location.pathname+"#godkjenn";
+    const code=await pairCode(e.pub),url=appUrl()+"#godkjenn";
     const box=el("div",{class:"qr",id:"qrbox"});box.innerHTML=qrSvg(url);
     app.append(el("h1",{},tr("pairing.title")),
       el("div",{class:"card"},

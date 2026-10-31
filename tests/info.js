@@ -3,7 +3,7 @@ const http=require("http"),fs=require("fs");
 const DIR=require("path").resolve(__dirname,"..")+"/",MOCK=fs.readFileSync(__dirname+"/mock.js","utf8");
 const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.slice(1):DIR+"index.html";r.setHeader("content-type",f.endsWith(".js")?"application/javascript":"text/html; charset=utf-8");r.end(fs.readFileSync(f))}).listen(8792);
 (async()=>{const br=await chromium.launch();const ctx=await br.newContext({viewport:{width:900,height:700}});
-await ctx.route("**/supabase.min.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
+await ctx.route("**/lib/supabase.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
 const p=await ctx.newPage();const errs=[];p.on("pageerror",e=>errs.push(e.message));
 await p.goto("http://localhost:8792/");await p.waitForTimeout(1500);console.log("tidlige feil:",errs);await p.waitForSelector(".lpic");
 await p.click("text=Personvern og hjelp");await p.waitForSelector("#info:not([hidden])");

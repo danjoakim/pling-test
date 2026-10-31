@@ -72,7 +72,7 @@ function drawInvite(){
     try{
       const tok=b64url(crypto.getRandomValues(new Uint8Array(16))),hs=await PrekCrypto.inviteHash(tok);
       await q(api.createInvite(hs),tr("ctx.createInvite"));
-      const link=location.origin+location.pathname+"#inv="+tok;
+      const link=appUrl()+"#inv="+tok;
       box.textContent="";
       const q1=el("div",{class:"qr",id:"invqr"});q1.innerHTML=qrSvg(link);
       const inp=el("input",{id:"invlink",readonly:true,value:link,"aria-label":tr("invite.linkAria")});

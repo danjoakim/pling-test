@@ -14,7 +14,7 @@ function amp(x,f,from,to){const w=2*Math.PI*f/SR,c=2*Math.cos(w);let s1=0,s2=0;c
 function peakHz(x,from,to,lo,hi){let best=0,bf=0;for(let f=lo;f<=hi;f+=1){const a=amp(x,f,from,to);if(a>best){best=a;bf=f}}return bf}
 (async()=>{
  const br=await chromium.launch();const ctx=await br.newContext();
- await ctx.route("**/supabase.min.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
+ await ctx.route("**/lib/supabase.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
  const p=await ctx.newPage();const errs=[];p.on("pageerror",e=>errs.push(e.message));await p.goto("http://localhost:8779/");
  const render=(which,secs)=>p.evaluate(async([which,secs])=>{const oc=new OfflineAudioContext(1,44100*secs,44100);oc.resume=()=>{};AC=oc;
   which==="dbl"?dobbelt():pling();const b=await oc.startRendering();return Array.from(b.getChannelData(0))},[which,secs]);

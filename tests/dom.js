@@ -7,7 +7,7 @@ const DIR=require("path").resolve(__dirname,"..")+"/",MOCK=fs.readFileSync(__dir
 const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.slice(1):DIR+"index.html";r.setHeader("content-type",f.endsWith(".js")?"application/javascript":"text/html; charset=utf-8");r.end(fs.readFileSync(f))}).listen(8785);
 (async()=>{
  const br=await chromium.launch();const ctx=await br.newContext({viewport:{width:1000,height:760}});
- await ctx.route("**/supabase.min.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
+ await ctx.route("**/lib/supabase.js",r=>r.fulfill({contentType:"application/javascript",body:MOCK}));
  const p=await ctx.newPage();p.errs=[];p.on("pageerror",e=>p.errs.push(e.message));p.on("console",m=>{if(m.type()==="error"&&!/^DOMTEST/.test(m.text()))p.errs.push(m.text())});
  await p.goto("http://localhost:8785/");
  await p.waitForFunction(()=>typeof el==="function"&&typeof q==="function"&&typeof fail==="function");

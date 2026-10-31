@@ -1,5 +1,5 @@
 {
- "note": "Answers of the old inline code (app/main.js at f1b7dd1: invitation IIFE, b64u, muted/setMuted, dagTxt) for src/helpers.ts. Never regenerate with new code.",
+ "note": "Answers of the old inline code (app/main.js at f1b7dd1: links from location, invitation IIFE, b64u, muted/setMuted, dagTxt) for src/helpers.ts. Never regenerate with new code.",
  "invite": [
   {
    "hash": "",
@@ -1025,6 +1025,53 @@
   {
    "d": "1",
    "out": "1 dager"
+  }
+ ],
+ "base": [
+  {
+   "loc": {
+    "protocol": "https:",
+    "hostname": "danjoakim.github.io",
+    "origin": "https://danjoakim.github.io",
+    "pathname": "/pling-test/"
+   },
+   "out": "https://danjoakim.github.io/pling-test/"
+  },
+  {
+   "loc": {
+    "protocol": "http:",
+    "hostname": "localhost",
+    "origin": "http://localhost:8785",
+    "pathname": "/"
+   },
+   "out": "http://localhost:8785/"
+  },
+  {
+   "loc": {
+    "protocol": "https:",
+    "hostname": "prek.es",
+    "origin": "https://prek.es",
+    "pathname": "/"
+   },
+   "out": "https://prek.es/"
+  },
+  {
+   "loc": {
+    "protocol": "https:",
+    "hostname": "example.org",
+    "origin": "https://example.org",
+    "pathname": "/a/b.html"
+   },
+   "out": "https://example.org/a/b.html"
+  },
+  {
+   "loc": {
+    "protocol": "http:",
+    "hostname": "127.0.0.1",
+    "origin": "http://127.0.0.1:3000",
+    "pathname": "/index.html"
+   },
+   "out": "http://127.0.0.1:3000/index.html"
   }
  ]
 }
