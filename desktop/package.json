@@ -1,0 +1,15 @@
+{
+  "name": "prek-desktop",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Prek! as an app for Mac and Windows (Tauri). Wraps the same page as the web version.",
+  "scripts": {
+    "prepare-dist": "node prepare.js",
+    "icons": "tauri icon app-icon.png",
+    "build": "node prepare.js && tauri build",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

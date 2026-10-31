@@ -1,2 +1,6 @@
 node_modules/
 *.png
+!desktop/app-icon.png
+desktop/dist/
+desktop/src-tauri/target/
+desktop/src-tauri/gen/

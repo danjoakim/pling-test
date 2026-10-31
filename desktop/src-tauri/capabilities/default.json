@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "What the main window may do: the basics, and open web links in the system browser.",
+  "windows": ["main"],
+  "permissions": ["core:default", "opener:default"]
+}
