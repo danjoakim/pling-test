@@ -9,12 +9,23 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: |
-          npm pack @supabase/supabase-js@2.45.4
-          tar xzf supabase-supabase-js-2.45.4.tgz
-          sha256sum package/dist/umd/supabase.min.js | tee sha256.txt
-          mkdir out && cp package/dist/umd/supabase.min.js package/LICENSE package/package.json sha256.txt out/
+      - name: Fetch
+        run: |
+          mkdir out
+          (
+            set -x
+            npm pack @supabase/supabase-js@2.45.4
+            ls -la
+            mkdir x && tar xzf supabase-supabase-js-2.45.4.tgz -C x
+            find x -maxdepth 3 | head -50
+            cp x/package/dist/umd/supabase.min.js out/
+            cp x/package/package.json out/
+            cp x/package/LICENSE* out/ || true
+            sha256sum out/supabase.min.js
+            wc -c out/supabase.min.js
+          ) > out/log.txt 2>&1 || echo "FAILED" >> out/log.txt
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: supabase-js
           path: out
