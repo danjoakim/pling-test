@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-iv8yissGV4R6CG0zisK5DKylPSH8LYAcE0vPzDPWR9k='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-uckCDXk7zng0eFraMROewDZ7Dihdgl/tEQzdY302eI8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -485,6 +485,12 @@ html.lys .ff .bd{fill:#1b5fb8}html.lys .ff.off .bd{fill:#9aa9ba}html.lys .ff .ab
 .tbn .prkw{width:84px;margin:2px 0 0 4px}#tbi[hidden]{display:none}
 .epv{flex:none;padding:4px 12px;font-size:13px;opacity:.85;display:flex;align-items:center;flex-wrap:wrap;gap:2px;min-height:24px;border-top:1px solid rgba(120,160,210,.25)}
 .epv[hidden]{display:none}.epv .an{width:22px;height:22px;display:inline-block}.epv .an svg{width:100%;height:100%}
+
+/* Desktop app (class "desk", set by desktop.js): the app window is already a window, so the page fills it edge to edge instead of
+   floating as a framed window with a border, rounded corners and a shadow on a background. */
+html.desk .win,html.desk.lys .win{max-width:none;width:100%;height:100%;border:0;border-radius:0;box-shadow:none}
+html.desk.lys .tb{border-radius:0}
+html.desk body{padding:0}
 
 </style>
 </head>
@@ -3880,6 +3886,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
+if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
   const u=externalLink(a.href,location.origin);if(!u)return;

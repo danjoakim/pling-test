@@ -35,11 +35,27 @@ const click=(p,href,target)=>p.evaluate(([href,target])=>{
  const inner=await p.evaluate(()=>{const a=document.createElement("a");a.href="https://example.com/card";a.target="_blank";const s=document.createElement("span");s.textContent="inner";a.append(s);document.body.append(a);document.addEventListener("click",e=>e.preventDefault(),{once:true});s.click();a.remove();return window.__calls.slice(-1)[0]});
  assert.deepStrictEqual(inner,["plugin:opener|open_url",{url:"https://example.com/card"}]);
  console.log("2 a click on an element inside a link works too");
+ // the page fills the whole app window (no frame, border, rounded corners or shadow), in the dark and the light theme
+ const box=()=>p.evaluate(()=>{const w=document.querySelector(".win"),r=w.getBoundingClientRect(),c=getComputedStyle(w);return{x:r.x,y:r.y,w:r.width,h:r.height,iw:innerWidth,ih:innerHeight,desk:document.documentElement.classList.contains("desk"),radius:c.borderTopLeftRadius,border:c.borderLeftWidth,shadow:c.boxShadow}});
+ for(const th of ["moerk","lys"]){
+  await p.evaluate(t=>window.plingTheme(t),th);
+  const b=await box();
+  assert.ok(b.desk,"class desk is set in the app");
+  assert.deepStrictEqual([b.x,b.y,b.w,b.h],[0,0,b.iw,b.ih],"fills the window ("+th+")");
+  assert.deepStrictEqual([b.radius,b.border,b.shadow],["0px","0px","none"],"no rounded corners, border or shadow ("+th+")");
+ }
+ console.log("2b the page fills the whole app window in both themes");
  assert.deepStrictEqual(p.errs,[],"no page errors: "+JSON.stringify(p.errs));await ctx.close();
  // on the web
  ({ctx,p}=await open(br,false));
  r=await click(p,"https://example.com/page","_blank");
  assert.strictEqual(r.prevented,false,"on the web the click is not touched");assert.strictEqual(r.calls,null);
+ for(const th of ["moerk","lys"]){
+  await p.evaluate(t=>window.plingTheme(t),th);const b=await box();
+  assert.ok(!b.desk,"no class desk on the web");
+  assert.ok(b.w<=940&&b.h<=680&&b.x>0&&b.y>0,"on the web the page is a framed window on a background ("+th+"): "+JSON.stringify([b.x,b.y,b.w,b.h]));
+  assert.ok(b.radius!=="0px"&&b.shadow!=="none","with rounded corners and shadow ("+th+")");
+ }
  console.log("3 on the web nothing changes");
  assert.deepStrictEqual(p.errs,[],"no page errors: "+JSON.stringify(p.errs));
  console.log("FEIL: ingen");
