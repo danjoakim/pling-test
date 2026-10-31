@@ -246,8 +246,7 @@ async function loadPreviews(){
   const mine=new Set(cm.filter(r=>r.user_id===S.user.id).map(r=>r.chat_id));
   /* engangs-flytting av «lest» som tidligere lå bare i nettleseren */
   for(const cid of mine)if(!hasSrv.has(cid)){let l=0;try{l=+localStorage.getItem(readKey(cid))||0}catch(e){}if(l>0)setRead(cid,l)}
-  const dm=new Map();
-  for(const r of cm)if(r.user_id!==S.user.id&&mine.has(r.chat_id)&&S.friends.includes(r.user_id))dm.set(r.user_id,r.chat_id);
+  const dm=dmChats(cm,S.user.id,S.friends);
   let more=false;
   await Promise.all([...dm].map(async([fid,cid])=>{
     const p=S.profiles.get(fid);if(!p)return;
@@ -258,10 +257,10 @@ async function loadPreviews(){
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
-    if(!S.firstRef)for(const r of rows)if(r.sender!==S.user.id&&r.id>rd&&!dpSeen.has(r.id)&&Date.now()-new Date(r.created_at).getTime()<30000){
+    if(!S.firstRef)for(const r of rows)if(dpCandidate(r,S.user.id,rd,dpSeen,Date.now())){
       const mm=await open(key,r.iv,r.ct);if(mm&&mm.dp)alertDp(fid,r.id,r.created_at)}
-    const n=isOpen?0:rows.filter(r=>r.sender!==S.user.id&&r.id>rd).length;
-    if(!S.firstRef&&n>(S.unread.get(fid)||0)&&!muted(fid))more=true;
+    const n=unreadCount(rows,S.user.id,rd,!!isOpen);
+    if(shouldRing(S.firstRef,n,S.unread.get(fid),muted(fid)))more=true;
     S.unread.set(fid,n);
   }));
   S.firstRef=false;
@@ -273,9 +272,8 @@ async function loadPreviews(){
    dpSeen = hver melding utløser bare én gang, selv om både forhåndsvisningen og den åpne samtalen ser den. */
 const dpSeen=new Set(),dpFlash=new Set();let dpT=0;
 function alertDp(fid,id,ts){
-  if(dpSeen.has(id))return;dpSeen.add(id);
-  if(Date.now()-new Date(ts).getTime()>30000)return; /* gammel melding: ikke ring */
-  if(muted(fid))return; /* dempet: ingen lyd, risting, banner eller tittelblink */
+  /* hver melding utløser bare én gang; gammel melding: ikke ring; dempet: ingen lyd, risting, banner eller tittelblink */
+  if(dpDecision(id,ts,Date.now(),dpSeen,muted(fid))!=="alert")return;
   stor();
   dpFlash.add(fid);drawFriends();setTimeout(()=>{dpFlash.delete(fid);drawFriends()},10000);
   const old=$("#dpb");if(old)old.remove();
@@ -422,7 +420,7 @@ async function loadMsgs(){
   const out=[...S.older,...latest];
   const sig=out.map(m=>m.id).join(",");
   if(sig===S.sig){if(rxChanged)drawLog(true);return}S.sig=sig;
-  const maxSeen=S.seen.get(cid)||0,fresh=S.first?[]:out.filter(m=>!m.mine&&m.id>maxSeen);
+  const maxSeen=S.seen.get(cid)||0,fresh=freshMessages(out,S.first,maxSeen);
   S.seen.set(cid,out.length?out[out.length-1].id:0);
   if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:previewText(l.ok?l:null)});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   if(S.first)for(const x of out)S.anSeen.set(String(x.id),0);
