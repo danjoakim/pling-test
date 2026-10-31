@@ -19,11 +19,12 @@ jobs:
           mkdir x && tar xzf supabase-supabase-js-2.45.4.tgz -C x
           cd "$GITHUB_WORKSPACE"
           mkdir -p vendor
-          cp /tmp/work/x/package/dist/umd/supabase.min.js vendor/
+          ls /tmp/work/x/package/dist/umd/ > /tmp/work/ls.txt 2>&1
+          cp /tmp/work/x/package/dist/umd/supabase.js vendor/ || { echo "::error title=files::$(cat /tmp/work/ls.txt | tr '\n' ' ')"; exit 1; }
           cp /tmp/work/x/package/package.json vendor/supabase-js.package.json
           cp /tmp/work/x/package/LICENSE* vendor/ 2>/dev/null || true
-          sha256sum vendor/supabase.min.js > vendor/supabase.min.js.sha256
-          wc -c vendor/supabase.min.js
+          sha256sum vendor/supabase.js > vendor/supabase.js.sha256
+          wc -c vendor/supabase.js
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git checkout -b vendor-supabase
