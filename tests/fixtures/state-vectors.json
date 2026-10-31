@@ -1,0 +1,31 @@
+{
+ "note": "The initial value of every field of S, made from the object literal in app/main.js before it moved to src/state.ts. Maps are written as __Map__. Never regenerate with new code.",
+ "initial": {
+  "backup": null,
+  "user": null,
+  "profile": null,
+  "id": null,
+  "profiles": "__Map__",
+  "av": "__Map__",
+  "friends": [],
+  "reqIn": [],
+  "reqOut": [],
+  "chat": null,
+  "msgs": [],
+  "mode": "in",
+  "needCode": false,
+  "status": "online",
+  "last": "__Map__",
+  "exp": "__Map__",
+  "reads": "__Map__",
+  "older": [],
+  "more": false,
+  "unread": "__Map__",
+  "firstRef": true,
+  "pres": "__Map__",
+  "typ": "__Map__",
+  "seen": "__Map__",
+  "cdUntil": 0,
+  "nref": 0
+ }
+}

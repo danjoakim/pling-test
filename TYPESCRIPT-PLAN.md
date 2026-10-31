@@ -111,7 +111,11 @@ first, or nothing there can be typed.
   them their old names and comes first in the script). They behave exactly as before, odd corners included (see the note at the top of the file).
   `tests/dom.js` calls them in the built page and pins that behavior; the final version passed against the old code (checked in a separate checkout of the
   previous commit) and then against the new. Of 14 deliberate changes, 13 were caught; the other one (`klasse`) gives the same result by another route.
-- **Next, the foundation, part 2:** a typed state `S` (`app/main.js` line 3, about 47 fields used across the app).
+- **Round 10 (done), the foundation, part 2:** the state `S` is typed. `src/state.ts` describes every field once (`AppState`: 26 that exist from the start,
+  18 that are set later and are `undefined` until then) and `createState()` makes the object (bundled as `PrekState`; `app/main.js` line 3 is `const S=PrekState.createState();`).
+  Two fields nobody used (`S.dm`, `S.pch`) were removed first (own commit). `nref` looked unused in a quick scan but `S.nref++%5` uses it, so it stayed.
+  `tests/state-unit.js` checks the starting values against `tests/fixtures/state-vectors.json` (made from the old object), that every `S.name` in `app/*.js` is declared
+  (a misspelled name would silently become a new field) and that every declared field is used. Of 7 deliberate changes, all 7 were caught.
 - **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered
   only by mocked browser tests. Decide when we get there whether it is worth converting now, or whether it should wait for the planned
   move to Vite and a UI framework (the same screens would be rewritten again).
