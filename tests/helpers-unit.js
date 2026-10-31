@@ -28,5 +28,13 @@ const esbuild=require("esbuild");
  assert.strictEqual(H.PUBLIC_URL,"https://danjoakim.github.io/pling-test/");
  for(const l of [{protocol:"http:",hostname:"mytauri.localhost2",origin:"http://mytauri.localhost2",pathname:"/"},{protocol:"https:",hostname:"notauri.localhost",origin:"https://notauri.localhost",pathname:"/"}])assert.notStrictEqual(H.appBase(l),H.PUBLIC_URL,"only the real app hosts count: "+l.origin);
  console.log("ok   appBase gives the public address inside the desktop app (3 hosts) and nowhere else");
+ // externalLink: which clicks leave the app (new function, checked by hand)
+ const O="http://tauri.localhost";
+ const ext=[["https://example.com/a",O,"https://example.com/a"],["http://example.com",O,"http://example.com"],["mailto:a@b.no",O,"mailto:a@b.no"],
+  ["http://tauri.localhost/index.html",O,null],["http://tauri.localhost:8080/",O,"http://tauri.localhost:8080/"],["https://tauri.localhost/",O,"https://tauri.localhost/"],
+  ["tauri://localhost/",O,null],["blob:http://tauri.localhost/abc",O,null],["javascript:alert(1)",O,null],["data:text/html,x",O,null],["not a url",O,null],["",O,null],
+  ["https://example.com/",  "https://example.com",null],["ftp://example.com/",O,null],["file:///etc/passwd",O,null]];
+ for(const [h,o,want] of ext)assert.strictEqual(H.externalLink(h,o),want,"externalLink "+h);
+ console.log("ok   externalLink decides which clicks leave the app ("+ext.length+" cases)");
  console.log("ok   daysText gives the old text in "+V.days.length+" cases");
 })().catch(e=>{console.error("TESTFEIL",e.message);process.exit(1)});

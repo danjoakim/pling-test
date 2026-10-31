@@ -10,6 +10,7 @@
  *   the stored text. Odd stored values behave as before: `isMuted` says no when it cannot read it; `withMuted` throws when the
  *   stored value is valid JSON but not a list (the old code did too, outside its `try`).
  * - `appBase`: the address links point to (the page's own address on the web, the public address inside the desktop app).
+ * - `externalLink`: whether a clicked link leaves the app (inside the desktop app such links open in the system browser instead of replacing the app window).
  * - `daysText`: "1 dag" or "N dager".
  *
  * tests/helpers-unit.js compares all of this with the old code.
@@ -62,4 +63,17 @@ export function withMuted(raw: string | null, id: string, on: boolean): string {
 /** "1 dag" or "7 dager". */
 export function daysText(d: number): string {
   return d === 1 ? tr("exp.oneDay") : tr("exp.days", { n: d });
+}
+
+/**
+ * The address to open in the system browser for a clicked link, or null when the app should handle the click itself.
+ * Web links (http, https) to another address than the page's own, and mail links, leave the app. Everything else (links inside the
+ * page, `javascript:`, `blob:`, unreadable addresses) stays.
+ */
+export function externalLink(href: string, pageOrigin: string): string | null {
+  let u: URL;
+  try { u = new URL(href); } catch { return null; }
+  if (u.protocol === "mailto:") return href;
+  if ((u.protocol === "http:" || u.protocol === "https:") && u.origin !== pageOrigin) return href;
+  return null;
 }
