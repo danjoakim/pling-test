@@ -1,0 +1,20 @@
+# One-off helper: fetches the exact supabase-js version the app uses from npm and offers the files as a download,
+# so they can be committed to lib/ (the page then no longer loads code from a CDN at start-up). Run by hand.
+name: vendor-supabase
+on: workflow_dispatch
+jobs:
+  fetch:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: |
+          npm pack @supabase/supabase-js@2.45.4
+          tar xzf supabase-supabase-js-2.45.4.tgz
+          sha256sum package/dist/umd/supabase.min.js | tee sha256.txt
+          mkdir out && cp package/dist/umd/supabase.min.js package/LICENSE package/package.json sha256.txt out/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: supabase-js
+          path: out
