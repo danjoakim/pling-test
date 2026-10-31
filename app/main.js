@@ -268,7 +268,7 @@ async function loadPreviews(){
     const rows=await q(api.latestMessages(cid,20),tr("ctx.messages"));
     if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
     const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
-    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:m?(m.dp?tr("chat.dp"):m.img?(m.img.t==="image/gif"?"GIF":tr("chat.previewImage")):String(m.t==null?"":m.t)):tr("chat.undecryptable")});
+    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:previewText(m)});
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
@@ -299,7 +299,7 @@ function alertDp(fid,id,ts){
   clearInterval(dpT);let n=0;const nm=nameOf(fid);
   dpT=setInterval(()=>{n++;document.title=n%2?"🔔 "+nm+" ringer!":tr("app.pageTitle");if(n>=20){clearInterval(dpT);setTitle()}},700);
 }
-function setTitle(){const tot=[...S.unread.values()].reduce((a,b)=>a+b,0);document.title=(tot?"("+tot+") ":"")+tr("app.pageTitle")}
+function setTitle(){document.title=pageTitle(S.unread.values())}
 const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
 
 /* ---------- min profil ---------- */
@@ -320,7 +320,7 @@ async function saveProfile(patch){
 /* ---------- kompislisten ---------- */
 const ORD={on:0,away:1,busy:1,off:2};
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
-function prev(id){const l=S.last.get(id);if(!l)return "";const t=emoji(l.t).replace(/\s+/g," ");return (l.mine?tr("chat.youPrefix"):"")+(t.length>60?t.slice(0,60)+"…":t)}
+function prev(id){return listLine(S.last.get(id))}
 function drawTitle(){
   const t=$("#title");if(!S.chat){t.textContent="";return}
   const id=S.chat.other,pm=(S.profiles.get(id)||{}).pm;t.textContent="";
@@ -439,7 +439,7 @@ async function loadMsgs(){
   if(sig===S.sig){if(rxChanged)drawLog(true);return}S.sig=sig;
   const maxSeen=S.seen.get(cid)||0,fresh=S.first?[]:out.filter(m=>!m.mine&&m.id>maxSeen);
   S.seen.set(cid,out.length?out[out.length-1].id:0);
-  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?tr("chat.dp"):l.img?(l.img.t==="image/gif"?"GIF":tr("chat.previewImage")):(l.ok?l.t||"":tr("chat.undecryptable"))});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
+  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:previewText(l.ok?l:null)});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   if(S.first)for(const x of out)S.anSeen.set(String(x.id),0);
   S.first=false;S.msgs=out;drawLog();
   if(fresh.length){

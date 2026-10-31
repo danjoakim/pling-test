@@ -2664,6 +2664,497 @@ var PrekState = (() => {
   return __toCommonJS(state_exports);
 })();
 
+"use strict";
+var PrekPreviews = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // src/previews.ts
+  var previews_exports = {};
+  __export(previews_exports, {
+    listLine: () => listLine,
+    pageTitle: () => pageTitle,
+    previewText: () => previewText
+  });
+
+  // src/i18n/nb-NO.ts
+  var nb = {
+    // device transfer
+    "device.sent": "N\xF8kkelen er sendt til den nye enheten",
+    // invitations
+    "invite.nowFriends": "Du og {name} er n\xE5 kompiser",
+    "invite.fallbackName": "kompisen din",
+    "invite.failed": "Invitasjonen virket ikke: den er utl\xF8pt, allerede brukt eller din egen.",
+    "invite.copied": "Lenken er kopiert",
+    "invite.selectToCopy": "Merk lenken og kopier den",
+    "invite.revoked": "{n} aktive invitasjoner er trukket tilbake",
+    // friends and blocking
+    "friend.nowFriends": "Dere er kompiser n\xE5",
+    "friend.requestSent": "Foresp\xF8rsel sendt til {name}",
+    "block.removed": "Blokkeringen er fjernet",
+    "block.done": "Blokkert",
+    "mute.on": "Samtalen er dempet",
+    "mute.off": "Lyden er p\xE5 igjen",
+    // messages
+    "msg.copied": "Meldingen er kopiert",
+    "msg.copyFailed": "Kunne ikke kopiere",
+    "msg.mineDeleted": "Dine meldinger er slettet",
+    "exp.on": "Nye meldinger slettes etter {when}",
+    "exp.off": "Nye meldinger utl\xF8per ikke",
+    // images, GIFs, camera, avatar
+    "img.notReadable": "Dette er ikke et bilde nettleseren kan lese",
+    "img.readFailed": "Kunne ikke lese bildet",
+    "img.avatarTooBig": "Bildet ble for stort",
+    "img.onlyImages": "Bare bilder kan sendes",
+    "img.sending": "Krypterer og sender bildet \u2026",
+    "img.sent": "Bildet er sendt",
+    "img.uploadFailed": "Laste opp: {msg}",
+    "gif.noDecoder": "Nettleseren din kan ikke gj\xF8re GIF-er mindre. Velg en mindre GIF.",
+    "gif.tooLarge": "GIF-en er altfor stor til \xE5 bli gjort mindre (over 40 MB)",
+    "gif.cannotShrink": "Klarte ikke \xE5 gj\xF8re GIF-en liten nok",
+    "gif.shrinking": "GIF-en er stor, gj\xF8r den mindre ({i}/{n}) \u2026",
+    "cam.denied": "Fikk ikke tilgang til kameraet. Sjekk tillatelsen i nettleseren, eller velg et bilde fra enheten med binders-knappen.",
+    "avatar.saved": "Bildet er lagret. Bare kompisene dine ser det.",
+    // keys and recovery
+    "key.noBackup": "Det finnes ingen sikkerhetskopi p\xE5 denne kontoen",
+    "key.wrongCode": "Koden stemmer ikke",
+    "key.wrongAccount": "N\xF8kkelen passer ikke til denne kontoen",
+    // privacy and help dialog
+    "info.title": "Personvern og hjelp",
+    "info.close": "Lukk",
+    "info.short.title": "Kort fortalt",
+    "info.short.p1": "Samtalene dine er ende-til-ende-kryptert: tekst og bilder l\xE5ses i nettleseren din med en n\xF8kkel som bare du og kompisen din har. Vi (og Supabase, som driver tjenesten) kan ikke lese dem.",
+    "info.sees.title": "Det serveren ser",
+    "info.sees.li1": "E-postadressen din, navnet ditt, den personlige meldingen din og profilbildet ditt. Navn, melding og bilde er ikke kryptert, men bare kompisene dine (og den du har sendt en foresp\xF8rsel til) kan se dem.",
+    "info.sees.li2": "Hvem som er kompiser med hvem.",
+    "info.sees.li3": "N\xE5r du er p\xE5logget, statusen din og om du skriver (hvilken samtale, ikke hva). Bare kompisene dine ser det.",
+    "info.sees.li4": "At en melding finnes: hvem som sendte den, hvilken samtale, n\xE5r, n\xE5r den utl\xF8per, og om den har et vedlegg (med en tilfeldig filsti). Ikke innholdet.",
+    "info.sees.li5": "At du har reagert p\xE5 en melding, og n\xE5r. Ikke hvilken reaksjon, for den er kryptert som meldingene.",
+    "info.sees.li6": "Hvem du har blokkert (bare du ser listen).",
+    "info.sees.li7": "Hvor langt du har lest i hver samtale (bare du ser det).",
+    "info.notsees.title": "Det serveren ikke ser",
+    "info.notsees.li1": "Tekst, bilder, GIF-er, lenkekort og reaksjoner i samtalene dine.",
+    "info.notsees.li2": "N\xF8kkelen din. Den ligger i nettleseren din, og en kopi som er l\xE5st med gjenopprettingskoden din.",
+    "info.linkprev.title": "Lenkeforh\xE5ndsvisning",
+    "info.linkprev.p1": "N\xE5r du sender en lenke, henter en funksjon hos oss tittel og bilde fra nettsiden, og den m\xE5 se adressen for \xE5 gj\xF8re det. Vi bruker den bare til \xE5 hente forh\xE5ndsvisningen. Mottakeren kontakter aldri nettsiden. Du kan sl\xE5 funksjonen av i profilen.",
+    "info.recovery.title": "Gjenopprettingskoden",
+    "info.recovery.p1": "Mister du alle enhetene dine og gjenopprettingskoden, kan ingen hente samtalehistorikken din tilbake, heller ikke vi. Lag koden under \xABSikkerhet\xBB i profilen og oppbevar den trygt.",
+    "info.invites.title": "Invitasjonslenker",
+    "info.invites.p1": "Lenken inneholder en hemmelig kode som ikke sendes til oss f\xF8r noen bruker den. Vi lagrer bare et avtrykk av den. Lenken virker \xE9n gang og i 7 dager. Send den bare til den du vil ha som kompis.",
+    "info.expiry.title": "Meldinger som utl\xF8per",
+    "info.expiry.p1": "Du og kompisen din kan sette en samtale til \xE5 slette meldinger etter 1, 7 eller 30 dager. Utl\xF8pte meldinger og bilder slettes fra serveren, senest en time etter. Kompisen din kan likevel ha tatt skjermbilde eller lagret en kopi.",
+    "info.howto.title": "Slik bruker du Prek!",
+    "info.howto.li1": "Legg til en kompis med e-postadressen hen bruker, eller send en invitasjonslenke eller QR-kode (\xAB+ Legg til kompis\xBB).",
+    "info.howto.li2": "Dobbeltklikk p\xE5 en kompis for \xE5 \xE5pne samtalen. Knappene under samtalen sender bilder og GIF-er; p\xE5 mobil kan du ogs\xE5 ta bilde.",
+    "info.howto.li3": "Reager p\xE5 en melding: hold musen over den og trykk \u263A, eller trykk og hold p\xE5 mobil. Der kan du ogs\xE5 kopiere teksten.",
+    "info.howto.li4": "Demp en kompis i menyen (\u22EF) i samtalen: ingen lyd eller dobbeltpling, men meldingene kommer. Gjelder bare denne enheten.",
+    "info.howto.li5": "Blokker en kompis i menyen (\u22EF) i samtalen. Du finner og fjerner blokkeringer under navnet ditt. Hen f\xE5r ikke vite det.",
+    "info.howto.li6": "Smilefjesknappen har egne animerte figurer. Du kan ogs\xE5 skrive koder som :) og (Y).",
+    "info.howto.li7": "Dobbeltpling f\xE5r vinduet til kompisen din til \xE5 riste. Bruk den sjelden.",
+    "info.howto.li8": "Navn, status, personlig melding, bilde og utseende endrer du ved \xE5 trykke p\xE5 navnet ditt \xF8verst.",
+    "info.howto.li9": "Sammenlign sikkerhetsnummeret i samtalen med kompisen din for \xE5 v\xE6re sikker p\xE5 at ingen ligger imellom.",
+    "info.about.title": "Om tjenesten",
+    "info.about.p1": "Prek! er en prototype under utvikling. Ting kan endre seg og g\xE5 i stykker, s\xE5 ikke bruk den til noe du ikke kan miste enn\xE5.",
+    // app (round 3)
+    "app.pageTitle": "Prek! testside",
+    // shared words (round 3)
+    "common.copy": "Kopier",
+    "common.close": "Lukk",
+    "common.send": "Send",
+    "common.sure": "Sikker? Trykk igjen",
+    // presence status (round 3)
+    "status.on": "P\xE5logget",
+    "status.away": "Borte",
+    "status.busy": "Opptatt",
+    "status.off": "Frakoblet",
+    // error prefixes (shown as "<prefix>: <message>") (round 3)
+    "ctx.createInvite": "Lage invitasjon",
+    "ctx.revokeInvites": "Trekke tilbake",
+    "ctx.friends": "Kompiser",
+    "ctx.requests": "Foresp\xF8rsler",
+    "ctx.unblock": "Fjerne blokkering",
+    "ctx.saveProfile": "Lagre profil",
+    "ctx.openChat": "\xC5pne samtale",
+    "ctx.olderMessages": "Eldre meldinger",
+    "ctx.saveAvatar": "Lagre bilde",
+    "ctx.search": "S\xF8k",
+    "ctx.request": "Foresp\xF8rsel",
+    "ctx.changeExpiry": "Endre utl\xF8p",
+    "ctx.removeFriend": "Fjerne kompis",
+    "ctx.block": "Blokkere",
+    // device transfer (round 3)
+    "device.requestTitle": "En ny enhet ber om n\xF8kkelen din",
+    "device.codeShouldBe": "Koden p\xE5 den nye enheten skal v\xE6re: ",
+    "device.approveWarning": "Godkjenn bare hvis det er deg, og koden stemmer med den du ser p\xE5 den nye enheten.",
+    // invitations (round 3)
+    "invite.expiredBanner": "Invitasjonen er utl\xF8pt eller brukt. Du kan fortsatt lage en konto og legge til kompiser med e-post.",
+    "invite.shareText": "Bli med meg p\xE5 Prek!:",
+    "invite.share": "Del \u2026",
+    "invite.validity": "Gyldig i 7 dager og kan brukes \xE9n gang. Den som \xE5pner lenken blir kompisen din med en gang, s\xE5 del den bare med den du vil ha som kompis.",
+    "invite.revokeAll": "Trekk tilbake alle aktive invitasjoner",
+    "invite.create": "Lag invitasjonslenke",
+    "invite.orSendLink": "Eller send en lenke eller QR-kode til en som ikke har konto enn\xE5:",
+    // friend list (round 3)
+    "friends.unreadTitle": "Uleste meldinger",
+    "friends.waiting": "Venter p\xE5 svar",
+    "friends.empty": "Ingen kompiser enn\xE5. Trykk \xABLegg til kompis\xBB og skriv e-posten til en du kjenner.",
+    "friends.accept": "Godta",
+    "friends.decline": "Avsl\xE5",
+    // adding friends (round 3)
+    "friend.notFound": "Fant ingen med den e-posten. Kompisen m\xE5 ha laget konto og profil f\xF8rst.",
+    // blocking (round 3)
+    "block.remove": "Fjern",
+    // muting (round 3)
+    "mute.unmuteButton": "Sl\xE5 p\xE5 lyd",
+    "mute.muteButton": "Demp",
+    // recovery code (round 3)
+    "recovery.exists": "Gjenopprettingskode er laget",
+    "recovery.missing": "Du har ingen gjenopprettingskode enn\xE5",
+    "recovery.makeNew": "Lag ny kode",
+    "recovery.make": "Lag kode",
+    "recovery.newDeviceHint": "Ny enhet? Logg inn der og velg \xABBe om n\xF8kkelen\xBB. Her kommer det da en foresp\xF8rsel du godkjenner.",
+    // expiry (round 3)
+    "exp.chatNote": "Nye meldinger i denne samtalen slettes etter {when}. Gjelder for begge.",
+    // chat (round 3)
+    "chat.youPrefix": "Du: ",
+    "chat.fingerprint": "N\xF8kkelavtrykk, din kompis: {fp}",
+    "chat.showOlder": "Vis eldre meldinger",
+    "chat.empty": "Samtalen er ende-til-ende-kryptert. Si hei til {name}!",
+    "chat.sentDp": "{who} sendte en dobbeltpling \xB7 {time}",
+    "chat.you": "Du",
+    "chat.deleteMine": "Slett mine meldinger",
+    "chat.removeFriend": "Fjern kompis",
+    "chat.block": "Blokker",
+    "chat.dpCooldown": "Dobbeltpling ({n})",
+    "chat.dp": "Dobbeltpling",
+    // reactions (round 3)
+    "rx.ariaReact": "Reager p\xE5 meldingen",
+    "rx.react": "Reager",
+    "rx.name.rofl": "ler",
+    "rx.name.thumbup": "bra",
+    "rx.name.heart": "hjerte",
+    "rx.name.surprised": "overrasket",
+    "rx.name.cry": "trist",
+    "rx.name.thumbdown": "d\xE5rlig",
+    "rx.removeMine": "Fjern reaksjonen din ({name})",
+    "rx.ariaMine": "{name}, {n}, din reaksjon",
+    "rx.aria": "{name}, {n}",
+    "rx.choose": "Velg reaksjon",
+    // images (round 3)
+    "img.loading": "Henter bilde \u2026",
+    "img.download": "Last ned",
+    // camera (round 3)
+    "cam.shoot": "Ta bilde",
+    "cam.flip": "Bytt kamera",
+    "cam.cancel": "Avbryt",
+    "cam.retake": "Ta p\xE5 nytt",
+    // leftovers (round 3)
+    "invite.invitedBy": " har invitert deg til Prek!. Lag en konto eller logg p\xE5, s\xE5 blir dere kompiser.",
+    "img.missing": "(bildet finnes ikke lenger eller kan ikke \xE5pnes)",
+    // sign-in and key screens: auth (round 4)
+    "auth.emailPlaceholder": "E-post",
+    "auth.passwordPlaceholder": "Passord (minst 10 tegn)",
+    "auth.codePlaceholder": "Kode fra e-posten",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.signUp": "Ny konto",
+    // sign-in and key screens: auth (round 4)
+    "auth.accountCreated": "Konto laget. Sjekk e-posten din for bekreftelse, og logg inn etterp\xE5.",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.signIn": "Innlogging",
+    "ctx.sendCode": "Send kode",
+    // sign-in and key screens: auth (round 4)
+    "auth.emailSent": "E-post sendt. Skriv inn koden (eller trykk p\xE5 lenken i e-posten).",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.verifyCode": "Bekreft kode",
+    // sign-in and key screens: auth (round 4)
+    "auth.statusLabel": "Logg p\xE5 som",
+    "auth.showOffline": "Vis meg som frakoblet",
+    "auth.signupTagline": "Lag en konto. Samtalene dine blir kryptert i nettleseren.",
+    "auth.tagline": "n\xE5 prek\xE6r vi!",
+    "auth.emailLabel": "E-postadresse:",
+    "auth.passwordLabel": "Passord:",
+    "auth.statusColon": "Status:",
+    "auth.remember": " Husk e-postadressen min",
+    "auth.verify": "Bekreft",
+    "auth.createAccount": "Lag konto",
+    "auth.login": "Logg p\xE5",
+    "auth.sendOtp": "Send engangskode i stedet",
+    "auth.haveAccount": "Jeg har en konto",
+    "auth.newAccount": "Ny konto",
+    "auth.e2eNote": "Ende-til-ende-kryptert \xB7 ",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.fetchProfile": "Hente profil",
+    // sign-in and key screens: setup (round 4)
+    "setup.displayName": "Visningsnavn",
+    "setup.enterName": "Skriv et navn",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.createProfile": "Lage profil",
+    // sign-in and key screens: setup (round 4)
+    "setup.welcome": "Velkommen",
+    "setup.explain": "Velg navnet kompisene dine skal se. N\xF8kkelen som krypterer samtalene lages n\xE5, og blir liggende i denne nettleseren.",
+    "setup.continue": "Fortsett",
+    // sign-in and key screens: nokey (round 4)
+    "nokey.title": "N\xF8kkelen finnes ikke her",
+    "nokey.explain": "Du har en konto, men denne nettleseren har ikke krypteringsn\xF8kkelen din. Hent den tilbake p\xE5 en av disse m\xE5tene:",
+    "nokey.option1": "1. Be en annen enhet om n\xF8kkelen",
+    "nokey.option1Hint": "Krever at du er innlogget p\xE5 en annen enhet som har n\xF8kkelen, for eksempel telefonen eller laptopen din.",
+    "nokey.ask": "Be om n\xF8kkelen",
+    "nokey.option2": "2. Gjenopprettingskode",
+    "nokey.option2Hint": "Koden du fikk da du lagde kontoen.",
+    "nokey.restored": "N\xF8kkelen er tilbake",
+    "nokey.restore": "Gjenopprett",
+    // sign-in and key screens: common (round 4)
+    "common.logout": "Logg ut",
+    // sign-in and key screens: ctx (round 4)
+    "ctx.askKey": "Be om n\xF8kkel",
+    // sign-in and key screens: pairing (round 4)
+    "pairing.title": "Venter p\xE5 godkjenning",
+    "pairing.explain": "\xC5pne Prek! p\xE5 en enhet der du allerede er innlogget. Der kommer det opp en foresp\xF8rsel du kan godkjenne. Sjekk at koden er den samme:",
+    "pairing.scan": "Eller skann denne med kameraet p\xE5 telefonen din (den \xE5pner Prek!):",
+    "pairing.rejected": "Foresp\xF8rselen ble avvist eller utl\xF8p",
+    "pairing.cannotOpen": "Kunne ikke \xE5pne n\xF8kkelen",
+    // sign-in and key screens: recovery (round 4)
+    "recovery.retype": "Skriv koden p\xE5 nytt for \xE5 bekrefte",
+    "recovery.mismatch": "Koden stemmer ikke. Sjekk at du har skrevet den av riktig.",
+    "recovery.activated": "Gjenopprettingskoden er aktivert",
+    "recovery.lastStep": "Siste steg: gjenopprettingskode",
+    "recovery.newCode": "Ny gjenopprettingskode",
+    "recovery.explain": "Denne koden er den eneste m\xE5ten \xE5 f\xE5 tilbake samtalene dine p\xE5 hvis du mister alle enhetene dine. Ikke engang vi kan hjelpe deg uten den.",
+    "recovery.copied": "Kopiert",
+    "recovery.copyFailed": "Kunne ikke kopiere. Marker koden og kopier selv.",
+    "recovery.fileContent": "Prek! gjenopprettingskode\n\n{code}\n\nOppbevar denne trygt. Alle med koden og passordet ditt kan \xE5pne samtalene dine.\n",
+    "recovery.saveAdvice": "Lagre den i passordbehandleren din eller skriv den ned og oppbevar den trygt.",
+    "recovery.saved": "Jeg har lagret den",
+    "recovery.skip": "Hopp over",
+    // static page text (round 4); substituted into body.html at build time as {{key}}
+    "html.lock.title": "Meldingene krypteres i nettleseren med AES-256-GCM",
+    "html.lock.text": "Kryptert",
+    "html.meb.title": "Min profil",
+    "html.avimg.alt": "Ditt bilde",
+    "html.mewarn.text": "Lag gjenopprettingskode",
+    "html.pm.placeholder": "<Skriv en personlig melding>",
+    "html.pm.aria": "Personlig melding",
+    "html.pnm.placeholder": "Visningsnavn",
+    "html.pnm.aria": "Visningsnavn",
+    "html.st.aria": "Status",
+    "html.st.optoff": "Vis meg som frakoblet",
+    "html.thm.aria": "Utseende",
+    "html.thm.optauto": "Utseende: automatisk",
+    "html.thm.optlys": "Utseende: lys (dag)",
+    "html.thm.optnatt": "Utseende: m\xF8rk (kveld)",
+    "html.lpv.aria": "Forh\xE5ndsvisning av lenker",
+    "html.lpv.title": "N\xE5r du sender en lenke, henter en tjeneste hos oss tittel og bilde. Mottakeren kontakter aldri nettstedet.",
+    "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
+    "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
+    "html.addf.text": "+ Legg til kompis",
+    "html.fe.placeholder": "Kompis' e-post",
+    "html.fe.aria": "Kompis' e-postadresse",
+    "html.fadd.text": "Legg til",
+    "html.emptyh.text": "Dobbeltklikk p\xE5 en kompis for \xE5 preke.",
+    "html.back.aria": "Lukk samtalen",
+    "html.pr.title": "Hvem som er her",
+    "html.mb.aria": "Innstillinger for samtalen",
+    "html.ex.aria": "Utl\xF8p for nye meldinger i samtalen (gjelder begge)",
+    "html.ex.opt0": "Utl\xF8per ikke",
+    "html.ex.opt1": "Etter 1 dag",
+    "html.ex.opt7": "Etter 7 dager",
+    "html.ex.opt30": "Etter 30 dager",
+    "html.eb.aria": "Vis emoji",
+    "html.ab.aria": "Send et bilde",
+    "html.ab.title": "Send et bilde",
+    "html.cb.aria": "Ta bilde med kameraet",
+    "html.cb.title": "Ta bilde med kameraet",
+    "html.tx.placeholder": "Skriv en melding \u2026",
+    "html.tx.aria": "Melding",
+    "html.dp.title": "Spiller to plinger og vibrerer hos mottakeren",
+    "html.profile.security": "Sikkerhet",
+    "html.home.friendsHeading": "Kompiser",
+    "html.add.explain": "Skriv e-posten til en kompis som har laget konto i Prek!. Personen f\xE5r en foresp\xF8rsel som kan godtas eller avsl\xE5s.",
+    "html.menu.hereNow": "Her n\xE5",
+    "html.menu.safetyNumber": "Sikkerhetsnummer",
+    "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
+    "html.menu.expiryLabel": "Utl\xF8p for nye meldinger i samtalen (gjelder begge)",
+    "html.profile.blocked": "Blokkerte",
+    "html.profile.changePhoto": "Bytt bilde",
+    "html.profile.photoHint": "Bildet vises bare for kompisene dine",
+    "fig.smile": "smil",
+    "fig.grin": "stort smil",
+    "fig.wink": "blunk",
+    "fig.sad": "trist",
+    "fig.tongue": "tunge",
+    "fig.surprised": "overrasket",
+    "fig.cry": "gr\xE5ter",
+    "fig.devil": "djevel",
+    "fig.angel": "engel",
+    "fig.kiss": "kyss",
+    "fig.heart": "hjerte",
+    "fig.broken": "knust hjerte",
+    "fig.thumbup": "tommel opp",
+    "fig.thumbdown": "tommel ned",
+    "fig.beer": "\xF8l",
+    "fig.star": "stjerne",
+    "fig.lol": "ler",
+    "fig.xd": "xD",
+    "fig.angry": "sint",
+    "fig.cool": "kul",
+    "fig.glasses": "briller",
+    "fig.yes": "bra",
+    "fig.no": "d\xE5rlig",
+    "fig.boo": "buuu",
+    "fig.rofl": "ler seg i hjel",
+    "fig.hourglass": "tilbake snart",
+    "chat.typing": "{name} skriver \u2026",
+    "invite.linkAria": "Invitasjonslenke",
+    "emo.pickAria": "{name}, skriver {code}",
+    "html.title": "Prek! testside",
+    "boot.noSupabase": "Klarte ikke \xE5 laste Supabase-biblioteket (nettverk blokkert?).",
+    "ctx.approve": "Godkjenne",
+    "ctx.reject": "Avvise",
+    "ctx.invitation": "Invitasjon",
+    "ctx.profiles": "Profiler",
+    "ctx.blocked": "Blokkerte",
+    "ctx.chats": "Samtaler",
+    "ctx.read": "Lest",
+    "ctx.messages": "Meldinger",
+    "ctx.send": "Sende",
+    "ctx.delete": "Slette",
+    "ctx.saveBackup": "Lagre sikkerhetskopi",
+    "ctx.fetchBackup": "Hente sikkerhetskopi",
+    "common.unknown": "Ukjent",
+    "chat.previewImage": "\u{1F4F7} Bilde",
+    "chat.undecryptable": "(kan ikke dekrypteres)",
+    "chat.dlDp": "(dobbeltpling)",
+    "chat.dlImage": "(bilde)",
+    "chat.mutedTitle": "Dempet",
+    "img.alt": "Bilde",
+    "emo.tabFigures": "Figurer",
+    "emo.tabEmoji": "Emoji"
+  };
+
+  // src/i18n/index.ts
+  function tr(key, params) {
+    const text = nb[key];
+    if (text === void 0) throw new Error("Unknown text key: " + key);
+    return text.replace(/\{(\w+)\}/g, (m, name) => params && name in params ? String(params[name]) : m);
+  }
+
+  // src/emoji.ts
+  var EMO = { ":)": "\u{1F60A}", ":-)": "\u{1F60A}", ":D": "\u{1F603}", ";)": "\u{1F609}", ":(": "\u{1F641}", ":P": "\u{1F61B}", ":p": "\u{1F61B}", "(L)": "\u2764\uFE0F", "(Y)": "\u{1F44D}", "(N)": "\u{1F44E}", ":O": "\u{1F62E}", "8-)": "\u{1F60E}", "(6)": "\u{1F608}", "(A)": "\u{1F607}", ":'(": "\u{1F622}", "(K)": "\u{1F48B}", "(U)": "\u{1F494}" };
+  var EMO2 = {
+    ":-D": "\u{1F603}",
+    ":-P": "\u{1F61B}",
+    ":-(": "\u{1F641}",
+    ";-)": "\u{1F609}",
+    ":-O": "\u{1F62E}",
+    ":-@": "\u{1F620}",
+    ":@": "\u{1F620}",
+    ":-#": "\u{1F910}",
+    ":-|": "\u{1F610}",
+    ":|": "\u{1F610}",
+    ":-$": "\u{1F633}",
+    ":$": "\u{1F633}",
+    ":-S": "\u{1F615}",
+    ":S": "\u{1F615}",
+    ":-*": "\u{1F618}",
+    ":*": "\u{1F618}",
+    ":-]": "\u{1F60D}",
+    ":]": "\u{1F60D}",
+    ":-[": "\u{1F608}",
+    "*-)": "\u{1F914}",
+    "+o(": "\u{1F922}",
+    "|-)": "\u{1F634}",
+    "8-|": "\u{1F913}",
+    "8o|": "\u{1F62C}",
+    ":8)": "\u{1F47D}",
+    ":}": "\u{1F478}",
+    "<3": "\u2764\uFE0F",
+    "(@)": "\u{1F431}",
+    "(&)": "\u{1F436}",
+    "(*)": "\u2B50",
+    "(#)": "\u2600\uFE0F",
+    "(^)": "\u{1F382}",
+    "(||)": "\u{1F35C}",
+    "(~)": "\u{1F3AC}",
+    "('.')": "\u{1F430}",
+    "(b)": "\u{1F37A}",
+    "(d)": "\u{1F378}",
+    "(f)": "\u{1F339}",
+    "(g)": "\u{1F381}",
+    "(t)": "\u{1F4DE}",
+    "(R)": "\u{1F308}",
+    "(w)": "\u{1F940}",
+    "(brb)": "\u23F3",
+    "(h)": "\u{1F60E}",
+    ":L": "\u{1F923}",
+    "(lol)": "\u{1F602}",
+    "(rotfl)": "\u{1F923}",
+    "(boo)": "\u{1F47B}",
+    "(ap)": "\u2708\uFE0F",
+    "(au)": "\u{1F697}",
+    "(bah)": "\u{1F411}",
+    "(bus)": "\u{1F68C}",
+    "(co)": "\u{1F4BB}",
+    "(ip)": "\u{1F3DD}\uFE0F",
+    "(li)": "\u26A1",
+    "(mo)": "\u{1F4B0}",
+    "(mp)": "\u{1F4F1}",
+    "(nah)": "\u{1F410}",
+    "(nnh)": "\u{1F410}",
+    "(pi)": "\u{1F355}",
+    "(pl)": "\u{1F37D}\uFE0F",
+    "(pu)": "\u261D\uFE0F",
+    "(sn)": "\u{1F40C}",
+    "(so)": "\u26BD",
+    "(st)": "\u26C8\uFE0F",
+    "(tu)": "\u{1F422}",
+    "(um)": "\u2602\uFE0F",
+    "(wo)": "\u{1F4BC}",
+    "(xo)": "\u{1F618}",
+    "(yn)": "\u{1F91E}",
+    "(h5)": "\u{1F64C}",
+    "(xx)": "\u{1F3AE}"
+  };
+  for (const k in EMO2) if (!(k in EMO)) EMO[k] = EMO2[k];
+  var EMO_LC = new Map(Object.keys(EMO).map((k) => [k.toLowerCase(), EMO[k]]));
+  var EMO_RE = new RegExp(Object.keys(EMO).sort((a, b) => b.length - a.length).map((k) => k.replace(/[^a-z0-9]/gi, (c) => String.fromCharCode(92) + c) + (/[a-z0-9]$/i.test(k) ? "(?![a-z0-9])" : "")).join("|"), "gi");
+  var EMO_CS = /* @__PURE__ */ new Map([["xD", "\u{1F606}"], ["XD", "\u{1F606}"], ["o_O", "\u{1F633}"], ["O_o", "\u{1F633}"], ["T_T", "\u{1F62D}"], ["^^", "\u{1F60A}"], ["-_-", "\u{1F611}"], [">:(", "\u{1F620}"]]);
+  var EMO_CS_RE = new RegExp("(^|[^A-Za-z0-9])(xD|XD|o_O|O_o|T_T)(?![A-Za-z0-9])|()(" + String.fromCharCode(92) + "^" + String.fromCharCode(92) + "^|-_-|>:" + String.fromCharCode(92) + "()", "g");
+  var emoji = (t) => t.replace(EMO_CS_RE, (_m, a, b, _c, d) => (b ? a : "") + String(EMO_CS.get(b || d))).replace(EMO_RE, (m) => EMO_LC.get(m.toLowerCase()) || m);
+
+  // src/previews.ts
+  function previewText(m) {
+    if (!m) return tr("chat.undecryptable");
+    if (m.dp) return tr("chat.dp");
+    if (m.img) return m.img.t === "image/gif" ? "GIF" : tr("chat.previewImage");
+    return String(m.t == null ? "" : m.t);
+  }
+  function listLine(l) {
+    if (!l) return "";
+    const t = emoji(l.t).replace(/\s+/g, " ");
+    return (l.mine ? tr("chat.youPrefix") : "") + (t.length > 60 ? t.slice(0, 60) + "\u2026" : t);
+  }
+  function pageTitle(unread) {
+    const tot = [...unread].reduce((a, b) => a + b, 0);
+    return (tot ? "(" + tot + ") " : "") + tr("app.pageTitle");
+  }
+  return __toCommonJS(previews_exports);
+})();
+
 /* ---------- kryptering ----------
    The cryptography itself lives in src/crypto.ts (bundled into PrekCrypto by build.py).
    This file only connects it to the app: browser storage (key per user), app state (S) and Supabase. */
@@ -2737,6 +3228,7 @@ function lkCard(l){
 const fetchPreview=u=>PrekLinks.fetchPreview(api.linkPreview,u);
 const {groupReactions,applyReaction,reactionPayload,menuPosition}=PrekReactions;
 const loadReacts=(cid,key)=>PrekReactions.loadReactions(()=>api.listReactions(cid),(iv,ct)=>open(key,iv,ct),RX_OK);
+const {previewText,listLine,pageTitle}=PrekPreviews;
 /* ---------- animerte smilefjes (tegneserie-stil, Dan Joakim 26. okt) ----------
    HVORFOR: MSN hadde animerte smilefjes. Våre er tegnet i kode (SVG + CSS), helt egne figurer (ikke MSNs grafikk), ligger i selve appen og krever ingen forespørsel til tredjepart.
    I meldingen sendes bare koden (for eksempel «:)»); mottakeren tegner figuren selv. Se claude/emoji.md.
@@ -3225,7 +3717,7 @@ async function loadPreviews(){
     const rows=await q(api.latestMessages(cid,20),tr("ctx.messages"));
     if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
     const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
-    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:m?(m.dp?tr("chat.dp"):m.img?(m.img.t==="image/gif"?"GIF":tr("chat.previewImage")):String(m.t==null?"":m.t)):tr("chat.undecryptable")});
+    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:previewText(m)});
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
@@ -3256,7 +3748,7 @@ function alertDp(fid,id,ts){
   clearInterval(dpT);let n=0;const nm=nameOf(fid);
   dpT=setInterval(()=>{n++;document.title=n%2?"🔔 "+nm+" ringer!":tr("app.pageTitle");if(n>=20){clearInterval(dpT);setTitle()}},700);
 }
-function setTitle(){const tot=[...S.unread.values()].reduce((a,b)=>a+b,0);document.title=(tot?"("+tot+") ":"")+tr("app.pageTitle")}
+function setTitle(){document.title=pageTitle(S.unread.values())}
 const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
 
 /* ---------- min profil ---------- */
@@ -3277,7 +3769,7 @@ async function saveProfile(patch){
 /* ---------- kompislisten ---------- */
 const ORD={on:0,away:1,busy:1,off:2};
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
-function prev(id){const l=S.last.get(id);if(!l)return "";const t=emoji(l.t).replace(/\s+/g," ");return (l.mine?tr("chat.youPrefix"):"")+(t.length>60?t.slice(0,60)+"…":t)}
+function prev(id){return listLine(S.last.get(id))}
 function drawTitle(){
   const t=$("#title");if(!S.chat){t.textContent="";return}
   const id=S.chat.other,pm=(S.profiles.get(id)||{}).pm;t.textContent="";
@@ -3396,7 +3888,7 @@ async function loadMsgs(){
   if(sig===S.sig){if(rxChanged)drawLog(true);return}S.sig=sig;
   const maxSeen=S.seen.get(cid)||0,fresh=S.first?[]:out.filter(m=>!m.mine&&m.id>maxSeen);
   S.seen.set(cid,out.length?out[out.length-1].id:0);
-  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:l.dp?tr("chat.dp"):l.img?(l.img.t==="image/gif"?"GIF":tr("chat.previewImage")):(l.ok?l.t||"":tr("chat.undecryptable"))});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
+  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:previewText(l.ok?l:null)});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   if(S.first)for(const x of out)S.anSeen.set(String(x.id),0);
   S.first=false;S.msgs=out;drawLog();
   if(fresh.length){

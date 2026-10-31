@@ -1,0 +1,6668 @@
+{
+ "note": "Answers of the old inline code (app/main.js at 3c6d58c, lines 271, 442, 323, 302) for previewText / listLine / pageTitle. Never regenerate with new code.",
+ "raw": [
+  {
+   "m": null,
+   "out": "(kan ikke dekrypteres)"
+  },
+  {
+   "m": "__undefined__",
+   "out": "(kan ikke dekrypteres)"
+  },
+  {
+   "m": {
+    "t": "hei"
+   },
+   "out": "hei"
+  },
+  {
+   "m": {
+    "t": ""
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "t": null
+   },
+   "out": ""
+  },
+  {
+   "m": {},
+   "out": ""
+  },
+  {
+   "m": {
+    "t": 0
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "t": 5
+   },
+   "out": "5"
+  },
+  {
+   "m": {
+    "t": "0"
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "t": false
+   },
+   "out": "false"
+  },
+  {
+   "m": {
+    "t": true
+   },
+   "out": "true"
+  },
+  {
+   "m": {
+    "t": {}
+   },
+   "out": "[object Object]"
+  },
+  {
+   "m": {
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "1,2"
+  },
+  {
+   "m": {
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "  to   ord \n\nny linje "
+  },
+  {
+   "m": {
+    "t": ":) hei"
+   },
+   "out": ":) hei"
+  },
+  {
+   "m": {
+    "img": null,
+    "t": "hei"
+   },
+   "out": "hei"
+  },
+  {
+   "m": {
+    "img": null,
+    "t": ""
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "img": null,
+    "t": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "img": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "img": null,
+    "t": 0
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "img": null,
+    "t": 5
+   },
+   "out": "5"
+  },
+  {
+   "m": {
+    "img": null,
+    "t": "0"
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "img": null,
+    "t": false
+   },
+   "out": "false"
+  },
+  {
+   "m": {
+    "img": null,
+    "t": true
+   },
+   "out": "true"
+  },
+  {
+   "m": {
+    "img": null,
+    "t": {}
+   },
+   "out": "[object Object]"
+  },
+  {
+   "m": {
+    "img": null,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "1,2"
+  },
+  {
+   "m": {
+    "img": null,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "  to   ord \n\nny linje "
+  },
+  {
+   "m": {
+    "img": null,
+    "t": ":) hei"
+   },
+   "out": ":) hei"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {},
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    }
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    }
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    }
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    }
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": "hei"
+   },
+   "out": "hei"
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": ""
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": false
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": 0
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": 5
+   },
+   "out": "5"
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": "0"
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": false
+   },
+   "out": "false"
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": true
+   },
+   "out": "true"
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": {}
+   },
+   "out": "[object Object]"
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "1,2"
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "  to   ord \n\nny linje "
+  },
+  {
+   "m": {
+    "dp": false,
+    "t": ":) hei"
+   },
+   "out": ":) hei"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": "hei"
+   },
+   "out": "hei"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": ""
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": 0
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": 5
+   },
+   "out": "5"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": "0"
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": false
+   },
+   "out": "false"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": true
+   },
+   "out": "true"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": {}
+   },
+   "out": "[object Object]"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "1,2"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "  to   ord \n\nny linje "
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": null,
+    "t": ":) hei"
+   },
+   "out": ":) hei"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {},
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    }
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    }
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    }
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    }
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": false,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": null,
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {},
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": true,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": null,
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {},
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 1,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": "hei"
+   },
+   "out": "hei"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": ""
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": 0
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": 0
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": 5
+   },
+   "out": "5"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": "0"
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": false
+   },
+   "out": "false"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": true
+   },
+   "out": "true"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": {}
+   },
+   "out": "[object Object]"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "1,2"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "  to   ord \n\nny linje "
+  },
+  {
+   "m": {
+    "dp": 0,
+    "t": ":) hei"
+   },
+   "out": ":) hei"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": "hei"
+   },
+   "out": "hei"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": ""
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": 0
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": 5
+   },
+   "out": "5"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": "0"
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": false
+   },
+   "out": "false"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": true
+   },
+   "out": "true"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": {}
+   },
+   "out": "[object Object]"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "1,2"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "  to   ord \n\nny linje "
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": null,
+    "t": ":) hei"
+   },
+   "out": ":) hei"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {},
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    }
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    }
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    }
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    }
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": 0,
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": null,
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {},
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    }
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "x",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": "hei"
+   },
+   "out": "hei"
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": ""
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": ""
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": 0
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": 5
+   },
+   "out": "5"
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": "0"
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": false
+   },
+   "out": "false"
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": true
+   },
+   "out": "true"
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": {}
+   },
+   "out": "[object Object]"
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "1,2"
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "  to   ord \n\nny linje "
+  },
+  {
+   "m": {
+    "dp": "",
+    "t": ":) hei"
+   },
+   "out": ":) hei"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": "hei"
+   },
+   "out": "hei"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": ""
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null
+   },
+   "out": ""
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": 0
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": 5
+   },
+   "out": "5"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": "0"
+   },
+   "out": "0"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": false
+   },
+   "out": "false"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": true
+   },
+   "out": "true"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": {}
+   },
+   "out": "[object Object]"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "1,2"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "  to   ord \n\nny linje "
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": null,
+    "t": ":) hei"
+   },
+   "out": ":) hei"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {},
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    }
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    }
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/jpeg"
+    },
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ""
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": null
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    }
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 0
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": 5
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "0"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": false
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": true
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": {}
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "t": "image/gif ",
+     "p": "x"
+    },
+    "t": ":) hei"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ""
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": null
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    }
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 0
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": 5
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "0"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": false
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": true
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": {}
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": [
+     1,
+     2
+    ]
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": "  to   ord \n\nny linje "
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {
+    "dp": "",
+    "img": {
+     "p": "a.jpg",
+     "t": "image/gif"
+    },
+    "t": ":) hei"
+   },
+   "out": "GIF"
+  },
+  {
+   "m": {},
+   "out": ""
+  }
+ ],
+ "decoded": [
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "hei",
+    "dp": true,
+    "img": null,
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "",
+    "dp": true,
+    "img": null,
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "0",
+    "dp": true,
+    "img": null,
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": null,
+    "dp": true,
+    "img": null,
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "hei",
+    "dp": true,
+    "img": {
+     "p": "x",
+     "t": "image/gif"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "",
+    "dp": true,
+    "img": {
+     "p": "x",
+     "t": "image/gif"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "0",
+    "dp": true,
+    "img": {
+     "p": "x",
+     "t": "image/gif"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": null,
+    "dp": true,
+    "img": {
+     "p": "x",
+     "t": "image/gif"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "hei",
+    "dp": true,
+    "img": {
+     "p": "x",
+     "t": "image/png"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "",
+    "dp": true,
+    "img": {
+     "p": "x",
+     "t": "image/png"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "0",
+    "dp": true,
+    "img": {
+     "p": "x",
+     "t": "image/png"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": null,
+    "dp": true,
+    "img": {
+     "p": "x",
+     "t": "image/png"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "hei",
+    "dp": true,
+    "img": {
+     "p": "x"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "",
+    "dp": true,
+    "img": {
+     "p": "x"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "0",
+    "dp": true,
+    "img": {
+     "p": "x"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": null,
+    "dp": true,
+    "img": {
+     "p": "x"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "Dobbeltpling"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "hei",
+    "dp": false,
+    "img": null,
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "hei"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "",
+    "dp": false,
+    "img": null,
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": ""
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "0",
+    "dp": false,
+    "img": null,
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "0"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": null,
+    "dp": false,
+    "img": null,
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": ""
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "hei",
+    "dp": false,
+    "img": {
+     "p": "x",
+     "t": "image/gif"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "GIF"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "",
+    "dp": false,
+    "img": {
+     "p": "x",
+     "t": "image/gif"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "GIF"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "0",
+    "dp": false,
+    "img": {
+     "p": "x",
+     "t": "image/gif"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "GIF"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": null,
+    "dp": false,
+    "img": {
+     "p": "x",
+     "t": "image/gif"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "GIF"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "hei",
+    "dp": false,
+    "img": {
+     "p": "x",
+     "t": "image/png"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "",
+    "dp": false,
+    "img": {
+     "p": "x",
+     "t": "image/png"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "0",
+    "dp": false,
+    "img": {
+     "p": "x",
+     "t": "image/png"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": null,
+    "dp": false,
+    "img": {
+     "p": "x",
+     "t": "image/png"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "hei",
+    "dp": false,
+    "img": {
+     "p": "x"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "",
+    "dp": false,
+    "img": {
+     "p": "x"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": "0",
+    "dp": false,
+    "img": {
+     "p": "x"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": null,
+    "dp": false,
+    "img": {
+     "p": "x"
+    },
+    "lk": null,
+    "ok": true,
+    "ts": "x"
+   },
+   "out": "📷 Bilde"
+  },
+  {
+   "l": {
+    "id": 1,
+    "mine": true,
+    "t": null,
+    "dp": false,
+    "img": null,
+    "lk": null,
+    "ok": false,
+    "ts": "x"
+   },
+   "out": "(kan ikke dekrypteres)"
+  }
+ ],
+ "line": [
+  {
+   "l": "__undefined__",
+   "out": ""
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": "hei"
+   },
+   "out": "Du: hei"
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "Du: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "Du: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "Du: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…"
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "Du: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…"
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": "a😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+   },
+   "out": "Du: a😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀\ud83d…"
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx😀"
+   },
+   "out": "Du: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\ud83d…"
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx😀"
+   },
+   "out": "Du: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx😀"
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": "  a \t\n b  "
+   },
+   "out": "Du:  a b "
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": ":) :( :D xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "Du: 😊 🙁 😃 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…"
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": ""
+   },
+   "out": "Du: "
+  },
+  {
+   "l": {
+    "mine": true,
+    "t": ":)"
+   },
+   "out": "Du: 😊"
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": "hei"
+   },
+   "out": "hei"
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…"
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…"
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": "a😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+   },
+   "out": "a😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀\ud83d…"
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx😀"
+   },
+   "out": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\ud83d…"
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx😀"
+   },
+   "out": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx😀"
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": "  a \t\n b  "
+   },
+   "out": " a b "
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": ":) :( :D xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "😊 🙁 😃 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…"
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": ""
+   },
+   "out": ""
+  },
+  {
+   "l": {
+    "mine": false,
+    "t": ":)"
+   },
+   "out": "😊"
+  }
+ ],
+ "title": [
+  {
+   "u": [],
+   "out": "Prek! testside"
+  },
+  {
+   "u": [
+    0
+   ],
+   "out": "Prek! testside"
+  },
+  {
+   "u": [
+    0,
+    0
+   ],
+   "out": "Prek! testside"
+  },
+  {
+   "u": [
+    1
+   ],
+   "out": "(1) Prek! testside"
+  },
+  {
+   "u": [
+    3
+   ],
+   "out": "(3) Prek! testside"
+  },
+  {
+   "u": [
+    2,
+    5,
+    0
+   ],
+   "out": "(7) Prek! testside"
+  },
+  {
+   "u": [
+    20
+   ],
+   "out": "(20) Prek! testside"
+  },
+  {
+   "u": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "out": "(4) Prek! testside"
+  },
+  {
+   "u": [
+    99,
+    1
+   ],
+   "out": "(100) Prek! testside"
+  }
+ ]
+}

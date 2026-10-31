@@ -116,6 +116,8 @@ first, or nothing there can be typed.
   Two fields nobody used (`S.dm`, `S.pch`) were removed first (own commit). `nref` looked unused in a quick scan but `S.nref++%5` uses it, so it stayed.
   `tests/state-unit.js` checks the starting values against `tests/fixtures/state-vectors.json` (made from the old object), that every `S.name` in `app/*.js` is declared
   (a misspelled name would silently become a new field) and that every declared field is used. Of 7 deliberate changes, all 7 were caught.
+- **Round 11 (done), logic out of the screens, part 1:** the short texts about a chat are `src/previews.ts` (`PrekPreviews`, glue `app/previews.js`): `previewText` (what the list calls the last message; the rule was written out twice in `main.js`), `listLine` (shortened, with "Du: ") and `pageTitle`. `tests/previews-unit.js` compares with `tests/fixtures/previews-vectors.json` (made from the old inline code: 640 raw messages, 33 decoded, 25 list lines, 9 titles). 10 of 10 deliberate changes caught.
+- **Planned rounds 12-15 (Dan approved, Claude's order):** 12 friends and requests from rows, and the friend order (`src/friends.ts`); 13 presence and "typing"; 14 unread counts, sound and double-ping alerts; 15 small pieces (invite token, mute list), hard-coded Norwegian texts into `nb-NO.ts`, and the possibly dead `b64u`/`hex`.
 - **Then screens and flow** (presence, invites, friends, chat, sign-in, start-up). This is the big and risky part: DOM-heavy and covered
   only by mocked browser tests. Decide when we get there whether it is worth converting now, or whether it should wait for the planned
   move to Vite and a UI framework (the same screens would be rewritten again).
