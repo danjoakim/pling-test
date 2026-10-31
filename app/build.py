@@ -13,7 +13,7 @@ def src(name):
     return t[:-1]
 # Pieces that used to be cut out of the old prototype (app/base/, removed) and patched here. They are normal source files now.
 # The order matters: emoji, status icon, sound, avatar helpers, GIF.
-proto='\n'.join([src('dom.js'),src('emoji.js'),src('icon.js'),src('sound.js'),src('avatar.js'),src('gif.js'),src('shrink.js'),src('links.js'),src('reactions.js'),src('previews.js'),src('friends.js')])
+proto='\n'.join([src('dom.js'),src('emoji.js'),src('icon.js'),src('sound.js'),src('avatar.js'),src('gif.js'),src('shrink.js'),src('links.js'),src('reactions.js'),src('previews.js'),src('friends.js'),src('presence.js')])
 # Start of the page script: Supabase URL and key, and the client. The "could not load" message is {{boot.noSupabase}}, filled from the language file below.
 head=src('boot.js')
 # The cryptography is TypeScript (src/crypto.ts), bundled by esbuild; crypto-glue.js connects it to the app.

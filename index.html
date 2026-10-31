@@ -3198,6 +3198,79 @@ var PrekFriends = (() => {
   return __toCommonJS(friends_exports);
 })();
 
+"use strict";
+var PrekPresence = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // src/presence.ts
+  var presence_exports = {};
+  __export(presence_exports, {
+    applyPresenceEvent: () => applyPresenceEvent,
+    presenceFromRows: () => presenceFromRows,
+    trackPlan: () => trackPlan,
+    typingShown: () => typingShown,
+    typingToSend: () => typingToSend
+  });
+  function applyPresenceEvent(w, p, now) {
+    const r = p && p.new;
+    if (!w.me || !r || !r.user_id || r.user_id === w.me || !w.isStatus(r.st)) return { used: false, redraw: false };
+    const uid = r.user_id;
+    let redraw = false;
+    if (r.st === "off") {
+      if (w.pres.delete(uid)) redraw = true;
+    } else if (w.pres.get(uid) !== r.st) {
+      w.pres.set(uid, r.st);
+      redraw = true;
+    }
+    if (r.st !== "off" && r.typ_chat && r.typ_at) {
+      if (w.typAt.get(uid) !== r.typ_at) {
+        w.typAt.set(uid, r.typ_at);
+        w.typ.set(uid, { n: now, c: r.typ_chat, seen: now });
+      }
+    } else w.typ.delete(uid);
+    return { used: true, redraw };
+  }
+  function presenceFromRows(rows, a, now) {
+    const m = /* @__PURE__ */ new Map();
+    for (const p of rows) {
+      if (!a.isStatus(p.st) || p.st === "off" || p.age_s == null || p.age_s > a.stale) continue;
+      m.set(p.user_id, p.st);
+      if (p.typ_chat && p.typ_age_s != null && p.typ_age_s < 3)
+        a.typ.set(p.user_id, { n: Math.round(now - p.typ_age_s * 1e3), c: p.typ_chat, seen: now - p.typ_age_s * 1e3 });
+    }
+    if (a.status !== "off") m.set(a.me, a.status);
+    return m;
+  }
+  function trackPlan(now, lastTrack, force) {
+    if (!force && now - (lastTrack || 0) < 2e3) return { wait: 2e3 - (now - lastTrack) };
+    return null;
+  }
+  function typingToSend(myTyp, now) {
+    return myTyp && now - myTyp.n < 3e3 ? myTyp.c : null;
+  }
+  function typingShown(x, chat, pres, now) {
+    const on = !!(x && x.c === chat.id && now - x.seen < 3e3 && pres.has(chat.other));
+    return { on, again: on ? 3100 - (now - x.seen) : null };
+  }
+  return __toCommonJS(presence_exports);
+})();
+
 /* ---------- kryptering ----------
    The cryptography itself lives in src/crypto.ts (bundled into PrekCrypto by build.py).
    This file only connects it to the app: browser storage (key per user), app state (S) and Supabase. */
@@ -3273,6 +3346,7 @@ const {groupReactions,applyReaction,reactionPayload,menuPosition}=PrekReactions;
 const loadReacts=(cid,key)=>PrekReactions.loadReactions(()=>api.listReactions(cid),(iv,ct)=>open(key,iv,ct),RX_OK);
 const {previewText,listLine,pageTitle}=PrekPreviews;
 const {relations,sortFriendRows}=PrekFriends;
+const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=PrekPresence;
 /* ---------- animerte smilefjes (tegneserie-stil, Dan Joakim 26. okt) ----------
    HVORFOR: MSN hadde animerte smilefjes. Våre er tegnet i kode (SVG + CSS), helt egne figurer (ikke MSNs grafikk), ligger i selve appen og krever ingen forespørsel til tredjepart.
    I meldingen sendes bare koden (for eksempel «:)»); mottakeren tegner figuren selv. Se claude/emoji.md.
@@ -3667,27 +3741,21 @@ function startPresence(){
 }
 function trackMe(force){
   if(!S.user)return;
-  const now=Date.now();
-  if(!force&&now-(S.lastTrack||0)<2000){
-    if(!S.trT)S.trT=setTimeout(()=>{S.trT=0;trackMe(true)},2000-(now-S.lastTrack));
+  const now=Date.now(),plan=trackPlan(now,S.lastTrack,force);
+  if(plan){
+    if(!S.trT)S.trT=setTimeout(()=>{S.trT=0;trackMe(true)},plan.wait);
     return}
   S.lastTrack=now;
-  const typ=S.myTyp&&now-S.myTyp.n<3000?S.myTyp.c:null;
+  const typ=typingToSend(S.myTyp,now);
   api.setPresence(S.status,typ).then(()=>{},()=>{});
 }
 let prT=0,prBusy=false,prAgain=false;const typAt=new Map();
 function presSoon(){clearTimeout(prT);prT=setTimeout(pullPresence,250)}
 /* Raden som endret seg følger med i Realtime-hendelsen (bare rader vi har lov til å se, altså kompiser og oss selv). Bruker den med en gang, så «skriver …» vises uten ekstra runde mot serveren. Listen hentes likevel rett etterpå som kontroll. (26. okt: «skriver» kom for sent.) */
 function presEvt(p){
-  const r=p&&p.new;
-  if(!S.user||!r||!r.user_id||r.user_id===S.user.id||!ST[r.st]){presSoon();return}
-  const now=Date.now();let redraw=false;
-  if(r.st==="off"){if(S.pres.delete(r.user_id))redraw=true}
-  else if(S.pres.get(r.user_id)!==r.st){S.pres.set(r.user_id,r.st);redraw=true}
-  if(r.st!=="off"&&r.typ_chat&&r.typ_at){
-    if(typAt.get(r.user_id)!==r.typ_at){typAt.set(r.user_id,r.typ_at);S.typ.set(r.user_id,{n:now,c:r.typ_chat,seen:now})}
-  }else S.typ.delete(r.user_id);
-  if(redraw){drawFriends();drawChatHead()}
+  const res=applyPresenceEvent({me:S.user?S.user.id:null,pres:S.pres,typ:S.typ,typAt,isStatus:s=>!!ST[s]},p,Date.now());
+  if(!res.used){presSoon();return}
+  if(res.redraw){drawFriends();drawChatHead()}
   drawTyping();presSoon();
 }
 async function pullPresence(){
@@ -3696,13 +3764,7 @@ async function pullPresence(){
   prBusy=true;
   try{
     const r=await api.getPresence();if(r.error||!S.user)return;
-    const m=new Map(),now=Date.now();
-    for(const p of r.data||[]){
-      if(!ST[p.st]||p.st==="off"||p.age_s==null||p.age_s>PRES_STALE)continue;
-      m.set(p.user_id,p.st);
-      if(p.typ_chat&&p.typ_age_s!=null&&p.typ_age_s<3)S.typ.set(p.user_id,{n:Math.round(now-p.typ_age_s*1000),c:p.typ_chat,seen:now-p.typ_age_s*1000});
-    }
-    if(S.status!=="off")m.set(S.user.id,S.status);
+    const m=presenceFromRows(r.data||[],{me:S.user.id,status:S.status,typ:S.typ,isStatus:s=>!!ST[s],stale:PRES_STALE},Date.now());
     S.pres=m;drawFriends();drawChatHead();drawTyping();
   }catch(e){}finally{prBusy=false;if(prAgain){prAgain=false;presSoon()}}
 }
@@ -3903,9 +3965,9 @@ async function safety(otherFp){
 function drawTyping(){
   const t=$("#typ");
   if(!S.chat){t.hidden=true;return}
-  const x=S.typ.get(S.chat.other),on=x&&x.c===S.chat.id&&Date.now()-x.seen<3000&&S.pres.has(S.chat.other);
-  t.hidden=false;t.textContent=on?tr("chat.typing",{name:nameOf(S.chat.other)}):"";
-  if(on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,3100-(Date.now()-x.seen))}
+  const sh=typingShown(S.typ.get(S.chat.other),S.chat,S.pres,Date.now());
+  t.hidden=false;t.textContent=sh.on?tr("chat.typing",{name:nameOf(S.chat.other)}):"";
+  if(sh.on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,sh.again)}
 }
 const PAGE=50;
 /* ---------- lenker og forhåndsvisning: src/links.ts, glue i app/links.js ---------- */

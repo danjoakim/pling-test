@@ -1,0 +1,7511 @@
+{
+ "note": "Answers of the old inline code (app/main.js at 3c6d58c: presEvt, pullPresence, trackMe, drawTyping) for src/presence.ts. Never regenerate with new code.",
+ "now": 1000000,
+ "events": [
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "away"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "away"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f9",
+     "st": "off"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f9",
+     "st": "off"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1000000,
+      "c": "c1",
+      "seen": 1000000
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t2"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1000000,
+      "c": "c1",
+      "seen": 1000000
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t2"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t2"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f2",
+     "st": "busy",
+     "typ_chat": "c2",
+     "typ_at": "t5"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f2",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "f2",
+     {
+      "n": 1000000,
+      "c": "c2",
+      "seen": 1000000
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f2",
+     "t5"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f2",
+     "st": "busy",
+     "typ_chat": "c2",
+     "typ_at": "t5"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off",
+     "typ_chat": "c1",
+     "typ_at": "t3"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off",
+     "typ_chat": "c1",
+     "typ_at": "t3"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "me",
+     "st": "away"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "me",
+     "st": "away"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "st": "online"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "st": "online"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "",
+     "st": "online"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "",
+     "st": "online"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "nope"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "nope"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "constructor"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "constructor"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "constructor"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": null
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": null
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {},
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {},
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": null,
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": null,
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": "__undefined__",
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [],
+    "typ": [],
+    "typAt": []
+   },
+   "e": "__undefined__",
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "away"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "away"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "away"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f9",
+     "st": "off"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f9",
+     "st": "off"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1000000,
+      "c": "c1",
+      "seen": 1000000
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t2"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1000000,
+      "c": "c1",
+      "seen": 1000000
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t2"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t2"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f2",
+     "st": "busy",
+     "typ_chat": "c2",
+     "typ_at": "t5"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "f2",
+     {
+      "n": 1000000,
+      "c": "c2",
+      "seen": 1000000
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f2",
+     "t5"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f2",
+     "st": "busy",
+     "typ_chat": "c2",
+     "typ_at": "t5"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off",
+     "typ_chat": "c1",
+     "typ_at": "t3"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off",
+     "typ_chat": "c1",
+     "typ_at": "t3"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "me",
+     "st": "away"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "me",
+     "st": "away"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "st": "online"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "st": "online"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "",
+     "st": "online"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "",
+     "st": "online"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "nope"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "nope"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "constructor"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "constructor"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "constructor"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": null
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {
+    "new": null
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {},
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": {},
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": null,
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": null,
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": "__undefined__",
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ],
+     [
+      "f2",
+      "away"
+     ]
+    ],
+    "typ": [],
+    "typAt": []
+   },
+   "e": "__undefined__",
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": []
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "away"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "away"
+    ]
+   ],
+   "typ": [],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "away"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f9",
+     "st": "off"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f9",
+     "st": "off"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t2"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1000000,
+      "c": "c1",
+      "seen": 1000000
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t2"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1",
+     "typ_at": "t2"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f2",
+     "st": "busy",
+     "typ_chat": "c2",
+     "typ_at": "t5"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ],
+    [
+     "f2",
+     {
+      "n": 1000000,
+      "c": "c2",
+      "seen": 1000000
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ],
+    [
+     "f2",
+     "t5"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f2",
+     "st": "busy",
+     "typ_chat": "c2",
+     "typ_at": "t5"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off",
+     "typ_chat": "c1",
+     "typ_at": "t3"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [],
+   "typ": [],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "off",
+     "typ_chat": "c1",
+     "typ_at": "t3"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "c1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "online",
+     "typ_chat": "",
+     "typ_at": "t1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "me",
+     "st": "away"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "me",
+     "st": "away"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "st": "online"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "st": "online"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "",
+     "st": "online"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "",
+     "st": "online"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "nope"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "nope"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "constructor"
+    }
+   },
+   "signedIn": true,
+   "res": {
+    "used": true,
+    "redraw": true
+   },
+   "pres": [
+    [
+     "f1",
+     "constructor"
+    ]
+   ],
+   "typ": [],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": {
+     "user_id": "f1",
+     "st": "constructor"
+    }
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": null
+   },
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {
+    "new": null
+   },
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {},
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": {},
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": null,
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": null,
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": "__undefined__",
+   "signedIn": true,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  },
+  {
+   "world": {
+    "pres": [
+     [
+      "f1",
+      "online"
+     ]
+    ],
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 1,
+       "c": "c1",
+       "seen": 1
+      }
+     ]
+    ],
+    "typAt": [
+     [
+      "f1",
+      "t1"
+     ]
+    ]
+   },
+   "e": "__undefined__",
+   "signedIn": false,
+   "res": {
+    "used": false,
+    "redraw": false
+   },
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "f1",
+     {
+      "n": 1,
+      "c": "c1",
+      "seen": 1
+     }
+    ]
+   ],
+   "typAt": [
+    [
+     "f1",
+     "t1"
+    ]
+   ]
+  }
+ ],
+ "sequence": [
+  [
+   {
+    "e": {
+     "new": {
+      "user_id": "f1",
+      "st": "online",
+      "typ_chat": "c1",
+      "typ_at": "t1"
+     }
+    },
+    "t": 10,
+    "res": {
+     "used": true,
+     "redraw": true
+    },
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 10,
+       "c": "c1",
+       "seen": 10
+      }
+     ]
+    ]
+   },
+   {
+    "e": {
+     "new": {
+      "user_id": "f1",
+      "st": "online",
+      "typ_chat": "c1",
+      "typ_at": "t1"
+     }
+    },
+    "t": 20,
+    "res": {
+     "used": true,
+     "redraw": false
+    },
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 10,
+       "c": "c1",
+       "seen": 10
+      }
+     ]
+    ]
+   },
+   {
+    "e": {
+     "new": {
+      "user_id": "f1",
+      "st": "online",
+      "typ_chat": "c1",
+      "typ_at": "t2"
+     }
+    },
+    "t": 30,
+    "res": {
+     "used": true,
+     "redraw": false
+    },
+    "typ": [
+     [
+      "f1",
+      {
+       "n": 30,
+       "c": "c1",
+       "seen": 30
+      }
+     ]
+    ]
+   },
+   {
+    "e": {
+     "new": {
+      "user_id": "f1",
+      "st": "online"
+     }
+    },
+    "t": 40,
+    "res": {
+     "used": true,
+     "redraw": false
+    },
+    "typ": []
+   },
+   {
+    "e": {
+     "new": {
+      "user_id": "f1",
+      "st": "online",
+      "typ_chat": "c1",
+      "typ_at": "t2"
+     }
+    },
+    "t": 50,
+    "res": {
+     "used": true,
+     "redraw": false
+    },
+    "typ": []
+   }
+  ]
+ ],
+ "pull": [
+  {
+   "rows": [],
+   "status": "online",
+   "pres": [
+    [
+     "me",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [],
+   "status": "away",
+   "pres": [
+    [
+     "me",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [],
+   "status": "busy",
+   "pres": [
+    [
+     "me",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [],
+   "status": "off",
+   "pres": [],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 5
+    }
+   ],
+   "status": "online",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "me",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 5
+    }
+   ],
+   "status": "away",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "me",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 5
+    }
+   ],
+   "status": "busy",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "me",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 5
+    }
+   ],
+   "status": "off",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 50
+    },
+    {
+     "user_id": "f2",
+     "st": "online",
+     "age_s": 51
+    },
+    {
+     "user_id": "f3",
+     "st": "away",
+     "age_s": 0
+    }
+   ],
+   "status": "online",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f3",
+     "away"
+    ],
+    [
+     "me",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 50
+    },
+    {
+     "user_id": "f2",
+     "st": "online",
+     "age_s": 51
+    },
+    {
+     "user_id": "f3",
+     "st": "away",
+     "age_s": 0
+    }
+   ],
+   "status": "away",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f3",
+     "away"
+    ],
+    [
+     "me",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 50
+    },
+    {
+     "user_id": "f2",
+     "st": "online",
+     "age_s": 51
+    },
+    {
+     "user_id": "f3",
+     "st": "away",
+     "age_s": 0
+    }
+   ],
+   "status": "busy",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f3",
+     "away"
+    ],
+    [
+     "me",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 50
+    },
+    {
+     "user_id": "f2",
+     "st": "online",
+     "age_s": 51
+    },
+    {
+     "user_id": "f3",
+     "st": "away",
+     "age_s": 0
+    }
+   ],
+   "status": "off",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f3",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "off",
+     "age_s": 1
+    },
+    {
+     "user_id": "f2",
+     "st": "nope",
+     "age_s": 1
+    },
+    {
+     "user_id": "f3",
+     "st": "busy",
+     "age_s": null
+    },
+    {
+     "user_id": "f4",
+     "st": "busy"
+    }
+   ],
+   "status": "online",
+   "pres": [
+    [
+     "me",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "off",
+     "age_s": 1
+    },
+    {
+     "user_id": "f2",
+     "st": "nope",
+     "age_s": 1
+    },
+    {
+     "user_id": "f3",
+     "st": "busy",
+     "age_s": null
+    },
+    {
+     "user_id": "f4",
+     "st": "busy"
+    }
+   ],
+   "status": "away",
+   "pres": [
+    [
+     "me",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "off",
+     "age_s": 1
+    },
+    {
+     "user_id": "f2",
+     "st": "nope",
+     "age_s": 1
+    },
+    {
+     "user_id": "f3",
+     "st": "busy",
+     "age_s": null
+    },
+    {
+     "user_id": "f4",
+     "st": "busy"
+    }
+   ],
+   "status": "busy",
+   "pres": [
+    [
+     "me",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "off",
+     "age_s": 1
+    },
+    {
+     "user_id": "f2",
+     "st": "nope",
+     "age_s": 1
+    },
+    {
+     "user_id": "f3",
+     "st": "busy",
+     "age_s": null
+    },
+    {
+     "user_id": "f4",
+     "st": "busy"
+    }
+   ],
+   "status": "off",
+   "pres": [],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": 2.9
+    },
+    {
+     "user_id": "f2",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": 3
+    },
+    {
+     "user_id": "f3",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": null
+    },
+    {
+     "user_id": "f4",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": null,
+     "typ_age_s": 1
+    },
+    {
+     "user_id": "f5",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c2",
+     "typ_age_s": 0
+    }
+   ],
+   "status": "online",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "online"
+    ],
+    [
+     "f3",
+     "online"
+    ],
+    [
+     "f4",
+     "online"
+    ],
+    [
+     "f5",
+     "online"
+    ],
+    [
+     "me",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ],
+    [
+     "f1",
+     {
+      "n": 997100,
+      "c": "c1",
+      "seen": 997100
+     }
+    ],
+    [
+     "f5",
+     {
+      "n": 1000000,
+      "c": "c2",
+      "seen": 1000000
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": 2.9
+    },
+    {
+     "user_id": "f2",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": 3
+    },
+    {
+     "user_id": "f3",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": null
+    },
+    {
+     "user_id": "f4",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": null,
+     "typ_age_s": 1
+    },
+    {
+     "user_id": "f5",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c2",
+     "typ_age_s": 0
+    }
+   ],
+   "status": "away",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "online"
+    ],
+    [
+     "f3",
+     "online"
+    ],
+    [
+     "f4",
+     "online"
+    ],
+    [
+     "f5",
+     "online"
+    ],
+    [
+     "me",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ],
+    [
+     "f1",
+     {
+      "n": 997100,
+      "c": "c1",
+      "seen": 997100
+     }
+    ],
+    [
+     "f5",
+     {
+      "n": 1000000,
+      "c": "c2",
+      "seen": 1000000
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": 2.9
+    },
+    {
+     "user_id": "f2",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": 3
+    },
+    {
+     "user_id": "f3",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": null
+    },
+    {
+     "user_id": "f4",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": null,
+     "typ_age_s": 1
+    },
+    {
+     "user_id": "f5",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c2",
+     "typ_age_s": 0
+    }
+   ],
+   "status": "busy",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "online"
+    ],
+    [
+     "f3",
+     "online"
+    ],
+    [
+     "f4",
+     "online"
+    ],
+    [
+     "f5",
+     "online"
+    ],
+    [
+     "me",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ],
+    [
+     "f1",
+     {
+      "n": 997100,
+      "c": "c1",
+      "seen": 997100
+     }
+    ],
+    [
+     "f5",
+     {
+      "n": 1000000,
+      "c": "c2",
+      "seen": 1000000
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": 2.9
+    },
+    {
+     "user_id": "f2",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": 3
+    },
+    {
+     "user_id": "f3",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c1",
+     "typ_age_s": null
+    },
+    {
+     "user_id": "f4",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": null,
+     "typ_age_s": 1
+    },
+    {
+     "user_id": "f5",
+     "st": "online",
+     "age_s": 2,
+     "typ_chat": "c2",
+     "typ_age_s": 0
+    }
+   ],
+   "status": "off",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "f2",
+     "online"
+    ],
+    [
+     "f3",
+     "online"
+    ],
+    [
+     "f4",
+     "online"
+    ],
+    [
+     "f5",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ],
+    [
+     "f1",
+     {
+      "n": 997100,
+      "c": "c1",
+      "seen": 997100
+     }
+    ],
+    [
+     "f5",
+     {
+      "n": 1000000,
+      "c": "c2",
+      "seen": 1000000
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 60,
+     "typ_chat": "c1",
+     "typ_age_s": 1
+    }
+   ],
+   "status": "online",
+   "pres": [
+    [
+     "me",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 60,
+     "typ_chat": "c1",
+     "typ_age_s": 1
+    }
+   ],
+   "status": "away",
+   "pres": [
+    [
+     "me",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 60,
+     "typ_chat": "c1",
+     "typ_age_s": 1
+    }
+   ],
+   "status": "busy",
+   "pres": [
+    [
+     "me",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 60,
+     "typ_chat": "c1",
+     "typ_age_s": 1
+    }
+   ],
+   "status": "off",
+   "pres": [],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "off",
+     "age_s": 1,
+     "typ_chat": "c1",
+     "typ_age_s": 1
+    }
+   ],
+   "status": "online",
+   "pres": [
+    [
+     "me",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "off",
+     "age_s": 1,
+     "typ_chat": "c1",
+     "typ_age_s": 1
+    }
+   ],
+   "status": "away",
+   "pres": [
+    [
+     "me",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "off",
+     "age_s": 1,
+     "typ_chat": "c1",
+     "typ_age_s": 1
+    }
+   ],
+   "status": "busy",
+   "pres": [
+    [
+     "me",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "off",
+     "age_s": 1,
+     "typ_chat": "c1",
+     "typ_age_s": 1
+    }
+   ],
+   "status": "off",
+   "pres": [],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "me",
+     "st": "away",
+     "age_s": 1
+    }
+   ],
+   "status": "online",
+   "pres": [
+    [
+     "me",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "me",
+     "st": "away",
+     "age_s": 1
+    }
+   ],
+   "status": "away",
+   "pres": [
+    [
+     "me",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "me",
+     "st": "away",
+     "age_s": 1
+    }
+   ],
+   "status": "busy",
+   "pres": [
+    [
+     "me",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "me",
+     "st": "away",
+     "age_s": 1
+    }
+   ],
+   "status": "off",
+   "pres": [
+    [
+     "me",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 0.4,
+     "typ_chat": "c1",
+     "typ_age_s": 1.2345
+    }
+   ],
+   "status": "online",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "me",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ],
+    [
+     "f1",
+     {
+      "n": 998766,
+      "c": "c1",
+      "seen": 998765.5
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 0.4,
+     "typ_chat": "c1",
+     "typ_age_s": 1.2345
+    }
+   ],
+   "status": "away",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "me",
+     "away"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ],
+    [
+     "f1",
+     {
+      "n": 998766,
+      "c": "c1",
+      "seen": 998765.5
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 0.4,
+     "typ_chat": "c1",
+     "typ_age_s": 1.2345
+    }
+   ],
+   "status": "busy",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ],
+    [
+     "me",
+     "busy"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ],
+    [
+     "f1",
+     {
+      "n": 998766,
+      "c": "c1",
+      "seen": 998765.5
+     }
+    ]
+   ]
+  },
+  {
+   "rows": [
+    {
+     "user_id": "f1",
+     "st": "online",
+     "age_s": 0.4,
+     "typ_chat": "c1",
+     "typ_age_s": 1.2345
+    }
+   ],
+   "status": "off",
+   "pres": [
+    [
+     "f1",
+     "online"
+    ]
+   ],
+   "typ": [
+    [
+     "old",
+     {
+      "n": 1,
+      "c": "x",
+      "seen": 1
+     }
+    ],
+    [
+     "f1",
+     {
+      "n": 998766,
+      "c": "c1",
+      "seen": 998765.5
+     }
+    ]
+   ]
+  },
+  {
+   "rows": "__null__",
+   "status": "online",
+   "pres": [
+    [
+     "me",
+     "online"
+    ]
+   ],
+   "typ": []
+  }
+ ],
+ "track": [
+  {
+   "lastTrack": "__undefined__",
+   "force": true,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": true,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": false,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": false,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": "__undefined__",
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": true,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": true,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": false,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": false,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 0,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": true,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": true,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": false,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": false,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 995000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": true,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": true,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": false,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": false,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": true,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": true,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": false,
+   "myTyp": null,
+   "res": {
+    "wait": 1
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": false,
+   "myTyp": "__undefined__",
+   "res": {
+    "wait": 1
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "wait": 1
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "wait": 1
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "wait": 1
+   }
+  },
+  {
+   "lastTrack": 998001,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "wait": 1
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": true,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": true,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": false,
+   "myTyp": null,
+   "res": {
+    "wait": 1999
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": false,
+   "myTyp": "__undefined__",
+   "res": {
+    "wait": 1999
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "wait": 1999
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "wait": 1999
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "wait": 1999
+   }
+  },
+  {
+   "lastTrack": 999999,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "wait": 1999
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": true,
+   "myTyp": null,
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": true,
+   "myTyp": "__undefined__",
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "send": true,
+    "typ": "c1"
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": true,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "send": true,
+    "typ": null
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": false,
+   "myTyp": null,
+   "res": {
+    "wait": 2000
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": false,
+   "myTyp": "__undefined__",
+   "res": {
+    "wait": 2000
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 999900
+   },
+   "res": {
+    "wait": 2000
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997001
+   },
+   "res": {
+    "wait": 2000
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 997000
+   },
+   "res": {
+    "wait": 2000
+   }
+  },
+  {
+   "lastTrack": 1000000,
+   "force": false,
+   "myTyp": {
+    "c": "c1",
+    "n": 996000
+   },
+   "res": {
+    "wait": 2000
+   }
+  }
+ ],
+ "typing": [
+  {
+   "x": "__undefined__",
+   "online": true,
+   "res": {
+    "on": false,
+    "again": null
+   }
+  },
+  {
+   "x": "__undefined__",
+   "online": false,
+   "res": {
+    "on": false,
+    "again": null
+   }
+  },
+  {
+   "x": {
+    "n": 1,
+    "c": "c1",
+    "seen": 999900
+   },
+   "online": true,
+   "res": {
+    "on": true,
+    "again": 3000
+   }
+  },
+  {
+   "x": {
+    "n": 1,
+    "c": "c1",
+    "seen": 999900
+   },
+   "online": false,
+   "res": {
+    "on": false,
+    "again": null
+   }
+  },
+  {
+   "x": {
+    "n": 1,
+    "c": "c1",
+    "seen": 997001
+   },
+   "online": true,
+   "res": {
+    "on": true,
+    "again": 101
+   }
+  },
+  {
+   "x": {
+    "n": 1,
+    "c": "c1",
+    "seen": 997001
+   },
+   "online": false,
+   "res": {
+    "on": false,
+    "again": null
+   }
+  },
+  {
+   "x": {
+    "n": 1,
+    "c": "c1",
+    "seen": 997000
+   },
+   "online": true,
+   "res": {
+    "on": false,
+    "again": null
+   }
+  },
+  {
+   "x": {
+    "n": 1,
+    "c": "c1",
+    "seen": 997000
+   },
+   "online": false,
+   "res": {
+    "on": false,
+    "again": null
+   }
+  },
+  {
+   "x": {
+    "n": 1,
+    "c": "c2",
+    "seen": 999900
+   },
+   "online": true,
+   "res": {
+    "on": false,
+    "again": null
+   }
+  },
+  {
+   "x": {
+    "n": 1,
+    "c": "c2",
+    "seen": 999900
+   },
+   "online": false,
+   "res": {
+    "on": false,
+    "again": null
+   }
+  }
+ ]
+}
