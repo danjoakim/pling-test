@@ -421,7 +421,7 @@ async function loadMsgs(){
   S.seen.set(cid,out.length?out[out.length-1].id:0);
   if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:previewText(l.ok?l:null)});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   if(S.first)for(const x of out)S.anSeen.set(String(x.id),0);
-  S.first=false;S.msgs=out;drawLog();
+  S.first=false;S.msgs=pend.length?[...out,...pend.filter(x=>x.cid===cid)]:out;drawLog();
   if(fresh.length){
     const bigs=fresh.filter(m=>m.dp);
     for(const m of bigs)alertDp(S.chat.other,m.id,m.ts);
@@ -448,12 +448,12 @@ function drawLog(keepPos){
   if(!S.msgs.length)log.append(el("div",{class:"sys"},tr("chat.empty",{name:nameOf(S.chat.other)})));
   for(const m of S.msgs){
     if(m.dp){log.append(el("div",{class:"sys"},tr("chat.sentDp",{who:m.mine?tr("chat.you"):nameOf(S.chat.other),time:tm(m.ts)})));continue}
-    const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")});d.dataset.mid=m.id;
+    const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")+(m.pending?" pending":"")});d.dataset.mid=m.id;
     if(m.img)d.append(picEl(m.img));else
     if(m.ok)d.append(...linkify(m.t==null?"":m.t));else d.append(tr("chat.undecryptable"));
     if(m.lk)d.append(lkCard(m.lk));
     d.append(el("br"),el("time",{},tm(m.ts)));
-    if(m.ok||m.img){const ch=rxChips(m);if(ch)d.append(ch);d.append(el("button",{type:"button",class:"rxb","aria-label":tr("rx.ariaReact"),title:tr("rx.react"),onclick:e=>{e.stopPropagation();openRx(m,e.currentTarget)}},"☺"))}
+    if((m.ok||m.img)&&!m.pending){const ch=rxChips(m);if(ch)d.append(ch);d.append(el("button",{type:"button",class:"rxb","aria-label":tr("rx.ariaReact"),title:tr("rx.react"),onclick:e=>{e.stopPropagation();openRx(m,e.currentTarget)}},"☺"))}
     log.append(d);
   }
   markAn();
@@ -529,16 +529,29 @@ async function setReact(mid,r){
     drawLog(true);refreshSoon();
   }catch(e){fail(e)}
 }
+/* Egne tekstmeldinger vises med en gang, svakt, mens serveren lagrer dem (1. nov: «merkbart delay»). Før dukket de opp først etter lagring pluss full oppdatering av kompiser, profiler og forhåndsvisninger.
+   Bildemeldinger og dobbeltpling vises ikke på forhånd. `pend` holder de som ikke er lagret ennå, så en oppdatering midt i sendingen ikke fjerner dem. Se claude/beslutningslogg.md. */
+let pend=[];
 async function sendMsg(payload,file){
   if(!S.chat)return false;
-  const other=S.profiles.get(S.chat.other);
+  const other=S.profiles.get(S.chat.other);let p=null;
   try{
     const key=await pairKey(other.pub),s=await seal(key,payload);
     const row={chat_id:S.chat.id,sender:S.user.id,iv:s.iv,ct:s.ct};
     if(file)row.file=file;
+    if(payload.t!=null&&!payload.img&&!payload.dp){
+      p={id:"p"+Date.now(),cid:S.chat.id,pending:true,mine:true,t:String(payload.t),dp:false,img:null,lk:payload.lk||null,ok:true,ts:new Date().toISOString()};
+      pend.push(p);S.msgs=[...S.msgs,p];S.justSent=true;drawLog();
+    }
     await q(api.sendMessage(row),tr("ctx.send"));
-    S.justSent=true;S.myTyp=null;trackMe(true);refreshSoon();return true;
-  }catch(e){fail(e);return false}
+  }catch(e){
+    if(p){pend=pend.filter(x=>x!==p);S.msgs=S.msgs.filter(x=>x!==p);if(S.chat)drawLog(true)}
+    fail(e);return false}
+  if(p)pend=pend.filter(x=>x!==p);
+  S.justSent=true;S.myTyp=null;trackMe(true);
+  /* hent bare meldingene (to kall), ikke alt; resten følger i refreshSoon */
+  loadMsgs().catch(()=>{}).then(()=>{if(p&&S.msgs.includes(p)){S.msgs=S.msgs.filter(x=>x!==p);if(S.chat)drawLog(true)}});
+  refreshSoon();return true;
 }
 
 /* ---------- bilder (krypteres før opplasting) ---------- */

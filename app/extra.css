@@ -345,3 +345,5 @@ html.lys .ff .bd{fill:#1b5fb8}html.lys .ff.off .bd{fill:#9aa9ba}html.lys .ff .ab
 html.desk .win,html.desk.lys .win{max-width:none;width:100%;height:100%;border:0;border-radius:0;box-shadow:none}
 html.desk.lys .tb{border-radius:0}
 html.desk body{padding:0}
+/* melding som ikke er lagret ennå */
+.m.pending{opacity:.65}
