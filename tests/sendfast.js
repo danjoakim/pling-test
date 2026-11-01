@@ -22,6 +22,7 @@ let bad=0;const ck=(n,ok,x)=>{console.log(ok?"ok  ":"FEIL",n,x===undefined?"":JS
  ck("meldingen vises før lagringen er ferdig",dt<700,dt);
  ck("teksten stemmer",(await A.textContent("#log .m.pending")).includes("hei sakte"));
  ck("feltet er tømt",(await A.inputValue("#tx"))==="");
+ ck("ulagret melding ser ut som en vanlig (full styrke, ingen overgang)",await A.evaluate(()=>{const c=getComputedStyle(document.querySelector("#log .m.pending"));return c.opacity==="1"&&c.transitionDuration.split(",").every(x=>parseFloat(x)===0)}));
  ck("ingen ☺-knapp på ulagret melding",await A.locator("#log .m.pending .rxb").count()===0);
  await A.waitForFunction(()=>!document.querySelector("#log .m.pending")&&document.querySelectorAll("#log .m.mine").length>=1,null,{timeout:6000});
  await A.waitForTimeout(600);

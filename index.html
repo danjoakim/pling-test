@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-C3+euRsKzw9i+Sbfsf9+62i1egGL0D26BX7X/QFjiNs='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-zF0tLGcSEEtJZaCbCuZy1xIldNFRmwrdfhanmC2T7L8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -491,8 +491,7 @@ html.lys .ff .bd{fill:#1b5fb8}html.lys .ff.off .bd{fill:#9aa9ba}html.lys .ff .ab
 html.desk .win,html.desk.lys .win{max-width:none;width:100%;height:100%;border:0;border-radius:0;box-shadow:none}
 html.desk.lys .tb{border-radius:0}
 html.desk body{padding:0}
-/* melding som ikke er lagret ennå */
-.m.pending{opacity:.65}
+/* melding som ikke er lagret ennå: ser ut som en vanlig melding (Dan Joakim 1. nov: ingen grunn til å vise noe teknisk); klassen brukes bare i koden */
 
 </style>
 </head>
@@ -3892,7 +3891,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="2fbcb85";
+const PREK_VERSION="0.1.0",PREK_BUILD="3a4fbe0";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
