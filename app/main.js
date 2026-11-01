@@ -113,6 +113,7 @@ function showInfo(){
       else body.append(el("p",{},p));
     }
   }
+  body.append(el("p",{class:"fine"},tr("info.version",{v:PREK_VERSION,b:PREK_BUILD})));
   box.append(body);o.append(box);o.hidden=false;
   o.onclick=e=>{if(e.target===o)closeInfo()};
   box.querySelector("button").focus();

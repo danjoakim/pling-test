@@ -45,6 +45,7 @@ export const nb = {
   // privacy and help dialog
   "info.title": "Personvern og hjelp",
   "info.close": "Lukk",
+  "info.version": "Versjon {v}, bygg {b}",
   "info.short.title": "Kort fortalt",
   "info.short.p1": "Samtalene dine er ende-til-ende-kryptert: tekst og bilder låses i nettleseren din med en nøkkel som bare du og kompisen din har. Vi (og Supabase, som driver tjenesten) kan ikke lese dem.",
   "info.sees.title": "Det serveren ser",

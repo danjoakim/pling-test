@@ -13,7 +13,7 @@ def src(name):
     return t[:-1]
 # Pieces that used to be cut out of the old prototype (app/base/, removed) and patched here. They are normal source files now.
 # The order matters: emoji, status icon, sound, avatar helpers, GIF.
-proto='\n'.join([src('dom.js'),src('emoji.js'),src('icon.js'),src('sound.js'),src('avatar.js'),src('gif.js'),src('shrink.js'),src('links.js'),src('reactions.js'),src('previews.js'),src('friends.js'),src('presence.js'),src('unread.js'),src('helpers.js'),src('desktop.js')])
+proto='\n'.join([src('dom.js'),src('emoji.js'),src('icon.js'),src('sound.js'),src('avatar.js'),src('gif.js'),src('shrink.js'),src('links.js'),src('reactions.js'),src('previews.js'),src('friends.js'),src('presence.js'),src('unread.js'),src('helpers.js'),src('version.js'),src('desktop.js')])
 # Start of the page script: Supabase URL and key, and the client. The "could not load" message is {{boot.noSupabase}}, filled from the language file below.
 head=src('boot.js')
 # The cryptography is TypeScript (src/crypto.ts), bundled by esbuild; crypto-glue.js connects it to the app.
@@ -68,6 +68,16 @@ assert '{{boot.noSupabase}}' in html
 html=html.replace('{{boot.noSupabase}}',json.dumps(_msgs['boot.noSupabase'],ensure_ascii=False)[1:-1])
 assert '{{html.title}}' in html
 html=html.replace('{{html.title}}',_esc(_msgs['html.title']),1)
+# Version and build code shown in the app (Personvern og hjelp) and in the names of the desktop downloads. The version is package.json's.
+# The build code is the first 7 characters of a SHA-256 of the finished page (with the code itself left as a placeholder), so it is the
+# same for the web page, the Mac app and the Windows app from the same sources, it changes whenever anything in the page changes, and
+# the build stays byte-identical when nothing changed (CI rebuilds and compares). It does not depend on git.
+import hashlib
+_ver=json.load(open(HERE+'/../package.json',encoding='utf8'))['version']
+assert html.count('@@VERSION@@')==1 and html.count('@@BUILD@@')==1
+html=html.replace('@@VERSION@@',_ver)
+_build=hashlib.sha256(html.encode('utf8')).hexdigest()[:7]
+html=html.replace('@@BUILD@@',_build)
 # Content-Security-Policy: the browser then runs only our own files and the inline scripts listed here by hash, and talks only to
 # Supabase. If someone managed to get a <script> into a message, the browser would refuse to run it. The hashes are worked out here, from
 # the finished page, so they always match. (Tests in tests/csp.js check that the page works under this policy and that foreign
