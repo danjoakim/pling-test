@@ -49,14 +49,20 @@ jobs:
         run: |
           source ./ci-step.sh
           step tauri-build npx tauri build --bundles ${{ matrix.bundles }} ${{ matrix.target }}
-      - name: Name the download after the version and build code in the page
+      - name: Name the file and the download after the version and build code in the page
         run: |
           v=$(grep -o 'PREK_VERSION="[^"]*"' ../index.html | head -1 | cut -d'"' -f2)
           b=$(grep -o 'PREK_BUILD="[^"]*"' ../index.html | head -1 | cut -d'"' -f2)
           test -n "$v" -a -n "$b"
+          src=$(ls ../${{ matrix.files }} | head -1)
+          test -f "$src"
+          ext="${src##*.}"
+          out="$(dirname "$src")/prek-${{ matrix.name }}_${v}_${b}.${ext}"
+          mv "$src" "$out"
           echo "ART=prek-${{ matrix.name }}_${v}_${b}" >> "$GITHUB_ENV"
+          echo "OUT=${out#../}" >> "$GITHUB_ENV"
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ART }}
-          path: ${{ matrix.files }}
+          path: ${{ env.OUT }}
           if-no-files-found: error
