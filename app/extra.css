@@ -353,3 +353,14 @@ html.desk body{padding:0}
 #delb{color:#c8352a}
 html:not(.lys) #delb{color:#ff8f84}
 .duo{display:flex;gap:8px}.duo .glass{flex:1;min-width:0}
+
+/* Rolig på telefon (Dan Joakim 5. nov: «en app som ikke hopper og spretter når man sveiper og trykker»).
+   Siden låses fast; bare listene ruller (og spretter ikke ut i selve siden). Ingen zoom ved dobbelttrykk, ingen blå trykkmarkering.
+   Knyp-zoom er med vilje ikke slått av (tilgjengelighet). dvh = høyden følger det som faktisk er synlig. */
+html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#log,.home,#friends,.infot,#emo{overscroll-behavior:contain}
+@media(max-width:700px){
+ html{overflow:hidden;height:100dvh}
+ body{position:fixed;inset:0;height:100dvh;width:100%;overflow:hidden;padding-block:0;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+ button,.conv,.glass{-webkit-touch-callout:none}
+}

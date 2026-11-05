@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-jMaxzXUUCR3vYtoLBLE4LHgMOElK+3HRUFjChYkMU9E='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-bEOGw/sVVa7v81jLPdXgAf8m89iU9EaPABDruevpqBw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -499,6 +499,17 @@ html.desk body{padding:0}
 #delb{color:#c8352a}
 html:not(.lys) #delb{color:#ff8f84}
 .duo{display:flex;gap:8px}.duo .glass{flex:1;min-width:0}
+
+/* Rolig på telefon (Dan Joakim 5. nov: «en app som ikke hopper og spretter når man sveiper og trykker»).
+   Siden låses fast; bare listene ruller (og spretter ikke ut i selve siden). Ingen zoom ved dobbelttrykk, ingen blå trykkmarkering.
+   Knyp-zoom er med vilje ikke slått av (tilgjengelighet). dvh = høyden følger det som faktisk er synlig. */
+html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#log,.home,#friends,.infot,#emo{overscroll-behavior:contain}
+@media(max-width:700px){
+ html{overflow:hidden;height:100dvh}
+ body{position:fixed;inset:0;height:100dvh;width:100%;overflow:hidden;padding-block:0;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+ button,.conv,.glass{-webkit-touch-callout:none}
+}
 
 </style>
 </head>
@@ -3960,7 +3971,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="6da2dc3";
+const PREK_VERSION="0.1.0",PREK_BUILD="d8dd448";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
