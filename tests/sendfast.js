@@ -14,7 +14,7 @@ let bad=0;const ck=(n,ok,x)=>{console.log(ok?"ok  ":"FEIL",n,x===undefined?"":JS
  await A.click("#addf");await A.fill("#fe","bob@x.test");await A.click("#fadd");await A.waitForSelector("text=Venter på svar");
  await B.evaluate(()=>refresh());await B.waitForSelector("#reqs:not([hidden]) button");await B.click("#reqs button:has-text('Godta')");await B.waitForSelector(".conv[data-id]");
  await A.evaluate(()=>refresh());await A.waitForSelector(".conv[data-id]");
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  // sakte lagring: 1,5 s
  await A.evaluate(()=>{const o=api.sendMessage;window.__orig=o;api.sendMessage=r=>new Promise(res=>setTimeout(res,1500)).then(()=>o(r))});
  await A.fill("#tx","hei sakte");const t0=Date.now();await A.click("#sd");
@@ -27,7 +27,7 @@ let bad=0;const ck=(n,ok,x)=>{console.log(ok?"ok  ":"FEIL",n,x===undefined?"":JS
  await A.waitForFunction(()=>!document.querySelector("#log .m.pending")&&document.querySelectorAll("#log .m.mine").length>=1,null,{timeout:6000});
  await A.waitForTimeout(600);
  ck("etterpå: nøyaktig én melding, ikke ulagret",await A.locator("#log .m.mine").count()===1&&await A.locator("#log .m.pending").count()===0,await A.locator("#log .m").count());
- ck("mottakeren fikk den",await (async()=>{await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");await B.evaluate(()=>refresh());await B.waitForTimeout(800);return (await B.textContent("#log")).includes("hei sakte")})());
+ ck("mottakeren fikk den",await (async()=>{await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");await B.evaluate(()=>refresh());await B.waitForTimeout(800);return (await B.textContent("#log")).includes("hei sakte")})());
  // lagring som feiler
  await A.evaluate(()=>{api.sendMessage=()=>new Promise((_,rej)=>setTimeout(()=>rej(new Error("nede")),400))});
  await A.fill("#tx","feiler");await A.click("#sd");

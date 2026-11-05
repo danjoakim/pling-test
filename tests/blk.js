@@ -18,7 +18,7 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await A.evaluate(()=>refresh());await A.waitForSelector(".conv[data-id]");
  console.log("4 venner:",await A.textContent(".conv[data-id]"),"|",await B.textContent(".conv[data-id]"));
 
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  await A.click("#mb");await A.screenshot({path:"blk1.png"});
  await A.click("#bbl");console.log("1 første trykk:",await A.textContent("#bbl"));
  await A.click("#bbl");await A.waitForTimeout(600);

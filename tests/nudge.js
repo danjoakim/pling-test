@@ -16,7 +16,7 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await B.evaluate(()=>refresh());await B.waitForSelector("#reqs:not([hidden]) button");
  await B.click("#reqs button:has-text('Godta')");await B.waitForSelector(".conv[data-id]");
  await A.evaluate(()=>refresh());await A.waitForSelector(".conv[data-id]");
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  await A.fill("#tx","Hei");await A.click("#sd");await A.waitForTimeout(300);
 
  // count how often the alert effect (sound + shake) runs at B
@@ -39,7 +39,7 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  console.log("2 fired once");
 
  // 3. B opens the chat; a second ping (A resets the cooldown) also alerts
- await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");await B.waitForTimeout(500);
+ await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");await B.waitForTimeout(500);
  await A.evaluate(()=>{S.cdUntil=0});await A.click("#dp");await A.waitForTimeout(400);
  await B.evaluate(()=>refresh());
  const s2=await shake();

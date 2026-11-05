@@ -16,10 +16,10 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await B.evaluate(()=>refresh());await B.waitForSelector("#reqs:not([hidden]) button");
  await B.click("#reqs button:has-text('Godta')");await B.waitForSelector(".conv[data-id]");
  await A.evaluate(()=>refresh());await A.waitForSelector(".conv[data-id]");
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  await A.fill("#tx","Første");await A.click("#sd");await A.waitForTimeout(300);
  await A.fill("#tx","Andre");await A.click("#sd");await A.waitForTimeout(300);
- await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");await B.waitForFunction(()=>document.querySelectorAll("#log .m").length>=2);
+ await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");await B.waitForFunction(()=>document.querySelectorAll("#log .m").length>=2);
  // what each message shows: [[label, mine, count], ...] per message, oldest first
  const chips=p=>p.evaluate(()=>[...document.querySelectorAll("#log .m")].map(m=>[...m.querySelectorAll(".rxc")].map(c=>[c.getAttribute("aria-label"),c.classList.contains("me"),c.lastElementChild.textContent])));
  const pick=async(p,nth,which)=>{const sel="#log .m:nth-of-type("+nth+")";await p.hover(sel);await p.click(sel+" .rxb");await p.waitForSelector(".rxp");await p.click(".rxp .rxo:nth-child("+which+")");await p.waitForTimeout(450)};

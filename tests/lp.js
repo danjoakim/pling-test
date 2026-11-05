@@ -17,11 +17,11 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await B.click("#reqs button:has-text('Godta')");await B.waitForSelector(".conv[data-id]");
  await A.evaluate(()=>refresh());await A.waitForSelector(".conv[data-id]");
  console.log("4 venner:",await A.textContent(".conv[data-id]"),"|",await B.textContent(".conv[data-id]"));
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  await A.fill("#tx","Første :)");await A.click("#sd");await A.waitForTimeout(300);
  await A.fill("#tx","Andre melding med en ganske lang tekst som skal kuttes når den vises i listen fordi den er lengre enn seksti tegn");await A.click("#sd");await A.waitForTimeout(300);
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
- await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");
  const fire=(sel,type,dx=0)=>A.evaluate(([sel,type,dx])=>{const e=document.querySelector(sel).getBoundingClientRect();document.querySelector(sel).dispatchEvent(new PointerEvent(type,{pointerType:"touch",bubbles:true,clientX:e.left+20+dx,clientY:e.top+10,isPrimary:true}))},[sel,type,dx]);
  const S1="#log .m:first-of-type";
  // kort trykk: ingen meny

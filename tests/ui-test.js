@@ -28,8 +28,8 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  console.log("6 A ser B:",(await A.textContent(".conv[data-id]")).replace(/\s+/g," "),"| status:",await A.evaluate(()=>document.querySelector(".conv[data-id]").className+" / "+document.querySelector(".conv[data-id] .ff").className),"| bilde:",await A.evaluate(()=>!!document.querySelector(".conv[data-id] img")));
  await A.screenshot({path:__dirname+"/u1.png"});
  // chat
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
- await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");
  await A.fill("#tx","Hei Bob :) hemmelig æøå");
  await B.waitForTimeout(3200);
  console.log("7 B ser at A skriver:",await B.textContent("#typ"));

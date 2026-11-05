@@ -15,8 +15,8 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await B.evaluate(()=>refresh());await B.waitForSelector("#reqs:not([hidden]) button");
  await B.click("#reqs button:has-text('Godta')");await B.waitForSelector(".conv[data-id]");
  await A.evaluate(()=>refresh());await A.waitForSelector(".conv[data-id]");
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
- await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");
 
  // 1. image: A sends, B reads
  const png=await A.evaluate(()=>{const c=document.createElement("canvas");c.width=64;c.height=40;const g=c.getContext("2d");g.fillStyle="#d33";g.fillRect(0,0,64,40);g.fillStyle="#fff";g.fillRect(10,10,20,12);return c.toDataURL("image/png").split(",")[1]});

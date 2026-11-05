@@ -21,11 +21,11 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  const cnt=p=>p.evaluate(()=>[window.__pl,window.__st]);
  for(const p of [A,B])await p.evaluate(()=>{window.__pl=0;window.__st=0;const o=window.pling,o2=window.stor;window.pling=function(){window.__pl++;return o.apply(this,arguments)};window.stor=function(){window.__st++;return o2.apply(this,arguments)}});
  // 1: ikke dempet, A har ikke samtalen åpen
- await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");
+ await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");
  await B.fill("#tx","hei 1");await B.click("#sd");await A.evaluate(()=>refresh());await A.waitForTimeout(800);
  console.log("1 ikke dempet, lyd:",JSON.stringify(await cnt(A)),"(forventer pling>=1)");
  // 2: demp
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  await A.click("#mb");console.log("2 knapp:",await A.textContent("#bmu"));
  await A.click("#bmu");console.log("  etter:",await A.textContent("#bmu"),"| liste:",JSON.stringify(await A.textContent(".conv[data-id] .nl")));
  await A.screenshot({path:"mute1.png"});
@@ -36,7 +36,7 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  const after=await cnt(A);
  console.log("3 dempet (liste): endring",JSON.stringify([after[0]-base[0],after[1]-base[1]]),"(forventer 0,0) | ulest-merke:",await A.locator(".conv .badge").count(),"| dp-banner:",await A.locator("#dpb").count());
  // 4: dempet med åpen samtale
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  const b2=await cnt(A);
  await B.fill("#tx","hei 3");await B.click("#sd");await A.evaluate(()=>refresh());await A.waitForTimeout(800);
  await B.evaluate(()=>{S.cdUntil=0;cdTick()});await B.click("#dp");await A.evaluate(()=>refresh());await A.waitForTimeout(800);
@@ -47,7 +47,7 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  console.log("5 etter reload, 🔕 i liste:",/🔕/.test(await A.textContent(".conv[data-id] .nl")));
  await A.evaluate(()=>{window.__pl=0});
  // 6: slå på igjen
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");await A.click("#mb");await A.click("#bmu");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");await A.click("#mb");await A.click("#bmu");
  console.log("6 på igjen:",await A.textContent("#bmu"),"| liste:",JSON.stringify(await A.textContent(".conv[data-id] .nl")));
  await B.evaluate(()=>{S.cdUntil=0;cdTick()});await B.click("#dp");await A.evaluate(()=>refresh());await A.waitForTimeout(800);
  console.log("7 kontroll, ikke dempet dobbeltpling: stor =",(await cnt(A))[1],"(forventer >=1) | banner:",await A.locator("#dpb").count());

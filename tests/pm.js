@@ -17,11 +17,11 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await B.click("#reqs button:has-text('Godta')");await B.waitForSelector(".conv[data-id]");
  await A.evaluate(()=>refresh());await A.waitForSelector(".conv[data-id]");
  console.log("4 venner:",await A.textContent(".conv[data-id]"),"|",await B.textContent(".conv[data-id]"));
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  await A.fill("#tx","Første :)");await A.click("#sd");await A.waitForTimeout(300);
  await A.fill("#tx","Andre melding med en ganske lang tekst som skal kuttes når den vises i listen fordi den er lengre enn seksti tegn");await A.click("#sd");await A.waitForTimeout(300);
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
- await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");
  await B.fill("#pm","Sover til 11 – ikke forstyrr");await B.press("#pm","Enter");await B.waitForTimeout(600);
  await A.evaluate(()=>refresh());await A.waitForTimeout(1500);
  console.log("liste:",JSON.stringify(await A.textContent(".conv[data-id]")));

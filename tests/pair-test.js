@@ -28,7 +28,7 @@ const srv=http.createServer((q,r)=>{const f=DIR+(q.url==="/"?"index.html":q.url.
  const Bp=await mk(false);await Bp.click("text=Ny konto");await Bp.fill("#em","bob@x.test");await Bp.fill("#pw","hemmelig12");await Bp.click("#go");await Bp.fill("#nm","Bob");await Bp.click("#mk");await Bp.waitForSelector("#rccode");await Bp.click("#skip");await Bp.waitForSelector("#addf");
  await A.click("#addf");await A.fill("#fe","bob@x.test");await A.click("#fadd");await A.waitForTimeout(200);
  await Bp.evaluate(()=>refresh());await Bp.click("#reqs button:has-text('Godta')");await Bp.waitForSelector(".conv[data-id]");
- await A.evaluate(()=>refresh());await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");await A.fill("#tx","hemmelig før ny enhet");await A.click("#sd");await A.waitForTimeout(300);
+ await A.evaluate(()=>refresh());await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");await A.fill("#tx","hemmelig før ny enhet");await A.click("#sd");await A.waitForTimeout(300);
  // ny enhet (samme konto Alice, uten nøkkel)
  const N=await mk(true);
  await N.fill("#em","alice@x.test").catch(()=>{});
@@ -42,7 +42,7 @@ const srv=http.createServer((q,r)=>{const f=DIR+(q.url==="/"?"index.html":q.url.
  await A.click("#papprove");
  await N.waitForSelector("#addf",{timeout:10000});
  console.log("4 ny enhet fikk nøkkelen og er inne:",await N.textContent(".dim"));
- await N.dblclick(".conv[data-id]");await N.waitForFunction(()=>document.querySelectorAll(".m").length>=1);
+ await N.click(".conv[data-id]");await N.waitForFunction(()=>document.querySelectorAll(".m").length>=1);
  console.log("5 ny enhet leser gammel melding:",await N.evaluate(()=>document.querySelector(".m").firstChild.textContent));
  const db=JSON.parse(await A.evaluate(()=>localStorage.getItem("mockdb")));
  console.log("6 forespørselen er ryddet bort:",(db.key_transfers||[]).length===0);

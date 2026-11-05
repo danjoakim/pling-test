@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-JKjxJ/2YpbAcPr2rbvreAGYJl5CMliWXQ+ux6e8GxWI='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-paKFUBbKrCkLCNwB9PXya9QtEhseqlJPGYoL4NFv91A='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -561,7 +561,7 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
   </section>
 
   <section class="chatpane" id="chatpane">
-   <div class="empty" id="empty"><div class="amb" id="amb" aria-hidden="true"></div><div class="in"><h1 data-prk="xl"></h1><div class="fine" id="emptyh">Dobbeltklikk på en kompis for å preke.</div></div></div>
+   <div class="empty" id="empty"><div class="amb" id="amb" aria-hidden="true"></div><div class="in"><h1 data-prk="xl"></h1><div class="fine" id="emptyh">Trykk på en kompis for å preke.</div></div></div>
    <div class="ch" id="ch" hidden>
     <button class="glass back" id="back" type="button" aria-label="Lukk samtalen">‹</button>
     <div class="ti" id="title"></div>
@@ -868,7 +868,7 @@ var PrekI18n = (() => {
     "info.expiry.p1": "Du og kompisen din kan sette en samtale til \xE5 slette meldinger etter 1, 7 eller 30 dager. Utl\xF8pte meldinger og bilder slettes fra serveren, senest en time etter. Kompisen din kan likevel ha tatt skjermbilde eller lagret en kopi.",
     "info.howto.title": "Slik bruker du Prek!",
     "info.howto.li1": "Legg til en kompis med e-postadressen hen bruker, eller send en invitasjonslenke eller QR-kode (\xAB+ Legg til kompis\xBB).",
-    "info.howto.li2": "Dobbeltklikk p\xE5 en kompis for \xE5 \xE5pne samtalen. Knappene under samtalen sender bilder og GIF-er; p\xE5 mobil kan du ogs\xE5 ta bilde.",
+    "info.howto.li2": "Trykk p\xE5 en kompis for \xE5 \xE5pne samtalen. Knappene under samtalen sender bilder og GIF-er; p\xE5 mobil kan du ogs\xE5 ta bilde.",
     "info.howto.li3": "Reager p\xE5 en melding: hold musen over den og trykk \u263A, eller trykk og hold p\xE5 mobil. Der kan du ogs\xE5 kopiere teksten.",
     "info.howto.li4": "Demp en kompis i menyen (\u22EF) i samtalen: ingen lyd eller dobbeltpling, men meldingene kommer. Gjelder bare denne enheten.",
     "info.howto.li5": "Blokker en kompis i menyen (\u22EF) i samtalen. Du finner og fjerner blokkeringer under navnet ditt. Hen f\xE5r ikke vite det.",
@@ -1079,7 +1079,7 @@ var PrekI18n = (() => {
     "html.fe.placeholder": "Kompis' e-post",
     "html.fe.aria": "Kompis' e-postadresse",
     "html.fadd.text": "Legg til",
-    "html.emptyh.text": "Dobbeltklikk p\xE5 en kompis for \xE5 preke.",
+    "html.emptyh.text": "Trykk p\xE5 en kompis for \xE5 preke.",
     "html.back.aria": "Lukk samtalen",
     "html.pr.title": "Hvem som er her",
     "html.mb.aria": "Innstillinger for samtalen",
@@ -1784,7 +1784,7 @@ var PrekShrink = (() => {
     "info.expiry.p1": "Du og kompisen din kan sette en samtale til \xE5 slette meldinger etter 1, 7 eller 30 dager. Utl\xF8pte meldinger og bilder slettes fra serveren, senest en time etter. Kompisen din kan likevel ha tatt skjermbilde eller lagret en kopi.",
     "info.howto.title": "Slik bruker du Prek!",
     "info.howto.li1": "Legg til en kompis med e-postadressen hen bruker, eller send en invitasjonslenke eller QR-kode (\xAB+ Legg til kompis\xBB).",
-    "info.howto.li2": "Dobbeltklikk p\xE5 en kompis for \xE5 \xE5pne samtalen. Knappene under samtalen sender bilder og GIF-er; p\xE5 mobil kan du ogs\xE5 ta bilde.",
+    "info.howto.li2": "Trykk p\xE5 en kompis for \xE5 \xE5pne samtalen. Knappene under samtalen sender bilder og GIF-er; p\xE5 mobil kan du ogs\xE5 ta bilde.",
     "info.howto.li3": "Reager p\xE5 en melding: hold musen over den og trykk \u263A, eller trykk og hold p\xE5 mobil. Der kan du ogs\xE5 kopiere teksten.",
     "info.howto.li4": "Demp en kompis i menyen (\u22EF) i samtalen: ingen lyd eller dobbeltpling, men meldingene kommer. Gjelder bare denne enheten.",
     "info.howto.li5": "Blokker en kompis i menyen (\u22EF) i samtalen. Du finner og fjerner blokkeringer under navnet ditt. Hen f\xE5r ikke vite det.",
@@ -1995,7 +1995,7 @@ var PrekShrink = (() => {
     "html.fe.placeholder": "Kompis' e-post",
     "html.fe.aria": "Kompis' e-postadresse",
     "html.fadd.text": "Legg til",
-    "html.emptyh.text": "Dobbeltklikk p\xE5 en kompis for \xE5 preke.",
+    "html.emptyh.text": "Trykk p\xE5 en kompis for \xE5 preke.",
     "html.back.aria": "Lukk samtalen",
     "html.pr.title": "Hvem som er her",
     "html.mb.aria": "Innstillinger for samtalen",
@@ -2877,7 +2877,7 @@ var PrekPreviews = (() => {
     "info.expiry.p1": "Du og kompisen din kan sette en samtale til \xE5 slette meldinger etter 1, 7 eller 30 dager. Utl\xF8pte meldinger og bilder slettes fra serveren, senest en time etter. Kompisen din kan likevel ha tatt skjermbilde eller lagret en kopi.",
     "info.howto.title": "Slik bruker du Prek!",
     "info.howto.li1": "Legg til en kompis med e-postadressen hen bruker, eller send en invitasjonslenke eller QR-kode (\xAB+ Legg til kompis\xBB).",
-    "info.howto.li2": "Dobbeltklikk p\xE5 en kompis for \xE5 \xE5pne samtalen. Knappene under samtalen sender bilder og GIF-er; p\xE5 mobil kan du ogs\xE5 ta bilde.",
+    "info.howto.li2": "Trykk p\xE5 en kompis for \xE5 \xE5pne samtalen. Knappene under samtalen sender bilder og GIF-er; p\xE5 mobil kan du ogs\xE5 ta bilde.",
     "info.howto.li3": "Reager p\xE5 en melding: hold musen over den og trykk \u263A, eller trykk og hold p\xE5 mobil. Der kan du ogs\xE5 kopiere teksten.",
     "info.howto.li4": "Demp en kompis i menyen (\u22EF) i samtalen: ingen lyd eller dobbeltpling, men meldingene kommer. Gjelder bare denne enheten.",
     "info.howto.li5": "Blokker en kompis i menyen (\u22EF) i samtalen. Du finner og fjerner blokkeringer under navnet ditt. Hen f\xE5r ikke vite det.",
@@ -3088,7 +3088,7 @@ var PrekPreviews = (() => {
     "html.fe.placeholder": "Kompis' e-post",
     "html.fe.aria": "Kompis' e-postadresse",
     "html.fadd.text": "Legg til",
-    "html.emptyh.text": "Dobbeltklikk p\xE5 en kompis for \xE5 preke.",
+    "html.emptyh.text": "Trykk p\xE5 en kompis for \xE5 preke.",
     "html.back.aria": "Lukk samtalen",
     "html.pr.title": "Hvem som er her",
     "html.mb.aria": "Innstillinger for samtalen",
@@ -3579,7 +3579,7 @@ var PrekHelpers = (() => {
     "info.expiry.p1": "Du og kompisen din kan sette en samtale til \xE5 slette meldinger etter 1, 7 eller 30 dager. Utl\xF8pte meldinger og bilder slettes fra serveren, senest en time etter. Kompisen din kan likevel ha tatt skjermbilde eller lagret en kopi.",
     "info.howto.title": "Slik bruker du Prek!",
     "info.howto.li1": "Legg til en kompis med e-postadressen hen bruker, eller send en invitasjonslenke eller QR-kode (\xAB+ Legg til kompis\xBB).",
-    "info.howto.li2": "Dobbeltklikk p\xE5 en kompis for \xE5 \xE5pne samtalen. Knappene under samtalen sender bilder og GIF-er; p\xE5 mobil kan du ogs\xE5 ta bilde.",
+    "info.howto.li2": "Trykk p\xE5 en kompis for \xE5 \xE5pne samtalen. Knappene under samtalen sender bilder og GIF-er; p\xE5 mobil kan du ogs\xE5 ta bilde.",
     "info.howto.li3": "Reager p\xE5 en melding: hold musen over den og trykk \u263A, eller trykk og hold p\xE5 mobil. Der kan du ogs\xE5 kopiere teksten.",
     "info.howto.li4": "Demp en kompis i menyen (\u22EF) i samtalen: ingen lyd eller dobbeltpling, men meldingene kommer. Gjelder bare denne enheten.",
     "info.howto.li5": "Blokker en kompis i menyen (\u22EF) i samtalen. Du finner og fjerner blokkeringer under navnet ditt. Hen f\xE5r ikke vite det.",
@@ -3790,7 +3790,7 @@ var PrekHelpers = (() => {
     "html.fe.placeholder": "Kompis' e-post",
     "html.fe.aria": "Kompis' e-postadresse",
     "html.fadd.text": "Legg til",
-    "html.emptyh.text": "Dobbeltklikk p\xE5 en kompis for \xE5 preke.",
+    "html.emptyh.text": "Trykk p\xE5 en kompis for \xE5 preke.",
     "html.back.aria": "Lukk samtalen",
     "html.pr.title": "Hvem som er her",
     "html.mb.aria": "Innstillinger for samtalen",
@@ -4008,7 +4008,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="7aeca16";
+const PREK_VERSION="0.1.0",PREK_BUILD="c048c72";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -4604,8 +4604,7 @@ function drawFriends(){
       el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
       el("span",{class:"rt"},S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
     if(S.unread.get(r.id))b.classList.add("unread");
-    b.addEventListener("dblclick",()=>openChat(r.id));
-    b.addEventListener("click",()=>{if(narrow()||matchMedia("(pointer:coarse)").matches)openChat(r.id)});
+    b.addEventListener("click",()=>openChat(r.id)); // one click or tap opens the chat, on desktop and phone alike (Dan Joakim 5 Nov)
     b.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();openChat(r.id)}});
     box.append(b);
   }

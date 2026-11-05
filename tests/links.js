@@ -16,8 +16,8 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await B.evaluate(()=>refresh());await B.waitForSelector("#reqs:not([hidden]) button");
  await B.click("#reqs button:has-text('Godta')");await B.waitForSelector(".conv[data-id]");
  await A.evaluate(()=>refresh());await A.waitForSelector(".conv[data-id]");
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
- await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");
  const send=async(text)=>{await A.fill("#tx",text);await A.click("#sd");await A.waitForFunction(()=>!document.querySelector("#sd").disabled,null,{timeout:15000});await A.waitForTimeout(250)};
  const last=p=>p.evaluate(()=>{const m=[...document.querySelectorAll("#log .m")].pop();if(!m)return null;
   const a=m.querySelector("a.ulink"),c=m.querySelector("a.lkc"),im=c&&c.querySelector("img.lki");
@@ -36,11 +36,11 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  console.log("1 link + preview card on both sides:",a1.card.title);
 
  // 2. the preview setting off: a clickable link but no fetching and no card
- await A.evaluate(()=>{localStorage.setItem("pling_lp","0")});await A.reload();await A.waitForSelector("#men");await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.evaluate(()=>{localStorage.setItem("pling_lp","0")});await A.reload();await A.waitForSelector("#men");await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  await send("Bare lenke http://example.org/x?y=1&z=2!");
  const a2=await last(A);assert.strictEqual(a2.card,null);assert.deepStrictEqual([a2.link.href,a2.link.next],["http://example.org/x?y=1&z=2","!"]);
  assert.strictEqual(await A.evaluate(()=>window.__lpCalls||0),0,"no call when the setting is off");
- await A.evaluate(()=>{localStorage.removeItem("pling_lp")});await A.reload();await A.waitForSelector("#men");await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.evaluate(()=>{localStorage.removeItem("pling_lp")});await A.reload();await A.waitForSelector("#men");await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  console.log("2 setting off: link only, no call");
 
  // 3. the preview fails: the message is still sent, without a card

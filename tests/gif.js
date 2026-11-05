@@ -16,7 +16,7 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await B.evaluate(()=>refresh());await B.waitForSelector("#reqs:not([hidden]) button");
  await B.click("#reqs button:has-text('Godta')");await B.waitForSelector(".conv[data-id]");
  await A.evaluate(()=>refresh());await A.waitForSelector(".conv[data-id]");
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx:visible");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx:visible");
  const count=p=>p.evaluate(()=>document.querySelectorAll(".pic-box img").length);
  const info=p=>p.evaluate(async()=>{const imgs=document.querySelectorAll(".pic-box img");const i=imgs[imgs.length-1];const b=await fetch(i.src).then(r=>r.arrayBuffer());
   const d=new ImageDecoder({data:b,type:"image/gif"});await d.tracks.ready;await d.completed;
@@ -33,7 +33,7 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  console.log("1 small GIF unchanged:",JSON.stringify(a1));
 
  // 2. B receives it
- await B.evaluate(()=>refresh());await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");await B.waitForFunction(()=>document.querySelectorAll(".pic-box img").length>=1,null,{timeout:8000});await B.waitForTimeout(300);
+ await B.evaluate(()=>refresh());await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");await B.waitForFunction(()=>document.querySelectorAll(".pic-box img").length>=1,null,{timeout:8000});await B.waitForTimeout(300);
  const b1=await info(B);assert.strictEqual(b1.size,gif.length);assert.strictEqual(b1.frames,2);
  console.log("2 B got the same GIF");
 

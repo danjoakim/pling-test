@@ -19,7 +19,7 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  console.log("4 venner:",await A.textContent(".conv[data-id]"),"|",await B.textContent(".conv[data-id]"));
 
 
- await A.dblclick(".conv[data-id]");await A.waitForSelector("#tx");
+ await A.click(".conv[data-id]");await A.waitForSelector("#tx");
  console.log("skjult først:",await A.isHidden("#epv"));
  await A.fill("#tx","hei :) og :D");await A.dispatchEvent("#tx","input");
  console.log("figurer i visning:",await A.locator("#epv .an").count(),"| synlig:",await A.isVisible("#epv"));

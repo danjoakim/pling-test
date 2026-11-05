@@ -19,14 +19,14 @@ const srv=http.createServer((q,r)=>{const f=DIR+(q.url==="/"?"index.html":q.url.
  await A.click("#addf");await A.fill("#fe","bob@x.test");await A.click("#fadd");await A.waitForTimeout(200);
  await B.evaluate(()=>refresh());await B.click("#reqs button:has-text('Godta')");await B.waitForSelector(".conv[data-id]");
  await A.evaluate(()=>refresh());await A.waitForSelector(".conv[data-id]");
- await B.dblclick(".conv[data-id]");await B.waitForSelector("#tx:visible");await B.fill("#tx","gammel melding til Alice");await B.click("#sd");
+ await B.click(".conv[data-id]");await B.waitForSelector("#tx:visible");await B.fill("#tx","gammel melding til Alice");await B.click("#sd");
  console.log("5 Bob uten kode: status",await B.textContent("#bkst"));
  // A mister nøkkelen -> gjenopprett med kode
  await A.evaluate(()=>{localStorage.removeItem(keyName(S.user.id))});await A.reload();await A.waitForSelector("#rc");
  console.log("6 A mistet nøkkelen:",await A.textContent("h1"));
  await A.fill("#rc","AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");await A.click("#rcgo");await A.waitForTimeout(1800);console.log("7 feil kode gir fortsatt gjenopprettingsside:",await A.isVisible("#rc"));
  await A.fill("#rc",code);await A.click("#rcgo");await A.waitForSelector("#addf");
- await A.dblclick(".conv[data-id]");await A.waitForFunction(()=>document.querySelectorAll(".m").length>=1);
+ await A.click(".conv[data-id]");await A.waitForFunction(()=>document.querySelectorAll(".m").length>=1);
  console.log("8 gjenopprettet med kode. A leser:",await A.evaluate(()=>[...document.querySelectorAll(".m")].map(m=>m.firstChild.textContent).join(" / ")));
  // (The old QR/transfer-code steps were removed together with that feature; device transfer is covered by pair-test.js.)
  await A.screenshot({path:"rec.png"});

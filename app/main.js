@@ -343,8 +343,7 @@ function drawFriends(){
       el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
       el("span",{class:"rt"},S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
     if(S.unread.get(r.id))b.classList.add("unread");
-    b.addEventListener("dblclick",()=>openChat(r.id));
-    b.addEventListener("click",()=>{if(narrow()||matchMedia("(pointer:coarse)").matches)openChat(r.id)});
+    b.addEventListener("click",()=>openChat(r.id)); // one click or tap opens the chat, on desktop and phone alike (Dan Joakim 5 Nov)
     b.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();openChat(r.id)}});
     box.append(b);
   }
