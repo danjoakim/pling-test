@@ -346,3 +346,10 @@ html.desk .win,html.desk.lys .win{max-width:none;width:100%;height:100%;border:0
 html.desk.lys .tb{border-radius:0}
 html.desk body{padding:0}
 /* melding som ikke er lagret ennå: ser ut som en vanlig melding (Dan Joakim 1. nov: ingen grunn til å vise noe teknisk); klassen brukes bare i koden */
+
+/* slett-konto-knappen er rød så den ikke forveksles med «Logg ut» */
+.glass.dng{background:linear-gradient(#e0574b,#b8342a);color:#fff;border-color:#8f241c}
+.glass.dng:disabled{opacity:.45}
+#delb{color:#c8352a}
+html:not(.lys) #delb{color:#ff8f84}
+.duo{display:flex;gap:8px}.duo .glass{flex:1;min-width:0}

@@ -156,6 +156,13 @@ function channel(name,opts){
     presenceState(){return pk()}};
   return ch}
 const functions={async invoke(name,o){window.__lpCalls=(window.__lpCalls||0)+1;window.__lpLast={name,body:o&&o.body};
+  if(name==="delete-account"){window.__delCalls=(window.__delCalls||0)+1;if(window.__delFail)return {data:{ok:false,error:"x"},error:null};
+    const sess=JSON.parse(SS.getItem("mocksess")||"null");if(!sess)return {data:{ok:false},error:null};const me=sess.user.id,d=db();
+    const cs=d.chat_members.filter(m=>m.user_id===me).map(m=>m.chat_id);
+    d.messages=d.messages.filter(m=>!cs.includes(m.chat_id));d.chat_members=d.chat_members.filter(m=>!cs.includes(m.chat_id));d.chats=d.chats.filter(c=>!cs.includes(c.id));
+    d.friends=d.friends.filter(f=>f.a!==me&&f.b!==me);d.friend_requests=d.friend_requests.filter(f=>f.from_id!==me&&f.to_id!==me);
+    d.profiles=d.profiles.filter(p=>p.id!==me);d.avatars=d.avatars.filter(a=>a.id!==me);d.key_backups=d.key_backups.filter(k=>k.user_id!==me);d.users=d.users.filter(u=>u.id!==me);save(d);
+    return {data:{ok:true,chats:cs.length,files:0},error:null}}
   if(window.__lpFail)return {data:{ok:false,error:"x"},error:null};
   const png="iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
   return {data:{ok:true,ti:"Viktig sak i Bergen",d:"En lengre beskrivelse av saken som vises i kortet.",s:"Avisen",img:{ct:"image/png",b64:png}},error:null}}};

@@ -121,6 +121,29 @@ function showInfo(){
 function closeInfo(){const o=$("#info");o.hidden=true;o.textContent=""}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#info").hidden)closeInfo()});
 
+/* Slett konto (Apple 5.1.1(v)). Serveren sletter alt (edge-funksjonen delete-account, se claude/slett-konto.md); her rydder vi bare denne enheten etterpå: nøkkelen og det som hører til brukeren, og så ut. */
+function showDelete(){
+  const o=$("#info");o.textContent="";
+  const word=tr("del.word"),inp=el("input",{type:"text",autocomplete:"off",autocapitalize:"off",spellcheck:"false","aria-label":tr("del.label")}),
+    go=el("button",{class:"glass dng",type:"button",disabled:true},tr("del.go")),msg=el("div",{class:"fine err"});
+  const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":tr("del.title")});
+  box.append(el("div",{class:"infoh"},el("b",{},tr("del.title")),el("button",{class:"glass sm",type:"button",onclick:closeInfo},tr("del.cancel"))));
+  const ul=el("ul",{});for(const t of [tr("del.l1"),tr("del.l2"),tr("del.l3"),tr("del.l4")])ul.append(el("li",{},t));
+  box.append(el("div",{class:"infot"},el("p",{},tr("del.lead")),ul,el("p",{},tr("del.note")),el("label",{class:"fine"},tr("del.label")),inp,go,msg));
+  o.append(box);o.hidden=false;o.onclick=e=>{if(e.target===o)closeInfo()};
+  inp.addEventListener("input",()=>{go.disabled=inp.value.trim().toLowerCase()!==word});
+  go.addEventListener("click",async()=>{
+    if(go.disabled)return;go.disabled=true;inp.disabled=true;go.textContent=tr("del.busy");msg.textContent="";
+    let r;try{r=await api.deleteAccount()}catch(e){r={error:e}}
+    if(r&&!r.error&&r.data&&r.data.ok){
+      const uid=S.user&&S.user.id;
+      try{Object.keys(localStorage).filter(k=>(uid&&k.indexOf(uid)>=0)||/^pling_(st_next|inv)$/.test(k)).forEach(k=>localStorage.removeItem(k))}catch(e){}
+      try{await api.signOut(true)}catch(e){}
+      try{Object.keys(localStorage).filter(k=>/^sb-.*-auth-token/.test(k)).forEach(k=>localStorage.removeItem(k))}catch(e){}
+      location.reload();return}
+    msg.textContent=tr("del.failed");go.textContent=tr("del.go");inp.disabled=false;go.disabled=inp.value.trim().toLowerCase()!==word});
+  inp.focus();
+}
 /* Logg ut. supabase-js sin signOut() avbryter uten å gjøre noe hvis kallet mot serveren feiler (nett, utløpt økt, uventet svar), og da ble brukeren stående på skjermen. Derfor: prøv vanlig utlogging, ellers lokalt, ellers fjern økten for hånd og last siden på nytt. */
 async function doLogout(){
   try{if(S.user&&S.id)await Promise.race([api.setPresence("off",null),new Promise(r=>setTimeout(r,2000))])}catch(e){}
@@ -651,6 +674,7 @@ function wire(){
   $("#meb").addEventListener("click",()=>{const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
   $("#infob").addEventListener("click",showInfo);
   $("#outb").addEventListener("click",doLogout);
+  $("#delb").addEventListener("click",showDelete);
   $("#lpv").value=LP_ON()?"on":"off";$("#lpv").addEventListener("change",e=>{try{localStorage.setItem("pling_lp",e.target.value==="off"?"0":"1")}catch(x){}});
   $("#thm").value=window.plingThemeGet();$("#thm").addEventListener("change",e=>window.plingTheme(e.target.value));
   $("#pnm").addEventListener("change",()=>{const n=$("#pnm").value.trim();if(!n){$("#pnm").value=S.profile.name;return}if(n!==S.profile.name)saveProfile({name:n.slice(0,24)})});

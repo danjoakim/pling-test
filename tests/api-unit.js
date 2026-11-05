@@ -44,7 +44,7 @@ const root=path.join(__dirname,"..");
   listFriends:[],listRequests:[],declineRequest:["a","b"],listBlocks:[],listChatMembers:[],listChats:[],listReads:[],
   latestMessages:["c",50],olderMessages:["c",9,50],sendMessage:[{chat_id:"c",sender:"u",iv:"i",ct:"c",file:"c/f"}],deleteMyMessages:["c","u"],
   listReactions:["c"],saveReaction:[{msg_id:1,chat_id:"c",user_id:"u",iv:"i",ct:"c"}],
-  uploadFile:["c/f",new Uint8Array(3)],downloadFile:["c/f"],removeFiles:[["c/f"]],linkPreview:["https://x"],
+  uploadFile:["c/f",new Uint8Array(3)],downloadFile:["c/f"],removeFiles:[["c/f"]],linkPreview:["https://x"],deleteAccount:[],
   subscribeLive:[{onMessage(){},onChange(){},onPresence(){}}],closeLive:[]};
  assert.deepStrictEqual(Object.keys(api).sort(),Object.keys(sample).sort(),"this test covers every API function");
  for(const k of Object.keys(sample)) await api[k](...sample[k]);

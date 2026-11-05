@@ -140,6 +140,8 @@ export function createApi(c: RpcClient) {
     // ---- other ----
     /** Edge function that fetches a link preview. Returns { data, error } like the client does. */
     linkPreview: (url: string) => c.functions.invoke("linkpreview", { body: { url } }),
+    /** Deletes the signed-in user's account for good (edge function `delete-account`; see claude/slett-konto.md). */
+    deleteAccount: () => c.functions.invoke("delete-account", { body: {} }),
     /** Live updates. Same channel and tables as before; each callback just triggers a refresh in the app. */
     subscribeLive: (h: { onMessage: (p: any) => void; onChange: () => void; onPresence: (p: any) => void }) =>
       c.channel("pling-live")
