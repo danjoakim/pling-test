@@ -16,6 +16,14 @@ export const nb = {
   "friend.requestSent": "Forespørsel sendt til {name}",
   "block.removed": "Blokkeringen er fjernet",
   "block.done": "Blokkert",
+  // update (desktop app)
+  "upd.new": "Ny versjon ({v}) finnes",
+  "upd.go": "Oppdater nå",
+  "upd.later": "Senere",
+  "upd.busy": "Laster ned …",
+  "upd.pct": "Laster ned … {p} %",
+  "upd.done": "Starter på nytt …",
+  "upd.failed": "Oppdateringen mislyktes. Prøv igjen senere.",
   // delete account
   "del.open": "Slett konto",
   "del.title": "Vil du slette kontoen din?",

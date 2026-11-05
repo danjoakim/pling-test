@@ -8,11 +8,19 @@
   },
   "app": {
     "windows": [
-      { "label": "main", "title": "Prek!", "width": 1000, "height": 760, "minWidth": 360, "minHeight": 480 }
+      {
+        "label": "main",
+        "title": "Prek!",
+        "width": 1000,
+        "height": 760,
+        "minWidth": 360,
+        "minHeight": 480
+      }
     ],
     "security": {
       "csp": null
-    }
+    },
+    "withGlobalTauri": true
   },
   "bundle": {
     "active": true,
@@ -25,6 +33,18 @@
       "icons/icon.ico"
     ],
     "shortDescription": "Prek! - encrypted messenger",
-    "category": "SocialNetworking"
+    "category": "SocialNetworking",
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU3MkIzOTBDMTJGNjA4RUMKUldUc0NQWVNERGtyNThuRUR6eThRdzRlWTJaWnU4MmtBakppSXVnT0JKaTl4WTdSbDBoampjRjAK",
+      "endpoints": [
+        "https://github.com/danjoakim/pling-test/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
   }
 }

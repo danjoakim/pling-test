@@ -364,3 +364,8 @@ html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;touch
  body{position:fixed;inset:0;height:100dvh;width:100%;overflow:hidden;padding-block:0;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
  button,.conv,.glass{-webkit-touch-callout:none}
 }
+
+/* oppdateringslinje i skrivebordsappen */
+#upd{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:10px;max-width:calc(100% - 24px);padding:8px 12px;border-radius:10px;background:var(--panel,#0c1630);color:var(--ink,#e9f0ff);border:1px solid var(--line,#2c4580);box-shadow:0 8px 28px rgba(0,0,0,.45);font-size:13px}
+html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,.98));color:#16324f;border-color:#8fb4d8}
+#upd button[hidden]{display:none}
