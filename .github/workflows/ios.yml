@@ -50,5 +50,5 @@ jobs:
           printf '%s\n' "$ASC_KEY_P8" > "$KEY"
           AUTH="-authenticationKeyPath $KEY -authenticationKeyID $ASC_KEY_ID -authenticationKeyIssuerID $ASC_ISSUER_ID"
           cd ios/App
-          step archive xcodebuild -project App.xcodeproj -scheme App -configuration Release -destination generic/platform=iOS -archivePath "$RUNNER_TEMP/Prek.xcarchive" -allowProvisioningUpdates $AUTH archive
+          step archive xcodebuild -project App.xcodeproj -scheme App -configuration Release -destination generic/platform=iOS -archivePath "$RUNNER_TEMP/Prek.xcarchive" -allowProvisioningUpdates $AUTH DEVELOPMENT_TEAM=$TEAM CODE_SIGN_STYLE=Automatic archive
           step export-upload xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Prek.xcarchive" -exportOptionsPlist ../../ExportOptions.plist -allowProvisioningUpdates $AUTH
