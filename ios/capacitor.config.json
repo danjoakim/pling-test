@@ -1,0 +1,9 @@
+{
+  "appId": "es.prek.messenger",
+  "appName": "Prek!",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#0b1d3a"
+  }
+}

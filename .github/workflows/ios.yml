@@ -1,0 +1,54 @@
+# Builds the Prek! iPhone app (Capacitor) and sends it to TestFlight. Run by hand (Actions -> ios -> Run workflow).
+# Needs the secrets ASC_KEY_ID, ASC_ISSUER_ID and ASC_KEY_P8 (App Store Connect API key, role App Manager). See claude/iphone-app.md.
+# The build number is the run number, so every upload is newer than the last. Errors are written as annotations (see desktop.yml).
+name: ios
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ios
+    env:
+      CI: "true"
+      NO_COLOR: "1"
+      TEAM: TEXEV54M7D
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: |
+          source ../desktop/ci-step.sh
+          step npm-install npm install --no-audit --no-fund
+      - name: Page and iOS project
+        run: |
+          source ../desktop/ci-step.sh
+          step prepare node prepare.js
+          step cap-add npx cap add ios
+          # the App Store wants the 1024 icon without transparency
+          python3 -m venv "$RUNNER_TEMP/v" && step pillow "$RUNNER_TEMP/v/bin/pip" install pillow
+          step icon "$RUNNER_TEMP/v/bin/python" ../desktop/flatten-icon.py ../desktop/app-icon.png ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png
+          step cap-sync npx cap sync ios
+      - name: Version
+        run: |
+          source ../desktop/ci-step.sh
+          cd ios/App
+          step version bash -c "sed -i '' 's/MARKETING_VERSION = [^;]*;/MARKETING_VERSION = 0.1.${{ github.run_number }};/; s/CURRENT_PROJECT_VERSION = [^;]*;/CURRENT_PROJECT_VERSION = ${{ github.run_number }};/; s/DEVELOPMENT_TEAM = [^;]*;/DEVELOPMENT_TEAM = $TEAM;/' App.xcodeproj/project.pbxproj"
+      - name: Archive and upload
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          source ../desktop/ci-step.sh
+          for v in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8; do test -n "${!v}" || { echo "::error title=missing secret::$v is not set (Settings, Secrets and variables, Actions)"; exit 1; }; done
+          mkdir -p "$HOME/.appstoreconnect/private_keys"
+          KEY="$HOME/.appstoreconnect/private_keys/AuthKey_$ASC_KEY_ID.p8"
+          printf '%s\n' "$ASC_KEY_P8" > "$KEY"
+          AUTH="-authenticationKeyPath $KEY -authenticationKeyID $ASC_KEY_ID -authenticationKeyIssuerID $ASC_ISSUER_ID"
+          cd ios/App
+          step archive xcodebuild -project App.xcodeproj -scheme App -configuration Release -destination generic/platform=iOS -archivePath "$RUNNER_TEMP/Prek.xcarchive" -allowProvisioningUpdates $AUTH archive
+          step export-upload xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Prek.xcarchive" -exportOptionsPlist ../../ExportOptions.plist -allowProvisioningUpdates $AUTH

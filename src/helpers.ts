@@ -19,14 +19,14 @@ import { tr } from "./i18n";
 
 /**
  * The public address of the web version. Links that other people open (invitations, the e-mail link, the QR code that links a new
- * device) must point here when the app runs inside the desktop app, where the page's own address is `tauri://localhost` or
- * `http://tauri.localhost` and means nothing to anyone else. Change this when the web version moves (for example to prek.es).
+ * device) must point here when the app runs inside the desktop app, where the page's own address is `tauri://localhost`,
+ * `http://tauri.localhost` or (iPhone app) `capacitor://localhost` and means nothing to anyone else. Change this when the web version moves (for example to prek.es).
  */
 export const PUBLIC_URL = "https://danjoakim.github.io/pling-test/";
 
 /** The address that links should point to: the page's own address on the web (as before), PUBLIC_URL inside the desktop app. */
 export function appBase(loc: { protocol: string; hostname: string; origin: string; pathname: string }): string {
-  const inApp = loc.protocol === "tauri:" || loc.hostname === "tauri.localhost";
+  const inApp = loc.protocol === "tauri:" || loc.protocol === "capacitor:" || loc.hostname === "tauri.localhost";
   return inApp ? PUBLIC_URL : loc.origin + loc.pathname;
 }
 

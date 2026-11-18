@@ -23,11 +23,11 @@ const esbuild=require("esbuild");
  for(const c of V.base)assert.strictEqual(H.appBase(c.loc),c.out,"base "+JSON.stringify(c.loc));
  console.log("ok   appBase gives the old address (origin + path) for "+V.base.length+" web addresses");
  // inside the desktop app the page's own address means nothing to others: links point to the public web address
- const app=[{protocol:"tauri:",hostname:"localhost",origin:"tauri://localhost",pathname:"/"},{protocol:"http:",hostname:"tauri.localhost",origin:"http://tauri.localhost",pathname:"/index.html"},{protocol:"https:",hostname:"tauri.localhost",origin:"https://tauri.localhost",pathname:"/"}];
+ const app=[{protocol:"tauri:",hostname:"localhost",origin:"tauri://localhost",pathname:"/"},{protocol:"http:",hostname:"tauri.localhost",origin:"http://tauri.localhost",pathname:"/index.html"},{protocol:"https:",hostname:"tauri.localhost",origin:"https://tauri.localhost",pathname:"/"},{protocol:"capacitor:",hostname:"localhost",origin:"capacitor://localhost",pathname:"/"}];
  for(const l of app)assert.strictEqual(H.appBase(l),H.PUBLIC_URL,"app "+l.origin);
  assert.strictEqual(H.PUBLIC_URL,"https://danjoakim.github.io/pling-test/");
  for(const l of [{protocol:"http:",hostname:"mytauri.localhost2",origin:"http://mytauri.localhost2",pathname:"/"},{protocol:"https:",hostname:"notauri.localhost",origin:"https://notauri.localhost",pathname:"/"}])assert.notStrictEqual(H.appBase(l),H.PUBLIC_URL,"only the real app hosts count: "+l.origin);
- console.log("ok   appBase gives the public address inside the desktop app (3 hosts) and nowhere else");
+ console.log("ok   appBase gives the public address inside the desktop and iPhone apps (4 hosts) and nowhere else");
  // externalLink: which clicks leave the app (new function, checked by hand)
  const O="http://tauri.localhost";
  const ext=[["https://example.com/a",O,"https://example.com/a"],["http://example.com",O,"http://example.com"],["mailto:a@b.no",O,"mailto:a@b.no"],
