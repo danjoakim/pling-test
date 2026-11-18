@@ -356,6 +356,7 @@ function drawFriends(){
 }
 function drawReqs(){
   const box=$("#reqs");box.textContent="";box.hidden=!S.reqIn.length;
+  const nb=$("#navb");if(nb){nb.hidden=!S.reqIn.length;nb.textContent=String(S.reqIn.length)}
   for(const id of S.reqIn){
     box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til"),
       el("div",{class:"row"},
@@ -692,6 +693,14 @@ function wire(){
       paintMe();drawChatHead();toast(tr("avatar.saved"));
     }catch(err){fail(err)}
   });
+  // Phone bottom menu (Kompiser / Legg til / Meg): shows the friend list, the add panel or the profile panel full screen. Only visible on narrow screens (mobil.css).
+  function navTo(t){
+    const sh=$("#shell");sh.classList.remove("tab-friends","tab-add","tab-me");sh.classList.add("tab-"+t);
+    $("#prof").hidden=t!=="me";$("#meb").setAttribute("aria-expanded",String(t==="me"));
+    $("#addfp").hidden=t!=="add";$("#addf").setAttribute("aria-expanded",String(t==="add"));
+    for(const b of document.querySelectorAll("#mnav button")){if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
+  }
+  for(const b of document.querySelectorAll("#mnav button"))b.addEventListener("click",()=>navTo(b.dataset.tab));
   $("#addf").addEventListener("click",()=>{const p=$("#addfp"),o=p.hidden;p.hidden=!o;$("#addf").setAttribute("aria-expanded",String(o));if(o)$("#fe").focus()});
   const add=async()=>{
     const v=$("#fe").value.trim(),err=$("#ferr");err.textContent="";if(!v)return;

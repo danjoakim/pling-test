@@ -1,0 +1,51 @@
+/*# Telefonvisning (smal skjerm): følger tegningene i designfilen «Prek! mobil» (Kompiser, Samtale, Legg til, Meg). Gjelder bare ≤700px, så PC og skrivebordsappen er uendret. Kommer etter extra.css. */
+.mnav{display:none}
+@media(max-width:700px){
+ /* ramme: ingen XP-vindu, hele skjermen */
+ body{padding:0}
+ .win,html.lys .win{max-width:none;width:100%;height:100%;border:0;border-radius:0;box-shadow:none;background:linear-gradient(#17335f,#0c1f3d)}
+ html.lys .win{background:linear-gradient(#d9ecfd,#a9cdee)}
+ .tb,html.lys .tb{border-radius:0;background:none;padding:calc(env(safe-area-inset-top,0px) + 10px) 20px 0;min-height:48px;text-shadow:none;color:#e6f0fb}
+ html.lys .tb{color:#10304f}
+ .tb .lock{margin-left:auto;padding:5px 12px;border-radius:999px;font:500 13px Inter,Tahoma,sans-serif;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#9bbbe0}
+ html.lys .tb .lock{background:rgba(255,255,255,.65);border-color:rgba(70,120,170,.35);color:#2a5f93}
+ .shell,html.lys .shell{padding:0;gap:0}
+ .home,html.lys .home{background:none;border:0;border-radius:0;overflow:visible}
+ /* profilkortet øverst */
+ .mewrap{margin:14px 16px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+ html.lys .mewrap{background:rgba(255,255,255,.7);border-color:rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(16,48,79,.12)}
+ .me,html.lys .me{border:0;padding:14px;gap:14px;border-radius:18px;min-height:88px}
+ .me .pav,.me .av{width:60px;height:60px;border-radius:50%;font-size:22px}
+ .me b{font:700 18px Inter,system-ui,sans-serif}
+ .mepi{left:88px;right:56px;top:42px;height:26px;font-size:14px}
+ /* kompisliste som hvitt ark */
+ .hs{background:#0f2340;border-radius:26px 26px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.25);padding-top:8px}
+ html.lys .hs{background:#fbfdff;box-shadow:0 -4px 20px rgba(16,48,79,.12)}
+ .homebar{padding:12px 16px 4px}
+ .list{padding:4px 0 8px;gap:0}
+ .conv,html.lys .conv{padding:10px 16px;gap:14px;border-radius:0;min-height:72px}
+ .conv .pav{width:56px;height:56px;border-radius:50%;font-size:20px}
+ .conv .t b{font:700 17px Inter,system-ui,sans-serif}
+ .conv .t small{font-size:14px}
+ .badge{min-width:22px;height:22px;border-radius:11px;font:700 13px/22px Inter,sans-serif;background:#2a5fb8;color:#fff;box-shadow:none}
+ /* nederste meny */
+ .home{position:relative}
+ .mnav{display:flex;flex:none;padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 8px);border-top:1px solid #1d3a63;background:#0f2340}
+ html.lys .mnav{background:#fbfdff;border-top-color:#d3e3f3}
+ .mnav button{flex:1;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:0;box-shadow:none;border-radius:0;text-shadow:none;font:500 12px Inter,system-ui,sans-serif;color:#8fb0d2;position:relative}
+ html.lys .mnav button{color:#4d6f93}
+ .mnav button[aria-current=page]{color:#7db3f2;font-weight:700}
+ html.lys .mnav button[aria-current=page]{color:#1f5fb8}
+ .mnav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+ .mnav .nb{position:absolute;top:2px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:#e5483b;color:#fff;font:700 11px/18px Inter,sans-serif;text-align:center;padding:0 4px}
+ .mepi:hover{border-color:transparent}.mepi:focus{border-color:#7db3f2}
+ .conv,.conv:hover,html.lys .conv:hover,html.lys .conv.act{border-color:transparent}
+ .homebar #addf{display:none}
+ #toast{bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
+ /* faner: bare den valgte delen vises */
+ .shell.tab-add .mewrap,.shell.tab-add #prof,.shell.tab-add .homebar,.shell.tab-add .list{display:none}
+ .shell.tab-me .hs{display:none}
+ .shell.tab-me #prof{flex:1;overflow:auto;align-content:start;background:#0f2340;border-radius:26px 26px 0 0;padding:18px 16px;border:0}
+ html.lys .shell.tab-me #prof{background:#fbfdff}
+ .shell.tab-add .hs{padding-top:14px}
+}

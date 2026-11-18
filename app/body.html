@@ -37,6 +37,11 @@
     </div>
     <div class="list" id="friends"></div>
    </div>
+   <nav class="mnav" id="mnav" aria-label="{{nav.aria}}">
+    <button type="button" data-tab="friends" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2 .7 3.5 2.6 3.5 5.7"/></svg>{{nav.friends}}</button>
+    <button type="button" data-tab="add"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M19 7v6M16 10h6"/></svg>{{nav.add}}<span class="nb" id="navb" hidden></span></button>
+    <button type="button" data-tab="me"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>{{nav.me}}</button>
+   </nav>
   </section>
 
   <section class="chatpane" id="chatpane">

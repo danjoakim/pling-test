@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-BUHKkQHtmJi20AYtZmoxmyAbOHzZ6w1jIZ55XB4EKOs='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-hBeeSpa6POSprMTi8DmDJca8/Vsky8Id96IC4iC2kB4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -516,6 +516,58 @@ html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;touch
 html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,.98));color:#16324f;border-color:#8fb4d8}
 #upd button[hidden]{display:none}
 
+/*# Telefonvisning (smal skjerm): følger tegningene i designfilen «Prek! mobil» (Kompiser, Samtale, Legg til, Meg). Gjelder bare ≤700px, så PC og skrivebordsappen er uendret. Kommer etter extra.css. */
+.mnav{display:none}
+@media(max-width:700px){
+ /* ramme: ingen XP-vindu, hele skjermen */
+ body{padding:0}
+ .win,html.lys .win{max-width:none;width:100%;height:100%;border:0;border-radius:0;box-shadow:none;background:linear-gradient(#17335f,#0c1f3d)}
+ html.lys .win{background:linear-gradient(#d9ecfd,#a9cdee)}
+ .tb,html.lys .tb{border-radius:0;background:none;padding:calc(env(safe-area-inset-top,0px) + 10px) 20px 0;min-height:48px;text-shadow:none;color:#e6f0fb}
+ html.lys .tb{color:#10304f}
+ .tb .lock{margin-left:auto;padding:5px 12px;border-radius:999px;font:500 13px Inter,Tahoma,sans-serif;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#9bbbe0}
+ html.lys .tb .lock{background:rgba(255,255,255,.65);border-color:rgba(70,120,170,.35);color:#2a5f93}
+ .shell,html.lys .shell{padding:0;gap:0}
+ .home,html.lys .home{background:none;border:0;border-radius:0;overflow:visible}
+ /* profilkortet øverst */
+ .mewrap{margin:14px 16px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+ html.lys .mewrap{background:rgba(255,255,255,.7);border-color:rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(16,48,79,.12)}
+ .me,html.lys .me{border:0;padding:14px;gap:14px;border-radius:18px;min-height:88px}
+ .me .pav,.me .av{width:60px;height:60px;border-radius:50%;font-size:22px}
+ .me b{font:700 18px Inter,system-ui,sans-serif}
+ .mepi{left:88px;right:56px;top:42px;height:26px;font-size:14px}
+ /* kompisliste som hvitt ark */
+ .hs{background:#0f2340;border-radius:26px 26px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.25);padding-top:8px}
+ html.lys .hs{background:#fbfdff;box-shadow:0 -4px 20px rgba(16,48,79,.12)}
+ .homebar{padding:12px 16px 4px}
+ .list{padding:4px 0 8px;gap:0}
+ .conv,html.lys .conv{padding:10px 16px;gap:14px;border-radius:0;min-height:72px}
+ .conv .pav{width:56px;height:56px;border-radius:50%;font-size:20px}
+ .conv .t b{font:700 17px Inter,system-ui,sans-serif}
+ .conv .t small{font-size:14px}
+ .badge{min-width:22px;height:22px;border-radius:11px;font:700 13px/22px Inter,sans-serif;background:#2a5fb8;color:#fff;box-shadow:none}
+ /* nederste meny */
+ .home{position:relative}
+ .mnav{display:flex;flex:none;padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 8px);border-top:1px solid #1d3a63;background:#0f2340}
+ html.lys .mnav{background:#fbfdff;border-top-color:#d3e3f3}
+ .mnav button{flex:1;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:0;box-shadow:none;border-radius:0;text-shadow:none;font:500 12px Inter,system-ui,sans-serif;color:#8fb0d2;position:relative}
+ html.lys .mnav button{color:#4d6f93}
+ .mnav button[aria-current=page]{color:#7db3f2;font-weight:700}
+ html.lys .mnav button[aria-current=page]{color:#1f5fb8}
+ .mnav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+ .mnav .nb{position:absolute;top:2px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:#e5483b;color:#fff;font:700 11px/18px Inter,sans-serif;text-align:center;padding:0 4px}
+ .mepi:hover{border-color:transparent}.mepi:focus{border-color:#7db3f2}
+ .conv,.conv:hover,html.lys .conv:hover,html.lys .conv.act{border-color:transparent}
+ .homebar #addf{display:none}
+ #toast{bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
+ /* faner: bare den valgte delen vises */
+ .shell.tab-add .mewrap,.shell.tab-add #prof,.shell.tab-add .homebar,.shell.tab-add .list{display:none}
+ .shell.tab-me .hs{display:none}
+ .shell.tab-me #prof{flex:1;overflow:auto;align-content:start;background:#0f2340;border-radius:26px 26px 0 0;padding:18px 16px;border:0}
+ html.lys .shell.tab-me #prof{background:#fbfdff}
+ .shell.tab-add .hs{padding-top:14px}
+}
+
 </style>
 </head>
 <body>
@@ -558,6 +610,11 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
     </div>
     <div class="list" id="friends"></div>
    </div>
+   <nav class="mnav" id="mnav" aria-label="Hovedmeny">
+    <button type="button" data-tab="friends" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2 .7 3.5 2.6 3.5 5.7"/></svg>Kompiser</button>
+    <button type="button" data-tab="add"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M19 7v6M16 10h6"/></svg>Legg til<span class="nb" id="navb" hidden></span></button>
+    <button type="button" data-tab="me"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Meg</button>
+   </nav>
   </section>
 
   <section class="chatpane" id="chatpane">
@@ -1076,6 +1133,10 @@ var PrekI18n = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
+    "nav.aria": "Hovedmeny",
+    "nav.friends": "Kompiser",
+    "nav.add": "Legg til",
+    "nav.me": "Meg",
     "html.fe.placeholder": "Kompis' e-post",
     "html.fe.aria": "Kompis' e-postadresse",
     "html.fadd.text": "Legg til",
@@ -1992,6 +2053,10 @@ var PrekShrink = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
+    "nav.aria": "Hovedmeny",
+    "nav.friends": "Kompiser",
+    "nav.add": "Legg til",
+    "nav.me": "Meg",
     "html.fe.placeholder": "Kompis' e-post",
     "html.fe.aria": "Kompis' e-postadresse",
     "html.fadd.text": "Legg til",
@@ -3085,6 +3150,10 @@ var PrekPreviews = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
+    "nav.aria": "Hovedmeny",
+    "nav.friends": "Kompiser",
+    "nav.add": "Legg til",
+    "nav.me": "Meg",
     "html.fe.placeholder": "Kompis' e-post",
     "html.fe.aria": "Kompis' e-postadresse",
     "html.fadd.text": "Legg til",
@@ -3787,6 +3856,10 @@ var PrekHelpers = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
+    "nav.aria": "Hovedmeny",
+    "nav.friends": "Kompiser",
+    "nav.add": "Legg til",
+    "nav.me": "Meg",
     "html.fe.placeholder": "Kompis' e-post",
     "html.fe.aria": "Kompis' e-postadresse",
     "html.fadd.text": "Legg til",
@@ -4008,7 +4081,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="6c0bf20";
+const PREK_VERSION="0.1.0",PREK_BUILD="af531cb";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -4617,6 +4690,7 @@ function drawFriends(){
 }
 function drawReqs(){
   const box=$("#reqs");box.textContent="";box.hidden=!S.reqIn.length;
+  const nb=$("#navb");if(nb){nb.hidden=!S.reqIn.length;nb.textContent=String(S.reqIn.length)}
   for(const id of S.reqIn){
     box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til"),
       el("div",{class:"row"},
@@ -4953,6 +5027,14 @@ function wire(){
       paintMe();drawChatHead();toast(tr("avatar.saved"));
     }catch(err){fail(err)}
   });
+  // Phone bottom menu (Kompiser / Legg til / Meg): shows the friend list, the add panel or the profile panel full screen. Only visible on narrow screens (mobil.css).
+  function navTo(t){
+    const sh=$("#shell");sh.classList.remove("tab-friends","tab-add","tab-me");sh.classList.add("tab-"+t);
+    $("#prof").hidden=t!=="me";$("#meb").setAttribute("aria-expanded",String(t==="me"));
+    $("#addfp").hidden=t!=="add";$("#addf").setAttribute("aria-expanded",String(t==="add"));
+    for(const b of document.querySelectorAll("#mnav button")){if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
+  }
+  for(const b of document.querySelectorAll("#mnav button"))b.addEventListener("click",()=>navTo(b.dataset.tab));
   $("#addf").addEventListener("click",()=>{const p=$("#addfp"),o=p.hidden;p.hidden=!o;$("#addf").setAttribute("aria-expanded",String(o));if(o)$("#fe").focus()});
   const add=async()=>{
     const v=$("#fe").value.trim(),err=$("#ferr");err.textContent="";if(!v)return;

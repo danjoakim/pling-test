@@ -24,7 +24,7 @@ crypto='/* ---------- src/ (bundled TypeScript) ---------- */\n'+bundle+'\n'+ope
 views=open(HERE+'/views.js',encoding='utf8').read()
 main=open(HERE+'/main.js',encoding='utf8').read().replace('/*@@PROTO@@*/',proto+'\n'+open(HERE+'/anim.js',encoding='utf8').read()).replace('//@@VIEWS@@',views)
 css=src('style.css')
-extra=open(HERE+'/extra.css',encoding='utf8').read()
+extra=open(HERE+'/extra.css',encoding='utf8').read()+'\n'+open(HERE+'/mobil.css',encoding='utf8').read()
 body=open(HERE+'/body.html',encoding='utf8').read()
 # Static page text comes from the language file: {{key}} in body.html is replaced here (HTML-escaped).
 _msgs=json.loads(subprocess.run(['node',HERE+'/bundle.js','--messages'],check=True,capture_output=True,text=True).stdout)
