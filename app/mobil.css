@@ -48,4 +48,29 @@
  .shell.tab-me #prof{flex:1;overflow:auto;align-content:start;background:#0f2340;border-radius:26px 26px 0 0;padding:18px 16px;border:0}
  html.lys .shell.tab-me #prof{background:#fbfdff}
  .shell.tab-add .hs{padding-top:14px}
+ /* samtalen */
+ .win:has(.shell.inchat) .tb{display:none}
+ .chatpane{background:#0f2340}
+ html.lys .chatpane{background:#f3f8fd}
+ .ch,html.lys .ch{padding:calc(env(safe-area-inset-top,0px) + 10px) 8px 10px;gap:4px;border:0;background:linear-gradient(#17335f,#12294d);box-shadow:0 2px 10px rgba(0,0,0,.25)}
+ html.lys .ch{background:linear-gradient(#d9ecfd,#bcd9f2);box-shadow:0 2px 10px rgba(16,48,79,.12)}
+ .win .ch .glass,html.lys .win .ch .glass{background:none!important;border:0;box-shadow:none;min-width:44px;min-height:44px;font-size:26px;padding:0;color:inherit}
+ .win .bar .eb,html.lys .win .bar .eb{background:none!important;border:0;box-shadow:none}
+ .ch #mb{font-size:22px}
+ .ch .back{order:1}.ch .pr{order:2;margin-left:2px}.ch .ti{order:3;margin-left:6px;font:700 17px Inter,system-ui,sans-serif}.ch #mb{order:4}
+ .pr .pav{width:44px;height:44px;border-radius:50%;font-size:16px}
+ #log{padding:14px 12px;gap:4px}
+ .m,html.lys .m{max-width:76%;padding:9px 13px;border-radius:18px 18px 18px 6px;background:#1a3150;border:1px solid #2a4468;font-size:15.5px;line-height:1.35}
+ html.lys .m{background:#fff;border-color:#d3e3f3;color:#10304f}
+ .m.mine,html.lys .m.mine{border-radius:18px 18px 6px 18px;background:linear-gradient(#4f93e0,#2a5fb8);border-color:transparent;color:#fff}
+ .m b{display:none}
+ .bar,html.lys .bar{flex-wrap:nowrap;gap:4px;padding:8px 8px calc(env(safe-area-inset-bottom,0px) + 8px);border-top:1px solid #1d3a63;background:#0f2340}
+ html.lys .bar{background:#fbfdff;border-top-color:#d3e3f3}
+ .bar .eb{padding:0;min-width:34px;min-height:44px;background:none;border:0;box-shadow:none;font-size:22px}
+ .bar input{flex:1 1 0;min-width:0;height:44px;border-radius:22px;padding:0 16px}
+ #sd{font-size:0;border-radius:50%;min-width:44px;min-height:44px;padding:0}
+ #sd::before{content:"➤";font-size:20px;color:#fff}
+ html.lys #sd{background:linear-gradient(#4f93e0,#2a5fb8);border-color:transparent}
+ #dp{font-size:0;min-width:44px;min-height:44px;padding:0;border-radius:50%}
+ #dp::before{content:"!!";font:900 20px Nunito,Inter,sans-serif;color:#4a3000}
 }
