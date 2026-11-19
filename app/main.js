@@ -815,24 +815,17 @@ function nativePlugin(name){const cap=window.Capacitor;if(!(cap&&cap.isNativePla
   return (cap.Plugins&&cap.Plugins[name])||(cap.registerPlugin?cap.registerPlugin(name):null)}
 function pushPlugin(){try{return nativePlugin("PushNotifications")}catch(e){return null}}
 let pushWired=false;
-/* Midlertidig feilsøking (fjernes når push virker): siste trinn vises nederst på Meg-siden. */
-let pushLog="";
-function pushDbg(m){pushLog=(pushLog?pushLog+" > ":"")+m;const e=$("#pushdbg");if(e)e.textContent="Push: "+pushLog}
 async function initPush(){
-  if(!S.user)return;const pn=pushPlugin();
-  if(!pn){if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform())pushDbg("finner ikke modulen");return}
-  pushDbg("modul ok");
+  if(!S.user)return;const pn=pushPlugin();if(!pn)return;
   try{
     if(!pushWired){pushWired=true;
-      pn.addListener("registrationError",e=>pushDbg("FEIL fra iOS: "+String(e&&e.error||JSON.stringify(e)).slice(0,160)));
-      pn.addListener("registration",t=>{const tok=t&&t.value;pushDbg("token mottatt ("+(tok?tok.length:0)+")");if(!tok||!S.user)return;try{localStorage.setItem(pushKey,tok)}catch(e){}
-        api.savePushToken(S.user.id,tok).then(r=>pushDbg(r&&r.error?"lagring feilet: "+String(r.error.message||r.error).slice(0,100):"lagret"),e=>pushDbg("lagring feilet: "+String(e&&e.message||e).slice(0,100)))});
+      pn.addListener("registration",t=>{const tok=t&&t.value;if(!tok||!S.user)return;try{localStorage.setItem(pushKey,tok)}catch(e){}
+        api.savePushToken(S.user.id,tok)});
       pn.addListener("pushNotificationActionPerformed",a=>{const d=a&&a.notification&&a.notification.data;if(d&&d.from&&S.profiles.has(d.from))openChat(d.from)})}
-    let p=await pn.checkPermissions();pushDbg("tillatelse: "+p.receive);
-    if(p.receive==="prompt"){p=await pn.requestPermissions();pushDbg("spurt: "+p.receive)}
-    if(p.receive==="granted"){await pn.register();pushDbg("register kalt");syncPushMutes();
-      setTimeout(()=>{if(!/token mottatt/.test(pushLog))pushDbg("ingen token etter 12 s")},12000)}
-  }catch(e){pushDbg("unntak: "+String(e&&e.message||e).slice(0,120))}
+    let p=await pn.checkPermissions();
+    if(p.receive==="prompt")p=await pn.requestPermissions();
+    if(p.receive==="granted"){await pn.register();syncPushMutes()}
+  }catch(e){}
 }
 async function dropPush(){let t=null;try{t=localStorage.getItem(pushKey);localStorage.removeItem(pushKey)}catch(e){}if(t)try{await Promise.race([api.deletePushToken(t),new Promise(r=>setTimeout(r,2000))])}catch(e){}}
 let camStream=null,camFace="environment";
@@ -945,7 +938,7 @@ function wire(){
     row("M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14.3 3h-4l-.3 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2l.3 2.6h4l.3-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z",tr("me.rowSettings"),"",()=>pageSettings());
     row("M10 4H5v16h5M15 8l4 4-4 4M19 12H9",tr("common.logout"),"",doLogout);
     const ab=el("div",{class:"mnew mabout"},el("div",{class:"mah"},el("b",{},tr("me.about")),el("button",{type:"button",class:"mae",onclick:()=>pageAbout()},tr("me.aboutEdit"))),el("p",{class:"mat",id:"abouttxt"}),el("div",{class:"mal"},tr("me.aboutNote")));
-    stat.after(rows);rows.after(ab);if(pushPlugin()){const d=el("div",{class:"mnew mabout",id:"pushdbg",style:"display:block;padding:12px 18px;margin-top:8px;word-break:break-word;font-size:14px;color:#9ec3ef"});d.textContent="Push: "+(pushLog||"ikke startet");ab.after(d)}
+    stat.after(rows);rows.after(ab);
     S.paintAbout=()=>{const t=$("#abouttxt");if(!t)return;const a=S.profile&&S.profile.about;t.textContent=a||tr("me.aboutEmpty");t.classList.toggle("empty",!a)};
   }
   $("#hdp").addEventListener("click",()=>$("#dp").click());
