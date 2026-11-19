@@ -11,10 +11,15 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await signup(A,"alice@x.test","Dan Joakim");
  const must=(c,m)=>{if(!c)throw new Error(m)};
  await A.click("[data-tab=me]");await A.waitForTimeout(200);
- must(await A.locator(".mrow").count()===6,"seks rader i Meg");
+ must(await A.locator(".mrow").count()===5,"fem rader i Meg (Slett konto ligger i Innstillinger)");
  must((await A.textContent(".mabout")).includes("Om meg"),"Om meg-kort mangler");
  must(await A.evaluate(()=>document.getElementById("avini").dataset.i2)==="DJ","to initialer");
  // Innstillinger flytter inn eksisterende kontroller og setter dem tilbake
+ await A.click(".mrow:has-text('Innstillinger')");await A.waitForSelector("#info.pg #thm");
+ must(await A.isVisible("#delset"),"Slett konto ligger i Innstillinger");
+ await A.click("#delset");await A.waitForSelector("#info.pg input");
+ must((await A.textContent("#info .infoh .pgt")).includes("Slett"),"Slett konto-siden åpnes fra Innstillinger");
+ await A.click("#info .infoh button");await A.waitForTimeout(150);
  await A.click(".mrow:has-text('Innstillinger')");await A.waitForSelector("#info.pg #thm");
  await A.click("#info .infoh button");await A.waitForTimeout(150);
  must(await A.evaluate(()=>document.getElementById("thm").parentElement.id)==="prof","#thm skal tilbake i #prof");
