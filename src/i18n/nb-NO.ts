@@ -172,7 +172,7 @@ export const nb = {
   "device.codeShouldBe": "Koden på den nye enheten skal være: ",
   "device.approveButton": "Godkjenn",
   "device.denyButton": "Avvis",
-  "dp.banner": "🔔 {name} vil ha tak i deg!",
+  "dp.banner": "{name} vil ha tak i deg!",
   "dp.titleRinging": "🔔 {name} ringer!",
   "device.approveWarning": "Godkjenn bare hvis det er deg, og koden stemmer med den du ser på den nye enheten.",
   // invitations (round 3)

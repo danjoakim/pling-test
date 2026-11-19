@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-RzZ4ZrWl9ZhN6XuaLYQxYAeZGycQc/MjocGGYtI4KMU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-fwr/lL9XtGwequETU1T5iddcqNT4L4N14SjcMESAz7s='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -185,7 +185,19 @@ button.ghost{background:transparent;border-color:var(--line);text-shadow:none;co
 .older{align-self:center;flex:none}
 
 /* dobbeltpling-varsel (Dan Joakim 25. okt) */
-.dpb{position:fixed;top:calc(max(env(safe-area-inset-top,0px),44px) + 8px);left:50%;transform:translateX(-50%);z-index:30;padding:12px 18px;border-radius:8px;border:2px solid #a6ff3d;background:#142a56;color:#fff;font:600 16px system-ui;box-shadow:0 8px 30px #000a,0 0 30px #a6ff3d88;cursor:pointer;animation:dpbp .5s ease-in-out infinite alternate}
+.dpb{position:fixed;top:calc(max(env(safe-area-inset-top,0px),44px) + 8px);left:50%;transform:translateX(-50%);z-index:30;padding:12px 18px;border-radius:8px;border:2px solid #a6ff3d;background:#142a56;color:#fff;font:600 16px system-ui;box-shadow:0 8px 30px #000a,0 0 30px #a6ff3d88;cursor:pointer;animation:dpbp .5s ease-in-out infinite alternate;display:flex;align-items:center;gap:10px;padding:8px 20px 8px 12px}
+.dpbw{display:flex;flex:none}
+.dpb-b{transform-origin:50% 95%;animation:dpbNikk .8s ease-in-out infinite}
+.dpb-al,.dpb-ar{transform-box:fill-box;animation:dpbOpp .4s ease-in-out infinite alternate}
+.dpb-al{transform-origin:100% 100%}.dpb-ar{transform-origin:0% 100%;animation-name:dpbOpp2}
+.dpb-l1,.dpb-l2{transform-box:fill-box;transform-origin:50% 0;animation:dpbSpark .4s ease-in-out infinite alternate}
+.dpb-l2{animation-direction:alternate-reverse}
+.dpb-n{opacity:0;animation:dpbFlyt 1.2s ease-out infinite}.dpb-n2{animation-delay:.6s}
+@keyframes dpbNikk{0%,100%{transform:rotate(-9deg) translateY(0)}25%{transform:rotate(0) translateY(-4px)}50%{transform:rotate(9deg) translateY(0)}75%{transform:rotate(0) translateY(-4px)}}
+@keyframes dpbOpp{from{transform:rotate(15deg)}to{transform:rotate(-40deg)}}
+@keyframes dpbOpp2{from{transform:rotate(-15deg)}to{transform:rotate(40deg)}}
+@keyframes dpbSpark{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+@keyframes dpbFlyt{0%{opacity:0;transform:translate(0,6px)}20%{opacity:1}100%{opacity:0;transform:translate(8px,-18px)}}
 @keyframes dpbp{to{box-shadow:0 8px 30px #000a,0 0 55px #a6ff3d}}
 .conv.dpflash{animation:dpfl .45s linear infinite alternate}
 @keyframes dpfl{from{background:#a6ff3d55}to{background:#a6ff3d11}}
@@ -1530,7 +1542,7 @@ var PrekI18n = (() => {
     "device.codeShouldBe": "Koden p\xE5 den nye enheten skal v\xE6re: ",
     "device.approveButton": "Godkjenn",
     "device.denyButton": "Avvis",
-    "dp.banner": "\u{1F514} {name} vil ha tak i deg!",
+    "dp.banner": "{name} vil ha tak i deg!",
     "dp.titleRinging": "\u{1F514} {name} ringer!",
     "device.approveWarning": "Godkjenn bare hvis det er deg, og koden stemmer med den du ser p\xE5 den nye enheten.",
     // invitations (round 3)
@@ -2525,7 +2537,7 @@ var PrekShrink = (() => {
     "device.codeShouldBe": "Koden p\xE5 den nye enheten skal v\xE6re: ",
     "device.approveButton": "Godkjenn",
     "device.denyButton": "Avvis",
-    "dp.banner": "\u{1F514} {name} vil ha tak i deg!",
+    "dp.banner": "{name} vil ha tak i deg!",
     "dp.titleRinging": "\u{1F514} {name} ringer!",
     "device.approveWarning": "Godkjenn bare hvis det er deg, og koden stemmer med den du ser p\xE5 den nye enheten.",
     // invitations (round 3)
@@ -3684,7 +3696,7 @@ var PrekPreviews = (() => {
     "device.codeShouldBe": "Koden p\xE5 den nye enheten skal v\xE6re: ",
     "device.approveButton": "Godkjenn",
     "device.denyButton": "Avvis",
-    "dp.banner": "\u{1F514} {name} vil ha tak i deg!",
+    "dp.banner": "{name} vil ha tak i deg!",
     "dp.titleRinging": "\u{1F514} {name} ringer!",
     "device.approveWarning": "Godkjenn bare hvis det er deg, og koden stemmer med den du ser p\xE5 den nye enheten.",
     // invitations (round 3)
@@ -4452,7 +4464,7 @@ var PrekHelpers = (() => {
     "device.codeShouldBe": "Koden p\xE5 den nye enheten skal v\xE6re: ",
     "device.approveButton": "Godkjenn",
     "device.denyButton": "Avvis",
-    "dp.banner": "\u{1F514} {name} vil ha tak i deg!",
+    "dp.banner": "{name} vil ha tak i deg!",
     "dp.titleRinging": "\u{1F514} {name} ringer!",
     "device.approveWarning": "Godkjenn bare hvis det er deg, og koden stemmer med den du ser p\xE5 den nye enheten.",
     // invitations (round 3)
@@ -4870,7 +4882,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="a0f8975";
+const PREK_VERSION="0.1.0",PREK_BUILD="94f7e7e";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -5531,6 +5543,8 @@ async function loadPreviews(){
 /* HVORFOR: dobbeltpling skal fange oppmerksomheten uansett hvor mottakeren er i appen, ikke bare når samtalen er åpen
    (Dan Joakim 25. okt: «poenget med et dobbeltpling er at man skal bli oppmerksom på at noen vil ha tak i en»).
    dpSeen = hver melding utløser bare én gang, selv om både forhåndsvisningen og den åpne samtalen ser den. */
+/* Dansende banan i dobbeltpling-banneren (Dan 19. nov: hommage til MSN). Egen tegning, ren SVG med CSS-animasjon (extra.css, .dpb). */
+const BANAN='<svg class="dpbn" viewBox="-6 -2 112 128" width="46" height="53" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="dpb-b"><g class="dpb-al"><path d="M24 62 C14 62 8 54 8 44" fill="none" stroke="#e0b21c" stroke-width="5" stroke-linecap="round"/></g><g class="dpb-ar"><path d="M50 64 C60 62 66 54 66 44" fill="none" stroke="#e0b21c" stroke-width="5" stroke-linecap="round"/></g><path d="M30 14 C16 44 20 76 52 90 C70 98 88 92 95 80 C74 84 56 72 50 52 C46 36 46 22 41 12 Z" fill="#f7d231" stroke="#d9a916" stroke-width="3" stroke-linejoin="round"/><path d="M30 14 L41 12 L39 4 L32 5 Z" fill="#7a5320" stroke="#7a5320" stroke-width="2" stroke-linejoin="round"/><path d="M21 40 C22 20 52 18 52 40" fill="none" stroke="#10304f" stroke-width="3.5" stroke-linecap="round"/><rect x="17" y="38" width="8" height="14" rx="4" fill="#1b5fb8" stroke="#10304f" stroke-width="2"/><rect x="48" y="38" width="8" height="14" rx="4" fill="#1b5fb8" stroke="#10304f" stroke-width="2"/><rect x="26" y="47" width="11" height="9" rx="3.5" fill="#10304f"/><rect x="38" y="47" width="11" height="9" rx="3.5" fill="#10304f"/><path d="M36.5 50 H38.5" stroke="#10304f" stroke-width="2.5"/><path d="M28.5 50 L31.5 49.2 M40.5 50 L43.5 49.2" stroke="#fff" stroke-opacity=".55" stroke-width="1.6" stroke-linecap="round"/><path d="M32 62 Q38 69 44 62" fill="none" stroke="#10304f" stroke-width="3" stroke-linecap="round"/><g class="dpb-l1"><path d="M54 90 L50 110 L42 110" fill="none" stroke="#e0b21c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g><g class="dpb-l2"><path d="M72 96 L76 112 L84 112" fill="none" stroke="#e0b21c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></g><text class="dpb-n" x="74" y="30" font-size="16" fill="#a6ff3d" font-weight="900">\u266a</text><text class="dpb-n dpb-n2" x="84" y="46" font-size="13" fill="#a6ff3d" font-weight="900">\u266b</text></svg>';
 const dpSeen=new Set(),dpFlash=new Set();let dpT=0;
 function alertDp(fid,id,ts){
   /* hver melding utløser bare én gang; gammel melding: ikke ring; dempet: ingen lyd, risting, banner eller tittelblink */
@@ -5538,7 +5552,8 @@ function alertDp(fid,id,ts){
   stor();
   dpFlash.add(fid);drawFriends();setTimeout(()=>{dpFlash.delete(fid);drawFriends()},10000);
   const old=$("#dpb");if(old)old.remove();
-  const b=el("button",{id:"dpb",class:"dpb",type:"button"},tr("dp.banner",{name:nameOf(fid)}));
+  const b=el("button",{id:"dpb",class:"dpb",type:"button"},el("span",{class:"dpbw"}),el("span",{},tr("dp.banner",{name:nameOf(fid)})));
+  b.firstChild.innerHTML=BANAN;
   b.addEventListener("click",()=>{b.remove();openChat(fid)});
   document.body.append(b);setTimeout(()=>{if(b.isConnected)b.remove()},12000);
   clearInterval(dpT);let n=0;const nm=nameOf(fid);
