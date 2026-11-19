@@ -63,7 +63,7 @@ export interface PresenceRow {
 export interface RedeemedInvite { id: string; name: string }
 
 // Rows, as in supabase/migrations/ (columns the app reads; dates arrive as ISO strings).
-export interface ProfileRow { id: string; fp: string; name: string; pub: any; pm: string | null }
+export interface ProfileRow { id: string; fp: string; name: string; pub: any; pm: string | null; about?: string | null }
 export interface MessageRow { id: number; chat_id: string; sender: string; iv: string; ct: string; exp: string | null; created_at: string; file: string | null }
 export interface ReactionRow { msg_id: number; user_id: string; iv: string; ct: string }
 export interface KeyBackupRow { user_id: string; salt: string; iv: string; ct: string; iter: number; updated_at: string }
@@ -105,9 +105,9 @@ export function createApi(c: RpcClient) {
     deleteTransfer: (id: string) => c.from("key_transfers").delete().eq("id", id) as Query<null>,
     // profiles and avatars
     getProfile: (id: string) => c.from("profiles").select("*").eq("id", id) as Query<ProfileRow[]>,
-    getProfiles: (ids: string[]) => c.from("profiles").select("id,name,fp,pub,pm").in("id", ids) as Query<ProfileRow[]>,
+    getProfiles: (ids: string[]) => c.from("profiles").select("id,name,fp,pub,pm,about").in("id", ids) as Query<ProfileRow[]>,
     createProfile: (row: { id: string; fp: string; name: string; pub: unknown }) => c.from("profiles").insert(row) as Query<null>,
-    updateProfile: (id: string, patch: { name?: string; pm?: string | null }) => c.from("profiles").update(patch).eq("id", id) as Query<null>,
+    updateProfile: (id: string, patch: { name?: string; pm?: string | null; about?: string | null }) => c.from("profiles").update(patch).eq("id", id) as Query<null>,
     getAvatars: (ids: string[]) => c.from("avatars").select("id,data").in("id", ids) as Query<{ id: string; data: string }[]>,
     saveAvatar: (row: { id: string; data: string; updated_at: string }) => c.from("avatars").upsert(row) as Query<null>,
     // friends, requests, blocks
@@ -118,7 +118,7 @@ export function createApi(c: RpcClient) {
     // chats
     listChatMembers: () => c.from("chat_members").select("chat_id,user_id") as Query<{ chat_id: string; user_id: string }[]>,
     listChats: () => c.from("chats").select("id,exp_days") as Query<{ id: string; exp_days: number }[]>,
-    listReads: () => c.from("chat_reads").select("chat_id,last_id") as Query<{ chat_id: string; last_id: number }[]>,
+    listReads: () => c.from("chat_reads").select("chat_id,user_id,last_id") as Query<{ chat_id: string; user_id: string; last_id: number }[]>,
     // messages, newest first
     latestMessages: (chat: string, n: number) =>
       c.from("messages").select("*").eq("chat_id", chat).order("id", { ascending: false }).limit(n) as Query<MessageRow[]>,

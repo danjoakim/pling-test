@@ -66,6 +66,31 @@ async function redeemCode(txt){
   try{localStorage.setItem("pling_inv",iv.token)}catch(e){}
   await redeemPending();$("#cd2").value="";
 }
+/* Skann kompisens kode (telefon): kameraet leser QR-koden i invitasjonen. Biblioteket lib/jsqr.js lastes først når skanneren åpnes. */
+let scanStop=null;
+function loadJsQR(){return window.jsQR?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement("script");s.src="lib/jsqr.js";s.onload=ok;s.onerror=no;document.head.append(s)})}
+async function scanOpen(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return toast(tr("scan.noCam"),true);
+  let stream;
+  try{await loadJsQR();stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"},audio:false})}catch(e){return toast(tr("scan.noCam"),true)}
+  const o=$("#info");o.textContent="";
+  const v=el("video",{class:"scanv",autoplay:true,playsinline:true});v.muted=true;v.srcObject=stream;
+  const done=()=>{scanStop=null;try{stream.getTracks().forEach(t=>t.stop())}catch(e){}cancelAnimationFrame(raf);closeInfo()};
+  scanStop=done;let raf=0;
+  const box=el("div",{class:"infob scanb",role:"dialog","aria-modal":"true","aria-label":tr("nav.scanBtn")},v,el("div",{class:"scanfr","aria-hidden":"true"}),el("div",{class:"scanhint"},tr("scan.hint")),el("button",{class:"glass scanx",type:"button",onclick:done},tr("del.cancel")));
+  o.classList.add("pg","scan");o.append(box);o.hidden=false;o.onclick=null;
+  const cv=document.createElement("canvas"),cx=cv.getContext("2d",{willReadFrequently:true});
+  const tick=()=>{
+    if(!scanStop)return;
+    if(v.readyState>=2&&v.videoWidth){
+      const w=Math.min(640,v.videoWidth),h=Math.round(w*v.videoHeight/v.videoWidth);cv.width=w;cv.height=h;cx.drawImage(v,0,0,w,h);
+      const r=window.jsQR(cx.getImageData(0,0,w,h).data,w,h);
+      if(r&&r.data){const t=String(r.data);if(/#inv=|^[A-Za-z0-9_-]{16,}$/.test(t)){done();redeemCode(t);return}}
+    }
+    raf=requestAnimationFrame(tick);
+  };
+  raf=requestAnimationFrame(tick);
+}
 async function showInviteBanner(){
   const box=$("#invb");if(!box)return;let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
   if(!t)return;
@@ -86,9 +111,9 @@ function drawInvite(){
       const inp=el("input",{id:"invlink",readonly:true,value:link,"aria-label":tr("invite.linkAria")});
       inp.addEventListener("focus",()=>inp.select());
       const row=el("div",{class:"row"},
-        el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast(tr("invite.copied"))}catch(e){inp.select();toast(tr("invite.selectToCopy"),true)}}},tr("common.copy")));
+        el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast(tr("invite.copied"))}catch(e){inp.select();toast(tr("invite.selectToCopy"),true)}}},tr("nav.copyLink")));
       if(!navigator.share)row.classList.add("noshare");
-      if(navigator.share)row.append(el("button",{class:"glass sm",type:"button",onclick:()=>navigator.share({title:"Prek!",text:tr("invite.shareText"),url:link}).catch(()=>{})},tr("invite.share")));
+      if(navigator.share)row.append(el("button",{class:"glass sm",type:"button",onclick:()=>navigator.share({title:"Prek!",text:tr("invite.shareText"),url:link}).catch(()=>{})},el("span",{class:"shic","aria-hidden":"true"}),tr("nav.shareLink")));
       box.append(q1,el("div",{class:"scantxt"},tr("nav.scanText")),inp,row,el("div",{class:"fine"},tr("invite.validity")),
         el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(api.revokeInvites(),tr("ctx.revokeInvites"));toast(tr("invite.revoked",{n}));drawInvite()}catch(e){fail(e)}}},tr("invite.revokeAll")));
     }catch(e){fail(e)}
@@ -127,7 +152,16 @@ function showInfo(){
   o.onclick=e=>{if(e.target===o)closeInfo()};
   box.querySelector("button").focus();
 }
-function closeInfo(){const o=$("#info");o.hidden=true;o.textContent="";o.classList.remove("pg")}
+let infoUndo=[];
+function closeInfo(){const o=$("#info");for(const f of infoUndo.splice(0))try{f()}catch(e){}o.hidden=true;o.textContent="";o.classList.remove("pg")}
+/* Hel side på telefon (som Slett konto og Rapporter): topplinje med tilbake, hvitt ark under. Eksisterende elementer flyttes inn og settes tilbake når siden lukkes. */
+function showPage(title,build){
+  const o=$("#info");for(const f of infoUndo.splice(0))try{f()}catch(e){}o.textContent="";
+  const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":title}),body=el("div",{class:"infot"});
+  box.append(el("div",{class:"infoh"},el("b",{},title),el("span",{class:"pgt"},title),el("button",{class:"glass sm",type:"button","aria-label":tr("del.cancel"),onclick:closeInfo},tr("del.cancel"))),body);
+  build(body);o.classList.add("pg");o.append(box);o.hidden=false;o.onclick=e=>{if(e.target===o)closeInfo()};
+}
+function lend(node,into){const p=node.parentNode,n=node.nextSibling;into.append(node);infoUndo.push(()=>p.insertBefore(node,n))}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#info").hidden)closeInfo()});
 
 /* Slett konto (Apple 5.1.1(v)). Serveren sletter alt (edge-funksjonen delete-account, se claude/slett-konto.md); her rydder vi bare denne enheten etterpå: nøkkelen og det som hører til brukeren, og så ut. */
@@ -154,6 +188,34 @@ function showDelete(){
       location.reload();return}
     msg.textContent=tr("del.failed");go.textContent=tr("del.go");inp.disabled=false;go.disabled=inp.value.trim().toLowerCase()!==word});
   inp.focus();
+}
+function pgField(label,input){return el("label",{class:"pgf"},el("span",{class:"pglbl"},label),input)}
+function pageName(){
+  showPage(tr("me.rowName"),body=>{
+    const n=el("input",{type:"text",maxlength:"24",autocomplete:"off",value:S.profile.name,"aria-label":tr("me.nameLbl")}),m=el("input",{type:"text",maxlength:"60",autocomplete:"off",value:S.profile.pm||"","aria-label":tr("me.pmLbl")});
+    n.addEventListener("change",()=>{const v=n.value.trim();if(!v){n.value=S.profile.name;return}if(v!==S.profile.name)saveProfile({name:v.slice(0,24)})});
+    m.addEventListener("change",()=>saveProfile({pm:m.value.trim().slice(0,60)||null}));
+    body.append(pgField(tr("me.nameLbl"),n),pgField(tr("me.pmLbl"),m),el("div",{class:"pgsp"}),el("button",{class:"glass pgprim",type:"button",onclick:()=>{n.blur();m.blur();closeInfo()}},tr("me.done")));
+  });
+}
+function pageAbout(){
+  showPage(tr("me.about"),body=>{
+    const t=el("textarea",{maxlength:"200",rows:"6","aria-label":tr("me.about"),placeholder:tr("me.aboutEmpty")});t.value=S.profile.about||"";
+    const cnt=el("div",{class:"pgcnt"});const pc=()=>{cnt.textContent=t.value.length+"/200"};pc();t.addEventListener("input",pc);
+    const msg=el("div",{class:"fine err"}),go=el("button",{class:"glass pgprim",type:"button"},tr("me.save"));
+    go.onclick=async()=>{go.disabled=true;await saveProfile({about:t.value.trim().slice(0,200)||null});go.disabled=false;if(S.paintAbout)S.paintAbout();closeInfo()};
+    body.append(t,cnt,el("div",{class:"mal"},tr("me.aboutNote")),el("div",{class:"pgsp"}),go,msg);
+  });
+}
+function pageDevices(){
+  showPage(tr("me.rowDevices"),body=>{lend($("#seccard"),body)});
+}
+function pageSettings(){
+  showPage(tr("me.rowSettings"),body=>{
+    for(const[id,lb]of[["#thm",tr("html.thm.aria")],["#lpv",tr("html.lpv.aria")]]){const f=el("label",{class:"pgf"},el("span",{class:"pglbl"},lb));body.append(f);lend($(id),f)}
+    const bg=el("div",{class:"pgblk"});body.append(bg);lend($("#bgrp"),bg);lend($("#blist"),bg);
+    body.append(el("button",{class:"glass sm pgbtn",type:"button",onclick:showInfo},tr("info.title")));
+  });
 }
 /* Rapporter én melding (Apple 1.2). Bare den valgte meldingen sendes, som klartekst; resten av samtalen er fortsatt kryptert. Se claude/personvern.md. */
 function showReport(m){
@@ -300,7 +362,11 @@ async function loadPreviews(){
   const [cm,cs,rr]=await Promise.all([q(api.listChatMembers(),tr("ctx.chats")),q(api.listChats(),tr("ctx.chats")),q(api.listReads(),tr("ctx.read"))]);
   for(const c of cs)S.exp.set(c.id,c.exp_days||0);
   const hasSrv=new Set();
-  for(const r of rr){hasSrv.add(r.chat_id);S.reads.set(r.chat_id,Math.max(S.reads.get(r.chat_id)||0,+r.last_id))}
+  S.peerRead=S.peerRead||new Map();let pr=false;
+  for(const r of rr){
+    if(r.user_id&&r.user_id!==S.user.id){const o=S.peerRead.get(r.chat_id)||0;if(+r.last_id>o){S.peerRead.set(r.chat_id,+r.last_id);pr=true}continue}
+    hasSrv.add(r.chat_id);S.reads.set(r.chat_id,Math.max(S.reads.get(r.chat_id)||0,+r.last_id))}
+  if(pr&&S.chat)setTimeout(()=>{if(S.chat)drawLog(true)},0);
   const mine=new Set(cm.filter(r=>r.user_id===S.user.id).map(r=>r.chat_id));
   /* engangs-flytting av «lest» som tidligere lå bare i nettleseren */
   for(const cid of mine)if(!hasSrv.has(cid)){let l=0;try{l=+localStorage.getItem(readKey(cid))||0}catch(e){}if(l>0)setRead(cid,l)}
@@ -347,12 +413,12 @@ const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
 /* ---------- min profil ---------- */
 function paintMe(){
   const i=$("#avimg"),s=$("#avini"),nm=S.profile.name;
-  if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=initial(nm)}
+  if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=initial(nm);s.dataset.i2=initials2(nm)}
   $("#avwrap").className="av "+ST[S.status];
   document.documentElement.style.setProperty("--dot",DOT[ST[S.status]]||DOT.on);
   $("#men").textContent=nm;
   const sel=$("#st");$("#mep").textContent=sel.options[sel.selectedIndex].text;const pmi=$("#pm");if(document.activeElement!==pmi)pmi.value=S.profile.pm||"";
-  const f=$("#mef");f.textContent="";f.append(ff(ST[S.status]));
+  const f=$("#mef");f.textContent="";f.append(ff(ST[S.status]));if(S.paintAbout)S.paintAbout();
   for(const b of document.querySelectorAll("#prof .seg"))b.setAttribute("aria-pressed",String(b.dataset.v===sel.value));
   const sp=$("#stp");if(sp){if(!sp.options.length)for(const o of sel.options)sp.append(new Option(o.text,o.value));sp.value=sel.value}
 }
@@ -410,10 +476,10 @@ function drawReqs(){
   if(S.reqIn.length)box.append(el("div",{class:"sechd"},tr("nav.reqHead")));
   for(const id of S.reqIn){
     const rpm=(S.profiles.get(id)||{}).pm;
-    box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til",rpm?el("i",{class:"rpm"},"«"+rpm+"»"):null),
+    box.append(el("div",{class:"req"},pav(id,"on"),el("div",{class:"rtx"},el("b",{},nameOf(id)),el("span",{class:"rtd"}," vil legge deg til"),el("span",{class:"rtm"},tr("nav.reqWants")),rpm?el("i",{class:"rpm"},"«"+rpm+"»"):null),
       el("div",{class:"row"},
         el("button",{class:"sm",onclick:async()=>{try{await q(api.acceptRequest(id),tr("friends.accept"));refresh()}catch(e){fail(e)}}},tr("friends.accept")),
-        el("button",{class:"glass sm",onclick:async()=>{try{await q(api.declineRequest(id,S.user.id),tr("friends.decline"));refresh()}catch(e){fail(e)}}},tr("friends.decline")))));
+        el("button",{class:"glass sm dcl","aria-label":tr("friends.decline"),onclick:async()=>{try{await q(api.declineRequest(id,S.user.id),tr("friends.decline"));refresh()}catch(e){fail(e)}}},el("span",{class:"dtxt"},tr("friends.decline"))))));
   }
 }
 function drawSec(){
@@ -536,6 +602,12 @@ function drawLog(keepPos){
     d.append(el("br"),el("time",{},tm(m.ts)));
     if((m.ok||m.img)&&!m.pending){const ch=rxChips(m);if(ch)d.append(ch);d.append(el("button",{type:"button",class:"rxb","aria-label":tr("rx.ariaReact"),title:tr("rx.react"),onclick:e=>{e.stopPropagation();openRx(m,e.currentTarget)}},"☺"))}
     log.append(d);
+    const nx=S.msgs[i+1],last=!nx||nx.dp||nx.mine!==m.mine||Math.abs(new Date(nx.ts)-new Date(m.ts))>=18e4||new Date(nx.ts).toDateString()!==new Date(m.ts).toDateString();
+    if(last&&!m.pending){ // phone layout: time (and read ticks on mine) under the last bubble of a run; hidden on desktop
+      const meta=el("span",{class:"meta"+(m.mine?" mine":"")},tm(m.ts));
+      if(m.mine&&typeof m.id==="number"){const rd=((S.peerRead&&S.peerRead.get(S.chat.id))||0)>=m.id,tk=el("span",{class:"tk"+(rd?" rd":""),title:rd?tr("chat.read"):tr("chat.sent")});tk.innerHTML=rd?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 13l4 4 8-10M10 14l3 3 9-11"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4 10-11"/></svg>';meta.append(tk)}
+      log.append(meta);
+    }
   }
   markAn();
   if(!keepPos&&(near||S.justSent))log.scrollTop=log.scrollHeight;S.justSent=false;
@@ -766,7 +838,27 @@ function wire(){
     for(const o of sel.options){const b=el("button",{type:"button",class:"seg "+({online:"on",away:"away",busy:"busy",off:"off"}[o.value]||"on"),"data-v":o.value,"aria-pressed":"false"},o.text);b.addEventListener("click",()=>{sel.value=o.value;sel.dispatchEvent(new Event("change"))});box.append(b)}
     sel.before(box);
   }
+  { // Meg-fanen på telefon: Status, rader og Om meg (mockup Meg). De gamle kontrollene ligger i #prof og flyttes inn på undersider.
+    const prof=$("#prof"),segs=prof.querySelector(".segs"),offb=segs.querySelector(".seg.off");
+    const ic=d=>{const s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.setAttribute("viewBox","0 0 24 24");s.setAttribute("aria-hidden","true");const p=document.createElementNS("http://www.w3.org/2000/svg","path");p.setAttribute("d",d);s.append(p);return s};
+    const stat=el("div",{class:"mnew mstat"},el("div",{class:"mgrp"},tr("me.status")));segs.before(stat);stat.append(segs);
+    if(offb)stat.append(offb);
+    const rows=el("div",{class:"mnew mrows"});
+    const row=(icon,label,val,fn,cls)=>{const b=el("button",{type:"button",class:"mrow"+(cls?" "+cls:"")},el("span",{class:"mri"},ic(icon)),el("span",{class:"mrl"},label),el("span",{class:"mrv"},val||""),el("span",{class:"mrc","aria-hidden":"true"},"›"));b.onclick=fn;rows.append(b);return b};
+    row("M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4",tr("me.rowName"),"",()=>pageName());
+    const snd=row("M4 9v6h4l5 4V5L8 9zM16.5 8.5a5 5 0 0 1 0 7",tr("me.rowSound"),"",()=>{setSound(!soundOn());paintSnd();if(soundOn())pling()});
+    const paintSnd=()=>{snd.querySelector(".mrv").textContent=soundOn()?tr("me.soundOn"):tr("me.soundOff")};paintSnd();
+    row("M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM11 18h2",tr("me.rowDevices"),"",()=>pageDevices());
+    row("M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14.3 3h-4l-.3 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2l.3 2.6h4l.3-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z",tr("me.rowSettings"),"",()=>pageSettings());
+    row("M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13",tr("del.open"),"",showDelete,"red");
+    row("M10 4H5v16h5M15 8l4 4-4 4M19 12H9",tr("common.logout"),"",doLogout);
+    const ab=el("div",{class:"mnew mabout"},el("div",{class:"mah"},el("b",{},tr("me.about")),el("button",{type:"button",class:"mae",onclick:()=>pageAbout()},tr("me.aboutEdit"))),el("p",{class:"mat",id:"abouttxt"}),el("div",{class:"mal"},tr("me.aboutNote")));
+    stat.after(rows);rows.after(ab);
+    S.paintAbout=()=>{const t=$("#abouttxt");if(!t)return;const a=S.profile&&S.profile.about;t.textContent=a||tr("me.aboutEmpty");t.classList.toggle("empty",!a)};
+  }
   $("#hdp").addEventListener("click",()=>$("#dp").click());
+  $("#scanbtn").addEventListener("click",scanOpen);
+  $("#emailtog").addEventListener("click",()=>{const sh=$("#addfp").classList.toggle("showem");$("#emailtog").setAttribute("aria-expanded",String(sh))});
   $("#cdgo").addEventListener("click",()=>redeemCode($("#cd2").value));
   $("#cd2").addEventListener("keydown",e=>{if(e.key==="Enter")redeemCode(e.target.value)});
   $("#fq").addEventListener("input",applyFilter);
@@ -828,14 +920,20 @@ function wire(){
   const put=t=>{const v=tx.value,pre=v&&!/\s$/.test(v)?" ":"";tx.value=v+pre+t+" ";drawPv();tx.focus()};
   const FIGS=[[":)","smile"],[":D","grin"],[";)","wink"],[":(","sad"],[":P","tongue"],[":O","surprised"],[":'(","cry"],["xD","xd"],["(lol)","lol"],[":L","rofl"],["(Y)","yes"],["(N)","no"],[":-@","angry"],["(H)","cool"],["8-)","glasses"],["(6)","devil"],["(A)","angel"],["(K)","kiss"],["<3","heart"],["(U)","broken"],["(b)","beer"],["(*)","star"],["(brb)","hourglass"]];
   const pf=el("div",{class:"eg"}),pe=el("div",{class:"eg",hidden:true});
-  for(const[c,id]of FIGS){const b=el("button",{type:"button",class:"ef",title:c+" ("+AN_FIG[id][0]+")","aria-label":tr("emo.pickAria",{name:AN_FIG[id][0],code:c}),onclick:()=>put(c)});b.append(anEl(id));pf.append(b)}
+  for(const[c,id]of FIGS){const b=el("button",{type:"button",class:"ef",title:c+" ("+AN_FIG[id][0]+")","aria-label":tr("emo.pickAria",{name:AN_FIG[id][0],code:c}),onclick:()=>put(c)});b.append(anEl(id),el("span",{class:"efn","aria-hidden":"true"},AN_FIG[id][0]));pf.append(b)}
   for(const e of ["😊","😃","😉","🙁","😛","❤️","👍","👎","😮","😎","😈","😇","😢","💋","💔","🎉"]){
     pe.append(el("button",{type:"button",class:"ef",onclick:()=>{tx.value+=e;drawPv();tx.focus()}},e));
   }
   const t1=el("button",{type:"button",class:"etab on"},tr("emo.tabFigures")),t2=el("button",{type:"button",class:"etab"},tr("emo.tabEmoji"));
   const tab=n=>{pf.hidden=n!==1;pe.hidden=n!==2;t1.classList.toggle("on",n===1);t2.classList.toggle("on",n===2)};
   t1.onclick=()=>tab(1);t2.onclick=()=>tab(2);
-  emo.append(el("div",{class:"etabs"},t1,t2),pf,pe);
+  emo.append(el("span",{class:"emoh","aria-hidden":"true"}),el("div",{class:"etabs"},t1,t2),pf,pe);
+  $("#plusb").addEventListener("click",e=>{ // telefon: «+» åpner Bilde / Kamera
+    e.stopPropagation();const old=document.querySelector(".plusm");if(old){old.remove();$("#plusb").setAttribute("aria-expanded","false");return}
+    const m=el("div",{class:"plusm",role:"menu"},el("button",{type:"button",role:"menuitem",onclick:()=>{m.remove();$("#plusb").setAttribute("aria-expanded","false");$("#af").click()}},tr("html.ab.title")),el("button",{type:"button",role:"menuitem",onclick:()=>{m.remove();$("#plusb").setAttribute("aria-expanded","false");camOpen()}},tr("html.cb.title")));
+    $("#bar").append(m);$("#plusb").setAttribute("aria-expanded","true");
+  });
+  document.addEventListener("click",e=>{const m=document.querySelector(".plusm");if(m&&!e.target.closest(".plusm,#plusb")){m.remove();$("#plusb").setAttribute("aria-expanded","false")}});
   $("#ab").addEventListener("click",()=>$("#af").click());
   $("#cb").addEventListener("click",camOpen);
   $("#cf").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)sendImage(f)});

@@ -55,6 +55,13 @@ export function initial(name: string): string {
   return (first || "?").toUpperCase();
 }
 
+/** Two letters for the phone layout (first and last word: "Dan Joakim" -> "DJ"); one word gives one letter. Shown only by mobil.css. */
+export function initials2(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (words.length < 2) return initial(name);
+  return initial(words[0]) + initial(words[words.length - 1]);
+}
+
 /** The avatar circle: the picture when it passes `okAv`, otherwise the first letter on a color made from the name. */
 export function avEl(name: string, av: unknown, cls: string): HTMLSpanElement {
   const d = document.createElement("span");
@@ -66,6 +73,7 @@ export function avEl(name: string, av: unknown, cls: string): HTMLSpanElement {
     d.append(i);
   } else {
     d.textContent = initial(name);
+    d.dataset.i2 = initials2(name);
     d.style.background = "hsl(" + hue(name) + " 45% 36%)";
   }
   return d;

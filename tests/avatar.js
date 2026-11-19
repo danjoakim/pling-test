@@ -8,10 +8,10 @@ const DIR=path.resolve(__dirname,"..")+"/",MOCK=fs.readFileSync(__dirname+"/mock
 const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.slice(1):DIR+"index.html";r.setHeader("content-type",f.endsWith(".js")?"application/javascript":"text/html; charset=utf-8");r.end(fs.readFileSync(f))}).listen(8781);
 const P="data:image/jpeg;base64,AAAA";
 const EXPECTED=[
- '<span class="pav x" style="background: rgb(95, 133, 50);">A</span>',
+ '<span class="pav x" data-i2="A" style="background: rgb(95, 133, 50);">A</span>',
  '<span class="pav y"><img alt="" src="data:image/jpeg;base64,AAAA"></span>',
- '<span class="pav z" style="background: rgb(133, 50, 50);">?</span>',
- '<span class="pav q" style="background: rgb(133, 82, 50);">Å</span>',
+ '<span class="pav z" data-i2="?" style="background: rgb(133, 50, 50);">?</span>',
+ '<span class="pav q" data-i2="Å" style="background: rgb(133, 82, 50);">Å</span>',
  '<span class="pav me big"><img alt="" src="data:image/jpeg;base64,AAAA"></span>'];
 (async()=>{
  const br=await chromium.launch();const ctx=await br.newContext({viewport:{width:1000,height:760}});

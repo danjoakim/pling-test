@@ -22,7 +22,7 @@ const visible=(d,t,me)=>{
   if(t==="reactions")return (d.reactions||[]).filter(r=>mem.includes(r.chat_id)&&d.messages.some(m=>m.id===r.msg_id&&m.chat_id===r.chat_id));
   if(t==="key_transfers")return (d.key_transfers||[]).filter(r=>r.user_id===me);
   if(t==="key_backups")return (d.key_backups||[]).filter(r=>r.user_id===me);
-  if(t==="chat_reads")return (d.chat_reads||[]).filter(r=>r.user_id===me);
+  if(t==="chat_reads")return (d.chat_reads||[]).filter(r=>r.user_id===me||d.chat_members.some(m=>m.chat_id===r.chat_id&&m.user_id===me));
   if(t==="avatars")return (d.avatars||[]).filter(r=>r.id===me||isFriend(d,me,r.id));
   if(t==="chats")return d.chats.filter(c=>mem.includes(c.id));
   if(t==="chat_members")return d.chat_members.filter(m=>mem.includes(m.chat_id));
@@ -55,7 +55,7 @@ function from(t){
       if(op==="delete"){d.key_transfers=d.key_transfers.filter(r=>!(r.user_id===me&&fl.every(f=>f(r))));save(d);return ok(null)}
     }
     if(t==="profiles"&&op==="update"){
-      const bad=Object.keys(payload).filter(k=>!["name","pm"].includes(k));if(bad.length)return err("permission denied for table profiles");
+      const bad=Object.keys(payload).filter(k=>!["name","pm","about"].includes(k));if(bad.length)return err("permission denied for table profiles");
       if(payload.pm&&payload.pm.length>60)return err("check constraint pm");
       d.profiles.forEach(p=>{if(p.id===me&&fl.every(f=>f(p)))Object.assign(p,payload)});save(d);return ok(null)}
     if(t==="avatars"&&op==="upsert"){if(payload.id!==me)return err("RLS: avatars");if(payload.data.length>60000)return err("check");d.avatars=(d.avatars||[]).filter(r=>r.id!==me);d.avatars.push({...payload});save(d);return ok(null)}

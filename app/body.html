@@ -3,6 +3,7 @@
  <div class="scr" id="scr"><div class="sc"></div></div>
  <div class="shell" id="shell" hidden>
   <section class="home" id="home">
+   <div class="mtop"><span class="mlg" data-prk="tbl"></span><span class="mlk"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>{{html.lock.text}}</span></div>
    <div class="mewrap">
    <button class="me" id="meb" type="button" aria-expanded="false" title="{{html.meb.title}}">
     <span class="av on" id="avwrap"><img id="avimg" alt="{{html.avimg.alt}}" hidden><span id="avini">?</span></span>
@@ -42,6 +43,8 @@
      <div class="invbox" id="invbox"></div>
      <div class="sechd ch2">{{nav.codeHead}}</div>
      <div class="row coderow"><input id="cd2" type="text" placeholder="{{nav.codePh}}" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="{{nav.codeHead}}"><button class="glass sm" id="cdgo" type="button">{{html.fadd.text}}</button></div>
+     <button class="scanbtn" id="scanbtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M4 12h16"/></svg>{{nav.scanBtn}}</button>
+     <button class="emailtog" id="emailtog" type="button" aria-expanded="false">{{nav.emailHead}}</button>
     </div>
     <div class="list" id="friends"></div>
    </div>
@@ -58,7 +61,7 @@
     <button class="glass back" id="back" type="button" aria-label="{{html.back.aria}}">‹</button>
     <div class="ti" id="title"></div>
     <div class="pr" id="pr" title="{{html.pr.title}}"></div>
-    <button class="glass hdp" id="hdp" type="button" aria-label="{{chat.dp}}" title="{{html.dp.title}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v11M9 19v2M16 3v11M16 19v2" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg></button>
+    <button class="glass hdp" id="hdp" type="button" aria-label="{{chat.dp}}" title="{{html.dp.title}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v10.5" fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="round"/><circle cx="12" cy="19.3" r="2.5" fill="currentColor"/></svg></button>
     <button class="glass" id="mb" type="button" aria-expanded="false" aria-label="{{html.mb.aria}}">⋯</button>
    </div>
    <div class="menu" id="menu" hidden>
@@ -74,7 +77,7 @@
    <div class="typing" id="typ" hidden></div>
    <div class="epv" id="epv" hidden aria-hidden="true"></div>
    <div class="emo" id="emo" hidden></div>
-   <div class="bar" id="bar" hidden><button class="glass eb" id="eb" type="button" aria-label="{{html.eb.aria}}">☺</button><button class="glass eb" id="ab" type="button" aria-label="{{html.ab.aria}}" title="{{html.ab.title}}">📎</button><button class="glass eb" id="cb" type="button" aria-label="{{html.cb.aria}}" title="{{html.cb.title}}">📷</button><input class="vh" id="af" type="file" accept="image/*" tabindex="-1"><input class="vh" id="cf" type="file" accept="image/*" capture="environment" tabindex="-1"><input id="tx" placeholder="{{html.tx.placeholder}}" maxlength="1000" autocomplete="off" aria-label="{{html.tx.aria}}"><button id="sd" type="button">{{common.send}}</button><button id="dp" class="hot" type="button" title="{{html.dp.title}}">{{chat.dp}}</button></div>
+   <div class="bar" id="bar" hidden><button class="plusb" id="plusb" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="{{chat.plus}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button class="glass eb" id="eb" type="button" aria-label="{{html.eb.aria}}">☺</button><button class="glass eb" id="ab" type="button" aria-label="{{html.ab.aria}}" title="{{html.ab.title}}">📎</button><button class="glass eb" id="cb" type="button" aria-label="{{html.cb.aria}}" title="{{html.cb.title}}">📷</button><input class="vh" id="af" type="file" accept="image/*" tabindex="-1"><input class="vh" id="cf" type="file" accept="image/*" capture="environment" tabindex="-1"><input id="tx" placeholder="{{html.tx.placeholder}}" maxlength="1000" autocomplete="off" aria-label="{{html.tx.aria}}"><button id="sd" type="button">{{common.send}}</button><button id="dp" class="hot" type="button" title="{{html.dp.title}}">{{chat.dp}}</button></div>
   </section>
  </div>
 </div>

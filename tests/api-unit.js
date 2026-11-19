@@ -18,6 +18,7 @@ const root=path.join(__dirname,"..");
  const tables=new Map();
  for(const m of sql.matchAll(/create table public\.(\w+) \(([\s\S]*?)\n\);/g))
   tables.set(m[1],new Set(m[2].split("\n").map(l=>l.trim()).filter(l=>l&&!/^(constraint|--|primary|foreign|check|unique)/i.test(l)).map(l=>l.split(/\s+/)[0])));
+ for(const m of sql.matchAll(/alter table public\.(\w+) add column (\w+)/gi))tables.get(m[1]).add(m[2]);
  assert(tables.size>=14&&tables.get("messages").has("chat_id"),"found the tables in the migrations");
  // Call every API function with a recording client.
  const calls=[];

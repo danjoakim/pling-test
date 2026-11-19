@@ -91,6 +91,10 @@ export interface AppState {
   exp: Map<string, number>;
   /** the last message that has been read, by chat id */
   reads: Map<string, number>;
+  /** How far the other person has read, per chat (phone layout read ticks); made on first use. */
+  peerRead?: Map<string, number>;
+  /** Redraws the "Om meg" card on the phone Meg page; set when that page is built. */
+  paintAbout?: () => void;
   /** number of unread messages, by friend id */
   unread: Map<string, number>;
   /** the highest message id seen in each chat (for the sound), by chat id */

@@ -2,7 +2,7 @@
 function viewLogin(){
   const app=scrHost();
   const email=el("input",{type:"email",placeholder:tr("auth.emailPlaceholder"),autocomplete:"email",id:"em"});
-  const pw=el("input",{type:"password",placeholder:tr("auth.passwordPlaceholder"),autocomplete:S.mode==="up"?"new-password":"current-password",id:"pw"});
+  const pw=el("input",{type:"password",placeholder:(S.mode!=="up"&&matchMedia("(max-width:700px)").matches)?tr("auth.passwordPlaceholderM"):tr("auth.passwordPlaceholder"),autocomplete:S.mode==="up"?"new-password":"current-password",id:"pw"});
   const code=el("input",{type:"text",placeholder:tr("auth.codePlaceholder"),inputmode:"numeric",id:"cd",autocomplete:"one-time-code"});
   const go=async()=>{
     try{
@@ -36,13 +36,13 @@ function viewLogin(){
     el("div",{class:"lrow"},el("label",{for:"lst",class:"ll"},tr("auth.statusColon")),lst),
     el("label",{class:"lchk"},rem,tr("auth.remember")),
     ...(S.needCode?[el("div",{class:"row"},code,el("button",{id:"vf",onclick:verify},tr("auth.verify")))]:[]),
-    el("button",{id:"go",class:"lgo",onclick:goW},S.mode==="up"?tr("auth.createAccount"):tr("auth.login")),
+    el("button",{id:"go",class:"lgo",onclick:goW},S.mode==="up"?tr("auth.createAccount"):matchMedia("(max-width:700px)").matches?tr("auth.loginM"):tr("auth.login")),
     el("div",{class:"lnote"},tr("auth.e2eShort")));
   app.append(
     fr,
     el("div",{class:"lh"},prk("lgn")),
     el("div",{class:"invb",id:"invb",hidden:true}),
-    el("div",{class:"dim lc"},S.mode==="up"?tr("auth.signupTagline"):tr("auth.tagline")),
+    el("div",{class:"dim lc"},S.mode==="up"?tr("auth.signupTagline"):matchMedia("(max-width:700px)").matches?tr("auth.taglineM"):tr("auth.tagline")),
     card,
     el("div",{class:"llinks"},
       el("button",{class:"llink",id:"otp",type:"button",onclick:sendCode},tr("auth.sendOtp")),
