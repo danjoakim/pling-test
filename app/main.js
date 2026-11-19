@@ -268,10 +268,10 @@ async function start(){
   $("#pnm").value=S.profile.name;$("#pm").value=S.profile.pm||"";$("#st").value=S.status;
   if(!wired){wired=true;wire()}
   paintMe();closeChat();
+  initPush();
   await refresh();
   drawInvite();await redeemPending();
   startPresence();
-  initPush();
   api.subscribeLive({
     onMessage:p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id&&S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}refreshSoon()},
     onChange:()=>refreshSoon(),
@@ -806,11 +806,12 @@ function nativePlugin(name){const cap=window.Capacitor;if(!(cap&&cap.isNativePla
 function pushPlugin(){try{return nativePlugin("PushNotifications")}catch(e){return null}}
 let pushWired=false;
 async function initPush(){
-  const pn=pushPlugin();if(!pn||!S.user)return;
+  if(!S.user)return;const pn=pushPlugin();
+  if(!pn){if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform())toast("Push: appen finner ikke varselmodulen",true);return}
   try{
     if(!pushWired){pushWired=true;
       pn.addListener("registrationError",e=>toast("Push: "+String(e&&e.error||e).slice(0,120),true));
-      pn.addListener("registration",t=>{const tok=t&&t.value;if(!tok||!S.user)return;try{localStorage.setItem(pushKey,tok)}catch(e){}api.savePushToken(S.user.id,tok).then(()=>{},()=>{})});
+      pn.addListener("registration",t=>{const tok=t&&t.value;if(!tok||!S.user)return;try{localStorage.setItem(pushKey,tok)}catch(e){}api.savePushToken(S.user.id,tok).then(r=>toast(r&&r.error?"Push: kunne ikke lagre adressen":"Push er klar",!!(r&&r.error)),()=>toast("Push: kunne ikke lagre adressen",true))});
       pn.addListener("pushNotificationActionPerformed",a=>{const d=a&&a.notification&&a.notification.data;if(d&&d.from&&S.profiles.has(d.from))openChat(d.from)})}
     let p=await pn.checkPermissions();
     if(p.receive==="prompt")p=await pn.requestPermissions();

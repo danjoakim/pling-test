@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-TnvmyIBTEW7exTIYlDAU+8OOi2pMRu98HuEYVvfN9FU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-v//ZQw0cmQtSQWZ0HbyT84jxKd33SR8E5iMX60IC9R8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -4870,7 +4870,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="f2b3f7b";
+const PREK_VERSION="0.1.0",PREK_BUILD="60cdebd";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -5399,10 +5399,10 @@ async function start(){
   $("#pnm").value=S.profile.name;$("#pm").value=S.profile.pm||"";$("#st").value=S.status;
   if(!wired){wired=true;wire()}
   paintMe();closeChat();
+  initPush();
   await refresh();
   drawInvite();await redeemPending();
   startPresence();
-  initPush();
   api.subscribeLive({
     onMessage:p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id&&S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}refreshSoon()},
     onChange:()=>refreshSoon(),
@@ -5937,11 +5937,12 @@ function nativePlugin(name){const cap=window.Capacitor;if(!(cap&&cap.isNativePla
 function pushPlugin(){try{return nativePlugin("PushNotifications")}catch(e){return null}}
 let pushWired=false;
 async function initPush(){
-  const pn=pushPlugin();if(!pn||!S.user)return;
+  if(!S.user)return;const pn=pushPlugin();
+  if(!pn){if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform())toast("Push: appen finner ikke varselmodulen",true);return}
   try{
     if(!pushWired){pushWired=true;
       pn.addListener("registrationError",e=>toast("Push: "+String(e&&e.error||e).slice(0,120),true));
-      pn.addListener("registration",t=>{const tok=t&&t.value;if(!tok||!S.user)return;try{localStorage.setItem(pushKey,tok)}catch(e){}api.savePushToken(S.user.id,tok).then(()=>{},()=>{})});
+      pn.addListener("registration",t=>{const tok=t&&t.value;if(!tok||!S.user)return;try{localStorage.setItem(pushKey,tok)}catch(e){}api.savePushToken(S.user.id,tok).then(r=>toast(r&&r.error?"Push: kunne ikke lagre adressen":"Push er klar",!!(r&&r.error)),()=>toast("Push: kunne ikke lagre adressen",true))});
       pn.addListener("pushNotificationActionPerformed",a=>{const d=a&&a.notification&&a.notification.data;if(d&&d.from&&S.profiles.has(d.from))openChat(d.from)})}
     let p=await pn.checkPermissions();
     if(p.receive==="prompt")p=await pn.requestPermissions();
