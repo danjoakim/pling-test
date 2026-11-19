@@ -134,10 +134,10 @@
  .win .conv .pav.off{opacity:1}
  #mef,.rt .ff{display:none}
  .stw{display:block;position:absolute;right:14px;top:50%;transform:translateY(-50%)}
- .stw::before{content:"";position:absolute;left:14px;top:50%;width:11px;height:11px;margin-top:-5.5px;border-radius:50%;background:var(--dot,#43d65a);pointer-events:none}
- .win .stpill,html.lys .win .stpill{appearance:none;-webkit-appearance:none;height:44px;width:134px;min-width:0;border-radius:22px;padding:0 34px 0 32px;font:600 15px Inter,system-ui,sans-serif;color:#10304f;background:linear-gradient(#fff,#dcebf9) no-repeat;border:1.5px solid #5c8fc4;box-shadow:none}
- .stw::after{content:"";position:absolute;right:14px;top:50%;width:8px;height:8px;margin-top:-6px;border-right:2px solid #4d6f93;border-bottom:2px solid #4d6f93;transform:rotate(45deg);pointer-events:none}
- .mepi{right:148px}
+ .stw::before{content:"";position:absolute;left:12px;top:50%;width:11px;height:11px;margin-top:-5.5px;border-radius:50%;background:var(--dot,#43d65a);pointer-events:none}
+ .win .stpill,html.lys .win .stpill{appearance:none;-webkit-appearance:none;height:44px;width:148px;min-width:0;border-radius:22px;padding:0 26px 0 30px;font:600 15px Inter,system-ui,sans-serif;color:#10304f;background:linear-gradient(#fff,#dcebf9) no-repeat;border:1.5px solid #5c8fc4;box-shadow:none}
+ .stw::after{content:"";position:absolute;right:12px;top:50%;width:8px;height:8px;margin-top:-6px;border-right:2px solid #4d6f93;border-bottom:2px solid #4d6f93;transform:rotate(45deg);pointer-events:none}
+ .mepi{right:164px}
  .me b{padding-right:112px}
  .win .fsearch,html.lys .win .fsearch{display:block;margin:6px 16px 10px;width:calc(100% - 32px);height:46px;border-radius:14px;border:0;background:#eaf2fa;padding:0 16px 0 44px;font-size:16px;color:#10304f;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d6f93' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:14px center;background-size:22px}
  .win .rqbn,html.lys .win .rqbn{background:linear-gradient(#fff3cf,#fde7a9)!important;border:1px solid #e2c15a!important;box-shadow:none!important}
@@ -227,4 +227,7 @@
  html:not(.lys) .lcard input[type=email],html:not(.lys) .lcard input[type=password],html:not(.lys) .lcard input[type=text]{background:#0c1f3d;border-color:#2a4468;color:#e6f0fb}
  html:not(.lys) .win .coderow .sm,html:not(.lys) .win #fadd{background:#1d3a63!important;color:#fff;border-color:#4f7fb5}
  html:not(.lys) .win .shell.tab-me .lbl{background:#1d3a63!important;border-color:#2a4468!important;color:#9cc8ff}
+
+/* iOS zoomer inn på felt under 16px og slipper ikke igjen */
+.win input,.win select,.win textarea,html.lys .win input,html.lys .win select,.win .mepi,html.lys .win .mepi,.lcard input::placeholder{font-size:16px!important}
 }

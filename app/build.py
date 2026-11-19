@@ -37,7 +37,7 @@ html=f'''<!doctype html>
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>{{{{html.title}}}}</title>
 <script>(function(){{var t="auto";try{{t=localStorage.getItem("pling_theme")||"auto"}}catch(e){{}}
 var mq=matchMedia("(prefers-color-scheme: light)");
