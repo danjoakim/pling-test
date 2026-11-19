@@ -58,6 +58,14 @@ async function redeemPending(){
     toast(tr("invite.nowFriends",{name:f?f.name:tr("invite.fallbackName")}));await refresh();
   }catch(e){toast(tr("invite.failed"),true)}
 }
+// "Har du fått en kode?" (phone layout): paste an invitation link or the bare code from it.
+async function redeemCode(txt){
+  txt=String(txt||"").trim();if(!txt)return;
+  const iv=inviteFromHash(txt.includes("#")?txt.slice(txt.indexOf("#")):"#inv="+txt);
+  if(!iv.token)return toast(tr("invite.badCode"),true);
+  try{localStorage.setItem("pling_inv",iv.token)}catch(e){}
+  await redeemPending();$("#cd2").value="";
+}
 async function showInviteBanner(){
   const box=$("#invb");if(!box)return;let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
   if(!t)return;
@@ -79,8 +87,9 @@ function drawInvite(){
       inp.addEventListener("focus",()=>inp.select());
       const row=el("div",{class:"row"},
         el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast(tr("invite.copied"))}catch(e){inp.select();toast(tr("invite.selectToCopy"),true)}}},tr("common.copy")));
+      if(!navigator.share)row.classList.add("noshare");
       if(navigator.share)row.append(el("button",{class:"glass sm",type:"button",onclick:()=>navigator.share({title:"Prek!",text:tr("invite.shareText"),url:link}).catch(()=>{})},tr("invite.share")));
-      box.append(q1,inp,row,el("div",{class:"fine"},tr("invite.validity")),
+      box.append(q1,el("div",{class:"scantxt"},tr("nav.scanText")),inp,row,el("div",{class:"fine"},tr("invite.validity")),
         el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(api.revokeInvites(),tr("ctx.revokeInvites"));toast(tr("invite.revoked",{n}));drawInvite()}catch(e){fail(e)}}},tr("invite.revokeAll")));
     }catch(e){fail(e)}
   }},tr("invite.create"));
@@ -317,6 +326,7 @@ function paintMe(){
   $("#men").textContent=nm;
   const sel=$("#st");$("#mep").textContent=sel.options[sel.selectedIndex].text;const pmi=$("#pm");if(document.activeElement!==pmi)pmi.value=S.profile.pm||"";
   const f=$("#mef");f.textContent="";f.append(ff(ST[S.status]));
+  for(const b of document.querySelectorAll("#prof .seg"))b.setAttribute("aria-pressed",String(b.dataset.v===sel.value));
   const sp=$("#stp");if(sp){if(!sp.options.length)for(const o of sel.options)sp.append(new Option(o.text,o.value));sp.value=sel.value}
 }
 function paintAvAll(){paintMe()}
@@ -339,9 +349,11 @@ function drawTitle(){
   const t=$("#title");if(!S.chat){t.textContent="";return}
   const id=S.chat.other,pm=(S.profiles.get(id)||{}).pm;t.textContent="";
   t.append(nameOf(id));if(pm){t.append(el("span",{class:"tpm"}," – "+pm));t.title=nameOf(id)+" – "+pm}else t.removeAttribute("title");
+  const sw={on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")}[ST[stOf(id)]||"off"];
+  t.append(el("span",{class:"tsub"},pm?sw+" · "+pm:sw)); // phone layout only (mobil.css)
 }
 function drawFriends(){
-  if(S.chat&&$("#title")&&$("#title").dataset.k!==((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)){$("#title").dataset.k=((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other);drawTitle()}
+  if(S.chat&&$("#title")&&$("#title").dataset.k!==((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)+"|"+stOf(S.chat.other)){$("#title").dataset.k=((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)+"|"+stOf(S.chat.other);drawTitle()}
   const box=$("#friends");if(!box)return;box.textContent="";
   const rows=S.friends.map(id=>({id,st:ST[stOf(id)]||"off"}));
   sortFriendRows(rows,nameOf);
@@ -368,8 +380,10 @@ function drawReqs(){
   const box=$("#reqs");box.textContent="";box.hidden=!S.reqIn.length;
   const nb=$("#navb");if(nb){nb.hidden=!S.reqIn.length;nb.textContent=String(S.reqIn.length)}
   const rb=$("#rqbn");if(rb){rb.hidden=!S.reqIn.length;if(S.reqIn.length){rb.querySelector(".rqn").textContent=String(S.reqIn.length);rb.querySelector(".rqt").textContent=S.reqIn.length===1?tr("nav.reqOne",{name:nameOf(S.reqIn[0])}):tr("nav.reqMany",{n:String(S.reqIn.length)})}}
+  if(S.reqIn.length)box.append(el("div",{class:"sechd"},tr("nav.reqHead")));
   for(const id of S.reqIn){
-    box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til"),
+    const rpm=(S.profiles.get(id)||{}).pm;
+    box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til",rpm?el("i",{class:"rpm"},"«"+rpm+"»"):null),
       el("div",{class:"row"},
         el("button",{class:"sm",onclick:async()=>{try{await q(api.acceptRequest(id),tr("friends.accept"));refresh()}catch(e){fail(e)}}},tr("friends.accept")),
         el("button",{class:"glass sm",onclick:async()=>{try{await q(api.declineRequest(id,S.user.id),tr("friends.decline"));refresh()}catch(e){fail(e)}}},tr("friends.decline")))));
@@ -481,9 +495,14 @@ function drawLog(keepPos){
   const tm=ts=>new Date(ts).toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"});
   if(S.more&&S.msgs.length)log.append(el("button",{class:"glass sm older",type:"button",onclick:loadOlder},tr("chat.showOlder")));
   if(!S.msgs.length)log.append(el("div",{class:"sys"},tr("chat.empty",{name:nameOf(S.chat.other)})));
-  for(const m of S.msgs){
-    if(m.dp){log.append(el("div",{class:"sys"},tr("chat.sentDp",{who:m.mine?tr("chat.you"):nameOf(S.chat.other),time:tm(m.ts)})));continue}
-    const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")+(m.pending?" pending":"")});d.dataset.mid=m.id;
+  log.prepend(el("span",{class:"encp"},tr("auth.e2eShort"))); // phone layout only (mobil.css)
+  let prevM=null,prevDay="";
+  const dayWord=ts=>{const d=new Date(ts),n=new Date(),k=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime(),diff=Math.round((k(n)-k(d))/864e5);return diff<=0?tr("nav.today"):diff===1?tr("nav.yesterday"):d.toLocaleDateString("nb-NO",{day:"numeric",month:"long"})};
+  for(const[i,m]of S.msgs.entries()){
+    if(m.ts){const dk=new Date(m.ts).toDateString();if(dk!==prevDay){prevDay=dk;log.append(el("span",{class:"dday"},dayWord(m.ts)));prevM=null}}
+    if(m.dp){log.append(el("div",{class:"sys"},tr("chat.sentDp",{who:m.mine?tr("chat.you"):nameOf(S.chat.other),time:tm(m.ts)})));prevM=null;continue}
+    const cont=prevM&&prevM.mine===m.mine&&Math.abs(new Date(m.ts)-new Date(prevM.ts))<18e4;prevM=m;
+    const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")+(m.pending?" pending":"")+(cont?" cont":"")});d.dataset.mid=m.id;
     if(m.img)d.append(picEl(m.img));else
     if(m.ok)d.append(...linkify(m.t==null?"":m.t));else d.append(tr("chat.undecryptable"));
     if(m.lk)d.append(lkCard(m.lk));
@@ -709,10 +728,19 @@ function wire(){
     const sh=$("#shell");sh.classList.remove("tab-friends","tab-add","tab-me");sh.classList.add("tab-"+t);
     $("#prof").hidden=t!=="me";$("#meb").setAttribute("aria-expanded",String(t==="me"));
     $("#addfp").hidden=t!=="add";$("#addf").setAttribute("aria-expanded",String(t==="add"));
+    if(t==="add"&&!$("#invqr")&&$("#mkinv"))$("#mkinv").click();
     for(const b of document.querySelectorAll("#mnav button")){if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
   }
   for(const b of document.querySelectorAll("#mnav button"))b.addEventListener("click",()=>navTo(b.dataset.tab));
   $("#rqbn").addEventListener("click",()=>navTo("add"));
+  { // Status as three/four buttons on the profile page (phone layout); the select #st stays the source of truth
+    const sel=$("#st"),box=el("div",{class:"segs",role:"group","aria-label":tr("nav.status")});
+    for(const o of sel.options){const b=el("button",{type:"button",class:"seg "+({online:"on",away:"away",busy:"busy",off:"off"}[o.value]||"on"),"data-v":o.value,"aria-pressed":"false"},o.text);b.addEventListener("click",()=>{sel.value=o.value;sel.dispatchEvent(new Event("change"))});box.append(b)}
+    sel.before(box);
+  }
+  $("#hdp").addEventListener("click",()=>$("#dp").click());
+  $("#cdgo").addEventListener("click",()=>redeemCode($("#cd2").value));
+  $("#cd2").addEventListener("keydown",e=>{if(e.key==="Enter")redeemCode(e.target.value)});
   $("#fq").addEventListener("input",applyFilter);
   $("#stp").addEventListener("change",()=>{$("#st").value=$("#stp").value;$("#st").dispatchEvent(new Event("change"))});
   $("#addf").addEventListener("click",()=>{const p=$("#addfp"),o=p.hidden;p.hidden=!o;$("#addf").setAttribute("aria-expanded",String(o));if(o)$("#fe").focus()});

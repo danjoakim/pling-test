@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-P6ARmBAS1SKNGVQ6gh8Dbpz/7580c+xEqzFsiG/fFs4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-tCiQJdeW7IKqVGpW16EBytQB06QXJdM8kptuYQNhdbo='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -518,7 +518,7 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
 
 /*# Telefonvisning (smal skjerm): følger tegningene i designfilen «Prek! mobil» (Kompiser, Samtale, Legg til, Meg). Gjelder bare ≤700px, så PC og skrivebordsappen er uendret. Kommer etter extra.css. */
 .mnav{display:none}
-.lcard{display:contents}.pwrap{display:contents}.ltabs,.leye,.lnote,.stw,.fsearch,.rqbn,.tm{display:none}
+.lcard{display:contents}.pwrap{display:contents}.ltabs,.leye,.lnote,.stw,.fsearch,.rqbn,.tm,.tsub,.hdp,.encp,.dday,.sechd,.ptitle,.scantxt,.coderow,.ch2,.segs{display:none}
 @media(max-width:700px){
  /* ramme: ingen XP-vindu, hele skjermen */
  body{padding:0}
@@ -576,27 +576,41 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
  .win:has(.shell.inchat) .tb{display:none}
  .chatpane{background:#0f2340}
  html.lys .chatpane{background:#f3f8fd}
- .ch,html.lys .ch{padding:calc(env(safe-area-inset-top,0px) + 10px) 8px 10px;gap:4px;border:0;background:linear-gradient(#17335f,#12294d);box-shadow:0 2px 10px rgba(0,0,0,.25)}
+ .ch,html.lys .ch{padding:calc(env(safe-area-inset-top,0px) + 8px) 8px 10px;gap:4px;border:0;background:linear-gradient(#17335f,#12294d);box-shadow:0 2px 10px rgba(0,0,0,.25);align-items:center}
  html.lys .ch{background:linear-gradient(#d9ecfd,#bcd9f2);box-shadow:0 2px 10px rgba(16,48,79,.12)}
- .win .ch .glass,html.lys .win .ch .glass{background:none!important;border:0;box-shadow:none;min-width:44px;min-height:44px;font-size:26px;padding:0;color:inherit}
- .win .bar .eb,html.lys .win .bar .eb{background:none!important;border:0;box-shadow:none}
+ .win .ch .glass,html.lys .win .ch .glass{background:none!important;border:0!important;box-shadow:none!important;min-width:44px;min-height:44px;font-size:26px;padding:0;color:inherit}
  .ch #mb{font-size:22px}
- .ch .back{order:1}.ch .pr{order:2;margin-left:2px}.ch .ti{order:3;margin-left:6px;font:700 17px Inter,system-ui,sans-serif}.ch #mb{order:4}
+ .hdp{display:flex!important;align-items:center;justify-content:center}.hdp svg{width:26px;height:26px;color:#e8a400}
+ .ch .back{order:1}.ch .pr{order:2;margin-left:0}.ch .ti{order:3;margin-left:8px;flex:1;min-width:0}.ch .hdp{order:4}.ch #mb{order:5}
+ .ch .ti{display:flex;flex-direction:column;gap:1px;font:700 17px Inter,system-ui,sans-serif;white-space:nowrap}
+ .ch .ti .tpm{display:none}
+ .ch .ti .tsub{display:block;font:400 12.5px Inter,system-ui,sans-serif;font-style:normal;color:#9bbbe0;overflow:hidden;text-overflow:ellipsis}
+ html.lys .ch .ti .tsub{color:#3d6a96}
  .pr .pav{width:44px;height:44px;border-radius:50%;font-size:16px}
- #log{padding:14px 12px;gap:4px}
- .m,html.lys .m{max-width:76%;padding:9px 13px;border-radius:18px 18px 18px 6px;background:#1a3150;border:1px solid #2a4468;font-size:15.5px;line-height:1.35}
+ #log{padding:14px 12px;gap:3px}
+ .encp{display:flex;align-self:center;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.1);color:#9bbbe0;font-size:12px;margin-bottom:8px}
+ html.lys .encp{background:rgba(255,255,255,.8);color:#4d6f93}
+ .dday{display:block;align-self:center;font-size:12px;color:#9bbbe0;margin:2px 0 6px}
+ html.lys .dday{color:#4d6f93}
+ .m,html.lys .m{max-width:76%;padding:9px 13px;border-radius:18px 18px 18px 6px;background:#1a3150;border:1px solid #2a4468;font-size:15.5px;line-height:1.35;margin-top:6px}
  html.lys .m{background:#fff;border-color:#d3e3f3;color:#10304f}
+ .m.cont{margin-top:0;border-top-left-radius:6px}
  .m.mine,html.lys .m.mine{border-radius:18px 18px 6px 18px;background:linear-gradient(#4f93e0,#2a5fb8);border-color:transparent;color:#fff}
+ .m.mine.cont{border-top-right-radius:6px;border-top-left-radius:18px}
+ .m.mine time,html.lys .m.mine time{color:rgba(255,255,255,.75)}
+ .m>br{display:none}
+ .m time{font-size:11px;float:right;margin:5px 0 -2px 12px}
+ .m.pic time{float:none;display:block;text-align:right}
  .m b{display:none}
  .bar,html.lys .bar{flex-wrap:nowrap;gap:4px;padding:8px 8px calc(env(safe-area-inset-bottom,0px) + 8px);border-top:1px solid #1d3a63;background:#0f2340}
  html.lys .bar{background:#fbfdff;border-top-color:#d3e3f3}
- .bar .eb{padding:0;min-width:34px;min-height:44px;background:none;border:0;box-shadow:none;font-size:22px}
+ .win .bar .eb,html.lys .win .bar .eb{background:none!important;border:0;box-shadow:none}
+ .bar .eb{padding:0;min-width:34px;min-height:44px;font-size:22px}
  .bar input{flex:1 1 0;min-width:0;height:44px;border-radius:22px;padding:0 16px}
  #sd{font-size:0;border-radius:50%;min-width:44px;min-height:44px;padding:0}
  #sd::before{content:"➤";font-size:20px;color:#fff}
  html.lys #sd{background:linear-gradient(#4f93e0,#2a5fb8);border-color:transparent}
- #dp{font-size:0;min-width:44px;min-height:44px;padding:0;border-radius:50%}
- #dp::before{content:"!!";font:900 20px Nunito,Inter,sans-serif;color:#4a3000}
+ #dp{display:none}
  /* innlogging */
  .win:has(.sc.lgn) .tb{display:none}
  .scr,.scr .sc.lgn{background:none}
@@ -651,11 +665,69 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
  .rqn{flex:none;width:36px;height:36px;border-radius:50%;background:#f5b72e;display:grid;place-items:center;font-weight:700;color:#4a3000}
  .rqt{flex:1;min-width:0}.rqc{font-size:26px;line-height:1}
  .shell.tab-friends #reqs,.shell:not(.tab-add):not(.tab-me) #reqs{display:none!important}
- .shell.tab-add .fsearch,.shell.tab-add .rqbn{display:none}
+ .win .shell.tab-add .fsearch,.win .shell.tab-add .rqbn,.win .shell.tab-add .homebar{display:none}
  .conv .t{gap:2px}.conv .t small{color:#4d6f93;font-style:normal}
  .rt{flex-direction:column;align-items:flex-end;gap:6px;align-self:start;padding-top:2px}
  .tm{display:block;font-size:13px;color:#4d6f93}
  .conv .npm{color:#6f93b8;font-weight:400}
+ /* Legg til */
+ .win:has(.shell.tab-add) .tb{display:none}
+ .win:has(.shell.tab-me) .tb{display:none}
+ .shell.tab-add .ptitle{display:block;margin:0;padding:calc(env(safe-area-inset-top,0px) + 56px) 20px 18px;font:700 32px Inter,system-ui,sans-serif;color:#10304f}
+ .shell.tab-add .home{background:none}
+ .shell.tab-add .hs{flex:1;overflow:auto}
+ .shell.tab-add #addfp{display:flex;flex-direction:column;padding:4px 16px 16px;gap:8px;border:0;background:none}
+ .shell.tab-add .sechd,.shell.tab-add .ch2{display:block;font:700 15px Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#4d6f93;margin:14px 0 4px}
+ .shell.tab-add #reqs{padding:8px 16px 0}
+ .shell.tab-add #reqs:not([hidden]){display:block}
+ .shell.tab-add #reqs .sechd{margin:6px 0 8px}
+ .shell.tab-add .req,html.lys .shell.tab-add .req{display:flex;flex-wrap:nowrap;gap:12px;align-items:center;padding:14px;border-radius:18px;border:1px solid #e2c15a;background:linear-gradient(#fff3cf,#fde7a9);color:#4a3000;margin-bottom:8px}
+ .req>div:nth-child(2){flex:1;min-width:0}
+ .req .row{flex:none;width:auto;flex-direction:column;gap:6px}
+ .win .req .pav{width:52px;height:52px;border:0;box-shadow:none;border-radius:50%;overflow:visible;position:relative;background:linear-gradient(#b48ae8,#7a4fc0);color:#fff;flex:none}
+ .req .rpm{display:block;font-size:14px;margin-top:2px}
+ .win .req .sm,html.lys .win .req .sm{min-height:44px;border-radius:22px;padding:0 20px;background:linear-gradient(#4f93e0,#2a5fb8)!important;color:#fff;border:0;font-weight:700}
+ .win .req .glass.sm,html.lys .win .req .glass.sm{background:rgba(255,255,255,.7)!important;color:#4a3000;border:0}
+ #ih,.ih{order:1}.invbox{order:2}.ch2{order:3}.coderow{order:4}.eh{order:6}.exp{order:7}#addfp .row:not(.coderow){order:8}#ferr{order:9}
+ .shell.tab-add .coderow{display:flex;order:4;gap:10px}
+ .coderow input,#addfp #fe{height:50px;border-radius:16px;border:1px solid #c5ddf2;background:#fff;padding:0 16px;font-size:16px;flex:1;min-width:0}
+ .win .coderow .sm,html.lys .win .coderow .sm,.win #fadd,html.lys .win #fadd{min-height:50px;border-radius:16px;padding:0 18px;font-weight:700;border:1.5px solid #5c8fc4}
+ .invbox{display:grid;grid-template-columns:104px 1fr;gap:10px 16px;align-items:center;padding:16px;border-radius:22px;background:#eaf2fa}
+ .invbox .qr{grid-row:1/3;width:104px;height:104px;background:#fff;border-radius:14px;padding:6px;box-sizing:border-box}
+ .invbox .qr svg{width:100%;height:100%}
+ .invbox .scantxt{display:block;font-size:16px;color:#3d6a96}
+ .invbox #invlink,.invbox #invcopy,.invbox>.fine,.invbox>.llink{display:none}
+ .invbox .row{align-self:start}
+ .invbox .row.noshare #invcopy{display:inline-flex}
+ .win .invbox .sm,html.lys .win .invbox .sm{min-height:44px;border-radius:22px;padding:0 20px;background:linear-gradient(#4f93e0,#2a5fb8)!important;color:#fff;border:0;font-weight:700}
+ .invbox>.fine:first-child,.invbox>.fine{display:none}
+ #mkinv{grid-column:1/-1}
+ .shell.tab-add .exp{margin:0}
+ /* Meg */
+ .shell.tab-me .home{position:relative}
+ .shell.tab-me .mewrap{margin:0;background:none!important;border:0!important;box-shadow:none!important;display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 40px) 24px 14px}
+ .shell.tab-me .me{display:flex;flex-direction:column;align-items:center;gap:12px;min-height:0;padding:0;background:none!important;border:0!important;box-shadow:none!important;pointer-events:none}
+ .shell.tab-me .me .av{width:104px;height:104px;font-size:38px}
+ .shell.tab-me .me .av::after{width:26px;height:26px;right:2px;bottom:2px}
+ .shell.tab-me .me b{padding:0;font:700 26px Inter,system-ui,sans-serif;color:#10304f}
+ .shell.tab-me .me .t{text-align:center}
+ .shell.tab-me .mepi{position:static;width:100%;max-width:300px;text-align:center;font-size:16px;height:36px;margin-top:2px}
+ .shell.tab-me .stw,.shell.tab-me .me .t small{display:none}
+ .shell.tab-me .lbl{display:grid!important;place-items:center;position:absolute;top:calc(env(safe-area-inset-top,0px) + 122px);left:calc(50% + 26px);width:40px;height:40px;padding:0;border-radius:50%;background:#fff!important;border:1px solid #d3e3f3!important;box-shadow:0 2px 8px rgba(16,48,79,.2)!important;font-size:0;color:#1f5fb8;z-index:2}
+ .shell.tab-me .lbl::before{content:"";width:22px;height:22px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Ccircle cx='12' cy='13' r='3.5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Ccircle cx='12' cy='13' r='3.5'/%3E%3C/svg%3E") center/contain no-repeat}
+ .shell.tab-me #prof{display:flex;flex-direction:column;gap:10px;padding:18px 16px calc(env(safe-area-inset-bottom,0px) + 16px)}
+ .shell.tab-me #prof>*{flex:none}
+ .shell.tab-me #prof .grp{font:700 15px Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#4d6f93;margin:10px 0 0}
+ .shell.tab-me .segs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+ .win .seg,html.lys .win .seg{min-height:52px;border-radius:16px;background:#fff!important;border:1.5px solid #c5ddf2!important;box-shadow:none!important;color:#10304f;font:600 16px Inter,system-ui,sans-serif;text-shadow:none;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 6px}
+ .seg::before{content:"";width:11px;height:11px;border-radius:50%;background:var(--fc)}
+ .win .seg[aria-pressed=true]{border-color:#2a5fb8!important;background:#eaf2fa!important;box-shadow:0 0 0 1px #2a5fb8!important}
+ .seg.off{grid-column:1/-1}
+ .shell.tab-me #st{display:none}
+ .shell.tab-me #prof input,.shell.tab-me #prof select,html.lys .shell.tab-me #prof select{height:56px!important;border-radius:16px;border:1px solid #c5ddf2;background-color:#fff;padding:0 16px;font-size:16px;color:#10304f;appearance:none;-webkit-appearance:none;box-sizing:border-box}
+ .shell.tab-me #prof select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f93b8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:20px}
+ .shell.tab-me .seccard{border-radius:18px}
+ .win .shell.tab-me #prof .sm,html.lys .win .shell.tab-me #prof .sm{min-height:52px;border-radius:16px;font-size:16px;font-weight:600}
 }
 
 </style>
@@ -689,6 +761,7 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
     <div class="duo"><button class="glass sm" id="outb" type="button">Logg ut</button><button class="glass sm" id="delb" type="button">Slett konto</button></div>
    </div>
    <div class="fine err msg" id="msg" role="status"></div>
+   <h2 class="ptitle" id="ptitle">Legg til kompis</h2>
    <div class="hs">
     <div id="pairbox"></div>
     <input id="fq" class="fsearch" type="search" placeholder="Søk blant kompiser" aria-label="Søk blant kompiser" autocomplete="off" autocapitalize="off">
@@ -696,10 +769,14 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
     <div id="reqs" hidden></div>
     <div class="homebar"><span class="grp">Kompiser</span><button class="glass" id="addf" type="button" aria-expanded="false">+ Legg til kompis</button></div>
     <div class="add" id="addfp" hidden>
-     <div class="fine">Skriv e-posten til en kompis som har laget konto i Prek!. Personen får en forespørsel som kan godtas eller avslås.</div>
+     <div class="sechd eh">Legg til med e-post</div>
+     <div class="fine exp">Skriv e-posten til en kompis som har laget konto i Prek!. Personen får en forespørsel som kan godtas eller avslås.</div>
      <div class="row"><input id="fe" type="email" placeholder="Kompis' e-post" autocomplete="off" aria-label="Kompis' e-postadresse"><button class="glass sm" id="fadd" type="button">Legg til</button></div>
      <div class="fine err" id="ferr" role="status"></div>
+     <div class="sechd ih">Inviter en kompis</div>
      <div class="invbox" id="invbox"></div>
+     <div class="sechd ch2">Har du fått en kode?</div>
+     <div class="row coderow"><input id="cd2" type="text" placeholder="Lim inn koden her" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Har du fått en kode?"><button class="glass sm" id="cdgo" type="button">Legg til</button></div>
     </div>
     <div class="list" id="friends"></div>
    </div>
@@ -716,6 +793,7 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
     <button class="glass back" id="back" type="button" aria-label="Lukk samtalen">‹</button>
     <div class="ti" id="title"></div>
     <div class="pr" id="pr" title="Hvem som er her"></div>
+    <button class="glass hdp" id="hdp" type="button" aria-label="Dobbeltpling" title="Spiller to plinger og vibrerer hos mottakeren"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v11M9 19v2M16 3v11M16 19v2" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg></button>
     <button class="glass" id="mb" type="button" aria-expanded="false" aria-label="Innstillinger for samtalen">⋯</button>
    </div>
    <div class="menu" id="menu" hidden>
@@ -1234,7 +1312,16 @@ var PrekI18n = (() => {
     "nav.status": "Din status",
     "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
     "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.today": "I dag",
     "nav.yesterday": "I g\xE5r",
+    "nav.addTitle": "Legg til kompis",
+    "nav.emailHead": "Legg til med e-post",
+    "nav.inviteHead": "Inviter en kompis",
+    "nav.codeHead": "Har du f\xE5tt en kode?",
+    "nav.codePh": "Lim inn koden her",
+    "nav.reqHead": "\xD8nsker til deg",
+    "nav.scanText": "La kompisen skanne koden, eller send lenken.",
+    "invite.badCode": "Koden ser ikke riktig ut. Lim inn hele lenken eller koden du fikk.",
     "nav.aria": "Hovedmeny",
     "nav.friends": "Kompiser",
     "nav.add": "Legg til",
@@ -2163,7 +2250,16 @@ var PrekShrink = (() => {
     "nav.status": "Din status",
     "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
     "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.today": "I dag",
     "nav.yesterday": "I g\xE5r",
+    "nav.addTitle": "Legg til kompis",
+    "nav.emailHead": "Legg til med e-post",
+    "nav.inviteHead": "Inviter en kompis",
+    "nav.codeHead": "Har du f\xE5tt en kode?",
+    "nav.codePh": "Lim inn koden her",
+    "nav.reqHead": "\xD8nsker til deg",
+    "nav.scanText": "La kompisen skanne koden, eller send lenken.",
+    "invite.badCode": "Koden ser ikke riktig ut. Lim inn hele lenken eller koden du fikk.",
     "nav.aria": "Hovedmeny",
     "nav.friends": "Kompiser",
     "nav.add": "Legg til",
@@ -3269,7 +3365,16 @@ var PrekPreviews = (() => {
     "nav.status": "Din status",
     "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
     "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.today": "I dag",
     "nav.yesterday": "I g\xE5r",
+    "nav.addTitle": "Legg til kompis",
+    "nav.emailHead": "Legg til med e-post",
+    "nav.inviteHead": "Inviter en kompis",
+    "nav.codeHead": "Har du f\xE5tt en kode?",
+    "nav.codePh": "Lim inn koden her",
+    "nav.reqHead": "\xD8nsker til deg",
+    "nav.scanText": "La kompisen skanne koden, eller send lenken.",
+    "invite.badCode": "Koden ser ikke riktig ut. Lim inn hele lenken eller koden du fikk.",
     "nav.aria": "Hovedmeny",
     "nav.friends": "Kompiser",
     "nav.add": "Legg til",
@@ -3984,7 +4089,16 @@ var PrekHelpers = (() => {
     "nav.status": "Din status",
     "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
     "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.today": "I dag",
     "nav.yesterday": "I g\xE5r",
+    "nav.addTitle": "Legg til kompis",
+    "nav.emailHead": "Legg til med e-post",
+    "nav.inviteHead": "Inviter en kompis",
+    "nav.codeHead": "Har du f\xE5tt en kode?",
+    "nav.codePh": "Lim inn koden her",
+    "nav.reqHead": "\xD8nsker til deg",
+    "nav.scanText": "La kompisen skanne koden, eller send lenken.",
+    "invite.badCode": "Koden ser ikke riktig ut. Lim inn hele lenken eller koden du fikk.",
     "nav.aria": "Hovedmeny",
     "nav.friends": "Kompiser",
     "nav.add": "Legg til",
@@ -4210,7 +4324,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="1386af3";
+const PREK_VERSION="0.1.0",PREK_BUILD="4ce18d6";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -4529,6 +4643,14 @@ async function redeemPending(){
     toast(tr("invite.nowFriends",{name:f?f.name:tr("invite.fallbackName")}));await refresh();
   }catch(e){toast(tr("invite.failed"),true)}
 }
+// "Har du fått en kode?" (phone layout): paste an invitation link or the bare code from it.
+async function redeemCode(txt){
+  txt=String(txt||"").trim();if(!txt)return;
+  const iv=inviteFromHash(txt.includes("#")?txt.slice(txt.indexOf("#")):"#inv="+txt);
+  if(!iv.token)return toast(tr("invite.badCode"),true);
+  try{localStorage.setItem("pling_inv",iv.token)}catch(e){}
+  await redeemPending();$("#cd2").value="";
+}
 async function showInviteBanner(){
   const box=$("#invb");if(!box)return;let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
   if(!t)return;
@@ -4550,8 +4672,9 @@ function drawInvite(){
       inp.addEventListener("focus",()=>inp.select());
       const row=el("div",{class:"row"},
         el("button",{class:"glass sm",id:"invcopy",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(link);toast(tr("invite.copied"))}catch(e){inp.select();toast(tr("invite.selectToCopy"),true)}}},tr("common.copy")));
+      if(!navigator.share)row.classList.add("noshare");
       if(navigator.share)row.append(el("button",{class:"glass sm",type:"button",onclick:()=>navigator.share({title:"Prek!",text:tr("invite.shareText"),url:link}).catch(()=>{})},tr("invite.share")));
-      box.append(q1,inp,row,el("div",{class:"fine"},tr("invite.validity")),
+      box.append(q1,el("div",{class:"scantxt"},tr("nav.scanText")),inp,row,el("div",{class:"fine"},tr("invite.validity")),
         el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(api.revokeInvites(),tr("ctx.revokeInvites"));toast(tr("invite.revoked",{n}));drawInvite()}catch(e){fail(e)}}},tr("invite.revokeAll")));
     }catch(e){fail(e)}
   }},tr("invite.create"));
@@ -4788,6 +4911,7 @@ function paintMe(){
   $("#men").textContent=nm;
   const sel=$("#st");$("#mep").textContent=sel.options[sel.selectedIndex].text;const pmi=$("#pm");if(document.activeElement!==pmi)pmi.value=S.profile.pm||"";
   const f=$("#mef");f.textContent="";f.append(ff(ST[S.status]));
+  for(const b of document.querySelectorAll("#prof .seg"))b.setAttribute("aria-pressed",String(b.dataset.v===sel.value));
   const sp=$("#stp");if(sp){if(!sp.options.length)for(const o of sel.options)sp.append(new Option(o.text,o.value));sp.value=sel.value}
 }
 function paintAvAll(){paintMe()}
@@ -4810,9 +4934,11 @@ function drawTitle(){
   const t=$("#title");if(!S.chat){t.textContent="";return}
   const id=S.chat.other,pm=(S.profiles.get(id)||{}).pm;t.textContent="";
   t.append(nameOf(id));if(pm){t.append(el("span",{class:"tpm"}," – "+pm));t.title=nameOf(id)+" – "+pm}else t.removeAttribute("title");
+  const sw={on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")}[ST[stOf(id)]||"off"];
+  t.append(el("span",{class:"tsub"},pm?sw+" · "+pm:sw)); // phone layout only (mobil.css)
 }
 function drawFriends(){
-  if(S.chat&&$("#title")&&$("#title").dataset.k!==((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)){$("#title").dataset.k=((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other);drawTitle()}
+  if(S.chat&&$("#title")&&$("#title").dataset.k!==((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)+"|"+stOf(S.chat.other)){$("#title").dataset.k=((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)+"|"+stOf(S.chat.other);drawTitle()}
   const box=$("#friends");if(!box)return;box.textContent="";
   const rows=S.friends.map(id=>({id,st:ST[stOf(id)]||"off"}));
   sortFriendRows(rows,nameOf);
@@ -4839,8 +4965,10 @@ function drawReqs(){
   const box=$("#reqs");box.textContent="";box.hidden=!S.reqIn.length;
   const nb=$("#navb");if(nb){nb.hidden=!S.reqIn.length;nb.textContent=String(S.reqIn.length)}
   const rb=$("#rqbn");if(rb){rb.hidden=!S.reqIn.length;if(S.reqIn.length){rb.querySelector(".rqn").textContent=String(S.reqIn.length);rb.querySelector(".rqt").textContent=S.reqIn.length===1?tr("nav.reqOne",{name:nameOf(S.reqIn[0])}):tr("nav.reqMany",{n:String(S.reqIn.length)})}}
+  if(S.reqIn.length)box.append(el("div",{class:"sechd"},tr("nav.reqHead")));
   for(const id of S.reqIn){
-    box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til"),
+    const rpm=(S.profiles.get(id)||{}).pm;
+    box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til",rpm?el("i",{class:"rpm"},"«"+rpm+"»"):null),
       el("div",{class:"row"},
         el("button",{class:"sm",onclick:async()=>{try{await q(api.acceptRequest(id),tr("friends.accept"));refresh()}catch(e){fail(e)}}},tr("friends.accept")),
         el("button",{class:"glass sm",onclick:async()=>{try{await q(api.declineRequest(id,S.user.id),tr("friends.decline"));refresh()}catch(e){fail(e)}}},tr("friends.decline")))));
@@ -4952,9 +5080,14 @@ function drawLog(keepPos){
   const tm=ts=>new Date(ts).toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"});
   if(S.more&&S.msgs.length)log.append(el("button",{class:"glass sm older",type:"button",onclick:loadOlder},tr("chat.showOlder")));
   if(!S.msgs.length)log.append(el("div",{class:"sys"},tr("chat.empty",{name:nameOf(S.chat.other)})));
-  for(const m of S.msgs){
-    if(m.dp){log.append(el("div",{class:"sys"},tr("chat.sentDp",{who:m.mine?tr("chat.you"):nameOf(S.chat.other),time:tm(m.ts)})));continue}
-    const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")+(m.pending?" pending":"")});d.dataset.mid=m.id;
+  log.prepend(el("span",{class:"encp"},tr("auth.e2eShort"))); // phone layout only (mobil.css)
+  let prevM=null,prevDay="";
+  const dayWord=ts=>{const d=new Date(ts),n=new Date(),k=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime(),diff=Math.round((k(n)-k(d))/864e5);return diff<=0?tr("nav.today"):diff===1?tr("nav.yesterday"):d.toLocaleDateString("nb-NO",{day:"numeric",month:"long"})};
+  for(const[i,m]of S.msgs.entries()){
+    if(m.ts){const dk=new Date(m.ts).toDateString();if(dk!==prevDay){prevDay=dk;log.append(el("span",{class:"dday"},dayWord(m.ts)));prevM=null}}
+    if(m.dp){log.append(el("div",{class:"sys"},tr("chat.sentDp",{who:m.mine?tr("chat.you"):nameOf(S.chat.other),time:tm(m.ts)})));prevM=null;continue}
+    const cont=prevM&&prevM.mine===m.mine&&Math.abs(new Date(m.ts)-new Date(prevM.ts))<18e4;prevM=m;
+    const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")+(m.pending?" pending":"")+(cont?" cont":"")});d.dataset.mid=m.id;
     if(m.img)d.append(picEl(m.img));else
     if(m.ok)d.append(...linkify(m.t==null?"":m.t));else d.append(tr("chat.undecryptable"));
     if(m.lk)d.append(lkCard(m.lk));
@@ -5180,10 +5313,19 @@ function wire(){
     const sh=$("#shell");sh.classList.remove("tab-friends","tab-add","tab-me");sh.classList.add("tab-"+t);
     $("#prof").hidden=t!=="me";$("#meb").setAttribute("aria-expanded",String(t==="me"));
     $("#addfp").hidden=t!=="add";$("#addf").setAttribute("aria-expanded",String(t==="add"));
+    if(t==="add"&&!$("#invqr")&&$("#mkinv"))$("#mkinv").click();
     for(const b of document.querySelectorAll("#mnav button")){if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
   }
   for(const b of document.querySelectorAll("#mnav button"))b.addEventListener("click",()=>navTo(b.dataset.tab));
   $("#rqbn").addEventListener("click",()=>navTo("add"));
+  { // Status as three/four buttons on the profile page (phone layout); the select #st stays the source of truth
+    const sel=$("#st"),box=el("div",{class:"segs",role:"group","aria-label":tr("nav.status")});
+    for(const o of sel.options){const b=el("button",{type:"button",class:"seg "+({online:"on",away:"away",busy:"busy",off:"off"}[o.value]||"on"),"data-v":o.value,"aria-pressed":"false"},o.text);b.addEventListener("click",()=>{sel.value=o.value;sel.dispatchEvent(new Event("change"))});box.append(b)}
+    sel.before(box);
+  }
+  $("#hdp").addEventListener("click",()=>$("#dp").click());
+  $("#cdgo").addEventListener("click",()=>redeemCode($("#cd2").value));
+  $("#cd2").addEventListener("keydown",e=>{if(e.key==="Enter")redeemCode(e.target.value)});
   $("#fq").addEventListener("input",applyFilter);
   $("#stp").addEventListener("change",()=>{$("#st").value=$("#stp").value;$("#st").dispatchEvent(new Event("change"))});
   $("#addf").addEventListener("click",()=>{const p=$("#addfp"),o=p.hidden;p.hidden=!o;$("#addf").setAttribute("aria-expanded",String(o));if(o)$("#fe").focus()});
