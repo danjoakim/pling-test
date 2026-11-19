@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-cecyAYxAZoIElaBTAoUIhIWObl7LaArqSTOjmw4bbaQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-RzZ4ZrWl9ZhN6XuaLYQxYAeZGycQc/MjocGGYtI4KMU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -185,7 +185,7 @@ button.ghost{background:transparent;border-color:var(--line);text-shadow:none;co
 .older{align-self:center;flex:none}
 
 /* dobbeltpling-varsel (Dan Joakim 25. okt) */
-.dpb{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:30;padding:12px 18px;border-radius:8px;border:2px solid #a6ff3d;background:#142a56;color:#fff;font:600 16px system-ui;box-shadow:0 8px 30px #000a,0 0 30px #a6ff3d88;cursor:pointer;animation:dpbp .5s ease-in-out infinite alternate}
+.dpb{position:fixed;top:calc(max(env(safe-area-inset-top,0px),44px) + 8px);left:50%;transform:translateX(-50%);z-index:30;padding:12px 18px;border-radius:8px;border:2px solid #a6ff3d;background:#142a56;color:#fff;font:600 16px system-ui;box-shadow:0 8px 30px #000a,0 0 30px #a6ff3d88;cursor:pointer;animation:dpbp .5s ease-in-out infinite alternate}
 @keyframes dpbp{to{box-shadow:0 8px 30px #000a,0 0 55px #a6ff3d}}
 .conv.dpflash{animation:dpfl .45s linear infinite alternate}
 @keyframes dpfl{from{background:#a6ff3d55}to{background:#a6ff3d11}}
@@ -4870,7 +4870,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="09d373b";
+const PREK_VERSION="0.1.0",PREK_BUILD="a0f8975";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
