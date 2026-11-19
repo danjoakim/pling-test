@@ -1025,6 +1025,11 @@ function wire(){
   $("#lb").addEventListener("click",e=>{if(e.target.id==="lb"){$("#lb").hidden=true;$("#lb").textContent=""}});
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#lb").hidden){$("#lb").hidden=true;$("#lb").textContent=""}});
   $("#eb").addEventListener("click",()=>{emo.hidden=!emo.hidden});
+  /* Flere måter å lukke velgeren på (Dan 19. nov: «får ikke stengt det igjen»): håndtaket øverst, trykk i samtalen, eller send. */
+  const emoShut=()=>{emo.hidden=true};
+  emo.querySelector(".emoh").addEventListener("click",emoShut);
+  $("#log").addEventListener("click",()=>{if(!emo.hidden)emoShut()});
+  $("#sd").addEventListener("click",emoShut);
   $("#dp").addEventListener("click",async()=>{
     if(Date.now()<S.cdUntil)return;
     if(await sendMsg({dp:1,ts:Date.now()})){S.cdUntil=Date.now()+60000;cdTick();clearInterval(S.cdT);S.cdT=setInterval(cdTick,1000);dobbelt()}

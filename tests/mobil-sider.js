@@ -102,6 +102,14 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  const rp=await A.evaluate(async()=>{let asked=0;window.Capacitor={isNativePlatform:()=>true,Plugins:{},registerPlugin:n=>{asked++;return {pickImages:async()=>{throw new Error("cancelled")}}}};
   document.getElementById("af").click=()=>{asked+=100};await pickPhoto();return asked});
  must(rp===1,"modulen hentes via registerPlugin når cap.Plugins er tom");
+ // emoji-velgeren kan lukkes på flere måter: ☺ igjen, håndtaket, trykk i samtalen, send
+ const em=await A.evaluate(async()=>{const r=[];const emo=document.getElementById("emo");
+  document.getElementById("bar").hidden=false;document.getElementById("log").hidden=false;
+  for(const how of ["eb","handle","log","send"]){emo.hidden=true;document.getElementById("eb").click();const open=!emo.hidden;
+   if(how==="eb")document.getElementById("eb").click();else if(how==="handle")emo.querySelector(".emoh").click();else if(how==="log")document.getElementById("log").click();else document.getElementById("sd").click();
+   r.push(how+":"+(open&&emo.hidden))}
+  return r.join()});
+ must(em==="eb:true,handle:true,log:true,send:true","emoji-velgeren lukkes: "+em);
  console.log("FEIL A:",A.errs.length?A.errs:"ingen");
  await br.close();srv.close();
 })().catch(e=>{console.error("TESTFEIL",e.message);process.exit(1)});

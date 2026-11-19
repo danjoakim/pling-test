@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-4h6mNmfjuhABHnSF33ka5iGafHWtqVVq5jdjqlxY8RE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-IfQaPynUk/DST+R78vYTKGfhjRyxR7zqoyGNNjqbtw0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -962,7 +962,7 @@ html.lys .bar{background:none}
 /* Velger: panel under inputlinjen */
 .chatpane .emo{order:91;flex:none;display:block;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 12px);border-radius:26px 26px 0 0;background:#fbfdff;box-shadow:0 -6px 24px rgba(16,48,79,.16);max-height:46vh;overflow:auto}
 .chatpane .emo[hidden]{display:none}
-.emoh{display:block;width:80px;height:5px;border-radius:3px;background:#c5ddf2;margin:2px auto 12px}
+.emoh{display:block;width:80px;height:5px;border-radius:3px;background:#c5ddf2;margin:-12px auto -2px;box-sizing:content-box;padding:14px 40px;background-clip:content-box;cursor:pointer}
 .emo .etabs{display:flex;padding:4px;border-radius:16px;background:#e9f1f9;gap:4px;margin-bottom:12px}
 .emo .etab,html.lys .emo .etab{flex:1;min-height:44px;border-radius:13px;border:0;background:none;font:600 17px var(--ui);color:#4d6f93;padding:0}
 .emo .etab.on,html.lys .emo .etab.on{background:#fff;color:#10304f;box-shadow:0 2px 6px rgba(16,48,79,.15)}
@@ -4870,7 +4870,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="a93573f";
+const PREK_VERSION="0.1.0",PREK_BUILD="aa7513e";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -6156,6 +6156,11 @@ function wire(){
   $("#lb").addEventListener("click",e=>{if(e.target.id==="lb"){$("#lb").hidden=true;$("#lb").textContent=""}});
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#lb").hidden){$("#lb").hidden=true;$("#lb").textContent=""}});
   $("#eb").addEventListener("click",()=>{emo.hidden=!emo.hidden});
+  /* Flere måter å lukke velgeren på (Dan 19. nov: «får ikke stengt det igjen»): håndtaket øverst, trykk i samtalen, eller send. */
+  const emoShut=()=>{emo.hidden=true};
+  emo.querySelector(".emoh").addEventListener("click",emoShut);
+  $("#log").addEventListener("click",()=>{if(!emo.hidden)emoShut()});
+  $("#sd").addEventListener("click",emoShut);
   $("#dp").addEventListener("click",async()=>{
     if(Date.now()<S.cdUntil)return;
     if(await sendMsg({dp:1,ts:Date.now()})){S.cdUntil=Date.now()+60000;cdTick();clearInterval(S.cdT);S.cdT=setInterval(cdTick,1000);dobbelt()}

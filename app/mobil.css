@@ -425,7 +425,7 @@ html.lys .bar{background:none}
 /* Velger: panel under inputlinjen */
 .chatpane .emo{order:91;flex:none;display:block;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 12px);border-radius:26px 26px 0 0;background:#fbfdff;box-shadow:0 -6px 24px rgba(16,48,79,.16);max-height:46vh;overflow:auto}
 .chatpane .emo[hidden]{display:none}
-.emoh{display:block;width:80px;height:5px;border-radius:3px;background:#c5ddf2;margin:2px auto 12px}
+.emoh{display:block;width:80px;height:5px;border-radius:3px;background:#c5ddf2;margin:-12px auto -2px;box-sizing:content-box;padding:14px 40px;background-clip:content-box;cursor:pointer}
 .emo .etabs{display:flex;padding:4px;border-radius:16px;background:#e9f1f9;gap:4px;margin-bottom:12px}
 .emo .etab,html.lys .emo .etab{flex:1;min-height:44px;border-radius:13px;border:0;background:none;font:600 17px var(--ui);color:#4d6f93;padding:0}
 .emo .etab.on,html.lys .emo .etab.on{background:#fff;color:#10304f;box-shadow:0 2px 6px rgba(16,48,79,.15)}
