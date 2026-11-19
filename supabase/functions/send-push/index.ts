@@ -52,7 +52,8 @@ Deno.serve(async (req: Request) => {
   const jwt = await apnsJwt();
   let sent = 0, dead = 0;
   const fails: string[] = [];
-  await Promise.all(toks.map(async ({ token }: { token: string }) => {
+  // collapse-id makes the repeats replace each other, so one notification is shown but each repeat rings and buzzes again
+  const sendAll = (round: number) => Promise.all(toks.map(async ({ token }: { token: string }) => {
     try {
       const r = await fetch("https://api.push.apple.com/3/device/" + token, {
         method: "POST",
@@ -61,15 +62,24 @@ Deno.serve(async (req: Request) => {
           "apns-topic": Deno.env.get("APNS_TOPIC") ?? "es.prek.messenger",
           "apns-push-type": "alert",
           "apns-priority": "10",
+          "apns-collapse-id": "m" + id,
           "apns-expiration": String(Math.floor(Date.now() / 1000) + (msg.dp ? 60 : 3600)),
         },
         body: payload,
       });
-      if (r.ok) { sent++; return; }
+      if (r.ok) { if (round === 0) sent++; return; }
       const t = await r.text();
       fails.push(r.status + " " + t);
       if (r.status === 410 || /BadDeviceToken|Unregistered|DeviceTokenNotForTopic/.test(t)) { dead++; await sb.from("push_tokens").delete().eq("token", token); }
     } catch (e) { fails.push(String(e)); }
   }));
+  await sendAll(0);
+  if (msg.dp && sent > 0) {
+    // double ping: ring twice more, ~4 s apart (the ring sound is ~3 s), after the response has gone out
+    const more = (async () => { for (let i = 1; i <= 2; i++) { await new Promise((r) => setTimeout(r, 4000)); await sendAll(i); } })();
+    // deno-lint-ignore no-explicit-any
+    const rt = (globalThis as any).EdgeRuntime;
+    if (rt?.waitUntil) rt.waitUntil(more); else await more;
+  }
   return json({ ok: true, sent, dead, fails });
 });
