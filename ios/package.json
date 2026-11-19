@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "Prek! as an iPhone app (Capacitor). Wraps the same page as the web version. Built by .github/workflows/ios.yml.",
   "dependencies": {
+    "@capacitor/camera": "^7",
     "@capacitor/cli": "^7",
     "@capacitor/core": "^7",
     "@capacitor/ios": "^7"

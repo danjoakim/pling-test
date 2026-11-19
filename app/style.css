@@ -6,7 +6,8 @@
  --luna1:#4a96ff;--luna2:#1859df;--luna3:#0a3fb5;--aqua:#5fe0d0;--bub:#1a2c5a;--me:#17483f;--sys:#ffd27a;
  --glow-on:#a6ff3d;--glow-away:#ffb23c;--glow-busy:#ff5a48;--glow-off:#4b5878;
  color-scheme:dark;
- font-family:Tahoma,Verdana,"Trebuchet MS",system-ui,sans-serif}
+ --ui:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+ font-family:var(--ui)}
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:radial-gradient(120% 90% at 20% 0%,#10244f,var(--bg0));color:var(--ink);font-size:14px;display:flex;align-items:center;justify-content:center;
@@ -14,9 +15,9 @@ body{margin:0;background:radial-gradient(120% 90% at 20% 0%,#10244f,var(--bg0));
 .on{--fc:var(--glow-on)}.away{--fc:var(--glow-away)}.busy{--fc:var(--glow-busy)}.off{--fc:var(--glow-off)}.ro{--fc:var(--aqua)}
 
 .win{width:100%;max-width:940px;height:min(680px,100%);display:flex;flex-direction:column;background:var(--night);border:3px solid var(--luna3);border-top:0;border-radius:10px 10px 5px 5px;overflow:hidden;box-shadow:0 18px 50px #000a,0 0 0 1px #000}
-.tb{flex:none;display:flex;align-items:center;gap:8px;padding:7px 10px;color:#fff;font:700 15px "Trebuchet MS",Tahoma,sans-serif;text-shadow:1px 1px 1px #0a2a7a;
+.tb{flex:none;display:flex;align-items:center;gap:8px;padding:7px 10px;color:#fff;font:700 15px var(--ui);text-shadow:1px 1px 1px #0a2a7a;
  background:linear-gradient(#4a96ff 0,#2a74ee 8%,#1859df 45%,#0e4dd3 85%,#0a3fb5 100%);border-radius:7px 7px 0 0}
-.tb .lock{margin-left:auto;font:400 12px Tahoma,sans-serif;opacity:.92}
+.tb .lock{margin-left:auto;font:400 12px var(--ui);opacity:.92}
 .shell{flex:1;min-height:0;display:flex}
 
 input,select,button{font:inherit;color:var(--ink);min-width:0}
@@ -33,7 +34,7 @@ button.sm{padding:5px 10px;font-size:13px}
 .lbl{display:inline-block;position:relative;text-align:center}
 .vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
 .fine{font-size:12px;color:var(--mut);line-height:1.45}
-.grp{font:700 12px Tahoma,sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.grp{font:700 12px var(--ui);color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
 .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .row input{flex:1;min-width:140px;font-size:12px}
 .err{min-height:1.2em;color:var(--sys)}
@@ -51,8 +52,8 @@ button.sm{padding:5px 10px;font-size:13px}
 /* avatar */
 .av{width:46px;height:46px;border-radius:8px;border:3px solid var(--fc);box-shadow:0 0 12px var(--fc);background:var(--panel2);display:grid;place-items:center;overflow:hidden;flex:none}
 .av img{width:100%;height:100%;object-fit:cover;display:block}
-.av span{font:700 20px/1 "Trebuchet MS",sans-serif}
-.pav{width:34px;height:34px;border-radius:6px;border:2px solid var(--fc);display:grid;place-items:center;overflow:hidden;font:700 15px "Trebuchet MS",sans-serif;color:#fff;box-shadow:0 0 8px var(--fc);flex:none}
+.av span{font:700 20px/1 var(--ui)}
+.pav{width:34px;height:34px;border-radius:6px;border:2px solid var(--fc);display:grid;place-items:center;overflow:hidden;font:700 15px var(--ui);color:#fff;box-shadow:0 0 8px var(--fc);flex:none}
 .pav img{width:100%;height:100%;object-fit:cover;display:block}
 .off.pav{box-shadow:none;opacity:.7}
 
@@ -61,7 +62,7 @@ button.sm{padding:5px 10px;font-size:13px}
 .hs{flex:1;overflow:auto;min-height:0}
 .me{flex:none;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:10px 12px;background:none;text-shadow:none;color:var(--ink)}
 .me .t{min-width:0}
-.me b{display:block;font:700 15px "Trebuchet MS",Tahoma,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.me b{display:block;font:700 15px var(--ui);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .me small{display:block;color:var(--mut);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .prof{display:grid;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line)}
 .pm{font-style:italic}
@@ -89,7 +90,7 @@ button.sm{padding:5px 10px;font-size:13px}
 /* samtalefelt */
 .chatpane{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
 .empty{flex:1;position:relative;display:grid;place-items:center;text-align:center;padding:24px;overflow:hidden}
-.empty h1{margin:0 0 6px;font:700 40px "Trebuchet MS",Tahoma,sans-serif;color:#fff;text-shadow:0 0 14px #a6ff3d88}
+.empty h1{margin:0 0 6px;font:700 40px var(--ui);color:#fff;text-shadow:0 0 14px #a6ff3d88}
 .empty .in{position:relative}
 .amb{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .amb .ff{position:absolute;animation:drift 9s ease-in-out infinite alternate}
@@ -97,7 +98,7 @@ button.sm{padding:5px 10px;font-size:13px}
 @keyframes drift{from{transform:translate(0,0)}to{transform:translate(22px,-30px)}}
 .ch{flex:none;display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:linear-gradient(#17295a,#122249)}
 .ch .back{padding:4px 11px;font-size:20px;line-height:1}
-.ch .ti{flex:1;min-width:0;font:700 15px "Trebuchet MS",Tahoma,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch .ti{flex:1;min-width:0;font:700 15px var(--ui);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pr{display:flex;gap:5px;align-items:center;cursor:pointer}
 .pr .pav{width:28px;height:28px;font-size:13px}
 .pr .more{font-size:12px;color:var(--mut)}

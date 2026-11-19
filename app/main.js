@@ -5,7 +5,7 @@ const api=PrekApi.createApi(sb); // typed server functions, src/api.ts
 /* logo: «prek» med skrå skrift, tegnet som former (ikke tekst), så den ser lik ut uten skriften Inter. Kula bakerst er statusen (CSS-variabelen --dot), fargen på bokstavene følger temaet (--lgc). Se claude/utseende.md. */
 const PRK='<svg class="prk" viewBox="-20 -40 2650 1010" overflow="visible" role="img" aria-label="prek" xmlns="http://www.w3.org/2000/svg"><g style="fill:var(--dot,#43d65a)"><circle cx="2403" cy="620" r="215" opacity=".08"/><circle cx="2403" cy="620" r="170" opacity=".1"/><circle cx="2403" cy="620" r="125"/></g><g transform="translate(200 0) skewX(-12)"><path d="M46.9 931.0H243.0V637.2H246.0C268.4 692.8 320.6 733.8 397.2 733.8C513.8 733.8 611.9 643.1 611.9 454.7C611.9 257.1 507.0 174.7 399.2 174.7C318.2 174.7 267.0 221.5 246.0 277.1H241.1V181.5H46.9ZM325.0 583.6C271.3 583.6 238.2 533.8 238.2 454.7C238.2 373.7 271.3 325.0 325.0 325.0C379.2 325.0 409.9 373.7 409.9 454.7C409.9 535.2 379.2 583.6 325.0 583.6ZM656.1 727.0H852.3V442.8C852.3 380.3 894.8 339.3 952.9 339.3C972.9 339.3 1005.7 342.2 1025.2 349.1V182.1C1009.6 177.2 992.5 174.3 975.4 174.3C917.3 174.3 871.9 208.4 852.3 285.6H846.5V181.1H656.1ZM1289.1 736.8C1428.3 736.8 1520.1 675.2 1547.9 577.1L1375.1 551.7C1363.3 582.0 1333.1 599.1 1293.0 599.1C1238.8 599.1 1202.7 566.8 1200.2 499.5H1555.7V454.5C1555.7 280.7 1449.3 174.3 1284.2 174.3C1115.3 174.3 1007.9 286.6 1007.9 455.5C1007.9 632.3 1113.8 736.8 1289.1 736.8ZM1201.7 392.0C1207.6 340.3 1236.4 312.0 1286.2 312.0C1336.0 312.0 1364.8 340.3 1370.7 392.0ZM1602.8 727.0H1799.1V571.7L1828.4 534.6L1939.8 727.0H2163.4L1973.0 420.4L2158.5 181.1H1937.8L1806.0 364.7H1799.1V-0.5H1602.8Z" style="fill:var(--lgc,#1b5fb8);stroke:var(--lgc,#1b5fb8)" stroke-width="37" stroke-linejoin="round"/></g><circle cx="2403" cy="620" r="125" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="14"/></svg>';
 const DOT={on:"#43d65a",away:"#f6b830",busy:"#ee4b3f",off:"#9aa7b5"};
-function ico(c){const s=document.createElement("span");s.className="icow "+(c||"");s.innerHTML='<svg viewBox="0 0 96 96" aria-hidden="true"><defs><linearGradient id="icg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b5fb8"/><stop offset="1" stop-color="#10304f"/></linearGradient></defs><rect width="96" height="96" rx="22" fill="url(#icg)"/><svg x="0" y="0" width="96" height="96" viewBox="-50 -20 1100 1100"><g transform="translate(200 0) skewX(-12)"><path d="M46.9 931.0H243.0V637.2H246.0C268.4 692.8 320.6 733.8 397.2 733.8C513.8 733.8 611.9 643.1 611.9 454.7C611.9 257.1 507.0 174.7 399.2 174.7C318.2 174.7 267.0 221.5 246.0 277.1H241.1V181.5H46.9ZM325.0 583.6C271.3 583.6 238.2 533.8 238.2 454.7C238.2 373.7 271.3 325.0 325.0 325.0C379.2 325.0 409.9 373.7 409.9 454.7C409.9 535.2 379.2 583.6 325.0 583.6Z" fill="#eef6fd" stroke="#eef6fd" stroke-width="37" stroke-linejoin="round"/></g><circle cx="855" cy="650" r="125" style="fill:var(--dot)"/><circle cx="855" cy="650" r="125" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="14"/></svg></svg>';return s}
+function ico(c){const s=document.createElement("span");s.className="icow "+(c||"");s.innerHTML='<svg viewBox="0 0 96 96" aria-hidden="true"><defs><linearGradient id="icg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b5fb8"/><stop offset="1" stop-color="#10304f"/></linearGradient></defs><rect width="96" height="96" rx="22" fill="url(#icg)"/><svg x="0" y="0" width="96" height="96" viewBox="-50 40 1000 1000"><g transform="translate(200 0) skewX(-12)"><path d="M46.9 931.0H243.0V637.2H246.0C268.4 692.8 320.6 733.8 397.2 733.8C513.8 733.8 611.9 643.1 611.9 454.7C611.9 257.1 507.0 174.7 399.2 174.7C318.2 174.7 267.0 221.5 246.0 277.1H241.1V181.5H46.9ZM325.0 583.6C271.3 583.6 238.2 533.8 238.2 454.7C238.2 373.7 271.3 325.0 325.0 325.0C379.2 325.0 409.9 373.7 409.9 454.7C409.9 535.2 379.2 583.6 325.0 583.6Z" fill="#eef6fd" stroke="#eef6fd" stroke-width="37" stroke-linejoin="round"/></g><circle cx="790" cy="660" r="85" style="fill:var(--dot)"/><circle cx="790" cy="660" r="85" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="10"/></svg></svg>';return s}
 function prk(c){const s=document.createElement("span");s.className="prkw "+(c||"");s.innerHTML=PRK;return s}
 const ST={online:"on",away:"away",busy:"busy",off:"off"};
 let myAv=null;
@@ -778,6 +778,19 @@ function lightbox(u,gif){
    HVORFOR eget kamera og ikke bare filvelgeren: Dan Joakim vil kunne ta bilde direkte som i andre meldingsapper. getUserMedia gir levende forhåndsvisning,
    bytte mellom fremre og bakre kamera og «Send»/«Ta på nytt». Bildet går deretter samme vei som alle andre bilder (sendImage: skaleres, krypteres).
    Uten støtte eller tillatelse faller vi tilbake til filvelgeren med capture (åpner kameraappen på telefonen). Strømmen stoppes alltid når vinduet lukkes. */
+/* «Send et bilde» skal bare velge et bilde fra biblioteket, ikke tilby kamera (Dan Joakim 19. nov). I iPhone-appen bruker vi det innebygde bildevalget (Capacitor Camera.pickImages, ingen kameravalg);
+   ellers (nettleser, skrivebord, eller om utvidelsen mangler) filvelgeren. Kamera er et eget valg i «+»-menyen. */
+async function pickPhoto(){
+  const cap=window.Capacitor,cm=cap&&cap.isNativePlatform&&cap.isNativePlatform()&&cap.Plugins&&cap.Plugins.Camera;
+  if(cm&&cm.pickImages){
+    try{
+      const r=await cm.pickImages({limit:1,quality:90}),ph=r&&r.photos&&r.photos[0];
+      if(ph){const b=await(await fetch(ph.webPath)).blob();sendImage(new File([b],"bilde."+(ph.format||"jpg"),{type:b.type||"image/"+(ph.format||"jpeg")}))}
+      return;
+    }catch(e){if(/cancel/i.test(String(e&&(e.message||e))))return}
+  }
+  $("#af").click();
+}
 let camStream=null,camFace="environment";
 function camStop(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}}
 function camClose(){camStop();const c=$("#cam");c.hidden=true;c.textContent=""}
@@ -966,11 +979,11 @@ function wire(){
   emo.append(el("span",{class:"emoh","aria-hidden":"true"}),el("div",{class:"etabs"},t1,t2),pf,pe);
   $("#plusb").addEventListener("click",e=>{ // telefon: «+» åpner Bilde / Kamera
     e.stopPropagation();const old=document.querySelector(".plusm");if(old){old.remove();$("#plusb").setAttribute("aria-expanded","false");return}
-    const m=el("div",{class:"plusm",role:"menu"},el("button",{type:"button",role:"menuitem",onclick:()=>{m.remove();$("#plusb").setAttribute("aria-expanded","false");$("#af").click()}},tr("html.ab.title")),el("button",{type:"button",role:"menuitem",onclick:()=>{m.remove();$("#plusb").setAttribute("aria-expanded","false");camOpen()}},tr("html.cb.title")));
+    const m=el("div",{class:"plusm",role:"menu"},el("button",{type:"button",role:"menuitem",onclick:()=>{m.remove();$("#plusb").setAttribute("aria-expanded","false");pickPhoto()}},tr("html.ab.title")),el("button",{type:"button",role:"menuitem",onclick:()=>{m.remove();$("#plusb").setAttribute("aria-expanded","false");camOpen()}},tr("html.cb.title")));
     $("#bar").append(m);$("#plusb").setAttribute("aria-expanded","true");
   });
   document.addEventListener("click",e=>{const m=document.querySelector(".plusm");if(m&&!e.target.closest(".plusm,#plusb")){m.remove();$("#plusb").setAttribute("aria-expanded","false")}});
-  $("#ab").addEventListener("click",()=>$("#af").click());
+  $("#ab").addEventListener("click",pickPhoto);
   $("#cb").addEventListener("click",camOpen);
   $("#cf").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)sendImage(f)});
   $("#af").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)sendImage(f)});

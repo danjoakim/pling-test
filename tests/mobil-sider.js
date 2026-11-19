@@ -67,6 +67,15 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await A.evaluate(()=>showInfo());await A.waitForSelector("#info.pg .infoh button");
  must((await A.locator("#info .infoh button").boundingBox()).y>=44,"lukkeknappen i Personvern ligger under statuslinjen");
  await A.click("#info .infoh button");must(await A.isHidden("#info"),"Personvern lukkes");
+ // «Send et bilde» åpner bare bildevalget (ingen kameravalg): i appen via Camera.pickImages, ellers filvelgeren
+ const pk=await A.evaluate(async()=>{
+  let pick=0,af=0;const inp=document.getElementById("af");inp.click=()=>{af++};
+  window.Capacitor={isNativePlatform:()=>true,Plugins:{Camera:{pickImages:async()=>{pick++;throw new Error("User cancelled photos app")}}}};
+  await pickPhoto();const nat={pick,af};
+  window.Capacitor={isNativePlatform:()=>false};await pickPhoto();
+  return {nat,web:{pick,af}}});
+ must(pk.nat.pick===1&&pk.nat.af===0,"i appen: bildevalget åpnes, ikke filvelgeren (kamera)");
+ must(pk.web.pick===1&&pk.web.af===1,"i nettleseren: filvelgeren");
  console.log("FEIL A:",A.errs.length?A.errs:"ingen");
  await br.close();srv.close();
 })().catch(e=>{console.error("TESTFEIL",e.message);process.exit(1)});
