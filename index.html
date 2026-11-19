@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-TAF2dyHFGwVHzi0D7Xzxxj9Z/q6O/Zc9ZFlIrgoLKYw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-woU7CZLstsGTYmCEZfFC2v0TxZ8nmHixKcT8Skgj5rg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -530,7 +530,7 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
 
 /*# Telefonvisning (smal skjerm): følger tegningene i designfilen «Prek! mobil» (Kompiser, Samtale, Legg til, Meg). Gjelder bare ≤700px, så PC og skrivebordsappen er uendret. Kommer etter extra.css. */
 .mnav{display:none}
-.mtop,.plusb,.plusm,.emoh,.efn,.meta,.mnew,.scanbtn,.emailtog{display:none}
+.mtop,.plusb,.plusm,.emoh,.efn,.meta,.mnew,.scanbtn,.emailtog,.lockpop,.srow,.grph{display:none}
 .lcard{display:contents}.pwrap{display:contents}.ltabs,.leye,.lnote,.stw,.fsearch,.rqbn,.tm,.tsub,.hdp,.encp,.dday,.sechd,.ptitle,.scantxt,.coderow,.ch2,.segs{display:none}
 @media(max-width:700px){
  /* ramme: ingen XP-vindu, hele skjermen */
@@ -1020,17 +1020,49 @@ html:not(.lys) .win .m .rxc.me{background:#1d3a63;border-color:#4a8fe0}
 .win .m .rxc .an{width:22px;height:22px}
 /* Settings panel is only for the Meg tab on phones; never inline in Kompiser */
 .shell:not(.tab-me) #prof{display:none!important}
-/* Kompiser: søket blir stående, toppen foldes sammen ved skroll */
-.win .fsearch,html.lys .win .fsearch{position:sticky;top:0;z-index:3;box-shadow:0 0 0 16px #fbfdff}
-html:not(.lys) .win .fsearch{box-shadow:0 0 0 16px #0f2340}
-.shell.tab-friends.compact .mtop,.shell.tab-friends.compact .mepi{display:none}
-.shell.tab-friends.compact .mewrap{margin:calc(max(env(safe-area-inset-top,0px),44px) + 6px) 16px 8px}
-.shell.tab-friends.compact .me{min-height:64px;padding:8px 14px}
-.shell.tab-friends.compact .me .av{width:44px;height:44px;font-size:17px}
-.shell.tab-friends.compact .me .av::after{width:16px;height:16px}
-.shell.tab-friends.compact .me{align-items:center}
-.shell.tab-friends.compact .me .t{align-self:center}
-.shell.tab-friends.compact .me .t small{display:none}
+/* ---- Kompiser (mockup D): logo + lås, søk med +, MSN-grupper, ønske nederst, profil i bunnmenyen ---- */
+.shell.tab-friends .mewrap,.homebar{display:none!important}
+.shell.tab-friends .mtop{padding-bottom:10px}
+.shell.tab-friends .mlk{width:44px;height:44px;padding:0;gap:0;justify-content:center}
+.lockpop:not([hidden]){display:block;position:absolute;z-index:20;top:calc(max(env(safe-area-inset-top,0px),44px) + 52px);left:56px;right:16px;padding:16px;border-radius:18px;background:#fff;color:#10304f;border:1px solid #d3e3f3;box-shadow:0 10px 30px rgba(16,48,79,.28)}
+.lockpop b{display:block;font:700 16px Inter,system-ui,sans-serif}
+.lockpop p{margin:8px 0 6px;font:400 14px/20px Inter,system-ui,sans-serif;color:#35597d}
+.win .lockpop .lockmore{min-height:44px;padding:0;border:0!important;background:none!important;box-shadow:none!important;color:#1f5fb8;font:600 15px Inter,system-ui,sans-serif;text-shadow:none}
+html:not(.lys) .lockpop{background:#12294d;border-color:#2a4468;color:#e6f0fb}
+html:not(.lys) .lockpop p{color:#9cb6d3}
+html:not(.lys) .win .lockpop .lockmore{color:#9cc8ff}
+.shell.tab-friends .hs{margin-top:6px}
+.win .srow{display:flex;align-items:center;gap:10px;margin:6px 16px 10px;position:sticky;top:0;z-index:4;box-shadow:0 0 0 16px #fbfdff}
+html:not(.lys) .win .srow{box-shadow:0 0 0 16px #0f2340}
+.shell.tab-add .srow,.shell.tab-me .srow{display:none}
+html .win .srow .fsearch{flex:1;min-width:0;width:auto;margin:0!important;height:44px;border-radius:22px;position:static!important;box-shadow:none!important}
+.win .addplus{width:44px;height:44px;min-height:44px;flex:none;padding:0;border-radius:50%;border:0!important;background:#2a5fb8!important;box-shadow:none!important;display:grid;place-items:center}
+.addplus svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round}
+.win .grph{position:sticky;top:56px;z-index:3;display:flex;align-items:center;gap:8px;width:100%;min-height:48px;padding:0 16px;border:0!important;border-radius:0;background:#fbfdff!important;box-shadow:none!important;text-shadow:none;text-align:left;font:700 13px Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#35597d}
+html:not(.lys) .win #friends .grph{background:#0f2340!important;color:#8fb0d2}
+html.lys .win #friends .grph{background:#fbfdff!important}
+.grph::before{content:"";flex:none;width:7px;height:7px;margin:0 4px 3px 2px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:rotate(45deg)}
+.grph.shut::before{transform:rotate(-45deg);margin-bottom:0}
+.grph .gd{width:9px;height:9px;border-radius:50%;background:#9aa9b9}
+.grph .gd.on{background:#43d65a}.grph .gd.away{background:#f0a92e}
+.grph .gn{font-weight:500;letter-spacing:0;text-transform:none}
+.conv.gc{display:none}
+#friends.srch .conv.gc:not([hidden]){display:flex}
+#friends.srch .grph{display:none}
+.rqbn{position:sticky;bottom:0;z-index:3;margin:6px 16px 8px}
+html .win #rqbn{box-shadow:0 0 0 8px #fbfdff!important}
+html:not(.lys) .win #rqbn{box-shadow:0 0 0 8px #0f2340!important}
+.mnav .navav{display:block;position:relative;width:28px;height:28px}
+.win .mnav .navav .pav{width:28px;height:28px;font-size:11px;border-radius:50%;position:relative;overflow:visible;border:0;box-shadow:none;background:linear-gradient(#6aa8e8,#2a5fb8);color:#fff}
+.win .mnav .navav .pav img{border-radius:50%;width:100%;height:100%;object-fit:cover}
+.win .mnav .navav .pav::after{content:"";position:absolute;right:-3px;bottom:-3px;width:12px;height:12px;border-radius:50%;background:var(--fc);border:2px solid #fbfdff;box-sizing:border-box}
+html:not(.lys) .win .mnav .navav .pav::after{border-color:#0f2340}
+.navnm{max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.win .mlk{background:rgba(255,255,255,.65)!important;border:1px solid rgba(70,120,170,.35)!important;box-shadow:none!important;color:#2a5f93;text-shadow:none}
+html:not(.lys) .win .mlk{background:rgba(255,255,255,.08)!important;border-color:#34517a!important;color:#9cc8ff}
+.shell.tab-friends .hs{display:flex;flex-direction:column}
+.shell.tab-friends .hs>*{flex:none}
+.shell.tab-friends .hs>#friends{flex:1 0 auto}
 }
 
 </style>
@@ -1039,9 +1071,10 @@ html:not(.lys) .win .fsearch{box-shadow:0 0 0 16px #0f2340}
 <div class="win" id="app">
  <div class="tb"><span id="tbi"></span><span class="tbn" data-prk="tbl"></span><span class="lock" id="lock" hidden title="Meldingene krypteres i nettleseren med AES-256-GCM">Kryptert</span></div>
  <div class="scr" id="scr"><div class="sc"></div></div>
- <div class="shell" id="shell" hidden>
+ <div class="shell tab-friends" id="shell" hidden>
   <section class="home" id="home">
-   <div class="mtop"><span class="mlg" data-prk="tbl"></span><span class="mlk"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Kryptert</span></div>
+   <div class="mtop"><span class="mlg" data-prk="tbl"></span><button type="button" class="mlk" id="lockb" aria-label="Kryptert. Trykk for å lese mer" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button></div>
+   <div class="lockpop" id="lockpop" role="dialog" aria-label="Du er på en sikker tjeneste" hidden><b>Du er på en sikker tjeneste</b><p>Meldinger og bilder krypteres på enheten din før de sendes. Bare du og kompisen din kan lese dem. Det kan ikke Prek! heller.</p><button type="button" class="lockmore" id="lockmore">Les mer om personvern</button></div>
    <div class="mewrap">
    <button class="me" id="meb" type="button" aria-expanded="false" title="Min profil">
     <span class="av on" id="avwrap"><img id="avimg" alt="Ditt bilde" hidden><span id="avini">?</span></span>
@@ -1068,9 +1101,8 @@ html:not(.lys) .win .fsearch{box-shadow:0 0 0 16px #0f2340}
    <h2 class="ptitle" id="ptitle">Legg til kompis</h2>
    <div class="hs">
     <div id="pairbox"></div>
-    <input id="fq" class="fsearch" type="search" placeholder="Søk blant kompiser" aria-label="Søk blant kompiser" autocomplete="off" autocapitalize="off">
-    <button id="rqbn" class="rqbn" type="button" hidden><span class="rqn"></span><span class="rqt"></span><span class="rqc" aria-hidden="true">›</span></button>
-    <div id="reqs" hidden></div>
+    <div class="srow"><input id="fq" class="fsearch" type="search" placeholder="Søk opp kompis" aria-label="Søk opp kompis" autocomplete="off" autocapitalize="off"><button type="button" class="addplus" id="addplus" aria-label="Legg til kompis"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div id="reqs" hidden></div>
     <div class="homebar"><span class="grp">Kompiser</span><button class="glass" id="addf" type="button" aria-expanded="false">+ Legg til kompis</button></div>
     <div class="add" id="addfp" hidden>
      <div class="sechd eh">Legg til med e-post</div>
@@ -1085,11 +1117,12 @@ html:not(.lys) .win .fsearch{box-shadow:0 0 0 16px #0f2340}
      <button class="emailtog" id="emailtog" type="button" aria-expanded="false">Legg til med e-post</button>
     </div>
     <div class="list" id="friends"></div>
+    <button id="rqbn" class="rqbn" type="button" hidden><span class="rqn"></span><span class="rqt"></span><span class="rqc" aria-hidden="true">›</span></button>
    </div>
    <nav class="mnav" id="mnav" aria-label="Hovedmeny">
     <button type="button" data-tab="friends" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2 .7 3.5 2.6 3.5 5.7"/></svg>Kompiser</button>
     <button type="button" data-tab="add"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M19 7v6M16 10h6"/></svg>Legg til<span class="nb" id="navb" hidden></span></button>
-    <button type="button" data-tab="me"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Meg</button>
+    <button type="button" data-tab="me"><span class="navav" id="navav" aria-hidden="true"></span><span class="navnm" id="navnm">Meg</span></button>
    </nav>
   </section>
 
@@ -1636,6 +1669,10 @@ var PrekI18n = (() => {
     // static page text (round 4); substituted into body.html at build time as {{key}}
     "html.lock.title": "Meldingene krypteres i nettleseren med AES-256-GCM",
     "html.lock.text": "Kryptert",
+    "lock.aria": "Kryptert. Trykk for \xE5 lese mer",
+    "lock.title": "Du er p\xE5 en sikker tjeneste",
+    "lock.text": "Meldinger og bilder krypteres p\xE5 enheten din f\xF8r de sendes. Bare du og kompisen din kan lese dem. Det kan ikke Prek! heller.",
+    "lock.more": "Les mer om personvern",
     "html.meb.title": "Min profil",
     "html.avimg.alt": "Ditt bilde",
     "html.mewarn.text": "Lag gjenopprettingskode",
@@ -1654,10 +1691,10 @@ var PrekI18n = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
-    "nav.search": "S\xF8k blant kompiser",
+    "nav.search": "S\xF8k opp kompis",
     "nav.status": "Din status",
-    "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
-    "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.reqOne": "{name} vil bli kompisen din",
+    "nav.reqMany": "{n} vil bli kompisene dine",
     "nav.today": "I dag",
     "nav.yesterday": "I g\xE5r",
     "nav.addTitle": "Legg til kompis",
@@ -2622,6 +2659,10 @@ var PrekShrink = (() => {
     // static page text (round 4); substituted into body.html at build time as {{key}}
     "html.lock.title": "Meldingene krypteres i nettleseren med AES-256-GCM",
     "html.lock.text": "Kryptert",
+    "lock.aria": "Kryptert. Trykk for \xE5 lese mer",
+    "lock.title": "Du er p\xE5 en sikker tjeneste",
+    "lock.text": "Meldinger og bilder krypteres p\xE5 enheten din f\xF8r de sendes. Bare du og kompisen din kan lese dem. Det kan ikke Prek! heller.",
+    "lock.more": "Les mer om personvern",
     "html.meb.title": "Min profil",
     "html.avimg.alt": "Ditt bilde",
     "html.mewarn.text": "Lag gjenopprettingskode",
@@ -2640,10 +2681,10 @@ var PrekShrink = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
-    "nav.search": "S\xF8k blant kompiser",
+    "nav.search": "S\xF8k opp kompis",
     "nav.status": "Din status",
-    "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
-    "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.reqOne": "{name} vil bli kompisen din",
+    "nav.reqMany": "{n} vil bli kompisene dine",
     "nav.today": "I dag",
     "nav.yesterday": "I g\xE5r",
     "nav.addTitle": "Legg til kompis",
@@ -3777,6 +3818,10 @@ var PrekPreviews = (() => {
     // static page text (round 4); substituted into body.html at build time as {{key}}
     "html.lock.title": "Meldingene krypteres i nettleseren med AES-256-GCM",
     "html.lock.text": "Kryptert",
+    "lock.aria": "Kryptert. Trykk for \xE5 lese mer",
+    "lock.title": "Du er p\xE5 en sikker tjeneste",
+    "lock.text": "Meldinger og bilder krypteres p\xE5 enheten din f\xF8r de sendes. Bare du og kompisen din kan lese dem. Det kan ikke Prek! heller.",
+    "lock.more": "Les mer om personvern",
     "html.meb.title": "Min profil",
     "html.avimg.alt": "Ditt bilde",
     "html.mewarn.text": "Lag gjenopprettingskode",
@@ -3795,10 +3840,10 @@ var PrekPreviews = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
-    "nav.search": "S\xF8k blant kompiser",
+    "nav.search": "S\xF8k opp kompis",
     "nav.status": "Din status",
-    "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
-    "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.reqOne": "{name} vil bli kompisen din",
+    "nav.reqMany": "{n} vil bli kompisene dine",
     "nav.today": "I dag",
     "nav.yesterday": "I g\xE5r",
     "nav.addTitle": "Legg til kompis",
@@ -4541,6 +4586,10 @@ var PrekHelpers = (() => {
     // static page text (round 4); substituted into body.html at build time as {{key}}
     "html.lock.title": "Meldingene krypteres i nettleseren med AES-256-GCM",
     "html.lock.text": "Kryptert",
+    "lock.aria": "Kryptert. Trykk for \xE5 lese mer",
+    "lock.title": "Du er p\xE5 en sikker tjeneste",
+    "lock.text": "Meldinger og bilder krypteres p\xE5 enheten din f\xF8r de sendes. Bare du og kompisen din kan lese dem. Det kan ikke Prek! heller.",
+    "lock.more": "Les mer om personvern",
     "html.meb.title": "Min profil",
     "html.avimg.alt": "Ditt bilde",
     "html.mewarn.text": "Lag gjenopprettingskode",
@@ -4559,10 +4608,10 @@ var PrekHelpers = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
-    "nav.search": "S\xF8k blant kompiser",
+    "nav.search": "S\xF8k opp kompis",
     "nav.status": "Din status",
-    "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
-    "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.reqOne": "{name} vil bli kompisen din",
+    "nav.reqMany": "{n} vil bli kompisene dine",
     "nav.today": "I dag",
     "nav.yesterday": "I g\xE5r",
     "nav.addTitle": "Legg til kompis",
@@ -4801,7 +4850,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="e23e119";
+const PREK_VERSION="0.1.0",PREK_BUILD="e8ca126";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -5479,6 +5528,7 @@ function paintMe(){
   $("#avwrap").className="av "+ST[S.status];
   document.documentElement.style.setProperty("--dot",DOT[ST[S.status]]||DOT.on);
   $("#men").textContent=nm;
+  const na=$("#navav");if(na){na.textContent="";na.append(avEl(nm,okAv(myAv)?myAv:null,ST[S.status]));$("#navnm").textContent=nm}
   const sel=$("#st");$("#mep").textContent=sel.options[sel.selectedIndex].text;const pmi=$("#pm");if(document.activeElement!==pmi)pmi.value=S.profile.pm||"";
   const f=$("#mef");f.textContent="";f.append(ff(ST[S.status]));if(S.paintAbout)S.paintAbout();
   for(const b of document.querySelectorAll("#prof .seg"))b.setAttribute("aria-pressed",String(b.dataset.v===sel.value));
@@ -5497,7 +5547,7 @@ function fmtWhen(ts){
   return el("span",{class:"tm"},t);
 }
 // Search field above the friend list (phone layout): hides rows that do not match.
-function applyFilter(){const q=(($("#fq")||{}).value||"").trim().toLowerCase();for(const b of document.querySelectorAll("#friends .conv"))b.hidden=!!q&&!b.textContent.toLowerCase().includes(q)}
+function applyFilter(){const q=(($("#fq")||{}).value||"").trim().toLowerCase();$("#friends").classList.toggle("srch",!!q);for(const b of document.querySelectorAll("#friends .conv"))b.hidden=!!q&&!b.textContent.toLowerCase().includes(q)}
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
 function prev(id){return listLine(S.last.get(id))}
 function drawTitle(){
@@ -5507,14 +5557,27 @@ function drawTitle(){
   const sw={on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")}[ST[stOf(id)]||"off"];
   t.append(el("span",{class:"tsub"},pm?sw+" · "+pm:sw)); // phone layout only (mobil.css)
 }
+// Which friend groups are folded (phone), kept per person in this browser. Offline starts folded.
+let grpSet=null;
+function grpShut(){if(!grpSet){try{grpSet=new Set(JSON.parse(localStorage.getItem("prek_grp_"+S.user.id)||'["off"]'))}catch(x){grpSet=new Set(["off"])}}return grpSet}
+function grpSave(){try{localStorage.setItem("prek_grp_"+S.user.id,JSON.stringify([...grpSet]))}catch(x){}}
 function drawFriends(){
   if(S.chat&&$("#title")&&$("#title").dataset.k!==((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)+"|"+stOf(S.chat.other)){$("#title").dataset.k=((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)+"|"+stOf(S.chat.other);drawTitle()}
   const box=$("#friends");if(!box)return;box.textContent="";
   const rows=S.friends.map(id=>({id,st:ST[stOf(id)]||"off"}));
   sortFriendRows(rows,nameOf);
+  // Phone: MSN-style groups (Online incl. busy, Away, Offline) with fold-away headers. Desktop keeps the flat order above.
+  const phone=matchMedia("(max-width:700px)").matches,gkey=r=>r.st==="away"?"away":r.st==="off"?"off":"on",gcount={on:0,away:0,off:0};
+  if(phone){const ord={on:0,away:1,off:2};rows.sort((a,b)=>ord[gkey(a)]-ord[gkey(b)]||nameOf(a.id).localeCompare(nameOf(b.id),"nb"));for(const r of rows)gcount[gkey(r)]++}
+  const shutG=grpShut();let lastG="";
   const word={on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")};
   for(const r of rows){
-    const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":""),type:"button","data-id":r.id});
+    const g=gkey(r);
+    if(phone&&g!==lastG){lastG=g;const shut=shutG.has(g);
+      const h=el("button",{class:"grph"+(shut?" shut":""),type:"button","aria-expanded":String(!shut),"data-g":g},el("span",{class:"gd "+g}),el("span",{class:"gt"},word[g]),el("span",{class:"gn"},"("+gcount[g]+")"));
+      h.addEventListener("click",()=>{if(shut)shutG.delete(g);else shutG.add(g);grpSave();drawFriends()});
+      box.append(h)}
+    const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":"")+(phone&&shutG.has(g)?" gc":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
       el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
       el("span",{class:"rt"},fmtWhen((S.last.get(r.id)||{}).at),S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
@@ -5890,25 +5953,30 @@ function wire(){
   });
   // Phone bottom menu (Kompiser / Legg til / Meg): shows the friend list, the add panel or the profile panel full screen. Only visible on narrow screens (mobil.css).
   function navTo(t){
-    const sh=$("#shell");sh.classList.remove("tab-friends","tab-add","tab-me","compact");sh.classList.add("tab-"+t);
+    const sh=$("#shell");sh.classList.remove("tab-friends","tab-add","tab-me");sh.classList.add("tab-"+t);
     $("#prof").hidden=t!=="me";$("#meb").setAttribute("aria-expanded",String(t==="me"));
     $("#addfp").hidden=t!=="add";$("#addf").setAttribute("aria-expanded",String(t==="add"));
     if(t==="add"&&!$("#invqr")&&$("#mkinv"))$("#mkinv").click();
     for(const b of document.querySelectorAll("#mnav button")){if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
   }
   for(const b of document.querySelectorAll("#mnav button"))b.addEventListener("click",()=>navTo(b.dataset.tab));
-  { // Phone, Kompiser: the top (logo, profile card) folds to one line when the list is scrolled, so the list gets the room. Hysteresis (60 px down, 4 px up) and an overflow check keep a short list from flickering.
-    const hs=document.querySelector("#home .hs"),sh=$("#shell");
-    hs.addEventListener("scroll",()=>{
-      const c=sh.classList.contains("compact"),t=hs.scrollTop;
-      if(!c&&t>60&&hs.scrollHeight-hs.clientHeight>200)sh.classList.add("compact");
-      else if(c&&t<4)sh.classList.remove("compact");
-    },{passive:true});
+  { // Phone, Kompiser
+    const sh=$("#shell");
     // Swipe right from the left edge in a conversation = back (the iOS gesture), same as the back button.
     let sx=0,sy=0,sw=false;
     const chp=$("#chatpane");
     chp.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;sw=sx<28&&sh.classList.contains("inchat")},{passive:true});
     chp.addEventListener("touchend",e=>{if(!sw)return;sw=false;const t=e.changedTouches[0];if(t.clientX-sx>70&&Math.abs(t.clientY-sy)<50)$("#back").click()},{passive:true});
+  }
+  { // Lock button next to the logo: a short explanation of the encryption (phone only; the button is hidden on desktop)
+    const lb=$("#lockb"),lp=$("#lockpop");
+    const shut=()=>{lp.hidden=true;lb.setAttribute("aria-expanded","false")};
+    lb.addEventListener("click",ev=>{ev.stopPropagation();const o=lp.hidden;lp.hidden=!o;lb.setAttribute("aria-expanded",String(o))});
+    document.addEventListener("click",ev=>{if(!lp.hidden&&!lp.contains(ev.target))shut()});
+    $("#lockmore").addEventListener("click",()=>{shut();showInfo()});
+    $("#addplus").addEventListener("click",()=>navTo("add"));
+    // The grouping of the friend list follows the layout, so draw again when the window crosses the phone width
+    matchMedia("(max-width:700px)").addEventListener("change",()=>{if(S.friends)drawFriends()});
   }
   $("#rqbn").addEventListener("click",()=>navTo("add"));
   { // Status as three/four buttons on the profile page (phone layout); the select #st stays the source of truth

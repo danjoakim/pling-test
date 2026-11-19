@@ -417,6 +417,7 @@ function paintMe(){
   $("#avwrap").className="av "+ST[S.status];
   document.documentElement.style.setProperty("--dot",DOT[ST[S.status]]||DOT.on);
   $("#men").textContent=nm;
+  const na=$("#navav");if(na){na.textContent="";na.append(avEl(nm,okAv(myAv)?myAv:null,ST[S.status]));$("#navnm").textContent=nm}
   const sel=$("#st");$("#mep").textContent=sel.options[sel.selectedIndex].text;const pmi=$("#pm");if(document.activeElement!==pmi)pmi.value=S.profile.pm||"";
   const f=$("#mef");f.textContent="";f.append(ff(ST[S.status]));if(S.paintAbout)S.paintAbout();
   for(const b of document.querySelectorAll("#prof .seg"))b.setAttribute("aria-pressed",String(b.dataset.v===sel.value));
@@ -435,7 +436,7 @@ function fmtWhen(ts){
   return el("span",{class:"tm"},t);
 }
 // Search field above the friend list (phone layout): hides rows that do not match.
-function applyFilter(){const q=(($("#fq")||{}).value||"").trim().toLowerCase();for(const b of document.querySelectorAll("#friends .conv"))b.hidden=!!q&&!b.textContent.toLowerCase().includes(q)}
+function applyFilter(){const q=(($("#fq")||{}).value||"").trim().toLowerCase();$("#friends").classList.toggle("srch",!!q);for(const b of document.querySelectorAll("#friends .conv"))b.hidden=!!q&&!b.textContent.toLowerCase().includes(q)}
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
 function prev(id){return listLine(S.last.get(id))}
 function drawTitle(){
@@ -445,14 +446,27 @@ function drawTitle(){
   const sw={on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")}[ST[stOf(id)]||"off"];
   t.append(el("span",{class:"tsub"},pm?sw+" · "+pm:sw)); // phone layout only (mobil.css)
 }
+// Which friend groups are folded (phone), kept per person in this browser. Offline starts folded.
+let grpSet=null;
+function grpShut(){if(!grpSet){try{grpSet=new Set(JSON.parse(localStorage.getItem("prek_grp_"+S.user.id)||'["off"]'))}catch(x){grpSet=new Set(["off"])}}return grpSet}
+function grpSave(){try{localStorage.setItem("prek_grp_"+S.user.id,JSON.stringify([...grpSet]))}catch(x){}}
 function drawFriends(){
   if(S.chat&&$("#title")&&$("#title").dataset.k!==((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)+"|"+stOf(S.chat.other)){$("#title").dataset.k=((S.profiles.get(S.chat.other)||{}).pm||"")+"|"+nameOf(S.chat.other)+"|"+stOf(S.chat.other);drawTitle()}
   const box=$("#friends");if(!box)return;box.textContent="";
   const rows=S.friends.map(id=>({id,st:ST[stOf(id)]||"off"}));
   sortFriendRows(rows,nameOf);
+  // Phone: MSN-style groups (Online incl. busy, Away, Offline) with fold-away headers. Desktop keeps the flat order above.
+  const phone=matchMedia("(max-width:700px)").matches,gkey=r=>r.st==="away"?"away":r.st==="off"?"off":"on",gcount={on:0,away:0,off:0};
+  if(phone){const ord={on:0,away:1,off:2};rows.sort((a,b)=>ord[gkey(a)]-ord[gkey(b)]||nameOf(a.id).localeCompare(nameOf(b.id),"nb"));for(const r of rows)gcount[gkey(r)]++}
+  const shutG=grpShut();let lastG="";
   const word={on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")};
   for(const r of rows){
-    const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":""),type:"button","data-id":r.id});
+    const g=gkey(r);
+    if(phone&&g!==lastG){lastG=g;const shut=shutG.has(g);
+      const h=el("button",{class:"grph"+(shut?" shut":""),type:"button","aria-expanded":String(!shut),"data-g":g},el("span",{class:"gd "+g}),el("span",{class:"gt"},word[g]),el("span",{class:"gn"},"("+gcount[g]+")"));
+      h.addEventListener("click",()=>{if(shut)shutG.delete(g);else shutG.add(g);grpSave();drawFriends()});
+      box.append(h)}
+    const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":"")+(phone&&shutG.has(g)?" gc":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
       el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
       el("span",{class:"rt"},fmtWhen((S.last.get(r.id)||{}).at),S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
@@ -828,25 +842,30 @@ function wire(){
   });
   // Phone bottom menu (Kompiser / Legg til / Meg): shows the friend list, the add panel or the profile panel full screen. Only visible on narrow screens (mobil.css).
   function navTo(t){
-    const sh=$("#shell");sh.classList.remove("tab-friends","tab-add","tab-me","compact");sh.classList.add("tab-"+t);
+    const sh=$("#shell");sh.classList.remove("tab-friends","tab-add","tab-me");sh.classList.add("tab-"+t);
     $("#prof").hidden=t!=="me";$("#meb").setAttribute("aria-expanded",String(t==="me"));
     $("#addfp").hidden=t!=="add";$("#addf").setAttribute("aria-expanded",String(t==="add"));
     if(t==="add"&&!$("#invqr")&&$("#mkinv"))$("#mkinv").click();
     for(const b of document.querySelectorAll("#mnav button")){if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
   }
   for(const b of document.querySelectorAll("#mnav button"))b.addEventListener("click",()=>navTo(b.dataset.tab));
-  { // Phone, Kompiser: the top (logo, profile card) folds to one line when the list is scrolled, so the list gets the room. Hysteresis (60 px down, 4 px up) and an overflow check keep a short list from flickering.
-    const hs=document.querySelector("#home .hs"),sh=$("#shell");
-    hs.addEventListener("scroll",()=>{
-      const c=sh.classList.contains("compact"),t=hs.scrollTop;
-      if(!c&&t>60&&hs.scrollHeight-hs.clientHeight>200)sh.classList.add("compact");
-      else if(c&&t<4)sh.classList.remove("compact");
-    },{passive:true});
+  { // Phone, Kompiser
+    const sh=$("#shell");
     // Swipe right from the left edge in a conversation = back (the iOS gesture), same as the back button.
     let sx=0,sy=0,sw=false;
     const chp=$("#chatpane");
     chp.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;sw=sx<28&&sh.classList.contains("inchat")},{passive:true});
     chp.addEventListener("touchend",e=>{if(!sw)return;sw=false;const t=e.changedTouches[0];if(t.clientX-sx>70&&Math.abs(t.clientY-sy)<50)$("#back").click()},{passive:true});
+  }
+  { // Lock button next to the logo: a short explanation of the encryption (phone only; the button is hidden on desktop)
+    const lb=$("#lockb"),lp=$("#lockpop");
+    const shut=()=>{lp.hidden=true;lb.setAttribute("aria-expanded","false")};
+    lb.addEventListener("click",ev=>{ev.stopPropagation();const o=lp.hidden;lp.hidden=!o;lb.setAttribute("aria-expanded",String(o))});
+    document.addEventListener("click",ev=>{if(!lp.hidden&&!lp.contains(ev.target))shut()});
+    $("#lockmore").addEventListener("click",()=>{shut();showInfo()});
+    $("#addplus").addEventListener("click",()=>navTo("add"));
+    // The grouping of the friend list follows the layout, so draw again when the window crosses the phone width
+    matchMedia("(max-width:700px)").addEventListener("change",()=>{if(S.friends)drawFriends()});
   }
   $("#rqbn").addEventListener("click",()=>navTo("add"));
   { // Status as three/four buttons on the profile page (phone layout); the select #st stays the source of truth

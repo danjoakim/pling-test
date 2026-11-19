@@ -1,6 +1,6 @@
 /*# Telefonvisning (smal skjerm): følger tegningene i designfilen «Prek! mobil» (Kompiser, Samtale, Legg til, Meg). Gjelder bare ≤700px, så PC og skrivebordsappen er uendret. Kommer etter extra.css. */
 .mnav{display:none}
-.mtop,.plusb,.plusm,.emoh,.efn,.meta,.mnew,.scanbtn,.emailtog{display:none}
+.mtop,.plusb,.plusm,.emoh,.efn,.meta,.mnew,.scanbtn,.emailtog,.lockpop,.srow,.grph{display:none}
 .lcard{display:contents}.pwrap{display:contents}.ltabs,.leye,.lnote,.stw,.fsearch,.rqbn,.tm,.tsub,.hdp,.encp,.dday,.sechd,.ptitle,.scantxt,.coderow,.ch2,.segs{display:none}
 @media(max-width:700px){
  /* ramme: ingen XP-vindu, hele skjermen */
@@ -490,15 +490,47 @@ html:not(.lys) .win .m .rxc.me{background:#1d3a63;border-color:#4a8fe0}
 .win .m .rxc .an{width:22px;height:22px}
 /* Settings panel is only for the Meg tab on phones; never inline in Kompiser */
 .shell:not(.tab-me) #prof{display:none!important}
-/* Kompiser: søket blir stående, toppen foldes sammen ved skroll */
-.win .fsearch,html.lys .win .fsearch{position:sticky;top:0;z-index:3;box-shadow:0 0 0 16px #fbfdff}
-html:not(.lys) .win .fsearch{box-shadow:0 0 0 16px #0f2340}
-.shell.tab-friends.compact .mtop,.shell.tab-friends.compact .mepi{display:none}
-.shell.tab-friends.compact .mewrap{margin:calc(max(env(safe-area-inset-top,0px),44px) + 6px) 16px 8px}
-.shell.tab-friends.compact .me{min-height:64px;padding:8px 14px}
-.shell.tab-friends.compact .me .av{width:44px;height:44px;font-size:17px}
-.shell.tab-friends.compact .me .av::after{width:16px;height:16px}
-.shell.tab-friends.compact .me{align-items:center}
-.shell.tab-friends.compact .me .t{align-self:center}
-.shell.tab-friends.compact .me .t small{display:none}
+/* ---- Kompiser (mockup D): logo + lås, søk med +, MSN-grupper, ønske nederst, profil i bunnmenyen ---- */
+.shell.tab-friends .mewrap,.homebar{display:none!important}
+.shell.tab-friends .mtop{padding-bottom:10px}
+.shell.tab-friends .mlk{width:44px;height:44px;padding:0;gap:0;justify-content:center}
+.lockpop:not([hidden]){display:block;position:absolute;z-index:20;top:calc(max(env(safe-area-inset-top,0px),44px) + 52px);left:56px;right:16px;padding:16px;border-radius:18px;background:#fff;color:#10304f;border:1px solid #d3e3f3;box-shadow:0 10px 30px rgba(16,48,79,.28)}
+.lockpop b{display:block;font:700 16px Inter,system-ui,sans-serif}
+.lockpop p{margin:8px 0 6px;font:400 14px/20px Inter,system-ui,sans-serif;color:#35597d}
+.win .lockpop .lockmore{min-height:44px;padding:0;border:0!important;background:none!important;box-shadow:none!important;color:#1f5fb8;font:600 15px Inter,system-ui,sans-serif;text-shadow:none}
+html:not(.lys) .lockpop{background:#12294d;border-color:#2a4468;color:#e6f0fb}
+html:not(.lys) .lockpop p{color:#9cb6d3}
+html:not(.lys) .win .lockpop .lockmore{color:#9cc8ff}
+.shell.tab-friends .hs{margin-top:6px}
+.win .srow{display:flex;align-items:center;gap:10px;margin:6px 16px 10px;position:sticky;top:0;z-index:4;box-shadow:0 0 0 16px #fbfdff}
+html:not(.lys) .win .srow{box-shadow:0 0 0 16px #0f2340}
+.shell.tab-add .srow,.shell.tab-me .srow{display:none}
+html .win .srow .fsearch{flex:1;min-width:0;width:auto;margin:0!important;height:44px;border-radius:22px;position:static!important;box-shadow:none!important}
+.win .addplus{width:44px;height:44px;min-height:44px;flex:none;padding:0;border-radius:50%;border:0!important;background:#2a5fb8!important;box-shadow:none!important;display:grid;place-items:center}
+.addplus svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round}
+.win .grph{position:sticky;top:56px;z-index:3;display:flex;align-items:center;gap:8px;width:100%;min-height:48px;padding:0 16px;border:0!important;border-radius:0;background:#fbfdff!important;box-shadow:none!important;text-shadow:none;text-align:left;font:700 13px Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#35597d}
+html:not(.lys) .win #friends .grph{background:#0f2340!important;color:#8fb0d2}
+html.lys .win #friends .grph{background:#fbfdff!important}
+.grph::before{content:"";flex:none;width:7px;height:7px;margin:0 4px 3px 2px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:rotate(45deg)}
+.grph.shut::before{transform:rotate(-45deg);margin-bottom:0}
+.grph .gd{width:9px;height:9px;border-radius:50%;background:#9aa9b9}
+.grph .gd.on{background:#43d65a}.grph .gd.away{background:#f0a92e}
+.grph .gn{font-weight:500;letter-spacing:0;text-transform:none}
+.conv.gc{display:none}
+#friends.srch .conv.gc:not([hidden]){display:flex}
+#friends.srch .grph{display:none}
+.rqbn{position:sticky;bottom:0;z-index:3;margin:6px 16px 8px}
+html .win #rqbn{box-shadow:0 0 0 8px #fbfdff!important}
+html:not(.lys) .win #rqbn{box-shadow:0 0 0 8px #0f2340!important}
+.mnav .navav{display:block;position:relative;width:28px;height:28px}
+.win .mnav .navav .pav{width:28px;height:28px;font-size:11px;border-radius:50%;position:relative;overflow:visible;border:0;box-shadow:none;background:linear-gradient(#6aa8e8,#2a5fb8);color:#fff}
+.win .mnav .navav .pav img{border-radius:50%;width:100%;height:100%;object-fit:cover}
+.win .mnav .navav .pav::after{content:"";position:absolute;right:-3px;bottom:-3px;width:12px;height:12px;border-radius:50%;background:var(--fc);border:2px solid #fbfdff;box-sizing:border-box}
+html:not(.lys) .win .mnav .navav .pav::after{border-color:#0f2340}
+.navnm{max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.win .mlk{background:rgba(255,255,255,.65)!important;border:1px solid rgba(70,120,170,.35)!important;box-shadow:none!important;color:#2a5f93;text-shadow:none}
+html:not(.lys) .win .mlk{background:rgba(255,255,255,.08)!important;border-color:#34517a!important;color:#9cc8ff}
+.shell.tab-friends .hs{display:flex;flex-direction:column}
+.shell.tab-friends .hs>*{flex:none}
+.shell.tab-friends .hs>#friends{flex:1 0 auto}
 }

@@ -1,9 +1,10 @@
 <div class="win" id="app">
  <div class="tb"><span id="tbi"></span><span class="tbn" data-prk="tbl"></span><span class="lock" id="lock" hidden title="{{html.lock.title}}">{{html.lock.text}}</span></div>
  <div class="scr" id="scr"><div class="sc"></div></div>
- <div class="shell" id="shell" hidden>
+ <div class="shell tab-friends" id="shell" hidden>
   <section class="home" id="home">
-   <div class="mtop"><span class="mlg" data-prk="tbl"></span><span class="mlk"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>{{html.lock.text}}</span></div>
+   <div class="mtop"><span class="mlg" data-prk="tbl"></span><button type="button" class="mlk" id="lockb" aria-label="{{lock.aria}}" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button></div>
+   <div class="lockpop" id="lockpop" role="dialog" aria-label="{{lock.title}}" hidden><b>{{lock.title}}</b><p>{{lock.text}}</p><button type="button" class="lockmore" id="lockmore">{{lock.more}}</button></div>
    <div class="mewrap">
    <button class="me" id="meb" type="button" aria-expanded="false" title="{{html.meb.title}}">
     <span class="av on" id="avwrap"><img id="avimg" alt="{{html.avimg.alt}}" hidden><span id="avini">?</span></span>
@@ -30,9 +31,8 @@
    <h2 class="ptitle" id="ptitle">{{nav.addTitle}}</h2>
    <div class="hs">
     <div id="pairbox"></div>
-    <input id="fq" class="fsearch" type="search" placeholder="{{nav.search}}" aria-label="{{nav.search}}" autocomplete="off" autocapitalize="off">
-    <button id="rqbn" class="rqbn" type="button" hidden><span class="rqn"></span><span class="rqt"></span><span class="rqc" aria-hidden="true">›</span></button>
-    <div id="reqs" hidden></div>
+    <div class="srow"><input id="fq" class="fsearch" type="search" placeholder="{{nav.search}}" aria-label="{{nav.search}}" autocomplete="off" autocapitalize="off"><button type="button" class="addplus" id="addplus" aria-label="{{nav.addTitle}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div id="reqs" hidden></div>
     <div class="homebar"><span class="grp">{{html.home.friendsHeading}}</span><button class="glass" id="addf" type="button" aria-expanded="false">{{html.addf.text}}</button></div>
     <div class="add" id="addfp" hidden>
      <div class="sechd eh">{{nav.emailHead}}</div>
@@ -47,11 +47,12 @@
      <button class="emailtog" id="emailtog" type="button" aria-expanded="false">{{nav.emailHead}}</button>
     </div>
     <div class="list" id="friends"></div>
+    <button id="rqbn" class="rqbn" type="button" hidden><span class="rqn"></span><span class="rqt"></span><span class="rqc" aria-hidden="true">›</span></button>
    </div>
    <nav class="mnav" id="mnav" aria-label="{{nav.aria}}">
     <button type="button" data-tab="friends" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2 .7 3.5 2.6 3.5 5.7"/></svg>{{nav.friends}}</button>
     <button type="button" data-tab="add"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M19 7v6M16 10h6"/></svg>{{nav.add}}<span class="nb" id="navb" hidden></span></button>
-    <button type="button" data-tab="me"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>{{nav.me}}</button>
+    <button type="button" data-tab="me"><span class="navav" id="navav" aria-hidden="true"></span><span class="navnm" id="navnm">{{nav.me}}</span></button>
    </nav>
   </section>
 
