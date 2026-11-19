@@ -34,6 +34,12 @@ jobs:
           # Apple requires iOS 15 or later from April 2027 (ITMS-90068)
           step target bash -c "sed -i '' 's/platform :ios, .14.0./platform :ios, '15.0'/' ios/App/Podfile; sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]*;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/' ios/App/App.xcodeproj/project.pbxproj; grep -n 'platform' ios/App/Podfile"
           step cap-sync npx cap sync ios
+      - name: Permission texts
+        run: |
+          source ../desktop/ci-step.sh
+          # without these iOS kills the app the moment the camera or photo picker is opened
+          P=ios/App/App/Info.plist
+          step plist bash -c "/usr/libexec/PlistBuddy -c 'Add :NSCameraUsageDescription string Prek! bruker kameraet når du tar et bilde som du vil sende i en samtale eller bruke som profilbilde.' $P; /usr/libexec/PlistBuddy -c 'Add :NSPhotoLibraryUsageDescription string Prek! trenger tilgang til bildene dine når du velger et bilde å sende eller bruke som profilbilde.' $P; /usr/libexec/PlistBuddy -c 'Print' $P | grep -c UsageDescription"
       - name: Version
         run: |
           source ../desktop/ci-step.sh
