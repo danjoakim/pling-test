@@ -56,6 +56,7 @@ jobs:
           step bgmode bash -c "/usr/libexec/PlistBuddy -c 'Add :UIBackgroundModes array' $P; /usr/libexec/PlistBuddy -c 'Add :UIBackgroundModes:0 string remote-notification' $P"
           step ring afconvert -f caff -d LEI16 ring.wav ios/App/App/ring.caf
           step xcodeproj-gem gem install xcodeproj --no-document --user-install
+          step appdelegate python3 patch-appdelegate.py
           step xcodeproj bash -c 'export GEM_PATH="$(ruby -e "puts Gem.user_dir"):$(ruby -e "puts Gem.default_dir")"; ruby add-push.rb'
       - name: Version
         run: |
@@ -76,4 +77,5 @@ jobs:
           AUTH="-authenticationKeyPath $KEY -authenticationKeyID $ASC_KEY_ID -authenticationKeyIssuerID $ASC_ISSUER_ID"
           cd ios/App
           step archive xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -destination generic/platform=iOS -archivePath "$RUNNER_TEMP/Prek.xcarchive" -allowProvisioningUpdates $AUTH DEVELOPMENT_TEAM=$TEAM CODE_SIGN_STYLE=Automatic archive
+          step diag bash -c 'A="$RUNNER_TEMP/Prek.xcarchive/Products/Applications/App.app"; echo "--- signed entitlements"; codesign -d --entitlements - "$A" 2>&1; echo "--- profile"; security cms -D -i "$A/embedded.mobileprovision" 2>/dev/null | grep -A1 -E "aps-environment|time-sensitive|ProfileDistributionType|Name" | head -30' || true
           step export-upload xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Prek.xcarchive" -exportOptionsPlist ../../ExportOptions.plist -allowProvisioningUpdates $AUTH
