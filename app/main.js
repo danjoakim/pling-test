@@ -927,8 +927,8 @@ function wire(){
     const paintSnd=()=>{snd.querySelector(".mrv").textContent=soundOn()?tr("me.soundOn"):tr("me.soundOff")};paintSnd();
     row("M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM11 18h2",tr("me.rowDevices"),"",()=>pageDevices());
     row("M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14.3 3h-4l-.3 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2l.3 2.6h4l.3-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z",tr("me.rowSettings"),"",()=>pageSettings());
-    row("M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13",tr("del.open"),"",showDelete,"red");
     row("M10 4H5v16h5M15 8l4 4-4 4M19 12H9",tr("common.logout"),"",doLogout);
+    row("M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13",tr("del.open"),"",showDelete,"red");
     const ab=el("div",{class:"mnew mabout"},el("div",{class:"mah"},el("b",{},tr("me.about")),el("button",{type:"button",class:"mae",onclick:()=>pageAbout()},tr("me.aboutEdit"))),el("p",{class:"mat",id:"abouttxt"}),el("div",{class:"mal"},tr("me.aboutNote")));
     stat.after(rows);rows.after(ab);
     S.paintAbout=()=>{const t=$("#abouttxt");if(!t)return;const a=S.profile&&S.profile.about;t.textContent=a||tr("me.aboutEmpty");t.classList.toggle("empty",!a)};
