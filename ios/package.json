@@ -7,6 +7,7 @@
     "@capacitor/camera": "^7",
     "@capacitor/cli": "^7",
     "@capacitor/core": "^7",
+    "@capacitor/haptics": "^7",
     "@capacitor/ios": "^7",
     "@capacitor/push-notifications": "^7"
   }

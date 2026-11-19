@@ -404,10 +404,16 @@ async function loadPreviews(){
 /* Dansende banan i dobbeltpling-banneren (Dan 19. nov: hommage til MSN). Egen tegning, ren SVG med CSS-animasjon (extra.css, .dpb). */
 const BANAN='<svg class="dpbn" viewBox="-6 -2 112 128" width="46" height="53" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="dpb-b"><g class="dpb-al"><path d="M24 62 C14 62 8 54 8 44" fill="none" stroke="#e0b21c" stroke-width="5" stroke-linecap="round"/></g><g class="dpb-ar"><path d="M50 64 C60 62 66 54 66 44" fill="none" stroke="#e0b21c" stroke-width="5" stroke-linecap="round"/></g><path d="M30 14 C16 44 20 76 52 90 C70 98 88 92 95 80 C74 84 56 72 50 52 C46 36 46 22 41 12 Z" fill="#f7d231" stroke="#d9a916" stroke-width="3" stroke-linejoin="round"/><path d="M30 14 L41 12 L39 4 L32 5 Z" fill="#7a5320" stroke="#7a5320" stroke-width="2" stroke-linejoin="round"/><path d="M21 40 C22 20 52 18 52 40" fill="none" stroke="#10304f" stroke-width="3.5" stroke-linecap="round"/><rect x="17" y="38" width="8" height="14" rx="4" fill="#1b5fb8" stroke="#10304f" stroke-width="2"/><rect x="48" y="38" width="8" height="14" rx="4" fill="#1b5fb8" stroke="#10304f" stroke-width="2"/><rect x="26" y="47" width="11" height="9" rx="3.5" fill="#10304f"/><rect x="38" y="47" width="11" height="9" rx="3.5" fill="#10304f"/><path d="M36.5 50 H38.5" stroke="#10304f" stroke-width="2.5"/><path d="M28.5 50 L31.5 49.2 M40.5 50 L43.5 49.2" stroke="#fff" stroke-opacity=".55" stroke-width="1.6" stroke-linecap="round"/><path d="M32 62 Q38 69 44 62" fill="none" stroke="#10304f" stroke-width="3" stroke-linecap="round"/><g class="dpb-l1"><path d="M54 90 L50 110 L42 110" fill="none" stroke="#e0b21c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g><g class="dpb-l2"><path d="M72 96 L76 112 L84 112" fill="none" stroke="#e0b21c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></g><text class="dpb-n" x="74" y="30" font-size="16" fill="#a6ff3d" font-weight="900">\u266a</text><text class="dpb-n dpb-n2" x="84" y="46" font-size="13" fill="#a6ff3d" font-weight="900">\u266b</text></svg>';
 const dpSeen=new Set(),dpFlash=new Set();let dpT=0;
+/* Kraftig ring-vibrasjon ved dobbeltpling når appen er åpen: iOS-appen via Capacitor Haptics (nettleseren har navigator.vibrate). */
+function buzz(){
+  try{const h=nativePlugin("Haptics");
+    if(h&&h.vibrate){for(let i=0;i<3;i++)setTimeout(()=>{try{h.vibrate({duration:400})}catch(x){}},i*700);return}}catch(x){}
+  try{navigator.vibrate&&navigator.vibrate([400,300,400,300,400])}catch(x){}
+}
 function alertDp(fid,id,ts){
   /* hver melding utløser bare én gang; gammel melding: ikke ring; dempet: ingen lyd, risting, banner eller tittelblink */
   if(dpDecision(id,ts,Date.now(),dpSeen,muted(fid))!=="alert")return;
-  stor();
+  stor();buzz();
   dpFlash.add(fid);drawFriends();setTimeout(()=>{dpFlash.delete(fid);drawFriends()},10000);
   const old=$("#dpb");if(old)old.remove();
   const b=el("button",{id:"dpb",class:"dpb",type:"button"},el("span",{class:"dpbw"}),el("span",{},tr("dp.banner",{name:nameOf(fid)})));
