@@ -828,13 +828,26 @@ function wire(){
   });
   // Phone bottom menu (Kompiser / Legg til / Meg): shows the friend list, the add panel or the profile panel full screen. Only visible on narrow screens (mobil.css).
   function navTo(t){
-    const sh=$("#shell");sh.classList.remove("tab-friends","tab-add","tab-me");sh.classList.add("tab-"+t);
+    const sh=$("#shell");sh.classList.remove("tab-friends","tab-add","tab-me","compact");sh.classList.add("tab-"+t);
     $("#prof").hidden=t!=="me";$("#meb").setAttribute("aria-expanded",String(t==="me"));
     $("#addfp").hidden=t!=="add";$("#addf").setAttribute("aria-expanded",String(t==="add"));
     if(t==="add"&&!$("#invqr")&&$("#mkinv"))$("#mkinv").click();
     for(const b of document.querySelectorAll("#mnav button")){if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
   }
   for(const b of document.querySelectorAll("#mnav button"))b.addEventListener("click",()=>navTo(b.dataset.tab));
+  { // Phone, Kompiser: the top (logo, profile card) folds to one line when the list is scrolled, so the list gets the room. Hysteresis (60 px down, 4 px up) and an overflow check keep a short list from flickering.
+    const hs=document.querySelector("#home .hs"),sh=$("#shell");
+    hs.addEventListener("scroll",()=>{
+      const c=sh.classList.contains("compact"),t=hs.scrollTop;
+      if(!c&&t>60&&hs.scrollHeight-hs.clientHeight>200)sh.classList.add("compact");
+      else if(c&&t<4)sh.classList.remove("compact");
+    },{passive:true});
+    // Swipe right from the left edge in a conversation = back (the iOS gesture), same as the back button.
+    let sx=0,sy=0,sw=false;
+    const chp=$("#chatpane");
+    chp.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;sw=sx<28&&sh.classList.contains("inchat")},{passive:true});
+    chp.addEventListener("touchend",e=>{if(!sw)return;sw=false;const t=e.changedTouches[0];if(t.clientX-sx>70&&Math.abs(t.clientY-sy)<50)$("#back").click()},{passive:true});
+  }
   $("#rqbn").addEventListener("click",()=>navTo("add"));
   { // Status as three/four buttons on the profile page (phone layout); the select #st stays the source of truth
     const sel=$("#st"),box=el("div",{class:"segs",role:"group","aria-label":tr("nav.status")});

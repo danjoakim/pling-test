@@ -38,6 +38,18 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await A.click("[data-tab=friends]");await A.waitForTimeout(150);
  must(await A.evaluate(()=>getComputedStyle(document.getElementById("prof")).display)==="none","#prof skjult i Kompiser");
  must(await A.isVisible("#fq"),"søkefeltet synlig");
+ // Kompiser: toppen foldes ved skroll, søket blir stående, og tilbake igjen øverst
+ await A.evaluate(()=>{const f=document.getElementById("friends");for(let i=0;i<20;i++){const d=document.createElement("div");d.className="conv";d.style.minHeight="72px";d.textContent="Rad "+i;f.appendChild(d)}});
+ await A.evaluate(()=>{document.querySelector("#home .hs").scrollTop=300});await A.waitForTimeout(250);
+ must(await A.evaluate(()=>document.getElementById("shell").classList.contains("compact")),"toppen foldes ved skroll");
+ must(await A.evaluate(()=>{const h=document.querySelector("#home .hs").getBoundingClientRect().top,q=document.getElementById("fq").getBoundingClientRect().top;return Math.abs(q-h-6)<12||q-h<20}),"søket står fast øverst i lista");
+ await A.evaluate(()=>{document.querySelector("#home .hs").scrollTop=0});await A.waitForTimeout(250);
+ must(!(await A.evaluate(()=>document.getElementById("shell").classList.contains("compact"))),"toppen er tilbake øverst");
+ // Sveip fra venstre kant i samtale = tilbake
+ const sw=await A.evaluate(()=>{let n=0;document.getElementById("back").addEventListener("click",()=>n++);document.getElementById("shell").classList.add("inchat");const c=document.getElementById("chatpane");const mk=(t,x,y)=>new Touch({identifier:1,target:c,clientX:x,clientY:y});
+  const ev=(type,x,y)=>c.dispatchEvent(new TouchEvent(type,{bubbles:true,touches:type==="touchend"?[]:[mk(0,x,y)],changedTouches:[mk(0,x,y)]}));
+  ev("touchstart",100,400);ev("touchend",220,400);const mid=n;ev("touchstart",10,400);ev("touchend",160,410);return [mid,n]});
+ must(sw[0]===0&&sw[1]===1,"sveip fra kanten gir tilbake, sveip midt på skjermen gjør ingenting: "+sw);
  console.log("FEIL A:",A.errs.length?A.errs:"ingen");
  await br.close();srv.close();
 })().catch(e=>{console.error("TESTFEIL",e.message);process.exit(1)});

@@ -490,4 +490,15 @@ html:not(.lys) .win .m .rxc.me{background:#1d3a63;border-color:#4a8fe0}
 .win .m .rxc .an{width:22px;height:22px}
 /* Settings panel is only for the Meg tab on phones; never inline in Kompiser */
 .shell:not(.tab-me) #prof{display:none!important}
+/* Kompiser: søket blir stående, toppen foldes sammen ved skroll */
+.win .fsearch,html.lys .win .fsearch{position:sticky;top:0;z-index:3;box-shadow:0 0 0 16px #fbfdff}
+html:not(.lys) .win .fsearch{box-shadow:0 0 0 16px #0f2340}
+.shell.tab-friends.compact .mtop,.shell.tab-friends.compact .mepi{display:none}
+.shell.tab-friends.compact .mewrap{margin:calc(max(env(safe-area-inset-top,0px),44px) + 6px) 16px 8px}
+.shell.tab-friends.compact .me{min-height:64px;padding:8px 14px}
+.shell.tab-friends.compact .me .av{width:44px;height:44px;font-size:17px}
+.shell.tab-friends.compact .me .av::after{width:16px;height:16px}
+.shell.tab-friends.compact .me{align-items:center}
+.shell.tab-friends.compact .me .t{align-self:center}
+.shell.tab-friends.compact .me .t small{display:none}
 }
