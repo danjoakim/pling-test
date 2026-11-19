@@ -32,7 +32,7 @@ const root=path.join(__dirname,"..");
  const auth={signUp:rec("signUp"),signInWithPassword:rec("signInWithPassword"),signInWithOtp:rec("signInWithOtp"),verifyOtp:rec("verifyOtp"),
   signOut:rec("signOut"),getSession:rec("getSession"),onAuthStateChange:cb=>{authCalls.push(["onAuthStateChange",cb])}};
  const api=createApi({rpc:async(name,args)=>{calls.push([name,args||{}]);return {data:null,error:null}},auth,from,storage,functions,channel,removeAllChannels(){}});
- const sample={findByEmail:["a@b.no"],sendRequest:["u"],acceptRequest:["u"],removeFriend:["u"],blockUser:["u"],unblockUser:["u"],
+ const sample={findByEmail:["a@b.no"],sendRequest:["u"],acceptRequest:["u"],removeFriend:["u"],blockUser:["u"],reportMessage:["c",1,"spam","t",true],unblockUser:["u"],
   openDm:["u"],setChatExpiry:["c",7],markRead:["c",5],setPresence:["on",null],getPresence:[],createInvite:["h"],peekInvite:["t"],
   redeemInvite:["t"],revokeInvites:[],
   signUp:["a@b.no","pw"],signIn:["a@b.no","pw"],sendLoginCode:["a@b.no","https://x/"],verifyLoginCode:["a@b.no","123456"],

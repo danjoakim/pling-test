@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-2fCpvJ4iNcbVy7xj7s76ufG5nrOncQXRM5BTShvXN8c='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-XwpbuizfNV3awrsjehJXKKkOKsA4iyCVsuN22RC2jcU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -515,6 +515,18 @@ html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;touch
 #upd{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:10px;max-width:calc(100% - 24px);padding:8px 12px;border-radius:10px;background:var(--panel,#0c1630);color:var(--ink,#e9f0ff);border:1px solid var(--line,#2c4580);box-shadow:0 8px 28px rgba(0,0,0,.45);font-size:13px}
 html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,.98));color:#16324f;border-color:#8fb4d8}
 #upd button[hidden]{display:none}
+/* sider med rapport og slett konto: på skrivebordet er dette vanlige dialoger, ekstra elementer for telefonvisning er skjult */
+.pgt,.pgico,.pgh2,.pgsp,.pgcancel{display:none}
+.rptq{margin:8px 0;padding:8px 10px;border:1px solid var(--line,#2c4580);border-radius:8px;overflow-wrap:anywhere}
+.rptr{display:flex;flex-direction:column;margin:8px 0}
+.rptro,.rptb{display:flex;align-items:center;gap:10px;background:none;border:0;color:inherit;font:inherit;padding:6px 4px;text-align:left;cursor:pointer}
+.rpto{width:18px;height:18px;box-sizing:border-box;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;flex:none}
+.rpto span{width:8px;height:8px;border-radius:50%;background:transparent}
+.rptro.on .rpto span{background:currentColor}
+.rptc{width:18px;height:18px;box-sizing:border-box;border-radius:4px;border:2px solid currentColor;flex:none}
+.rptb.on .rptc{background:currentColor}
+.rptn{margin:8px 0;font-size:13px;opacity:.85}
+.glass.pgprim{margin-top:8px}
 
 /*# Telefonvisning (smal skjerm): følger tegningene i designfilen «Prek! mobil» (Kompiser, Samtale, Legg til, Meg). Gjelder bare ≤700px, så PC og skrivebordsappen er uendret. Kommer etter extra.css. */
 .mnav{display:none}
@@ -748,6 +760,74 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
 
 /* iOS zoomer inn på felt under 16px og slipper ikke igjen */
 .win input,.win select,.win textarea,html.lys .win input,html.lys .win select,.win .mepi,html.lys .win .mepi,.lcard input::placeholder{font-size:16px!important}
+
+/* ---- Slett konto og Rapporter som hele sider (SlettKonto/Rapporter i mockupene) ---- */
+#info.pg{background:linear-gradient(#d9ecfd,#a9cdee);padding:0;align-items:stretch;justify-content:stretch;z-index:40}
+.pg .infob,html.lys .pg .infob{width:100%;max-height:none;height:100%;border:0;border-radius:0;box-shadow:none;background:none;color:#10304f;display:flex;flex-direction:column}
+.pg .infoh,html.lys .pg .infoh{border:0;padding:max(env(safe-area-inset-top,0px),44px) 20px 16px;justify-content:flex-start;gap:10px;flex:none}
+.pg .infoh b{display:none}
+.pg .pgt{display:block;font-size:20px;font-weight:700;order:2}
+.pg .infoh button,.pg .infoh button:hover{order:1;width:44px;height:44px;padding:0;border:0;background:none!important;box-shadow:none;font-size:0!important;position:relative;color:transparent}
+.pg .infoh button::before{content:"";position:absolute;left:50%;top:50%;width:12px;height:12px;border-left:2.4px solid #2a5fb8;border-bottom:2.4px solid #2a5fb8;transform:translate(-30%,-50%) rotate(45deg)}
+.pg .infot{flex:1;min-height:0;background:#fbfdff;border-radius:26px 26px 0 0;padding:22px 16px calc(env(safe-area-inset-bottom,0px) + 20px);display:flex;flex-direction:column;gap:16px;box-shadow:0 -4px 20px rgba(16,48,79,.12);font-size:15px;overflow:auto;line-height:1.45}
+.pg .infot p,.pg .infot ul{margin:0}
+.pg .pgico{display:flex;align-self:center;width:64px;height:64px;border-radius:50%;background:#fdecea;border:1px solid #f3b8b2;color:#c8352a;align-items:center;justify-content:center;flex:none}
+.pg .pgh2{display:block;margin:-6px 0 0;text-align:center;font-size:20px;font-weight:700;line-height:1.25}
+.pg .pglead{text-align:center;color:#4d6f93;margin-top:-10px}
+.pg .infot ul{list-style:none;padding:6px 16px;border-radius:18px;background:#fff;border:1px solid #d3e3f3}
+.pg .infot li{display:flex;align-items:center;gap:12px;min-height:48px;margin:0;border-top:1px solid #e3eef8}
+.pg .infot li:first-child{border-top:0}
+.pg .infot li::before{content:"";width:18px;height:18px;flex:none;background:#c8352a;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E") center/contain no-repeat}
+.pg .pgnote{font-size:14px;color:#4d6f93}
+.pg .pglbl{display:block;font-size:13px;font-weight:700;color:#4d6f93;text-transform:uppercase;letter-spacing:.6px;margin-bottom:-10px}
+.pg .infot input,html.lys .pg .infot input{width:100%;box-sizing:border-box;min-height:52px;border-radius:14px;border:1px solid #d3e3f3;background:#fff;padding:0 16px;color:#10304f;font-weight:500}
+.pg .pgsp{display:block;flex:1}
+.pg .infot .glass.dng,.pg .infot .pgprim{display:block;width:100%;min-height:54px;border-radius:16px;border:0;box-shadow:none;margin:0;font:700 16px Inter,system-ui,sans-serif;color:#fff;background:#d9453a!important}
+.pg .infot .pgprim{background:#2a5fb8!important}
+.pg .infot .glass.dng:disabled{opacity:.45}
+.pg .pgcancel{display:flex;align-items:center;justify-content:center;min-height:48px;background:none;border:0;color:#2a5fb8;font:600 16px Inter,system-ui,sans-serif}
+.pg .infot .err{text-align:center;color:#c8352a;min-height:0}
+.pg .rptask{color:#4d6f93}
+.pg .rptq{align-self:flex-start;max-width:80%;margin:0;padding:12px 14px;border-radius:16px 16px 16px 4px;background:#fff;border:1px solid #d3e3f3;color:#10304f}
+.pg .rptr{margin:0;border-radius:18px;background:#fff;border:1px solid #d3e3f3;overflow:hidden}
+.pg .rptro,.pg .rptro:hover,.pg .rptro:focus,.pg .rptro:active{width:100%;min-height:54px;padding:0 16px;gap:12px;border:0;border-top:1px solid #e3eef8;border-radius:0;font-size:16px;font-weight:500;color:#10304f;background:none!important;box-shadow:none}
+.pg .rptro:first-child,.pg .rptro:first-child:hover{border-top:0}
+.pg .rptro:hover .rpto,.pg .rptro .rpto{opacity:1}
+.pg .infot input:focus,html.lys .pg .infot input:focus{border-color:#2a5fb8;outline:0;box-shadow:0 0 0 3px rgba(42,95,184,.18)}
+.pg .rptro.on{background:#eaf2fa!important}
+.pg .rpto{width:22px;height:22px;border-color:#d3e3f3;color:#2a5fb8}
+.pg .rptro.on .rpto{border-color:#2a5fb8}
+.pg .rpto span{width:10px;height:10px}
+.pg .rptro.on .rpto span{background:#2a5fb8}
+.pg .rptb{min-height:48px;padding:0;gap:12px;font-size:15px;color:#10304f;background:none!important;box-shadow:none}
+.pg .rptc{width:26px;height:26px;border-radius:8px;border:2px solid #d3e3f3;background:#fff;position:relative}
+.pg .rptb.on .rptc{background:#2a5fb8;border-color:#2a5fb8}
+.pg .rptb.on .rptc::after{content:"";position:absolute;left:8px;top:3px;width:6px;height:11px;border-right:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(45deg)}
+.pg .rptn{display:flex;align-items:flex-start;gap:8px;margin:0;font-size:13px;color:#4d6f93;opacity:1}
+.pg .rptn::before{content:"";width:16px;height:16px;flex:none;margin-top:2px;background:#4d6f93;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='9' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='9' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat}
+/* natt */
+html:not(.lys) #info.pg{background:linear-gradient(#17335f,#0c1f3d)}
+html:not(.lys) .pg .infob{color:#e6f0fb}
+html:not(.lys) .pg .infoh button::before{border-color:#3f82dc}
+html:not(.lys) .pg .infot{background:#0b1a31;box-shadow:0 -4px 20px rgba(0,0,0,.4)}
+html:not(.lys) .pg .pgico{background:#3a1a22;border-color:#7a2e3a;color:#ff7a6e}
+html:not(.lys) .pg .infot ul,html:not(.lys) .pg .rptq,html:not(.lys) .pg .rptr{background:#0f2340;border-color:#2a4468}
+html:not(.lys) .pg .infot li,html:not(.lys) .pg .rptro{border-top-color:#2a4468}
+html:not(.lys) .pg .infot li:first-child,html:not(.lys) .pg .rptro:first-child{border-top-color:transparent}
+html:not(.lys) .pg .rptro,html:not(.lys) .pg .rptro:hover{border-top-color:#2a4468}
+html:not(.lys) .pg .infot input:focus{border-color:#3f82dc;box-shadow:0 0 0 3px rgba(63,130,220,.25)}
+html:not(.lys) .pg .infot li::before{background:#ff7a6e}
+html:not(.lys) .pg .pglead,html:not(.lys) .pg .pgnote,html:not(.lys) .pg .pglbl,html:not(.lys) .pg .rptask,html:not(.lys) .pg .rptn{color:#8fb0d2}
+html:not(.lys) .pg .rptn::before{background:#8fb0d2}
+html:not(.lys) .pg .infot input{background:#14294a;border-color:#34517a;color:#e6f0fb}
+html:not(.lys) .pg .rptq,html:not(.lys) .pg .rptro,html:not(.lys) .pg .rptb{color:#e6f0fb}
+html:not(.lys) .pg .rptro.on{background:#1a3150!important}
+html:not(.lys) .pg .rpto{border-color:#34517a}
+html:not(.lys) .pg .rptro.on .rpto,html:not(.lys) .pg .rptb.on .rptc{border-color:#3f82dc}
+html:not(.lys) .pg .rptro.on .rpto span,html:not(.lys) .pg .rptb.on .rptc{background:#3f82dc}
+html:not(.lys) .pg .rptc{background:#14294a;border-color:#34517a}
+html:not(.lys) .pg .infot .pgprim{background:#3f82dc!important}
+html:not(.lys) .pg .pgcancel{color:#3f82dc}
 }
 
 </style>
@@ -1049,6 +1129,20 @@ var PrekI18n = (() => {
     "upd.done": "Starter p\xE5 nytt \u2026",
     "upd.failed": "Oppdateringen mislyktes. Pr\xF8v igjen senere.",
     // delete account
+    "rpt.menu": "Rapporter",
+    "rpt.title": "Rapporter",
+    "rpt.ask": "Hva er galt med denne meldingen fra {name}?",
+    "rpt.spam": "S\xF8ppel eller reklame",
+    "rpt.threat": "Trusler eller trakassering",
+    "rpt.offensive": "Upassende eller st\xF8tende innhold",
+    "rpt.other": "Noe annet",
+    "rpt.block": "Blokker {name} samtidig",
+    "rpt.note": "Meldingene er krypterte. Bare denne ene meldingen, som du n\xE5 ser \xE5pen, sendes til oss. Resten av samtalen forblir privat.",
+    "rpt.send": "Send rapport",
+    "rpt.sending": "Sender \u2026",
+    "rpt.done": "Takk, rapporten er sendt",
+    "rpt.failed": "Rapporten ble ikke sendt. Pr\xF8v igjen om litt.",
+    "rpt.img": "(bilde)",
     "del.open": "Slett konto",
     "del.title": "Vil du slette kontoen din?",
     "del.lead": "Dette kan ikke angres.",
@@ -1536,6 +1630,7 @@ var PrekApi = (() => {
       // blocking
       blockUser: (other) => call("block_user", { p_other: other }),
       unblockUser: (other) => call("unblock_user", { p_other: other }),
+      reportMessage: (chat, message, reason, text, block) => call("report_message", { p_chat: chat, p_message: message, p_reason: reason, p_text: text, p_block: block }),
       // chats
       openDm: (other) => call("open_dm", { p_other: other }),
       setChatExpiry: (chat, days) => call("set_chat_expiry", { p_chat: chat, p_days: days }),
@@ -1987,6 +2082,20 @@ var PrekShrink = (() => {
     "upd.done": "Starter p\xE5 nytt \u2026",
     "upd.failed": "Oppdateringen mislyktes. Pr\xF8v igjen senere.",
     // delete account
+    "rpt.menu": "Rapporter",
+    "rpt.title": "Rapporter",
+    "rpt.ask": "Hva er galt med denne meldingen fra {name}?",
+    "rpt.spam": "S\xF8ppel eller reklame",
+    "rpt.threat": "Trusler eller trakassering",
+    "rpt.offensive": "Upassende eller st\xF8tende innhold",
+    "rpt.other": "Noe annet",
+    "rpt.block": "Blokker {name} samtidig",
+    "rpt.note": "Meldingene er krypterte. Bare denne ene meldingen, som du n\xE5 ser \xE5pen, sendes til oss. Resten av samtalen forblir privat.",
+    "rpt.send": "Send rapport",
+    "rpt.sending": "Sender \u2026",
+    "rpt.done": "Takk, rapporten er sendt",
+    "rpt.failed": "Rapporten ble ikke sendt. Pr\xF8v igjen om litt.",
+    "rpt.img": "(bilde)",
     "del.open": "Slett konto",
     "del.title": "Vil du slette kontoen din?",
     "del.lead": "Dette kan ikke angres.",
@@ -3102,6 +3211,20 @@ var PrekPreviews = (() => {
     "upd.done": "Starter p\xE5 nytt \u2026",
     "upd.failed": "Oppdateringen mislyktes. Pr\xF8v igjen senere.",
     // delete account
+    "rpt.menu": "Rapporter",
+    "rpt.title": "Rapporter",
+    "rpt.ask": "Hva er galt med denne meldingen fra {name}?",
+    "rpt.spam": "S\xF8ppel eller reklame",
+    "rpt.threat": "Trusler eller trakassering",
+    "rpt.offensive": "Upassende eller st\xF8tende innhold",
+    "rpt.other": "Noe annet",
+    "rpt.block": "Blokker {name} samtidig",
+    "rpt.note": "Meldingene er krypterte. Bare denne ene meldingen, som du n\xE5 ser \xE5pen, sendes til oss. Resten av samtalen forblir privat.",
+    "rpt.send": "Send rapport",
+    "rpt.sending": "Sender \u2026",
+    "rpt.done": "Takk, rapporten er sendt",
+    "rpt.failed": "Rapporten ble ikke sendt. Pr\xF8v igjen om litt.",
+    "rpt.img": "(bilde)",
     "del.open": "Slett konto",
     "del.title": "Vil du slette kontoen din?",
     "del.lead": "Dette kan ikke angres.",
@@ -3826,6 +3949,20 @@ var PrekHelpers = (() => {
     "upd.done": "Starter p\xE5 nytt \u2026",
     "upd.failed": "Oppdateringen mislyktes. Pr\xF8v igjen senere.",
     // delete account
+    "rpt.menu": "Rapporter",
+    "rpt.title": "Rapporter",
+    "rpt.ask": "Hva er galt med denne meldingen fra {name}?",
+    "rpt.spam": "S\xF8ppel eller reklame",
+    "rpt.threat": "Trusler eller trakassering",
+    "rpt.offensive": "Upassende eller st\xF8tende innhold",
+    "rpt.other": "Noe annet",
+    "rpt.block": "Blokker {name} samtidig",
+    "rpt.note": "Meldingene er krypterte. Bare denne ene meldingen, som du n\xE5 ser \xE5pen, sendes til oss. Resten av samtalen forblir privat.",
+    "rpt.send": "Send rapport",
+    "rpt.sending": "Sender \u2026",
+    "rpt.done": "Takk, rapporten er sendt",
+    "rpt.failed": "Rapporten ble ikke sendt. Pr\xF8v igjen om litt.",
+    "rpt.img": "(bilde)",
     "del.open": "Slett konto",
     "del.title": "Vil du slette kontoen din?",
     "del.lead": "Dette kan ikke angres.",
@@ -4344,7 +4481,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="b64a2db";
+const PREK_VERSION="0.1.0",PREK_BUILD="4f57085";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -4732,7 +4869,7 @@ function showInfo(){
   o.onclick=e=>{if(e.target===o)closeInfo()};
   box.querySelector("button").focus();
 }
-function closeInfo(){const o=$("#info");o.hidden=true;o.textContent=""}
+function closeInfo(){const o=$("#info");o.hidden=true;o.textContent="";o.classList.remove("pg")}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#info").hidden)closeInfo()});
 
 /* Slett konto (Apple 5.1.1(v)). Serveren sletter alt (edge-funksjonen delete-account, se claude/slett-konto.md); her rydder vi bare denne enheten etterpå: nøkkelen og det som hører til brukeren, og så ut. */
@@ -4741,9 +4878,11 @@ function showDelete(){
   const word=tr("del.word"),inp=el("input",{type:"text",autocomplete:"off",autocapitalize:"off",spellcheck:"false","aria-label":tr("del.label")}),
     go=el("button",{class:"glass dng",type:"button",disabled:true},tr("del.go")),msg=el("div",{class:"fine err"});
   const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":tr("del.title")});
-  box.append(el("div",{class:"infoh"},el("b",{},tr("del.title")),el("button",{class:"glass sm",type:"button",onclick:closeInfo},tr("del.cancel"))));
+  box.append(el("div",{class:"infoh"},el("b",{},tr("del.title")),el("span",{class:"pgt"},tr("del.open")),el("button",{class:"glass sm",type:"button","aria-label":tr("del.cancel"),onclick:closeInfo},tr("del.cancel"))));
   const ul=el("ul",{});for(const t of [tr("del.l1"),tr("del.l2"),tr("del.l3"),tr("del.l4")])ul.append(el("li",{},t));
-  box.append(el("div",{class:"infot"},el("p",{},tr("del.lead")),ul,el("p",{},tr("del.note")),el("label",{class:"fine"},tr("del.label")),inp,go,msg));
+  const ico=el("span",{class:"pgico","aria-hidden":"true"});ico.innerHTML='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>';
+  box.append(el("div",{class:"infot"},ico,el("h2",{class:"pgh2"},tr("del.title")),el("p",{class:"pglead"},tr("del.lead")),ul,el("p",{class:"pgnote"},tr("del.note")),el("label",{class:"fine pglbl"},tr("del.label")),inp,el("div",{class:"pgsp"}),go,el("button",{class:"pgcancel",type:"button",onclick:closeInfo},tr("del.cancel")),msg));
+  o.classList.add("pg");
   o.append(box);o.hidden=false;o.onclick=e=>{if(e.target===o)closeInfo()};
   inp.addEventListener("input",()=>{go.disabled=inp.value.trim().toLowerCase()!==word});
   go.addEventListener("click",async()=>{
@@ -4757,6 +4896,31 @@ function showDelete(){
       location.reload();return}
     msg.textContent=tr("del.failed");go.textContent=tr("del.go");inp.disabled=false;go.disabled=inp.value.trim().toLowerCase()!==word});
   inp.focus();
+}
+/* Rapporter én melding (Apple 1.2). Bare den valgte meldingen sendes, som klartekst; resten av samtalen er fortsatt kryptert. Se claude/personvern.md. */
+function showReport(m){
+  const o=$("#info");o.textContent="";const nm=nameOf(S.chat.other),cid=S.chat.id;
+  const reasons=[["spam",tr("rpt.spam")],["threat",tr("rpt.threat")],["offensive",tr("rpt.offensive")],["other",tr("rpt.other")]];
+  let pick="spam",blk=true;
+  const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":tr("rpt.title")});
+  box.append(el("div",{class:"infoh"},el("b",{},tr("rpt.title")),el("span",{class:"pgt"},tr("rpt.title")),el("button",{class:"glass sm",type:"button","aria-label":tr("del.cancel"),onclick:closeInfo},tr("del.cancel"))));
+  const quote=el("div",{class:"rptq"},m.img?tr("rpt.img"):String(m.t==null?"":m.t));
+  const grp=el("div",{class:"rptr",role:"radiogroup","aria-label":tr("rpt.title")}),opts=[];
+  const paint=()=>{for(const[b,k]of opts){b.setAttribute("aria-checked",String(k===pick));b.classList.toggle("on",k===pick)}};
+  for(const[k,lb]of reasons){const b=el("button",{type:"button",role:"radio",class:"rptro"},el("span",{class:"rpto"},el("span",{})),el("span",{},lb));b.onclick=()=>{pick=k;paint()};opts.push([b,k]);grp.append(b)}
+  paint();
+  const bl=el("button",{type:"button",role:"checkbox",class:"rptb"},el("span",{class:"rptc"}),el("span",{},tr("rpt.block",{name:nm})));
+  const bp=()=>{bl.setAttribute("aria-checked",String(blk));bl.classList.toggle("on",blk)};bp();bl.onclick=()=>{blk=!blk;bp()};
+  const note=el("div",{class:"rptn"},el("span",{}, tr("rpt.note")));
+  const msg=el("div",{class:"fine err"}),go=el("button",{class:"glass pgprim",type:"button"},tr("rpt.send"));
+  box.append(el("div",{class:"infot"},el("p",{class:"rptask"},tr("rpt.ask",{name:nm})),quote,grp,bl,note,el("div",{class:"pgsp"}),go,el("button",{class:"pgcancel",type:"button",onclick:closeInfo},tr("del.cancel")),msg));
+  o.classList.add("pg");o.append(box);o.hidden=false;o.onclick=e=>{if(e.target===o)closeInfo()};
+  go.addEventListener("click",async()=>{
+    if(go.disabled)return;go.disabled=true;go.textContent=tr("rpt.sending");msg.textContent="";
+    let r;try{r=await api.reportMessage(cid,m.id,pick,m.img?tr("rpt.img"):String(m.t==null?"":m.t),blk)}catch(e){r={error:e}}
+    if(r&&!r.error){closeInfo();toast(tr("rpt.done"));if(blk){closeChat();refresh()}return}
+    msg.textContent=tr("rpt.failed");go.textContent=tr("rpt.send");go.disabled=false});
+  go.focus();
 }
 /* Logg ut. supabase-js sin signOut() avbryter uten å gjøre noe hvis kallet mot serveren feiler (nett, utløpt økt, uventet svar), og da ble brukeren stående på skjermen. Derfor: prøv vanlig utlogging, ellers lokalt, ellers fjern økten for hånd og last siden på nytt. */
 async function doLogout(){
@@ -5143,6 +5307,7 @@ function openRx(m,anchor){
     b.append(anEl(r));p.append(b);
   }
   if(m.ok&&m.t!=null&&!m.img)p.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();copyText(String(m.t))}},tr("common.copy")));
+  if(!m.mine&&(m.ok||m.img)&&!m.pending&&typeof m.id==="number")p.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();showReport(m)}},tr("rpt.menu")));
   document.body.append(p);rxPop=p;
   const a=anchor.getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight;
   const{x,y}=menuPosition(a,w,h,innerWidth);

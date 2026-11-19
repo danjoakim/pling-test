@@ -102,6 +102,7 @@ function rpc(name,a){
     if(name==="find_by_email"){const u=d.users.find(u=>u.email.toLowerCase()===a.p_email.trim().toLowerCase());const p=u&&u.id!==me&&d.profiles.find(p=>p.id===u.id);return ok(p?[{id:p.id,name:p.name,fp:p.fp,pub:p.pub}]:[])}
     d.blocks=d.blocks||[];
     if(name==="block_user"){const p=d.profiles.find(p=>p.id===a.p_other);if(!p)return err("finner ikke bruker");if(!d.blocks.some(b=>b.blocker===me&&b.blocked===a.p_other))d.blocks.push({blocker:me,blocked:a.p_other,name:p.name});const[x,y]=ord(me,a.p_other);d.friends=d.friends.filter(r=>!(r.a===x&&r.b===y));d.friend_requests=d.friend_requests.filter(r=>!((r.from_id===me&&r.to_id===a.p_other)||(r.from_id===a.p_other&&r.to_id===me)));save(d);return ok(null)}
+    if(name==="report_message"){d.reports=d.reports||[];d.reports.push({reporter:me,chat_id:a.p_chat,message_id:a.p_message,reason:a.p_reason,body:a.p_text});if(a.p_block){const o=(d.chat_members||[]).find(x=>x.chat_id===a.p_chat&&x.user_id!==me);if(o&&!d.blocks.some(b=>b.blocker===me&&b.blocked===o.user_id))d.blocks.push({blocker:me,blocked:o.user_id,name:""});const[x,y]=ord(me,o.user_id);d.friends=d.friends.filter(r=>!(r.a===x&&r.b===y))}save(d);return ok(null)}
     if(name==="unblock_user"){d.blocks=d.blocks.filter(b=>!(b.blocker===me&&b.blocked===a.p_other));save(d);return ok(null)}
     if(name==="send_request"){const to=a.p_to;if(to===me)return err("ikke deg selv");
       if(d.blocks.some(b=>b.blocker===to&&b.blocked===me))return err("finner ikke bruker");

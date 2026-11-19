@@ -164,6 +164,8 @@ export function createApi(c: RpcClient) {
     // blocking
     blockUser: (other: string) => call<void>("block_user", { p_other: other }),
     unblockUser: (other: string) => call<void>("unblock_user", { p_other: other }),
+    reportMessage: (chat: string, message: number, reason: string, text: string, block: boolean) =>
+      call<void>("report_message", { p_chat: chat, p_message: message, p_reason: reason, p_text: text, p_block: block }),
     // chats
     openDm: (other: string) => call<string>("open_dm", { p_other: other }),
     setChatExpiry: (chat: string, days: number) => call<void>("set_chat_expiry", { p_chat: chat, p_days: days }),

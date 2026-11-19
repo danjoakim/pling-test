@@ -127,7 +127,7 @@ function showInfo(){
   o.onclick=e=>{if(e.target===o)closeInfo()};
   box.querySelector("button").focus();
 }
-function closeInfo(){const o=$("#info");o.hidden=true;o.textContent=""}
+function closeInfo(){const o=$("#info");o.hidden=true;o.textContent="";o.classList.remove("pg")}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#info").hidden)closeInfo()});
 
 /* Slett konto (Apple 5.1.1(v)). Serveren sletter alt (edge-funksjonen delete-account, se claude/slett-konto.md); her rydder vi bare denne enheten etterpå: nøkkelen og det som hører til brukeren, og så ut. */
@@ -136,9 +136,11 @@ function showDelete(){
   const word=tr("del.word"),inp=el("input",{type:"text",autocomplete:"off",autocapitalize:"off",spellcheck:"false","aria-label":tr("del.label")}),
     go=el("button",{class:"glass dng",type:"button",disabled:true},tr("del.go")),msg=el("div",{class:"fine err"});
   const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":tr("del.title")});
-  box.append(el("div",{class:"infoh"},el("b",{},tr("del.title")),el("button",{class:"glass sm",type:"button",onclick:closeInfo},tr("del.cancel"))));
+  box.append(el("div",{class:"infoh"},el("b",{},tr("del.title")),el("span",{class:"pgt"},tr("del.open")),el("button",{class:"glass sm",type:"button","aria-label":tr("del.cancel"),onclick:closeInfo},tr("del.cancel"))));
   const ul=el("ul",{});for(const t of [tr("del.l1"),tr("del.l2"),tr("del.l3"),tr("del.l4")])ul.append(el("li",{},t));
-  box.append(el("div",{class:"infot"},el("p",{},tr("del.lead")),ul,el("p",{},tr("del.note")),el("label",{class:"fine"},tr("del.label")),inp,go,msg));
+  const ico=el("span",{class:"pgico","aria-hidden":"true"});ico.innerHTML='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>';
+  box.append(el("div",{class:"infot"},ico,el("h2",{class:"pgh2"},tr("del.title")),el("p",{class:"pglead"},tr("del.lead")),ul,el("p",{class:"pgnote"},tr("del.note")),el("label",{class:"fine pglbl"},tr("del.label")),inp,el("div",{class:"pgsp"}),go,el("button",{class:"pgcancel",type:"button",onclick:closeInfo},tr("del.cancel")),msg));
+  o.classList.add("pg");
   o.append(box);o.hidden=false;o.onclick=e=>{if(e.target===o)closeInfo()};
   inp.addEventListener("input",()=>{go.disabled=inp.value.trim().toLowerCase()!==word});
   go.addEventListener("click",async()=>{
@@ -152,6 +154,31 @@ function showDelete(){
       location.reload();return}
     msg.textContent=tr("del.failed");go.textContent=tr("del.go");inp.disabled=false;go.disabled=inp.value.trim().toLowerCase()!==word});
   inp.focus();
+}
+/* Rapporter én melding (Apple 1.2). Bare den valgte meldingen sendes, som klartekst; resten av samtalen er fortsatt kryptert. Se claude/personvern.md. */
+function showReport(m){
+  const o=$("#info");o.textContent="";const nm=nameOf(S.chat.other),cid=S.chat.id;
+  const reasons=[["spam",tr("rpt.spam")],["threat",tr("rpt.threat")],["offensive",tr("rpt.offensive")],["other",tr("rpt.other")]];
+  let pick="spam",blk=true;
+  const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":tr("rpt.title")});
+  box.append(el("div",{class:"infoh"},el("b",{},tr("rpt.title")),el("span",{class:"pgt"},tr("rpt.title")),el("button",{class:"glass sm",type:"button","aria-label":tr("del.cancel"),onclick:closeInfo},tr("del.cancel"))));
+  const quote=el("div",{class:"rptq"},m.img?tr("rpt.img"):String(m.t==null?"":m.t));
+  const grp=el("div",{class:"rptr",role:"radiogroup","aria-label":tr("rpt.title")}),opts=[];
+  const paint=()=>{for(const[b,k]of opts){b.setAttribute("aria-checked",String(k===pick));b.classList.toggle("on",k===pick)}};
+  for(const[k,lb]of reasons){const b=el("button",{type:"button",role:"radio",class:"rptro"},el("span",{class:"rpto"},el("span",{})),el("span",{},lb));b.onclick=()=>{pick=k;paint()};opts.push([b,k]);grp.append(b)}
+  paint();
+  const bl=el("button",{type:"button",role:"checkbox",class:"rptb"},el("span",{class:"rptc"}),el("span",{},tr("rpt.block",{name:nm})));
+  const bp=()=>{bl.setAttribute("aria-checked",String(blk));bl.classList.toggle("on",blk)};bp();bl.onclick=()=>{blk=!blk;bp()};
+  const note=el("div",{class:"rptn"},el("span",{}, tr("rpt.note")));
+  const msg=el("div",{class:"fine err"}),go=el("button",{class:"glass pgprim",type:"button"},tr("rpt.send"));
+  box.append(el("div",{class:"infot"},el("p",{class:"rptask"},tr("rpt.ask",{name:nm})),quote,grp,bl,note,el("div",{class:"pgsp"}),go,el("button",{class:"pgcancel",type:"button",onclick:closeInfo},tr("del.cancel")),msg));
+  o.classList.add("pg");o.append(box);o.hidden=false;o.onclick=e=>{if(e.target===o)closeInfo()};
+  go.addEventListener("click",async()=>{
+    if(go.disabled)return;go.disabled=true;go.textContent=tr("rpt.sending");msg.textContent="";
+    let r;try{r=await api.reportMessage(cid,m.id,pick,m.img?tr("rpt.img"):String(m.t==null?"":m.t),blk)}catch(e){r={error:e}}
+    if(r&&!r.error){closeInfo();toast(tr("rpt.done"));if(blk){closeChat();refresh()}return}
+    msg.textContent=tr("rpt.failed");go.textContent=tr("rpt.send");go.disabled=false});
+  go.focus();
 }
 /* Logg ut. supabase-js sin signOut() avbryter uten å gjøre noe hvis kallet mot serveren feiler (nett, utløpt økt, uventet svar), og da ble brukeren stående på skjermen. Derfor: prøv vanlig utlogging, ellers lokalt, ellers fjern økten for hånd og last siden på nytt. */
 async function doLogout(){
@@ -538,6 +565,7 @@ function openRx(m,anchor){
     b.append(anEl(r));p.append(b);
   }
   if(m.ok&&m.t!=null&&!m.img)p.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();copyText(String(m.t))}},tr("common.copy")));
+  if(!m.mine&&(m.ok||m.img)&&!m.pending&&typeof m.id==="number")p.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();showReport(m)}},tr("rpt.menu")));
   document.body.append(p);rxPop=p;
   const a=anchor.getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight;
   const{x,y}=menuPosition(a,w,h,innerWidth);
