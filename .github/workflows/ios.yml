@@ -31,6 +31,8 @@ jobs:
           # the App Store wants the 1024 icon without transparency
           python3 -m venv "$RUNNER_TEMP/v" && step pillow "$RUNNER_TEMP/v/bin/pip" install pillow
           step icon "$RUNNER_TEMP/v/bin/python" ../desktop/flatten-icon.py ../desktop/app-icon.png ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png
+          # Apple requires iOS 15 or later from April 2027 (ITMS-90068)
+          step target bash -c "sed -i '' 's/platform :ios, .14.0./platform :ios, '15.0'/' ios/App/Podfile; sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]*;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/' ios/App/App.xcodeproj/project.pbxproj; grep -n 'platform' ios/App/Podfile"
           step cap-sync npx cap sync ios
       - name: Version
         run: |
