@@ -262,7 +262,7 @@ export const nb = {
   // sign-in and key screens: auth (round 4)
   "auth.statusLabel": "Logg på som",
   "auth.showOffline": "Vis meg som frakoblet",
-  "auth.signupTagline": "Lag en konto. Samtalene dine blir kryptert i nettleseren.",
+  "auth.signupTagline": "Lag en konto og prek i vei med kompisene dine.",
   "auth.tagline": "nå prekær vi!",
   "auth.emailLabel": "E-postadresse:",
   "auth.passwordLabel": "Passord:",
