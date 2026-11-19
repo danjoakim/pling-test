@@ -936,7 +936,7 @@ function wire(){
     row("M10 4H5v16h5M15 8l4 4-4 4M19 12H9",tr("common.logout"),"",doLogout);
     row("M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13",tr("del.open"),"",showDelete,"red");
     const ab=el("div",{class:"mnew mabout"},el("div",{class:"mah"},el("b",{},tr("me.about")),el("button",{type:"button",class:"mae",onclick:()=>pageAbout()},tr("me.aboutEdit"))),el("p",{class:"mat",id:"abouttxt"}),el("div",{class:"mal"},tr("me.aboutNote")));
-    stat.after(rows);rows.after(ab);if(pushPlugin()){const d=el("div",{class:"fine",id:"pushdbg",style:"padding:8px 16px;word-break:break-word"});d.textContent="Push: "+(pushLog||"ikke startet");ab.after(d)}
+    stat.after(rows);rows.after(ab);if(pushPlugin()){const d=el("div",{class:"mnew mabout",id:"pushdbg",style:"display:block;padding:12px 18px;margin-top:8px;word-break:break-word;font-size:14px;color:#9ec3ef"});d.textContent="Push: "+(pushLog||"ikke startet");ab.after(d)}
     S.paintAbout=()=>{const t=$("#abouttxt");if(!t)return;const a=S.profile&&S.profile.about;t.textContent=a||tr("me.aboutEmpty");t.classList.toggle("empty",!a)};
   }
   $("#hdp").addEventListener("click",()=>$("#dp").click());
