@@ -64,7 +64,7 @@ export interface RedeemedInvite { id: string; name: string }
 
 // Rows, as in supabase/migrations/ (columns the app reads; dates arrive as ISO strings).
 export interface ProfileRow { id: string; fp: string; name: string; pub: any; pm: string | null; about?: string | null }
-export interface MessageRow { id: number; chat_id: string; sender: string; iv: string; ct: string; exp: string | null; created_at: string; file: string | null }
+export interface MessageRow { id: number; chat_id: string; sender: string; iv: string; ct: string; exp: string | null; created_at: string; file: string | null; dp?: boolean }
 export interface ReactionRow { msg_id: number; user_id: string; iv: string; ct: string }
 export interface KeyBackupRow { user_id: string; salt: string; iv: string; ct: string; iter: number; updated_at: string }
 export interface KeyTransferRow {
@@ -119,12 +119,19 @@ export function createApi(c: RpcClient) {
     listChatMembers: () => c.from("chat_members").select("chat_id,user_id") as Query<{ chat_id: string; user_id: string }[]>,
     listChats: () => c.from("chats").select("id,exp_days") as Query<{ id: string; exp_days: number }[]>,
     listReads: () => c.from("chat_reads").select("chat_id,user_id,last_id") as Query<{ chat_id: string; user_id: string; last_id: number }[]>,
+    // push notifications (APNs): this phone's token, and who I have muted (the server cannot read the app's local mute list)
+    savePushToken: (user_id: string, token: string) => c.from("push_tokens").upsert({ user_id, token, platform: "ios", updated_at: new Date().toISOString() }) as Query<null>,
+    deletePushToken: (token: string) => c.from("push_tokens").delete().eq("token", token) as Query<null>,
+    setPushMute: (user_id: string, muted_id: string, on: boolean) => (on
+      ? c.from("push_mutes").upsert({ user_id, muted_id })
+      : c.from("push_mutes").delete().eq("user_id", user_id).eq("muted_id", muted_id)) as Query<null>,
+    listPushMutes: () => c.from("push_mutes").select("muted_id") as Query<{ muted_id: string }[]>,
     // messages, newest first
     latestMessages: (chat: string, n: number) =>
       c.from("messages").select("*").eq("chat_id", chat).order("id", { ascending: false }).limit(n) as Query<MessageRow[]>,
     olderMessages: (chat: string, beforeId: number, n: number) =>
       c.from("messages").select("*").eq("chat_id", chat).lt("id", beforeId).order("id", { ascending: false }).limit(n) as Query<MessageRow[]>,
-    sendMessage: (row: { chat_id: string; sender: string; iv: string; ct: string; file?: string }) => c.from("messages").insert(row) as Query<null>,
+    sendMessage: (row: { chat_id: string; sender: string; iv: string; ct: string; file?: string; dp?: boolean }) => c.from("messages").insert(row) as Query<null>,
     deleteMyMessages: (chat: string, sender: string) => c.from("messages").delete().eq("chat_id", chat).eq("sender", sender) as Query<null>,
     // reactions
     listReactions: (chat: string) => c.from("reactions").select("msg_id,user_id,iv,ct").eq("chat_id", chat) as Query<ReactionRow[]>,

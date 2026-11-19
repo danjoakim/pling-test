@@ -76,6 +76,28 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
   return {nat,web:{pick,af}}});
  must(pk.nat.pick===1&&pk.nat.af===0,"i appen: bildevalget åpnes, ikke filvelgeren (kamera)");
  must(pk.web.pick===1&&pk.web.af===1,"i nettleseren: filvelgeren");
+ // push (appen): tillatelse, token lagres, dempet venn synkes til serveren, trykk på varsel åpner samtalen, utlogging sletter token
+ const ps=await A.evaluate(async()=>{
+  const calls=[],ls={};let regCb=null,actCb=null,perm="prompt";
+  const real=api.savePushToken,rm=api.setPushMute,dt=api.deletePushToken,lm=api.listPushMutes;
+  api.savePushToken=(u,t)=>{calls.push(["tok",t]);return Promise.resolve({})};
+  api.setPushMute=(u,id,on)=>{calls.push(["mute",id,on]);return Promise.resolve({})};
+  api.deletePushToken=t=>{calls.push(["del",t]);return Promise.resolve({})};
+  api.listPushMutes=()=>Promise.resolve({data:[]});
+  window.Capacitor={isNativePlatform:()=>true,Plugins:{PushNotifications:{
+    addListener:(n,f)=>{if(n==="registration")regCb=f;if(n==="pushNotificationActionPerformed")actCb=f},
+    checkPermissions:async()=>({receive:perm}),requestPermissions:async()=>{perm="granted";calls.push(["ask"]);return{receive:"granted"}},
+    register:async()=>{calls.push(["reg"])}}}};
+  const u=S.user;S.user=S.user||{id:"u1"};
+  await initPush();regCb({value:"T".repeat(64)});
+  setMuted("f1",true);
+  await dropPush();
+  S.user=u;api.savePushToken=real;api.setPushMute=rm;api.deletePushToken=dt;api.listPushMutes=lm;
+  return calls.map(c=>c.join(":").slice(0,12))});
+ must(ps.includes("ask")&&ps.includes("reg"),"push: ber om tillatelse og registrerer");
+ must(ps.some(x=>x.startsWith("tok:TTTT")),"push: token lagres");
+ must(ps.includes("mute:f1:true"),"push: demping sendes til serveren");
+ must(ps.some(x=>x.startsWith("del:TTTT")),"push: token slettes ved utlogging");
  console.log("FEIL A:",A.errs.length?A.errs:"ingen");
  await br.close();srv.close();
 })().catch(e=>{console.error("TESTFEIL",e.message);process.exit(1)});

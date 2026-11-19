@@ -245,6 +245,7 @@ function showReport(m){
 }
 /* Logg ut. supabase-js sin signOut() avbryter uten å gjøre noe hvis kallet mot serveren feiler (nett, utløpt økt, uventet svar), og da ble brukeren stående på skjermen. Derfor: prøv vanlig utlogging, ellers lokalt, ellers fjern økten for hånd og last siden på nytt. */
 async function doLogout(){
+  await dropPush();
   try{if(S.user&&S.id)await Promise.race([api.setPresence("off",null),new Promise(r=>setTimeout(r,2000))])}catch(e){}
   let bad=false;
   try{const r=await Promise.race([api.signOut(),new Promise(r=>setTimeout(()=>r({error:1}),4000))]);bad=!!(r&&r.error)}catch(e){bad=true}
@@ -270,6 +271,7 @@ async function start(){
   await refresh();
   drawInvite();await redeemPending();
   startPresence();
+  initPush();
   api.subscribeLive({
     onMessage:p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id&&S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}refreshSoon()},
     onChange:()=>refreshSoon(),
@@ -330,7 +332,10 @@ window.addEventListener("pagehide",()=>{
 /* demp: lagres bare på denne enheten (ingenting sendes til serveren, avsenderen får ikke vite det) */
 const muteKey=()=>"pling_mute_"+S.user.id;
 function muted(id){let raw=null;try{raw=localStorage.getItem(muteKey())}catch(e){}return isMuted(raw,id)}
-function setMuted(id,on){let raw=null;try{raw=localStorage.getItem(muteKey())}catch(e){}const v=withMuted(raw,id,on);try{localStorage.setItem(muteKey(),v)}catch(e){}}
+function setMuted(id,on){let raw=null;try{raw=localStorage.getItem(muteKey())}catch(e){}const v=withMuted(raw,id,on);try{localStorage.setItem(muteKey(),v)}catch(e){}
+  if(S.user)api.setPushMute(S.user.id,id,on).then(()=>{},()=>{})}
+/* Serveren kjenner ikke den lokale demp-lista, så push for dempede venner må stoppes der. Synk ved oppstart. */
+async function syncPushMutes(){try{const ids=JSON.parse(localStorage.getItem(muteKey())||"[]");if(!Array.isArray(ids))return;const have=new Set(((await api.listPushMutes()).data||[]).map(r=>r.muted_id));for(const id of ids)if(!have.has(id))await api.setPushMute(S.user.id,id,true);for(const id of have)if(!ids.includes(id))await api.setPushMute(S.user.id,id,false)}catch(e){}}
 function drawMute(){const b=$("#bmu");if(!b||!S.chat)return;b.textContent=muted(S.chat.other)?tr("mute.unmuteButton"):tr("mute.muteButton")}
 function stOf(id){return S.pres.get(id)||"off"}
 
@@ -708,6 +713,7 @@ async function sendMsg(payload,file){
     const key=await pairKey(other.pub),s=await seal(key,payload);
     const row={chat_id:S.chat.id,sender:S.user.id,iv:s.iv,ct:s.ct};
     if(file)row.file=file;
+    if(payload.dp)row.dp=true; /* ren flagg så serveren kan sende ringelyd-push; innholdet er fortsatt kryptert */
     if(payload.t!=null&&!payload.img&&!payload.dp){
       p={id:"p"+Date.now(),cid:S.chat.id,pending:true,mine:true,t:String(payload.t),dp:false,img:null,lk:payload.lk||null,ok:true,ts:new Date().toISOString()};
       pend.push(p);S.msgs=[...S.msgs,p];S.justSent=true;drawLog();
@@ -791,6 +797,23 @@ async function pickPhoto(){
   }
   $("#af").click();
 }
+/* Push (iPhone-appen): varsler når appen er lukket eller skjermen er låst. Serveren kan ikke lese meldinger, så teksten er «Navn har sendt deg en melding».
+   Se claude/push.md. Nettversjonen har ingen push; der gjelder bare varslene mens siden er åpen. */
+const pushKey="prek_push_token";
+function pushPlugin(){const cap=window.Capacitor;return cap&&cap.isNativePlatform&&cap.isNativePlatform()&&cap.Plugins&&cap.Plugins.PushNotifications||null}
+let pushWired=false;
+async function initPush(){
+  const pn=pushPlugin();if(!pn||!S.user)return;
+  try{
+    if(!pushWired){pushWired=true;
+      pn.addListener("registration",t=>{const tok=t&&t.value;if(!tok||!S.user)return;try{localStorage.setItem(pushKey,tok)}catch(e){}api.savePushToken(S.user.id,tok).then(()=>{},()=>{})});
+      pn.addListener("pushNotificationActionPerformed",a=>{const d=a&&a.notification&&a.notification.data;if(d&&d.from&&S.profiles.has(d.from))openChat(d.from)})}
+    let p=await pn.checkPermissions();
+    if(p.receive==="prompt")p=await pn.requestPermissions();
+    if(p.receive==="granted"){await pn.register();syncPushMutes()}
+  }catch(e){}
+}
+async function dropPush(){let t=null;try{t=localStorage.getItem(pushKey);localStorage.removeItem(pushKey)}catch(e){}if(t)try{await Promise.race([api.deletePushToken(t),new Promise(r=>setTimeout(r,2000))])}catch(e){}}
 let camStream=null,camFace="environment";
 function camStop(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}}
 function camClose(){camStop();const c=$("#cam");c.hidden=true;c.textContent=""}

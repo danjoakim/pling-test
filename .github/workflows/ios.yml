@@ -40,6 +40,23 @@ jobs:
           # without these iOS kills the app the moment the camera or photo picker is opened
           P=ios/App/App/Info.plist
           step plist bash -c "/usr/libexec/PlistBuddy -c 'Add :NSCameraUsageDescription string Prek! bruker kameraet når du tar et bilde som du vil sende i en samtale eller bruke som profilbilde.' $P; /usr/libexec/PlistBuddy -c 'Add :NSPhotoLibraryUsageDescription string Prek! trenger tilgang til bildene dine når du velger et bilde å sende eller bruke som profilbilde.' $P; /usr/libexec/PlistBuddy -c 'Print' $P | grep -c UsageDescription"
+      - name: Push notifications
+        run: |
+          source ../desktop/ci-step.sh
+          # APNs: entitlement (incl. time-sensitive for double ping), background mode, and the ringing sound as the push sound
+          cat > ios/App/App/App.entitlements <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+          <key>aps-environment</key><string>production</string>
+          <key>com.apple.developer.usernotifications.time-sensitive</key><true/>
+          </dict></plist>
+          EOF
+          P=ios/App/App/Info.plist
+          step bgmode bash -c "/usr/libexec/PlistBuddy -c 'Add :UIBackgroundModes array' $P; /usr/libexec/PlistBuddy -c 'Add :UIBackgroundModes:0 string remote-notification' $P"
+          step ring afconvert -f caff -d LEI16 ring.wav ios/App/App/ring.caf
+          step xcodeproj-gem gem install xcodeproj --no-document --user-install
+          step xcodeproj bash -c 'export GEM_PATH="$(ruby -e "puts Gem.user_dir"):$(ruby -e "puts Gem.default_dir")"; ruby add-push.rb'
       - name: Version
         run: |
           source ../desktop/ci-step.sh
