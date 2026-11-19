@@ -52,7 +52,7 @@ Deno.serve(async (req: Request) => {
   const jwt = await apnsJwt();
   let sent = 0, dead = 0;
   const fails: string[] = [];
-  // collapse-id makes the repeats replace each other, so one notification is shown but each repeat rings and buzzes again
+  // no collapse-id: with it iOS updated the notification silently, so the repeats did not ring. thread-id keeps them grouped.
   const sendAll = (round: number) => Promise.all(toks.map(async ({ token }: { token: string }) => {
     try {
       const r = await fetch("https://api.push.apple.com/3/device/" + token, {
@@ -62,11 +62,11 @@ Deno.serve(async (req: Request) => {
           "apns-topic": Deno.env.get("APNS_TOPIC") ?? "es.prek.messenger",
           "apns-push-type": "alert",
           "apns-priority": "10",
-          "apns-collapse-id": "m" + id,
           "apns-expiration": String(Math.floor(Date.now() / 1000) + (msg.dp ? 60 : 3600)),
         },
         body: payload,
       });
+      console.log("apns", id, "round", round, r.status);
       if (r.ok) { if (round === 0) sent++; return; }
       const t = await r.text();
       fails.push(r.status + " " + t);
