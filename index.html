@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-PagpKwH4VRfrFj3kef5R2Q5nMe2Pb+IDR/eODyj7oWU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-WOrHa3S3Oj0dg4POfedb0RqOKbOyfz9+BI6wwqDfzlM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -1018,6 +1018,8 @@ html:not(.lys) .pg .infot .pgbtn{background:#14294a!important;border-color:#3451
 .win .m .rxc.me{background:#e1efff;border-color:#8fbcf0}
 html:not(.lys) .win .m .rxc.me{background:#1d3a63;border-color:#4a8fe0}
 .win .m .rxc .an{width:22px;height:22px}
+/* Settings panel is only for the Meg tab on phones; never inline in Kompiser */
+.shell:not(.tab-me) #prof{display:none!important}
 }
 
 </style>
@@ -4788,7 +4790,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="e9368e2";
+const PREK_VERSION="0.1.0",PREK_BUILD="2dac302";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -5850,7 +5852,10 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#cam").hidden)c
 
 /* ---------- koble knapper ---------- */
 function wire(){
-  $("#meb").addEventListener("click",()=>{const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
+  $("#meb").addEventListener("click",ev=>{
+    // Phone: the profile card is not a toggle (it pushed the settings panel into the friend list); a tap on it opens the Meg tab. The status pill keeps its own select.
+    if(matchMedia("(max-width:700px)").matches){if(ev.target.closest(".stw"))return;navTo("me");return}
+    const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
   $("#infob").addEventListener("click",showInfo);
   $("#outb").addEventListener("click",doLogout);
   $("#delb").addEventListener("click",showDelete);

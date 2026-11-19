@@ -801,7 +801,10 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#cam").hidden)c
 
 /* ---------- koble knapper ---------- */
 function wire(){
-  $("#meb").addEventListener("click",()=>{const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
+  $("#meb").addEventListener("click",ev=>{
+    // Phone: the profile card is not a toggle (it pushed the settings panel into the friend list); a tap on it opens the Meg tab. The status pill keeps its own select.
+    if(matchMedia("(max-width:700px)").matches){if(ev.target.closest(".stw"))return;navTo("me");return}
+    const p=$("#prof"),o=p.hidden;p.hidden=!o;$("#meb").setAttribute("aria-expanded",String(o))});
   $("#infob").addEventListener("click",showInfo);
   $("#outb").addEventListener("click",doLogout);
   $("#delb").addEventListener("click",showDelete);

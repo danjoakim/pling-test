@@ -488,4 +488,6 @@ html:not(.lys) .pg .infot .pgbtn{background:#14294a!important;border-color:#3451
 .win .m .rxc.me{background:#e1efff;border-color:#8fbcf0}
 html:not(.lys) .win .m .rxc.me{background:#1d3a63;border-color:#4a8fe0}
 .win .m .rxc .an{width:22px;height:22px}
+/* Settings panel is only for the Meg tab on phones; never inline in Kompiser */
+.shell:not(.tab-me) #prof{display:none!important}
 }

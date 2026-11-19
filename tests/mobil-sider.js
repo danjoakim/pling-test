@@ -30,6 +30,14 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  // Navn og tekst
  await A.click(".mrow:has-text('Navn og tekst')");await A.fill("#info input >> nth=1","Ålreit nå vel?");await A.press("#info input >> nth=1","Tab");await A.waitForTimeout(300);
  must(await A.evaluate(()=>S.profile.pm)==="Ålreit nå vel?","pm lagret");
+ // Kompiser: trykk på profilkortet skal ikke åpne innstillingspanelet inni lista (Dan: søket ble borte)
+ await A.click("#info .infoh button");await A.waitForTimeout(150);
+ await A.click("[data-tab=friends]");await A.waitForTimeout(150);
+ await A.click("#meb .av");await A.waitForTimeout(200);
+ must(await A.evaluate(()=>document.getElementById("shell").classList.contains("tab-me")),"profilkortet åpner Meg-fanen");
+ await A.click("[data-tab=friends]");await A.waitForTimeout(150);
+ must(await A.evaluate(()=>getComputedStyle(document.getElementById("prof")).display)==="none","#prof skjult i Kompiser");
+ must(await A.isVisible("#fq"),"søkefeltet synlig");
  console.log("FEIL A:",A.errs.length?A.errs:"ingen");
  await br.close();srv.close();
 })().catch(e=>{console.error("TESTFEIL",e.message);process.exit(1)});
