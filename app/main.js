@@ -787,7 +787,7 @@ function lightbox(u,gif){
 /* «Send et bilde» skal bare velge et bilde fra biblioteket, ikke tilby kamera (Dan Joakim 19. nov). I iPhone-appen bruker vi det innebygde bildevalget (Capacitor Camera.pickImages, ingen kameravalg);
    ellers (nettleser, skrivebord, eller om utvidelsen mangler) filvelgeren. Kamera er et eget valg i «+»-menyen. */
 async function pickPhoto(){
-  const cap=window.Capacitor,cm=cap&&cap.isNativePlatform&&cap.isNativePlatform()&&cap.Plugins&&cap.Plugins.Camera;
+  let cm=null;try{cm=nativePlugin("Camera")}catch(e){}
   if(cm&&cm.pickImages){
     try{
       const r=await cm.pickImages({limit:1,quality:90}),ph=r&&r.photos&&r.photos[0];
@@ -800,18 +800,23 @@ async function pickPhoto(){
 /* Push (iPhone-appen): varsler når appen er lukket eller skjermen er låst. Serveren kan ikke lese meldinger, så teksten er «Navn har sendt deg en melding».
    Se claude/push.md. Nettversjonen har ingen push; der gjelder bare varslene mens siden er åpen. */
 const pushKey="prek_push_token";
-function pushPlugin(){const cap=window.Capacitor;return cap&&cap.isNativePlatform&&cap.isNativePlatform()&&cap.Plugins&&cap.Plugins.PushNotifications||null}
+/* Uten bunter finnes ikke alltid cap.Plugins.X; registerPlugin(navn) gir en proxy til den innebygde modulen uansett. */
+function nativePlugin(name){const cap=window.Capacitor;if(!(cap&&cap.isNativePlatform&&cap.isNativePlatform()))return null;
+  return (cap.Plugins&&cap.Plugins[name])||(cap.registerPlugin?cap.registerPlugin(name):null)}
+function pushPlugin(){try{return nativePlugin("PushNotifications")}catch(e){return null}}
 let pushWired=false;
 async function initPush(){
   const pn=pushPlugin();if(!pn||!S.user)return;
   try{
     if(!pushWired){pushWired=true;
+      pn.addListener("registrationError",e=>toast("Push: "+String(e&&e.error||e).slice(0,120),true));
       pn.addListener("registration",t=>{const tok=t&&t.value;if(!tok||!S.user)return;try{localStorage.setItem(pushKey,tok)}catch(e){}api.savePushToken(S.user.id,tok).then(()=>{},()=>{})});
       pn.addListener("pushNotificationActionPerformed",a=>{const d=a&&a.notification&&a.notification.data;if(d&&d.from&&S.profiles.has(d.from))openChat(d.from)})}
     let p=await pn.checkPermissions();
     if(p.receive==="prompt")p=await pn.requestPermissions();
     if(p.receive==="granted"){await pn.register();syncPushMutes()}
-  }catch(e){}
+    else toast("Varsler er ikke tillatt. Slå på under Innstillinger > Prek!.",true)
+  }catch(e){toast("Push: "+String(e&&e.message||e).slice(0,120),true)}
 }
 async function dropPush(){let t=null;try{t=localStorage.getItem(pushKey);localStorage.removeItem(pushKey)}catch(e){}if(t)try{await Promise.race([api.deletePushToken(t),new Promise(r=>setTimeout(r,2000))])}catch(e){}}
 let camStream=null,camFace="environment";

@@ -98,6 +98,10 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  must(ps.some(x=>x.startsWith("tok:TTTT")),"push: token lagres");
  must(ps.includes("mute:f1:true"),"push: demping sendes til serveren");
  must(ps.some(x=>x.startsWith("del:TTTT")),"push: token slettes ved utlogging");
+ // uten cap.Plugins.X finnes modulen fortsatt via registerPlugin
+ const rp=await A.evaluate(async()=>{let asked=0;window.Capacitor={isNativePlatform:()=>true,Plugins:{},registerPlugin:n=>{asked++;return {pickImages:async()=>{throw new Error("cancelled")}}}};
+  document.getElementById("af").click=()=>{asked+=100};await pickPhoto();return asked});
+ must(rp===1,"modulen hentes via registerPlugin når cap.Plugins er tom");
  console.log("FEIL A:",A.errs.length?A.errs:"ingen");
  await br.close();srv.close();
 })().catch(e=>{console.error("TESTFEIL",e.message);process.exit(1)});
