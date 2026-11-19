@@ -25,17 +25,25 @@ function viewLogin(){
   const goW=async()=>{try{localStorage.setItem("pling_st_next",lst.value);if(rem.checked)localStorage.setItem("pling_remember_email",email.value.trim());else{localStorage.removeItem("pling_remember_email");localStorage.removeItem("pling_last_av")}}catch(e){}await go0()};
   const fr=el("div",{class:"lpic"});let lastAv=null;try{lastAv=remMail?localStorage.getItem("pling_last_av"):null}catch(e){}if(lastAv&&okAv(lastAv)){fr.classList.add("hasav");fr.append(el("img",{src:lastAv,alt:""}))}else fr.append(ico("lgi"));
   const wm=el("div",{class:"lwm","aria-hidden":"true"});wm.hidden=true;
+  // Phone layout (mobil.css): tabs, one card, eye button. On wide screens these extras are hidden and the wrappers are transparent.
+  if(window.matchMedia&&matchMedia("(max-width:700px)").matches&&!remMail)rem.checked=true;
+  const eye=el("button",{class:"leye",type:"button","aria-label":tr("auth.showPw"),onclick:()=>{const h=pw.type==="password";pw.type=h?"text":"password";eye.setAttribute("aria-pressed",String(h))}});
+  const tab=(m,label)=>el("button",{class:"ltab",type:"button","aria-pressed":String(S.mode===m),onclick:()=>{if(S.mode!==m){S.mode=m;viewLogin()}}},label);
+  const card=el("div",{class:"lcard"},
+    el("div",{class:"ltabs",role:"group"},tab("in",tr("auth.tabIn")),tab("up",tr("auth.tabUp"))),
+    el("label",{for:"em",class:"ll"},tr("auth.emailLabel")),email,
+    el("label",{for:"pw",class:"ll"},tr("auth.passwordLabel")),el("div",{class:"pwrap"},pw,eye),
+    el("div",{class:"lrow"},el("label",{for:"lst",class:"ll"},tr("auth.statusColon")),lst),
+    el("label",{class:"lchk"},rem,tr("auth.remember")),
+    ...(S.needCode?[el("div",{class:"row"},code,el("button",{id:"vf",onclick:verify},tr("auth.verify")))]:[]),
+    el("button",{id:"go",class:"lgo",onclick:goW},S.mode==="up"?tr("auth.createAccount"):tr("auth.login")),
+    el("div",{class:"lnote"},tr("auth.e2eShort")));
   app.append(
     fr,
     el("div",{class:"lh"},prk("lgn")),
     el("div",{class:"invb",id:"invb",hidden:true}),
     el("div",{class:"dim lc"},S.mode==="up"?tr("auth.signupTagline"):tr("auth.tagline")),
-    el("label",{for:"em",class:"ll"},tr("auth.emailLabel")),email,
-    el("label",{for:"pw",class:"ll"},tr("auth.passwordLabel")),pw,
-    el("div",{class:"lrow"},el("label",{for:"lst",class:"ll"},tr("auth.statusColon")),lst),
-    el("label",{class:"lchk"},rem,tr("auth.remember")),
-    ...(S.needCode?[el("div",{class:"row"},code,el("button",{id:"vf",onclick:verify},tr("auth.verify")))]:[]),
-    el("button",{id:"go",class:"lgo",onclick:goW},S.mode==="up"?tr("auth.createAccount"):tr("auth.login")),
+    card,
     el("div",{class:"llinks"},
       el("button",{class:"llink",id:"otp",type:"button",onclick:sendCode},tr("auth.sendOtp")),
       el("button",{class:"llink",type:"button",onclick:()=>{S.mode=S.mode==="up"?"in":"up";viewLogin()}},S.mode==="up"?tr("auth.haveAccount"):tr("auth.newAccount"))),

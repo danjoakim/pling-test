@@ -275,7 +275,7 @@ async function loadPreviews(){
     const rows=await q(api.latestMessages(cid,20),tr("ctx.messages"));
     if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
     const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
-    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:previewText(m)});
+    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:previewText(m),at:top.created_at});
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
@@ -317,6 +317,7 @@ function paintMe(){
   $("#men").textContent=nm;
   const sel=$("#st");$("#mep").textContent=sel.options[sel.selectedIndex].text;const pmi=$("#pm");if(document.activeElement!==pmi)pmi.value=S.profile.pm||"";
   const f=$("#mef");f.textContent="";f.append(ff(ST[S.status]));
+  const sp=$("#stp");if(sp){if(!sp.options.length)for(const o of sel.options)sp.append(new Option(o.text,o.value));sp.value=sel.value}
 }
 function paintAvAll(){paintMe()}
 async function saveProfile(patch){
@@ -324,6 +325,14 @@ async function saveProfile(patch){
 }
 
 /* ---------- kompislisten ---------- */
+// Time of the last message for the friend list on phones: clock time today, "I går" yesterday, otherwise day.month.
+function fmtWhen(ts){
+  if(!ts)return null;const d=new Date(ts),n=new Date(),day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime(),diff=Math.round((day(n)-day(d))/864e5);
+  const t=diff<=0?d.toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"}):diff===1?tr("nav.yesterday"):d.toLocaleDateString("nb-NO",{day:"2-digit",month:"2-digit"});
+  return el("span",{class:"tm"},t);
+}
+// Search field above the friend list (phone layout): hides rows that do not match.
+function applyFilter(){const q=(($("#fq")||{}).value||"").trim().toLowerCase();for(const b of document.querySelectorAll("#friends .conv"))b.hidden=!!q&&!b.textContent.toLowerCase().includes(q)}
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
 function prev(id){return listLine(S.last.get(id))}
 function drawTitle(){
@@ -341,12 +350,13 @@ function drawFriends(){
     const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
       el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
-      el("span",{class:"rt"},S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
+      el("span",{class:"rt"},fmtWhen((S.last.get(r.id)||{}).at),S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
     if(S.unread.get(r.id))b.classList.add("unread");
     b.addEventListener("click",()=>openChat(r.id)); // one click or tap opens the chat, on desktop and phone alike (Dan Joakim 5 Nov)
     b.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();openChat(r.id)}});
     box.append(b);
   }
+  applyFilter();
   for(const id of S.reqOut){
     const b=el("div",{class:"conv pend"});
     b.append(pav(id,"off"),el("span",{class:"t"},el("b",{},nameOf(id)),el("small",{},tr("friends.waiting"))),ff("off"));
@@ -357,6 +367,7 @@ function drawFriends(){
 function drawReqs(){
   const box=$("#reqs");box.textContent="";box.hidden=!S.reqIn.length;
   const nb=$("#navb");if(nb){nb.hidden=!S.reqIn.length;nb.textContent=String(S.reqIn.length)}
+  const rb=$("#rqbn");if(rb){rb.hidden=!S.reqIn.length;if(S.reqIn.length){rb.querySelector(".rqn").textContent=String(S.reqIn.length);rb.querySelector(".rqt").textContent=S.reqIn.length===1?tr("nav.reqOne",{name:nameOf(S.reqIn[0])}):tr("nav.reqMany",{n:String(S.reqIn.length)})}}
   for(const id of S.reqIn){
     box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til"),
       el("div",{class:"row"},
@@ -443,7 +454,7 @@ async function loadMsgs(){
   if(sig===S.sig){if(rxChanged)drawLog(true);return}S.sig=sig;
   const maxSeen=S.seen.get(cid)||0,fresh=freshMessages(out,S.first,maxSeen);
   S.seen.set(cid,out.length?out[out.length-1].id:0);
-  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:previewText(l.ok?l:null)});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
+  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:previewText(l.ok?l:null),at:l.ts});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   if(S.first)for(const x of out)S.anSeen.set(String(x.id),0);
   S.first=false;S.msgs=pend.length?[...out,...pend.filter(x=>x.cid===cid)]:out;drawLog();
   if(fresh.length){
@@ -701,6 +712,9 @@ function wire(){
     for(const b of document.querySelectorAll("#mnav button")){if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
   }
   for(const b of document.querySelectorAll("#mnav button"))b.addEventListener("click",()=>navTo(b.dataset.tab));
+  $("#rqbn").addEventListener("click",()=>navTo("add"));
+  $("#fq").addEventListener("input",applyFilter);
+  $("#stp").addEventListener("change",()=>{$("#st").value=$("#stp").value;$("#st").dispatchEvent(new Event("change"))});
   $("#addf").addEventListener("click",()=>{const p=$("#addfp"),o=p.hidden;p.hidden=!o;$("#addf").setAttribute("aria-expanded",String(o));if(o)$("#fe").focus()});
   const add=async()=>{
     const v=$("#fe").value.trim(),err=$("#ferr");err.textContent="";if(!v)return;

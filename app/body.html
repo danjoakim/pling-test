@@ -10,6 +10,7 @@
     <span id="mef"></span>
    </button>
    <input id="pm" class="mepi" placeholder="{{html.pm.placeholder}}" maxlength="60" autocomplete="off" aria-label="{{html.pm.aria}}">
+   <span class="stw"><select id="stp" class="stpill" aria-label="{{nav.status}}"></select></span>
    </div>
    <div class="prof" id="prof" hidden>
     <input id="pnm" placeholder="{{html.pnm.placeholder}}" maxlength="24" aria-label="{{html.pnm.aria}}">
@@ -27,6 +28,8 @@
    <div class="fine err msg" id="msg" role="status"></div>
    <div class="hs">
     <div id="pairbox"></div>
+    <input id="fq" class="fsearch" type="search" placeholder="{{nav.search}}" aria-label="{{nav.search}}" autocomplete="off" autocapitalize="off">
+    <button id="rqbn" class="rqbn" type="button" hidden><span class="rqn"></span><span class="rqt"></span><span class="rqc" aria-hidden="true">›</span></button>
     <div id="reqs" hidden></div>
     <div class="homebar"><span class="grp">{{html.home.friendsHeading}}</span><button class="glass" id="addf" type="button" aria-expanded="false">{{html.addf.text}}</button></div>
     <div class="add" id="addfp" hidden>

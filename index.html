@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-I4AQzszbAdwD6nSkEhUN1ZWvtSjgK4/FEUogmKF69mk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-P6ARmBAS1SKNGVQ6gh8Dbpz/7580c+xEqzFsiG/fFs4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -518,6 +518,7 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
 
 /*# Telefonvisning (smal skjerm): følger tegningene i designfilen «Prek! mobil» (Kompiser, Samtale, Legg til, Meg). Gjelder bare ≤700px, så PC og skrivebordsappen er uendret. Kommer etter extra.css. */
 .mnav{display:none}
+.lcard{display:contents}.pwrap{display:contents}.ltabs,.leye,.lnote,.stw,.fsearch,.rqbn,.tm{display:none}
 @media(max-width:700px){
  /* ramme: ingen XP-vindu, hele skjermen */
  body{padding:0}
@@ -596,6 +597,65 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
  html.lys #sd{background:linear-gradient(#4f93e0,#2a5fb8);border-color:transparent}
  #dp{font-size:0;min-width:44px;min-height:44px;padding:0;border-radius:50%}
  #dp::before{content:"!!";font:900 20px Nunito,Inter,sans-serif;color:#4a3000}
+ /* innlogging */
+ .win:has(.sc.lgn) .tb{display:none}
+ .scr,.scr .sc.lgn{background:none}
+ .scr{padding:0}
+ .sc.lgn{max-width:none;margin:0;display:flex;flex-direction:column;align-items:stretch;padding:calc(env(safe-area-inset-top,0px) + 36px) 24px calc(env(safe-area-inset-bottom,0px) + 24px);gap:0;min-height:100%;justify-content:center;overflow:auto}
+ .lpic,html.lys .lpic{align-self:center;width:112px;height:112px;border-radius:50%;border:3px solid #fff;margin:0;box-shadow:0 6px 18px rgba(16,48,79,.18);background:linear-gradient(#e6f1fc,#b9d6f0)}
+ .lpic .ff svg,html.lys .lpic .ff svg{width:56px;height:56px}
+ .lh .prkw{width:230px;margin:14px auto 2px;display:block}
+ .lc.dim{margin:0 0 20px;font-size:17px;color:#3d6a96}
+ .ll{display:none}
+ .lrow,.lchk{display:none}
+ .lcard{display:flex;flex-direction:column;gap:12px;padding:20px 22px 16px;border-radius:26px;background:rgba(255,255,255,.88);border:1px solid #fff;box-shadow:0 10px 30px rgba(16,48,79,.15)}
+ .ltabs{display:flex;padding:4px;border-radius:16px;background:#e6f0f9;gap:4px}
+ .win .ltab{flex:1;min-height:44px;border-radius:13px;background:none!important;border:0!important;box-shadow:none!important;font:600 17px Inter,system-ui,sans-serif;color:#4d6f93;text-shadow:none}
+ .win .ltab[aria-pressed=true]{background:#fff!important;color:#10304f;box-shadow:0 2px 6px rgba(16,48,79,.15)!important}
+ .lcard input[type=email],.lcard input[type=password],.lcard input[type=text]{height:52px;border-radius:16px;padding:0 18px;font-size:16px;text-overflow:ellipsis;border:1px solid #c5ddf2;background:#fff;color:#10304f}
+ .pwrap{position:relative;display:block}.pwrap input{width:100%;padding-right:52px!important}
+ .leye{display:block;position:absolute;right:6px;top:4px;width:44px;height:44px;background:none!important;border:0!important;box-shadow:none!important;padding:0;color:#6f93b8}
+ .win .leye,html.lys .win .leye{color:#6f93b8}
+ .leye::before{content:"";display:block;width:24px;height:24px;margin:auto;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") center/contain no-repeat}
+ .lcard input::placeholder{font-size:15px}
+ .leye[aria-pressed=true]{color:#1f5fb8}
+ .win .lgo,html.lys .win .lgo{width:100%;min-height:54px;border-radius:18px;margin:0;font:700 20px Inter,system-ui,sans-serif;color:#fff;border:0;background:linear-gradient(#4f93e0,#2a5fb8);box-shadow:0 6px 16px rgba(42,95,184,.35);text-shadow:none}
+ .lnote{display:block;text-align:center;font-size:14px;color:#4d6f93}
+ .llinks{justify-content:center;margin-top:16px}
+ .llinks .llink:nth-child(2){display:none}
+ .sc.lgn .fine{margin-top:6px;font-size:0}
+ .sc.lgn .fine .llink{font-size:14px}
+ .lnote::before{content:"";display:inline-block;width:16px;height:16px;margin-right:6px;vertical-align:-3px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat}
+ /* Kompiser: profilkort, søk, ønske-banner, rader */
+ .tb .lock::before{content:"";display:inline-block;width:14px;height:14px;margin-right:6px;vertical-align:-2px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat}
+ /* avatarer: runde, statusprikk nede til høyre i stedet for lysende ramme */
+ .win .me .av,.win .conv .pav,.win .pr .pav{border:0;box-shadow:none;border-radius:50%;overflow:visible;position:relative;background:linear-gradient(#6aa8ea,#2a5fb8);color:#fff}
+ .win .me .av img,.win .conv .pav img,.win .pr .pav img{border-radius:50%}
+ .win .me .av::after,.win .conv .pav::after,.win .pr .pav::after{content:"";position:absolute;right:-2px;bottom:-2px;width:16px;height:16px;border-radius:50%;background:var(--fc);border:3px solid #fff;box-sizing:border-box}
+ .win .me .av{width:60px;height:60px}
+ .win .me .av::after{width:20px;height:20px}
+ .win .conv .pav.off::after,.win .pr .pav.off::after{background:#9aa9b9}
+ .win .conv .pav.off{opacity:1}
+ #mef,.rt .ff{display:none}
+ .stw{display:block;position:absolute;right:14px;top:50%;transform:translateY(-50%)}
+ .stw::before{content:"";position:absolute;left:14px;top:50%;width:11px;height:11px;margin-top:-5.5px;border-radius:50%;background:var(--dot,#43d65a);pointer-events:none}
+ .win .stpill,html.lys .win .stpill{appearance:none;-webkit-appearance:none;height:44px;width:134px;min-width:0;border-radius:22px;padding:0 34px 0 32px;font:600 15px Inter,system-ui,sans-serif;color:#10304f;background:linear-gradient(#fff,#dcebf9) no-repeat;border:1.5px solid #5c8fc4;box-shadow:none}
+ .stw::after{content:"";position:absolute;right:14px;top:50%;width:8px;height:8px;margin-top:-6px;border-right:2px solid #4d6f93;border-bottom:2px solid #4d6f93;transform:rotate(45deg);pointer-events:none}
+ .mepi{right:148px}
+ .me b{padding-right:112px}
+ .win .fsearch,html.lys .win .fsearch{display:block;margin:6px 16px 10px;width:calc(100% - 32px);height:46px;border-radius:14px;border:0;background:#eaf2fa;padding:0 16px 0 44px;font-size:16px;color:#10304f;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d6f93' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:14px center;background-size:22px}
+ .win .rqbn,html.lys .win .rqbn{background:linear-gradient(#fff3cf,#fde7a9)!important;border:1px solid #e2c15a!important;box-shadow:none!important}
+ .emp,#friends>p,#friends>.dim{padding:8px 16px}
+ .rqbn{display:flex;align-items:center;gap:14px;margin:0 16px 10px;width:calc(100% - 32px);min-height:58px;padding:8px 16px 8px 12px;border-radius:16px;border:1px solid #e2c15a;background:linear-gradient(#fff3cf,#fde7a9);color:#4a3000;text-align:left;font:600 17px Inter,system-ui,sans-serif;box-shadow:none;text-shadow:none}
+ .rqbn[hidden]{display:none}
+ .rqn{flex:none;width:36px;height:36px;border-radius:50%;background:#f5b72e;display:grid;place-items:center;font-weight:700;color:#4a3000}
+ .rqt{flex:1;min-width:0}.rqc{font-size:26px;line-height:1}
+ .shell.tab-friends #reqs,.shell:not(.tab-add):not(.tab-me) #reqs{display:none!important}
+ .shell.tab-add .fsearch,.shell.tab-add .rqbn{display:none}
+ .conv .t{gap:2px}.conv .t small{color:#4d6f93;font-style:normal}
+ .rt{flex-direction:column;align-items:flex-end;gap:6px;align-self:start;padding-top:2px}
+ .tm{display:block;font-size:13px;color:#4d6f93}
+ .conv .npm{color:#6f93b8;font-weight:400}
 }
 
 </style>
@@ -613,6 +673,7 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
     <span id="mef"></span>
    </button>
    <input id="pm" class="mepi" placeholder="&lt;Skriv en personlig melding&gt;" maxlength="60" autocomplete="off" aria-label="Personlig melding">
+   <span class="stw"><select id="stp" class="stpill" aria-label="Din status"></select></span>
    </div>
    <div class="prof" id="prof" hidden>
     <input id="pnm" placeholder="Visningsnavn" maxlength="24" aria-label="Visningsnavn">
@@ -630,6 +691,8 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
    <div class="fine err msg" id="msg" role="status"></div>
    <div class="hs">
     <div id="pairbox"></div>
+    <input id="fq" class="fsearch" type="search" placeholder="Søk blant kompiser" aria-label="Søk blant kompiser" autocomplete="off" autocapitalize="off">
+    <button id="rqbn" class="rqbn" type="button" hidden><span class="rqn"></span><span class="rqt"></span><span class="rqc" aria-hidden="true">›</span></button>
     <div id="reqs" hidden></div>
     <div class="homebar"><span class="grp">Kompiser</span><button class="glass" id="addf" type="button" aria-expanded="false">+ Legg til kompis</button></div>
     <div class="add" id="addfp" hidden>
@@ -1094,6 +1157,10 @@ var PrekI18n = (() => {
     "auth.verify": "Bekreft",
     "auth.createAccount": "Lag konto",
     "auth.login": "Logg p\xE5",
+    "auth.tabIn": "Logg inn",
+    "auth.tabUp": "Ny bruker",
+    "auth.showPw": "Vis eller skjul passord",
+    "auth.e2eShort": "Ende-til-ende-kryptert",
     "auth.sendOtp": "Send engangskode i stedet",
     "auth.haveAccount": "Jeg har en konto",
     "auth.newAccount": "Ny konto",
@@ -1163,6 +1230,11 @@ var PrekI18n = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
+    "nav.search": "S\xF8k blant kompiser",
+    "nav.status": "Din status",
+    "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
+    "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.yesterday": "I g\xE5r",
     "nav.aria": "Hovedmeny",
     "nav.friends": "Kompiser",
     "nav.add": "Legg til",
@@ -2014,6 +2086,10 @@ var PrekShrink = (() => {
     "auth.verify": "Bekreft",
     "auth.createAccount": "Lag konto",
     "auth.login": "Logg p\xE5",
+    "auth.tabIn": "Logg inn",
+    "auth.tabUp": "Ny bruker",
+    "auth.showPw": "Vis eller skjul passord",
+    "auth.e2eShort": "Ende-til-ende-kryptert",
     "auth.sendOtp": "Send engangskode i stedet",
     "auth.haveAccount": "Jeg har en konto",
     "auth.newAccount": "Ny konto",
@@ -2083,6 +2159,11 @@ var PrekShrink = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
+    "nav.search": "S\xF8k blant kompiser",
+    "nav.status": "Din status",
+    "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
+    "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.yesterday": "I g\xE5r",
     "nav.aria": "Hovedmeny",
     "nav.friends": "Kompiser",
     "nav.add": "Legg til",
@@ -3111,6 +3192,10 @@ var PrekPreviews = (() => {
     "auth.verify": "Bekreft",
     "auth.createAccount": "Lag konto",
     "auth.login": "Logg p\xE5",
+    "auth.tabIn": "Logg inn",
+    "auth.tabUp": "Ny bruker",
+    "auth.showPw": "Vis eller skjul passord",
+    "auth.e2eShort": "Ende-til-ende-kryptert",
     "auth.sendOtp": "Send engangskode i stedet",
     "auth.haveAccount": "Jeg har en konto",
     "auth.newAccount": "Ny konto",
@@ -3180,6 +3265,11 @@ var PrekPreviews = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
+    "nav.search": "S\xF8k blant kompiser",
+    "nav.status": "Din status",
+    "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
+    "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.yesterday": "I g\xE5r",
     "nav.aria": "Hovedmeny",
     "nav.friends": "Kompiser",
     "nav.add": "Legg til",
@@ -3817,6 +3907,10 @@ var PrekHelpers = (() => {
     "auth.verify": "Bekreft",
     "auth.createAccount": "Lag konto",
     "auth.login": "Logg p\xE5",
+    "auth.tabIn": "Logg inn",
+    "auth.tabUp": "Ny bruker",
+    "auth.showPw": "Vis eller skjul passord",
+    "auth.e2eShort": "Ende-til-ende-kryptert",
     "auth.sendOtp": "Send engangskode i stedet",
     "auth.haveAccount": "Jeg har en konto",
     "auth.newAccount": "Ny konto",
@@ -3886,6 +3980,11 @@ var PrekHelpers = (() => {
     "html.lpv.opton": "Forh\xE5ndsvisning av lenker: p\xE5",
     "html.lpv.optoff": "Forh\xE5ndsvisning av lenker: av",
     "html.addf.text": "+ Legg til kompis",
+    "nav.search": "S\xF8k blant kompiser",
+    "nav.status": "Din status",
+    "nav.reqOne": "Nytt kompis\xF8nske fra {name}",
+    "nav.reqMany": "{n} nye kompis\xF8nsker",
+    "nav.yesterday": "I g\xE5r",
     "nav.aria": "Hovedmeny",
     "nav.friends": "Kompiser",
     "nav.add": "Legg til",
@@ -4111,7 +4210,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="cbcd941";
+const PREK_VERSION="0.1.0",PREK_BUILD="1386af3";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -4266,17 +4365,25 @@ function viewLogin(){
   const goW=async()=>{try{localStorage.setItem("pling_st_next",lst.value);if(rem.checked)localStorage.setItem("pling_remember_email",email.value.trim());else{localStorage.removeItem("pling_remember_email");localStorage.removeItem("pling_last_av")}}catch(e){}await go0()};
   const fr=el("div",{class:"lpic"});let lastAv=null;try{lastAv=remMail?localStorage.getItem("pling_last_av"):null}catch(e){}if(lastAv&&okAv(lastAv)){fr.classList.add("hasav");fr.append(el("img",{src:lastAv,alt:""}))}else fr.append(ico("lgi"));
   const wm=el("div",{class:"lwm","aria-hidden":"true"});wm.hidden=true;
+  // Phone layout (mobil.css): tabs, one card, eye button. On wide screens these extras are hidden and the wrappers are transparent.
+  if(window.matchMedia&&matchMedia("(max-width:700px)").matches&&!remMail)rem.checked=true;
+  const eye=el("button",{class:"leye",type:"button","aria-label":tr("auth.showPw"),onclick:()=>{const h=pw.type==="password";pw.type=h?"text":"password";eye.setAttribute("aria-pressed",String(h))}});
+  const tab=(m,label)=>el("button",{class:"ltab",type:"button","aria-pressed":String(S.mode===m),onclick:()=>{if(S.mode!==m){S.mode=m;viewLogin()}}},label);
+  const card=el("div",{class:"lcard"},
+    el("div",{class:"ltabs",role:"group"},tab("in",tr("auth.tabIn")),tab("up",tr("auth.tabUp"))),
+    el("label",{for:"em",class:"ll"},tr("auth.emailLabel")),email,
+    el("label",{for:"pw",class:"ll"},tr("auth.passwordLabel")),el("div",{class:"pwrap"},pw,eye),
+    el("div",{class:"lrow"},el("label",{for:"lst",class:"ll"},tr("auth.statusColon")),lst),
+    el("label",{class:"lchk"},rem,tr("auth.remember")),
+    ...(S.needCode?[el("div",{class:"row"},code,el("button",{id:"vf",onclick:verify},tr("auth.verify")))]:[]),
+    el("button",{id:"go",class:"lgo",onclick:goW},S.mode==="up"?tr("auth.createAccount"):tr("auth.login")),
+    el("div",{class:"lnote"},tr("auth.e2eShort")));
   app.append(
     fr,
     el("div",{class:"lh"},prk("lgn")),
     el("div",{class:"invb",id:"invb",hidden:true}),
     el("div",{class:"dim lc"},S.mode==="up"?tr("auth.signupTagline"):tr("auth.tagline")),
-    el("label",{for:"em",class:"ll"},tr("auth.emailLabel")),email,
-    el("label",{for:"pw",class:"ll"},tr("auth.passwordLabel")),pw,
-    el("div",{class:"lrow"},el("label",{for:"lst",class:"ll"},tr("auth.statusColon")),lst),
-    el("label",{class:"lchk"},rem,tr("auth.remember")),
-    ...(S.needCode?[el("div",{class:"row"},code,el("button",{id:"vf",onclick:verify},tr("auth.verify")))]:[]),
-    el("button",{id:"go",class:"lgo",onclick:goW},S.mode==="up"?tr("auth.createAccount"):tr("auth.login")),
+    card,
     el("div",{class:"llinks"},
       el("button",{class:"llink",id:"otp",type:"button",onclick:sendCode},tr("auth.sendOtp")),
       el("button",{class:"llink",type:"button",onclick:()=>{S.mode=S.mode==="up"?"in":"up";viewLogin()}},S.mode==="up"?tr("auth.haveAccount"):tr("auth.newAccount"))),
@@ -4639,7 +4746,7 @@ async function loadPreviews(){
     const rows=await q(api.latestMessages(cid,20),tr("ctx.messages"));
     if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
     const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
-    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:previewText(m)});
+    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:previewText(m),at:top.created_at});
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
@@ -4681,6 +4788,7 @@ function paintMe(){
   $("#men").textContent=nm;
   const sel=$("#st");$("#mep").textContent=sel.options[sel.selectedIndex].text;const pmi=$("#pm");if(document.activeElement!==pmi)pmi.value=S.profile.pm||"";
   const f=$("#mef");f.textContent="";f.append(ff(ST[S.status]));
+  const sp=$("#stp");if(sp){if(!sp.options.length)for(const o of sel.options)sp.append(new Option(o.text,o.value));sp.value=sel.value}
 }
 function paintAvAll(){paintMe()}
 async function saveProfile(patch){
@@ -4688,6 +4796,14 @@ async function saveProfile(patch){
 }
 
 /* ---------- kompislisten ---------- */
+// Time of the last message for the friend list on phones: clock time today, "I går" yesterday, otherwise day.month.
+function fmtWhen(ts){
+  if(!ts)return null;const d=new Date(ts),n=new Date(),day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime(),diff=Math.round((day(n)-day(d))/864e5);
+  const t=diff<=0?d.toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"}):diff===1?tr("nav.yesterday"):d.toLocaleDateString("nb-NO",{day:"2-digit",month:"2-digit"});
+  return el("span",{class:"tm"},t);
+}
+// Search field above the friend list (phone layout): hides rows that do not match.
+function applyFilter(){const q=(($("#fq")||{}).value||"").trim().toLowerCase();for(const b of document.querySelectorAll("#friends .conv"))b.hidden=!!q&&!b.textContent.toLowerCase().includes(q)}
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
 function prev(id){return listLine(S.last.get(id))}
 function drawTitle(){
@@ -4705,12 +4821,13 @@ function drawFriends(){
     const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
       el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
-      el("span",{class:"rt"},S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
+      el("span",{class:"rt"},fmtWhen((S.last.get(r.id)||{}).at),S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
     if(S.unread.get(r.id))b.classList.add("unread");
     b.addEventListener("click",()=>openChat(r.id)); // one click or tap opens the chat, on desktop and phone alike (Dan Joakim 5 Nov)
     b.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();openChat(r.id)}});
     box.append(b);
   }
+  applyFilter();
   for(const id of S.reqOut){
     const b=el("div",{class:"conv pend"});
     b.append(pav(id,"off"),el("span",{class:"t"},el("b",{},nameOf(id)),el("small",{},tr("friends.waiting"))),ff("off"));
@@ -4721,6 +4838,7 @@ function drawFriends(){
 function drawReqs(){
   const box=$("#reqs");box.textContent="";box.hidden=!S.reqIn.length;
   const nb=$("#navb");if(nb){nb.hidden=!S.reqIn.length;nb.textContent=String(S.reqIn.length)}
+  const rb=$("#rqbn");if(rb){rb.hidden=!S.reqIn.length;if(S.reqIn.length){rb.querySelector(".rqn").textContent=String(S.reqIn.length);rb.querySelector(".rqt").textContent=S.reqIn.length===1?tr("nav.reqOne",{name:nameOf(S.reqIn[0])}):tr("nav.reqMany",{n:String(S.reqIn.length)})}}
   for(const id of S.reqIn){
     box.append(el("div",{class:"req"},pav(id,"on"),el("div",{},el("b",{},nameOf(id))," vil legge deg til"),
       el("div",{class:"row"},
@@ -4807,7 +4925,7 @@ async function loadMsgs(){
   if(sig===S.sig){if(rxChanged)drawLog(true);return}S.sig=sig;
   const maxSeen=S.seen.get(cid)||0,fresh=freshMessages(out,S.first,maxSeen);
   S.seen.set(cid,out.length?out[out.length-1].id:0);
-  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:previewText(l.ok?l:null)});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
+  if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:previewText(l.ok?l:null),at:l.ts});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   if(S.first)for(const x of out)S.anSeen.set(String(x.id),0);
   S.first=false;S.msgs=pend.length?[...out,...pend.filter(x=>x.cid===cid)]:out;drawLog();
   if(fresh.length){
@@ -5065,6 +5183,9 @@ function wire(){
     for(const b of document.querySelectorAll("#mnav button")){if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}
   }
   for(const b of document.querySelectorAll("#mnav button"))b.addEventListener("click",()=>navTo(b.dataset.tab));
+  $("#rqbn").addEventListener("click",()=>navTo("add"));
+  $("#fq").addEventListener("input",applyFilter);
+  $("#stp").addEventListener("change",()=>{$("#st").value=$("#stp").value;$("#st").dispatchEvent(new Event("change"))});
   $("#addf").addEventListener("click",()=>{const p=$("#addfp"),o=p.hidden;p.hidden=!o;$("#addf").setAttribute("aria-expanded",String(o));if(o)$("#fe").focus()});
   const add=async()=>{
     const v=$("#fe").value.trim(),err=$("#ferr");err.textContent="";if(!v)return;
