@@ -5,7 +5,7 @@
  body{padding:0}
  .win,html.lys .win{max-width:none;width:100%;height:100%;border:0;border-radius:0;box-shadow:none;background:linear-gradient(#17335f,#0c1f3d)}
  html.lys .win{background:linear-gradient(#d9ecfd,#a9cdee)}
- .tb,html.lys .tb{border-radius:0;background:none;padding:calc(env(safe-area-inset-top,0px) + 10px) 20px 0;min-height:48px;text-shadow:none;color:#e6f0fb}
+ .tb,html.lys .tb{border-radius:0;background:none;padding:calc(env(safe-area-inset-top,0px) + 2px) 20px 0;min-height:44px;text-shadow:none;color:#e6f0fb}
  html.lys .tb{color:#10304f}
  .tb .lock{margin-left:auto;padding:5px 12px;border-radius:999px;font:500 13px Inter,Tahoma,sans-serif;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#9bbbe0}
  html.lys .tb .lock{background:rgba(255,255,255,.65);border-color:rgba(70,120,170,.35);color:#2a5f93}
@@ -17,7 +17,7 @@
  .me,html.lys .me{border:0;padding:14px;gap:14px;border-radius:18px;min-height:88px}
  .me .pav,.me .av{width:60px;height:60px;border-radius:50%;font-size:22px}
  .me b{font:700 18px Inter,system-ui,sans-serif}
- .mepi{left:88px;right:56px;top:42px;height:26px;font-size:14px}
+ .mepi{left:88px;right:56px;top:50px;height:24px;font-size:14px}
  /* kompisliste som hvitt ark */
  .hs{background:#0f2340;border-radius:26px 26px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.25);padding-top:8px}
  html.lys .hs{background:#fbfdff;box-shadow:0 -4px 20px rgba(16,48,79,.12)}
@@ -32,14 +32,19 @@
  .home{position:relative}
  .mnav{display:flex;flex:none;padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 8px);border-top:1px solid #1d3a63;background:#0f2340}
  html.lys .mnav{background:#fbfdff;border-top-color:#d3e3f3}
+ .win .mnav button,html.lys .win .mnav button{background:none!important;border:0!important;box-shadow:none!important;margin:0}
  .mnav button{flex:1;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:0;box-shadow:none;border-radius:0;text-shadow:none;font:500 12px Inter,system-ui,sans-serif;color:#8fb0d2;position:relative}
  html.lys .mnav button{color:#4d6f93}
  .mnav button[aria-current=page]{color:#7db3f2;font-weight:700}
  html.lys .mnav button[aria-current=page]{color:#1f5fb8}
  .mnav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
  .mnav .nb{position:absolute;top:2px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:#e5483b;color:#fff;font:700 11px/18px Inter,sans-serif;text-align:center;padding:0 4px}
- .mepi:hover{border-color:transparent}.mepi:focus{border-color:#7db3f2}
- .conv,.conv:hover,html.lys .conv:hover,html.lys .conv.act{border-color:transparent}
+ .win .mepi,html.lys .win .mepi,.win .mepi:hover,html.lys .win .mepi:hover{border-color:transparent;background:transparent}
+ .win .mepi:focus,html.lys .win .mepi:focus{border-color:#7db3f2;background:rgba(255,255,255,.12)}
+ html.lys .win .mepi:focus{background:#fff}
+ .win .conv,.win .conv:hover,.win .conv.act,html.lys .win .conv,html.lys .win .conv:hover,html.lys .win .conv.act{border:0!important;box-shadow:none!important}
+ .win .conv:hover,html.lys .win .conv:hover{background:none}
+ .win .conv:active,html.lys .win .conv:active{background:rgba(79,147,224,.12)}
  .homebar #addf{display:none}
  #toast{bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
  /* faner: bare den valgte delen vises */
