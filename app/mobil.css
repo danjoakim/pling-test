@@ -210,4 +210,21 @@
  .shell.tab-me #prof select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f93b8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:20px}
  .shell.tab-me .seccard{border-radius:18px}
  .win .shell.tab-me #prof .sm,html.lys .win .shell.tab-me #prof .sm{min-height:52px;border-radius:16px;font-size:16px;font-weight:600}
+ /* natt (alt som ikke er «lys»): mørke varianter av de lyse fargene over */
+ html:not(.lys) .shell.tab-me .me b,html:not(.lys) .shell.tab-add .ptitle{color:#eaf3ff}
+ html:not(.lys) .shell.tab-add .sechd,html:not(.lys) .shell.tab-add .ch2,html:not(.lys) .shell.tab-me #prof .grp{color:#8fb0d2}
+ html:not(.lys) .shell.tab-me #prof input,html:not(.lys) .shell.tab-me #prof select,html:not(.lys) .coderow input,html:not(.lys) #addfp #fe,html:not(.lys) .win .fsearch{background-color:#12294d;border-color:#2a4468;color:#e6f0fb}
+ html:not(.lys) .win .fsearch{background-color:#12294d}
+ html:not(.lys) .win .seg{background:#12294d!important;border-color:#2a4468!important;color:#e6f0fb}
+ html:not(.lys) .win .seg[aria-pressed=true]{background:#1d3a63!important;border-color:#7db3f2!important;box-shadow:0 0 0 1px #7db3f2!important}
+ html:not(.lys) .invbox{background:#12294d}
+ html:not(.lys) .invbox .scantxt,html:not(.lys) .fine,html:not(.lys) .lnote{color:#9bbbe0}
+ html:not(.lys) .lc.dim{color:#9bbbe0}
+ html:not(.lys) .lcard{background:rgba(18,41,77,.92);border-color:#2a4468}
+ html:not(.lys) .ltabs{background:#0c1f3d}
+ html:not(.lys) .win .ltab{color:#9bbbe0}
+ html:not(.lys) .win .ltab[aria-pressed=true]{background:#1d3a63!important;color:#fff}
+ html:not(.lys) .lcard input[type=email],html:not(.lys) .lcard input[type=password],html:not(.lys) .lcard input[type=text]{background:#0c1f3d;border-color:#2a4468;color:#e6f0fb}
+ html:not(.lys) .win .coderow .sm,html:not(.lys) .win #fadd{background:#1d3a63!important;color:#fff;border-color:#4f7fb5}
+ html:not(.lys) .win .shell.tab-me .lbl{background:#1d3a63!important;border-color:#2a4468!important;color:#9cc8ff}
 }
