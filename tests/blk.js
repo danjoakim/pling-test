@@ -27,6 +27,7 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  console.log("3 B: venner =",await B.locator(".conv[data-id]").count());
  await B.click("#addf");await B.fill("#fe","alice@x.test");await B.click("#fadd");await B.waitForTimeout(600);
  console.log("4 B legg til A ->",JSON.stringify(await B.textContent("#msg"))+JSON.stringify(await B.textContent("#toast")),"| forespørsler hos A:",await A.evaluate(async()=>{await refresh();return S.reqIn.length}));
+ {const rt=await A.evaluate(()=>{S.profiles.set("x-req",{id:"x-req",name:"Eva",pm:"Hei"});S.reqIn=["x-req"];drawReqs();const e=document.querySelector(".req .rtx");const t=e?e.innerText.replace(/\s+/g," "):null;S.reqIn=[];drawReqs();return t});if(!rt||!/vil legge deg til/i.test(rt)||/til\s*vil/i.test(rt))throw new Error("forespørselsteksten på skrivebord er rotete eller mangler: "+rt)}
  await A.evaluate(()=>$("#meb").click());await A.waitForTimeout(200);
  console.log("5 A Blokkerte:",JSON.stringify(await A.textContent("#blist")),"| overskrift synlig:",await A.isVisible("#bgrp"));
  await A.screenshot({path:"blk2.png"});
