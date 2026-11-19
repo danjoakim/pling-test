@@ -18,7 +18,7 @@ const root=path.join(__dirname,"..");
  const tables=new Map();
  for(const m of sql.matchAll(/create table public\.(\w+) \(([\s\S]*?)\n\);/g))
   tables.set(m[1],new Set(m[2].split("\n").map(l=>l.trim()).filter(l=>l&&!/^(constraint|--|primary|foreign|check|unique)/i.test(l)).map(l=>l.split(/\s+/)[0])));
- for(const m of sql.matchAll(/alter table public\.(\w+) add column (\w+)/gi))tables.get(m[1]).add(m[2]);
+ for(const m of sql.matchAll(/alter table public\.(\w+) add column (?:if not exists )?(\w+)/gi))tables.get(m[1]).add(m[2]);
  assert(tables.size>=14&&tables.get("messages").has("chat_id"),"found the tables in the migrations");
  // Call every API function with a recording client.
  const calls=[];
@@ -43,7 +43,7 @@ const root=path.join(__dirname,"..");
   getProfile:["u"],getProfiles:[["u"]],createProfile:[{id:"u",fp:"f",name:"n",pub:{}}],updateProfile:["u",{name:"n",pm:"m"}],
   getAvatars:[["u"]],saveAvatar:[{id:"u",data:"d",updated_at:"t"}],
   listFriends:[],listRequests:[],declineRequest:["a","b"],listBlocks:[],listChatMembers:[],listChats:[],listReads:[],
-  latestMessages:["c",50],olderMessages:["c",9,50],sendMessage:[{chat_id:"c",sender:"u",iv:"i",ct:"c",file:"c/f"}],deleteMyMessages:["c","u"],
+  latestMessages:["c",50],olderMessages:["c",9,50],sendMessage:[{chat_id:"c",sender:"u",iv:"i",ct:"c",file:"c/f",dp:true}],savePushToken:["u","T".repeat(40)],deletePushToken:["T".repeat(40)],setPushMute:["u","f",true],listPushMutes:[],deleteMyMessages:["c","u"],
   listReactions:["c"],saveReaction:[{msg_id:1,chat_id:"c",user_id:"u",iv:"i",ct:"c"}],
   uploadFile:["c/f",new Uint8Array(3)],downloadFile:["c/f"],removeFiles:[["c/f"]],linkPreview:["https://x"],deleteAccount:[],
   subscribeLive:[{onMessage(){},onChange(){},onPresence(){}}],closeLive:[]};
