@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-woU7CZLstsGTYmCEZfFC2v0TxZ8nmHixKcT8Skgj5rg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-knCRzlzx/o4NG4WeoVBiKpNzlBCcdaVz0e3s9HE8hxg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -1063,6 +1063,9 @@ html:not(.lys) .win .mlk{background:rgba(255,255,255,.08)!important;border-color
 .shell.tab-friends .hs{display:flex;flex-direction:column}
 .shell.tab-friends .hs>*{flex:none}
 .shell.tab-friends .hs>#friends{flex:1 0 auto}
+.pg .infot ul.pl li{padding:10px 0;align-items:flex-start}
+.pg .infot ul.pl li::before{width:7px;height:7px;margin-top:8px;border-radius:50%;background:#4d6f93;-webkit-mask:none;mask:none}
+html:not(.lys) .pg .infot ul.pl li::before{background:#8fb0d2}
 }
 
 </style>
@@ -4850,7 +4853,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="e8ca126";
+const PREK_VERSION="0.1.0",PREK_BUILD="3be3a44";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -5249,17 +5252,18 @@ const INFO=[
 function showInfo(){
   const o=$("#info");o.textContent="";
   const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":tr("info.title")});
-  box.append(el("div",{class:"infoh"},el("b",{},tr("info.title")),el("button",{class:"glass sm",type:"button",onclick:closeInfo},tr("info.close"))));
+  // Phone: a full page like Slett konto, so the close button sits below the status bar (class pg; the title span is hidden on desktop)
+  box.append(el("div",{class:"infoh"},el("b",{},tr("info.title")),el("span",{class:"pgt"},tr("info.title")),el("button",{class:"glass sm",type:"button","aria-label":tr("info.close"),onclick:closeInfo},tr("info.close"))));
   const body=el("div",{class:"infot"});
   for(const [h,ps] of INFO){
     body.append(el("h3",{},h));
     for(const p of ps){
-      if(Array.isArray(p)){const ul=el("ul",{});for(const t of p.slice(1))ul.append(el("li",{},t));body.append(ul)}
+      if(Array.isArray(p)){const ul=el("ul",{class:"pl"});for(const t of p.slice(1))ul.append(el("li",{},t));body.append(ul)}
       else body.append(el("p",{},p));
     }
   }
   body.append(el("p",{class:"fine"},tr("info.version",{v:PREK_VERSION,b:PREK_BUILD})));
-  box.append(body);o.append(box);o.hidden=false;
+  box.append(body);o.classList.add("pg");o.append(box);o.hidden=false;
   o.onclick=e=>{if(e.target===o)closeInfo()};
   box.querySelector("button").focus();
 }

@@ -63,6 +63,10 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  await A.click("#friends",{position:{x:5,y:5},force:true});must(await A.isHidden("#lockpop"),"låsboble lukkes ved trykk utenfor");
  await A.click("#addplus");must(await A.evaluate(()=>document.getElementById("shell").classList.contains("tab-add")),"+ åpner Legg til");
  must((await A.textContent("#navnm")).trim()==="Dan Joakim","navnet i bunnmenyen");
+ // Personvern og hjelp er en hel side: lukkeknappen ligger under statuslinjen, ikke oppunder batteri og nett
+ await A.evaluate(()=>showInfo());await A.waitForSelector("#info.pg .infoh button");
+ must((await A.locator("#info .infoh button").boundingBox()).y>=44,"lukkeknappen i Personvern ligger under statuslinjen");
+ await A.click("#info .infoh button");must(await A.isHidden("#info"),"Personvern lukkes");
  console.log("FEIL A:",A.errs.length?A.errs:"ingen");
  await br.close();srv.close();
 })().catch(e=>{console.error("TESTFEIL",e.message);process.exit(1)});

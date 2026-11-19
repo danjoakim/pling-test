@@ -138,17 +138,18 @@ const INFO=[
 function showInfo(){
   const o=$("#info");o.textContent="";
   const box=el("div",{class:"infob",role:"dialog","aria-modal":"true","aria-label":tr("info.title")});
-  box.append(el("div",{class:"infoh"},el("b",{},tr("info.title")),el("button",{class:"glass sm",type:"button",onclick:closeInfo},tr("info.close"))));
+  // Phone: a full page like Slett konto, so the close button sits below the status bar (class pg; the title span is hidden on desktop)
+  box.append(el("div",{class:"infoh"},el("b",{},tr("info.title")),el("span",{class:"pgt"},tr("info.title")),el("button",{class:"glass sm",type:"button","aria-label":tr("info.close"),onclick:closeInfo},tr("info.close"))));
   const body=el("div",{class:"infot"});
   for(const [h,ps] of INFO){
     body.append(el("h3",{},h));
     for(const p of ps){
-      if(Array.isArray(p)){const ul=el("ul",{});for(const t of p.slice(1))ul.append(el("li",{},t));body.append(ul)}
+      if(Array.isArray(p)){const ul=el("ul",{class:"pl"});for(const t of p.slice(1))ul.append(el("li",{},t));body.append(ul)}
       else body.append(el("p",{},p));
     }
   }
   body.append(el("p",{class:"fine"},tr("info.version",{v:PREK_VERSION,b:PREK_BUILD})));
-  box.append(body);o.append(box);o.hidden=false;
+  box.append(body);o.classList.add("pg");o.append(box);o.hidden=false;
   o.onclick=e=>{if(e.target===o)closeInfo()};
   box.querySelector("button").focus();
 }

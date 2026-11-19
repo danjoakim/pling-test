@@ -533,4 +533,7 @@ html:not(.lys) .win .mlk{background:rgba(255,255,255,.08)!important;border-color
 .shell.tab-friends .hs{display:flex;flex-direction:column}
 .shell.tab-friends .hs>*{flex:none}
 .shell.tab-friends .hs>#friends{flex:1 0 auto}
+.pg .infot ul.pl li{padding:10px 0;align-items:flex-start}
+.pg .infot ul.pl li::before{width:7px;height:7px;margin-top:8px;border-radius:50%;background:#4d6f93;-webkit-mask:none;mask:none}
+html:not(.lys) .pg .infot ul.pl li::before{background:#8fb0d2}
 }
