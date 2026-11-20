@@ -542,3 +542,5 @@ html:not(.lys) .pg .infot ul.pl li::before{background:#8fb0d2}
    Ligger sist og uten media-vilkår, så den gjelder både på telefon og skrivebord. */
 button{font-family:inherit}
 h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.sechd,.ch2,.ch .ti,.grph .gt,.tb,.tbn{font-weight:900}
+/* Titler skrås som logoen (skewX -12, Dan Joakim 20. nov: overskriftene skal ha samme font som logoen). Små etiketter, chat-navn og knapper står rett. */
+h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:italic;letter-spacing:-.01em}
