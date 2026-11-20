@@ -681,6 +681,7 @@ html:not(.lys) .avs.pick::after,html:not(.lys) .avs.take::after{background:#cfe2
 html:not(.lys) .avs.del{color:#ff8a8a}html:not(.lys) .avs.del::before{background:#3a1f2c}html:not(.lys) .avs.del::after{background:#ff8a8a}
 .avs.cx{justify-content:center;margin-top:6px;font-weight:600;background:#e9f1f9!important}
 html:not(.lys) .avs.cx{background:#14294a!important}
+#friends>.fine{padding:32px 24px!important;text-align:center;font-size:15px;line-height:1.5}
 .emoh,.emo .etabs{touch-action:none}
 .chatpane .emo{transition:transform .18s ease}
 }

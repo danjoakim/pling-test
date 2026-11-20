@@ -192,6 +192,7 @@ export const nb = {
   "friends.unreadTitle": "Uleste meldinger",
   "friends.waiting": "Venter på svar",
   "friends.empty": "Ingen kompiser ennå. Trykk «Legg til kompis» og skriv e-posten til en du kjenner.",
+  "friends.loading": "Henter kompiser …",
   "friends.accept": "Godta",
   "friends.decline": "Avslå",
   // adding friends (round 3)

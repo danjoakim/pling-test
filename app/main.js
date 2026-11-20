@@ -252,6 +252,7 @@ function showReport(m){
 }
 /* Logg ut. supabase-js sin signOut() avbryter uten å gjøre noe hvis kallet mot serveren feiler (nett, utløpt økt, uventet svar), og da ble brukeren stående på skjermen. Derfor: prøv vanlig utlogging, ellers lokalt, ellers fjern økten for hånd og last siden på nytt. */
 async function doLogout(){
+  try{if(S.user)localStorage.removeItem(flKey())}catch(e){}
   await dropPush();
   try{if(S.user&&S.id)await Promise.race([api.setPresence("off",null),new Promise(r=>setTimeout(r,2000))])}catch(e){}
   let bad=false;
@@ -276,7 +277,8 @@ async function start(){
   if(!wired){wired=true;wire()}
   paintMe();closeChat();
   initPush();
-  await refresh();
+  friendsLoaded=false;warmStart();
+  warmP=refresh();await warmP;friendsLoaded=true;warm=false;drawFriends();
   drawInvite();await redeemPending();
   startPresence();
   api.subscribeLive({
@@ -356,6 +358,21 @@ async function syncPushMutes(){try{const ids=JSON.parse(localStorage.getItem(mut
 function drawMute(){const b=$("#bmu");if(!b||!S.chat)return;b.textContent=muted(S.chat.other)?tr("mute.unmuteButton"):tr("mute.muteButton")}
 function stOf(id){return S.pres.get(id)||"off"}
 
+/* HVORFOR (20. nov, Dan): appen viste «ingen kompiser» i noen sekunder ved oppstart. Nå tegnes sist kjente kompiser (bare id, navn og personlig melding, aldri meldinger) med en gang,
+   så oppdateres de når den ekte listen er hentet. Før første henting vises «Henter kompiser …», aldri tom-teksten. Slettes ved utlogging. */
+const flKey=()=>"pling_fl_"+S.user.id;
+let warm=false,warmP=null,friendsLoaded=false;
+function warmStart(){
+  try{const c=JSON.parse(localStorage.getItem(flKey())||"null");
+    if(!c||!Array.isArray(c.f)||!c.f.length)return;
+    const ids=c.f.filter(x=>typeof x==="string").slice(0,200);
+    for(const p of (Array.isArray(c.p)?c.p:[]))if(p&&typeof p.id==="string"&&ids.includes(p.id)&&!S.profiles.has(p.id))S.profiles.set(p.id,{id:p.id,name:String(p.name||"").slice(0,40),pm:p.pm?String(p.pm).slice(0,80):null});
+    S.friends=ids;warm=true;drawFriends();
+  }catch(e){}
+}
+function saveFriendCache(){
+  try{localStorage.setItem(flKey(),JSON.stringify({f:S.friends,p:S.friends.map(id=>{const p=S.profiles.get(id)||{};return{id,name:p.name||"",pm:p.pm||null}})}))}catch(e){}
+}
 /* ---------- data ---------- */
 async function refresh(){
   if(!S.user||!S.profile)return;
@@ -367,6 +384,7 @@ async function refresh(){
     if(S.nref++%5===0&&S.friends.length){
       try{const as=await q(api.getAvatars(S.friends));for(const a of as)if(okAv(a.data))S.av.set(a.id,a.data)}catch(e){}
     }
+    saveFriendCache();
     if(S.chat&&!S.friends.includes(S.chat.other))closeChat();
     try{S.blocks=await q(api.listBlocks(),tr("ctx.blocked"))}catch(e){S.blocks=S.blocks||[]}
     await loadPreviews();
@@ -513,7 +531,7 @@ function drawFriends(){
     b.append(pav(id,"off"),el("span",{class:"t"},el("b",{},nameOf(id)),el("small",{},tr("friends.waiting"))),ff("off"));
     box.append(b);
   }
-  if(!rows.length&&!S.reqOut.length)box.append(el("div",{class:"fine",style:"padding:6px 4px"},tr("friends.empty")));
+  if(!rows.length&&!S.reqOut.length)box.append(el("div",{class:"fine",style:"padding:6px 4px"},friendsLoaded?tr("friends.empty"):tr("friends.loading")));
 }
 function drawReqs(){
   const box=$("#reqs");box.textContent="";box.hidden=!S.reqIn.length;
@@ -546,6 +564,7 @@ function closeChat(){
 }
 async function openChat(otherId){
   try{
+    if(warm&&warmP)await warmP;
     const cid=await q(api.openDm(otherId),tr("ctx.openChat"));
     S.chat={id:cid,other:otherId};S.msgs=[];S.older=[];S.more=false;S.sig=null;S.first=true;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
     $("#shell").classList.add("inchat");
