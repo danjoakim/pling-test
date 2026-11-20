@@ -685,3 +685,14 @@ html:not(.lys) .avs.cx{background:#14294a!important}
 .emoh,.emo .etabs{touch-action:none}
 .chatpane .emo{transition:transform .18s ease}
 }
+
+/* ---- 0.1.27: rettinger etter test (Dan 20. nov): overskrift Legg til, chat-navn og valgrad i samtale-menyen ---- */
+.shell.tab-add .ptitle{font-style:italic;font-weight:900;letter-spacing:-.01em}
+.pg .pgt,.pgt,.pgh2{font-weight:900}
+.ch .ti{font-style:italic;font-weight:900;letter-spacing:-.01em}
+.ch .ti .tsub,.ch .ti .tpm{font-style:normal;font-weight:400;letter-spacing:0}
+@media(max-width:700px){
+.menu .msel{position:relative}
+.menu .msel select{position:absolute;inset:0;width:100%;max-width:none;height:100%;padding:0 16px;box-sizing:border-box;outline:none;border-radius:0;-webkit-tap-highlight-color:transparent}
+.menu .msel select:focus,.menu .msel:focus-within{outline:none}
+}
