@@ -394,3 +394,23 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
 .rptb.on .rptc{background:currentColor}
 .rptn{margin:8px 0;font-size:13px;opacity:.85}
 .glass.pgprim{margin-top:8px}
+
+/* Nøkkelvarsel (claude/noekkelvarsel.md): rødt kort i samtalen, rad i menyen, låst skrivefelt. Natt først, så dag. */
+.keyalert{margin:14px 0;padding:16px;border-radius:14px;background:#3a1f2c;border:1px solid #7a3347;color:#ffd9d9;display:flex;flex-direction:column;gap:10px}
+.keyalert .kah{font-weight:900;font-size:17px;color:#ff8a8a}
+.keyalert p{margin:0;font-size:15px;line-height:1.4}
+.keyalert button{height:46px;border-radius:12px;font-weight:600;font-size:15px;cursor:pointer}
+.keyalert .kab1{background:#2f6fd6;border:0;color:#fff}
+.keyalert .kab2{background:none;border:1.5px solid #7a3347;color:#ff8a8a}
+.keyalert .kab3{background:none;border:0;height:36px;color:#ff8a8a}
+#snok[hidden]{display:none}
+#snok{margin-top:10px;width:100%}
+#snb.kv .mv{color:#6fe085;font-weight:600}
+#snb.kbad .mv{color:#ff8a8a;font-weight:600}
+.bar.keybad{opacity:.55}
+html.lys .keyalert{background:#fde8e8;border-color:#f0b4b4;color:#7a1f1f}
+html.lys .keyalert .kah,html.lys .keyalert .kab2,html.lys .keyalert .kab3{color:#c0392b}
+html.lys .keyalert .kab2{border-color:#f0b4b4}
+html.lys .keyalert .kab1{background:#2a6fd0}
+html.lys #snb.kv .mv{color:#1c8a37}
+html.lys #snb.kbad .mv{color:#c0392b}

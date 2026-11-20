@@ -253,6 +253,7 @@ function showReport(m){
 /* Logg ut. supabase-js sin signOut() avbryter uten å gjøre noe hvis kallet mot serveren feiler (nett, utløpt økt, uventet svar), og da ble brukeren stående på skjermen. Derfor: prøv vanlig utlogging, ellers lokalt, ellers fjern økten for hånd og last siden på nytt. */
 async function doLogout(){
   try{if(S.user)localStorage.removeItem(flKey())}catch(e){}
+  pins=null;keyBadPubs.clear();keyBadIds.clear();
   await dropPush();
   try{if(S.user&&S.id)await Promise.race([api.setPresence("off",null),new Promise(r=>setTimeout(r,2000))])}catch(e){}
   let bad=false;
@@ -380,7 +381,7 @@ async function refresh(){
     const [fr,rq]=await Promise.all([q(api.listFriends(),tr("ctx.friends")),q(api.listRequests(),tr("ctx.requests"))]);
     const rel=relations(S.user.id,fr,rq),ids=rel.ids;
     S.friends=rel.friends;S.reqIn=rel.reqIn;S.reqOut=rel.reqOut;
-    if(ids.length){const ps=await q(api.getProfiles(ids),tr("ctx.profiles"));ps.forEach(p=>S.profiles.set(p.id,p))}
+    if(ids.length){const ps=await q(api.getProfiles(ids),tr("ctx.profiles"));ps.forEach(p=>S.profiles.set(p.id,p));await checkKeys()}
     if(S.nref++%5===0&&S.friends.length){
       try{const as=await q(api.getAvatars(S.friends));for(const a of as)if(okAv(a.data))S.av.set(a.id,a.data)}catch(e){}
     }
@@ -417,8 +418,9 @@ async function loadPreviews(){
     const p=S.profiles.get(fid);if(!p)return;
     const rows=await q(api.latestMessages(cid,20),tr("ctx.messages"));
     if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
-    const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
-    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:previewText(m),at:top.created_at});
+    const top=rows[0];let m=null,hid=false;
+    try{m=await open(await pairKey(p.pub),top.iv,top.ct)}catch(e){if(!(e&&e.keyChanged))throw e;hid=true}
+    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:hid?tr("keypin.hidden"):previewText(m),at:top.created_at});
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
@@ -592,7 +594,31 @@ function drawChatHead(){
   w.append(el("div",{class:"bud"},avEl(S.profile.name,myAv,mine),el("span",{class:"t"},S.profile.name+" (deg)",el("small",{},S.profile.pm||"")),ff(mine)));
   const o=S.profiles.get(id);
   if(o&&o.fp)safety(o.fp).then(s=>{if(S.chat&&S.chat.other===id)$("#sn").textContent=s});
+  drawKeyUi();
   $("#fp").textContent=o?tr("chat.fingerprint",{fp:o.fp.match(/.{4}/g).join(" ")}):"";
+}
+/* Nøkkelvarsel: rad i menyen, låst skrivefelt og rødt kort i samtalen. Se claude/noekkelvarsel.md. */
+function drawKeyUi(){
+  if(!S.chat)return;
+  const id=S.chat.other,st=keyRow(id),bad=st==="changed",b=$("#snb"),tx=$("#tx");
+  b.classList.toggle("kv",st==="verified");b.classList.toggle("kbad",bad);
+  b.querySelector(".mv").textContent=(st==="verified"?tr("keypin.rowVerified"):bad?tr("keypin.rowChanged"):tr("html.menu.verify"))+(st==="verified"?"":" \u203A");
+  $("#snst").textContent=st==="verified"?tr("keypin.stVerified"):bad?tr("keypin.stChanged"):tr("keypin.stUnverified");
+  const ok=$("#snok");ok.hidden=bad;ok.textContent=st==="verified"?tr("keypin.unmark"):tr("keypin.markVerified");ok.dataset.v=st==="verified"?"1":"";
+  if(!tx.dataset.ph)tx.dataset.ph=tx.placeholder;
+  tx.placeholder=bad?tr("keypin.noSend"):tx.dataset.ph;
+  $("#bar").inert=bad;$("#bar").classList.toggle("keybad",bad);
+  if(!bad&&$("#log .keyalert"))S.sig=null;
+}
+function keyAlert(){
+  const id=S.chat.other,two=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
+    if(!s){s=true;btn.textContent=tr("common.sure");t=setTimeout(()=>{s=false;btn.textContent=label},3500);return}
+    clearTimeout(t);s=false;btn.textContent=label;fn()})};
+  const trust=el("button",{class:"kab2",type:"button"},tr("keypin.trust")),rm=el("button",{class:"kab3",type:"button"},tr("chat.removeFriend"));
+  two(trust,tr("keypin.trust"),async()=>{try{if(await trustNewKey(id)){toast(tr("keypin.trusted"));S.sig=null;drawChatHead();await loadMsgs();refreshSoon()}}catch(e){fail(e)}});
+  two(rm,tr("chat.removeFriend"),async()=>{try{await q(api.removeFriend(id),tr("ctx.removeFriend"));closeChat();refresh()}catch(e){fail(e)}});
+  return el("div",{class:"keyalert",role:"alert"},el("div",{class:"kah"},tr("keypin.title",{name:nameOf(id)})),el("p",{},tr("keypin.body")),
+    el("button",{class:"kab1",type:"button",onclick:()=>{if($("#menu").hidden)$("#mb").click();$("#snbox").classList.add("open");$("#snb").setAttribute("aria-expanded","true")}},tr("keypin.compare")),trust,rm);
 }
 async function safety(otherFp){
   return PrekCrypto.safetyNumber(S.profile.fp,otherFp);
@@ -616,7 +642,8 @@ async function loadMsgs(){
   const cid=S.chat.id,other=S.profiles.get(S.chat.other);if(!other)return;
   const rows=(await q(api.latestMessages(cid,PAGE),tr("ctx.messages"))).reverse();
   if(!S.chat||S.chat.id!==cid)return;
-  const key=await pairKey(other.pub),latest=await decodeRows(rows,key);
+  let key;try{key=await pairKey(other.pub)}catch(e){if(e&&e.keyChanged){drawKeyUi();if(!$("#log .keyalert"))drawLog();return}throw e}
+  const latest=await decodeRows(rows,key);
   const rxr=await loadReacts(cid,key);
   if(!S.chat||S.chat.id!==cid)return;
   let rxChanged=false;if(rxr&&rxr.sig!==S.rxSig){S.rx=rxr.map;S.rxSig=rxr.sig;rxChanged=true}
@@ -650,6 +677,7 @@ async function loadOlder(){
 function drawLog(keepPos){
   const log=$("#log"),near=log.scrollHeight-log.scrollTop-log.clientHeight<80;
   log.textContent="";
+  if(keyBadIds.has(S.chat.other)){log.append(keyAlert());return}
   const tm=ts=>new Date(ts).toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"});
   if(S.more&&S.msgs.length)log.append(el("button",{class:"glass sm older",type:"button",onclick:loadOlder},tr("chat.showOlder")));
   if(!S.msgs.length)log.append(el("div",{class:"sys"},tr("chat.empty",{name:nameOf(S.chat.other)})));
@@ -1015,6 +1043,7 @@ function wire(){
   $("#fe").addEventListener("keydown",e=>{if(e.key==="Enter")add()});
   /* samtale */
   $("#back").addEventListener("click",closeChat);
+  $("#snok").addEventListener("click",()=>{if(!S.chat)return;setVerified(S.chat.other,!$("#snok").dataset.v);drawKeyUi()});
   $("#snb").addEventListener("click",()=>{const b=$("#snbox"),o=!b.classList.contains("open");b.classList.toggle("open",o);$("#snb").setAttribute("aria-expanded",String(o))});
   $("#mb").addEventListener("click",()=>{const m=$("#menu"),o=m.hidden;m.hidden=!o;$("#mb").setAttribute("aria-expanded",String(o))});
   $("#pr").addEventListener("click",()=>$("#mb").click());

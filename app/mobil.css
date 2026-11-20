@@ -696,3 +696,11 @@ html:not(.lys) .avs.cx{background:#14294a!important}
 .menu .msel select{position:absolute;inset:0;width:100%;max-width:none;height:100%;padding:0 16px;box-sizing:border-box;outline:none;border-radius:0;-webkit-tap-highlight-color:transparent}
 .menu .msel select:focus,.menu .msel:focus-within{outline:none}
 }
+
+/* Nøkkelvarsel på telefon */
+@media(max-width:700px){
+.keyalert{margin:14px 4px;font-size:16px}
+.keyalert button{height:48px;font-size:16px;border-radius:14px}
+.menu .snbox #snok{margin-top:12px;height:46px;border-radius:12px;font-size:15px}
+.menu .snbox #snst{margin-top:10px}
+}

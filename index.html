@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-+D503UJJtdNJSmRlLyWVWqDFPAI7PFtHs4OW1rWt/ik='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-RKu33m9w1sJfuKVHI6qOekkroZJFUJO3hGRuhjP5668='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -552,6 +552,26 @@ html.lys #upd{background:linear-gradient(rgba(236,246,255,.98),rgba(214,234,250,
 .rptb.on .rptc{background:currentColor}
 .rptn{margin:8px 0;font-size:13px;opacity:.85}
 .glass.pgprim{margin-top:8px}
+
+/* Nøkkelvarsel (claude/noekkelvarsel.md): rødt kort i samtalen, rad i menyen, låst skrivefelt. Natt først, så dag. */
+.keyalert{margin:14px 0;padding:16px;border-radius:14px;background:#3a1f2c;border:1px solid #7a3347;color:#ffd9d9;display:flex;flex-direction:column;gap:10px}
+.keyalert .kah{font-weight:900;font-size:17px;color:#ff8a8a}
+.keyalert p{margin:0;font-size:15px;line-height:1.4}
+.keyalert button{height:46px;border-radius:12px;font-weight:600;font-size:15px;cursor:pointer}
+.keyalert .kab1{background:#2f6fd6;border:0;color:#fff}
+.keyalert .kab2{background:none;border:1.5px solid #7a3347;color:#ff8a8a}
+.keyalert .kab3{background:none;border:0;height:36px;color:#ff8a8a}
+#snok[hidden]{display:none}
+#snok{margin-top:10px;width:100%}
+#snb.kv .mv{color:#6fe085;font-weight:600}
+#snb.kbad .mv{color:#ff8a8a;font-weight:600}
+.bar.keybad{opacity:.55}
+html.lys .keyalert{background:#fde8e8;border-color:#f0b4b4;color:#7a1f1f}
+html.lys .keyalert .kah,html.lys .keyalert .kab2,html.lys .keyalert .kab3{color:#c0392b}
+html.lys .keyalert .kab2{border-color:#f0b4b4}
+html.lys .keyalert .kab1{background:#2a6fd0}
+html.lys #snb.kv .mv{color:#1c8a37}
+html.lys #snb.kbad .mv{color:#c0392b}
 
 /*# Telefonvisning (smal skjerm): følger tegningene i designfilen «Prek! mobil» (Kompiser, Samtale, Legg til, Meg). Gjelder bare ≤700px, så PC og skrivebordsappen er uendret. Kommer etter extra.css. */
 .mnav{display:none}
@@ -1252,6 +1272,14 @@ html:not(.lys) .avs.cx{background:#14294a!important}
 .menu .msel select:focus,.menu .msel:focus-within{outline:none}
 }
 
+/* Nøkkelvarsel på telefon */
+@media(max-width:700px){
+.keyalert{margin:14px 4px;font-size:16px}
+.keyalert button{height:48px;font-size:16px;border-radius:14px}
+.menu .snbox #snok{margin-top:12px;height:46px;border-radius:12px;font-size:15px}
+.menu .snbox #snst{margin-top:10px}
+}
+
 </style>
 </head>
 <body>
@@ -1326,7 +1354,7 @@ html:not(.lys) .avs.cx{background:#14294a!important}
     <div class="mhero"><div class="grp mhere">Her nå</div><div class="who" id="who"></div></div>
     <div class="xgrp"><div class="mlab">Sikkerhet</div>
      <div class="mcard"><button class="xrow" id="snb" type="button" aria-expanded="false"><span class="mtx">Sikkerhetsnummer</span><span class="mv">Bekreft &#8250;</span></button>
-     <div class="snbox" id="snbox"><div class="grp mnh">Sikkerhetsnummer</div><div class="sn" id="sn"></div><div class="fine">Sammenlign nummeret med kompisen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.</div></div></div>
+     <div class="snbox" id="snbox"><div class="grp mnh">Sikkerhetsnummer</div><div class="sn" id="sn"></div><div class="fine">Sammenlign nummeret med kompisen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.</div><div class="fine" id="snst"></div><button class="glass" id="snok" type="button"></button></div></div>
     </div>
     <div class="xgrp"><div class="mlab">Samtale</div>
      <div class="mcard"><label class="xrow msel" id="exrow"><span class="mtx"><span class="dsk fine">Utløp for nye meldinger i samtalen (gjelder begge)</span><span class="mob">Meldinger utløper</span></span>
@@ -2002,7 +2030,23 @@ var PrekI18n = (() => {
     "chat.mutedTitle": "Dempet",
     "img.alt": "Bilde",
     "emo.tabFigures": "Figurer",
-    "emo.tabEmoji": "Emoji"
+    "emo.tabEmoji": "Emoji",
+    "keypin.title": "N\xF8kkelen til {name} er endret",
+    "keypin.body": "Det skal ikke skje. Noen kan ha byttet ut n\xF8kkelen for \xE5 lese samtalen. Sending er stoppet, og meldingene er skjult til du har valgt.",
+    "keypin.compare": "Sammenlign sikkerhetsnummer",
+    "keypin.trust": "Stol p\xE5 ny n\xF8kkel \u2026",
+    "keypin.trusted": "Ny n\xF8kkel godtatt",
+    "keypin.stopped": "N\xF8kkelen til kompisen er endret. Sending er stoppet.",
+    "keypin.hidden": "\u{1F512} Skjult",
+    "keypin.noSend": "Stoppet",
+    "keypin.rowVerified": "Bekreftet \u2713",
+    "keypin.rowChanged": "Endret",
+    "keypin.stUnverified": "Ikke bekreftet. N\xF8kkelen er husket p\xE5 denne enheten, og du f\xE5r varsel hvis den endres.",
+    "keypin.stVerified": "Bekreftet. Du og kompisen din har sammenlignet nummeret.",
+    "keypin.stChanged": "N\xF8kkelen er ikke den samme som sist. Sending er stoppet.",
+    "keypin.markVerified": "Marker som bekreftet",
+    "keypin.unmark": "Fjern bekreftelsen",
+    "keypin.inconsistent": "Serveren gir ulik n\xF8kkel og avtrykk. Det er ikke trygt \xE5 stole p\xE5 den."
   };
 
   // src/i18n/index.ts
@@ -3014,7 +3058,23 @@ var PrekShrink = (() => {
     "chat.mutedTitle": "Dempet",
     "img.alt": "Bilde",
     "emo.tabFigures": "Figurer",
-    "emo.tabEmoji": "Emoji"
+    "emo.tabEmoji": "Emoji",
+    "keypin.title": "N\xF8kkelen til {name} er endret",
+    "keypin.body": "Det skal ikke skje. Noen kan ha byttet ut n\xF8kkelen for \xE5 lese samtalen. Sending er stoppet, og meldingene er skjult til du har valgt.",
+    "keypin.compare": "Sammenlign sikkerhetsnummer",
+    "keypin.trust": "Stol p\xE5 ny n\xF8kkel \u2026",
+    "keypin.trusted": "Ny n\xF8kkel godtatt",
+    "keypin.stopped": "N\xF8kkelen til kompisen er endret. Sending er stoppet.",
+    "keypin.hidden": "\u{1F512} Skjult",
+    "keypin.noSend": "Stoppet",
+    "keypin.rowVerified": "Bekreftet \u2713",
+    "keypin.rowChanged": "Endret",
+    "keypin.stUnverified": "Ikke bekreftet. N\xF8kkelen er husket p\xE5 denne enheten, og du f\xE5r varsel hvis den endres.",
+    "keypin.stVerified": "Bekreftet. Du og kompisen din har sammenlignet nummeret.",
+    "keypin.stChanged": "N\xF8kkelen er ikke den samme som sist. Sending er stoppet.",
+    "keypin.markVerified": "Marker som bekreftet",
+    "keypin.unmark": "Fjern bekreftelsen",
+    "keypin.inconsistent": "Serveren gir ulik n\xF8kkel og avtrykk. Det er ikke trygt \xE5 stole p\xE5 den."
   };
 
   // src/i18n/index.ts
@@ -4189,7 +4249,23 @@ var PrekPreviews = (() => {
     "chat.mutedTitle": "Dempet",
     "img.alt": "Bilde",
     "emo.tabFigures": "Figurer",
-    "emo.tabEmoji": "Emoji"
+    "emo.tabEmoji": "Emoji",
+    "keypin.title": "N\xF8kkelen til {name} er endret",
+    "keypin.body": "Det skal ikke skje. Noen kan ha byttet ut n\xF8kkelen for \xE5 lese samtalen. Sending er stoppet, og meldingene er skjult til du har valgt.",
+    "keypin.compare": "Sammenlign sikkerhetsnummer",
+    "keypin.trust": "Stol p\xE5 ny n\xF8kkel \u2026",
+    "keypin.trusted": "Ny n\xF8kkel godtatt",
+    "keypin.stopped": "N\xF8kkelen til kompisen er endret. Sending er stoppet.",
+    "keypin.hidden": "\u{1F512} Skjult",
+    "keypin.noSend": "Stoppet",
+    "keypin.rowVerified": "Bekreftet \u2713",
+    "keypin.rowChanged": "Endret",
+    "keypin.stUnverified": "Ikke bekreftet. N\xF8kkelen er husket p\xE5 denne enheten, og du f\xE5r varsel hvis den endres.",
+    "keypin.stVerified": "Bekreftet. Du og kompisen din har sammenlignet nummeret.",
+    "keypin.stChanged": "N\xF8kkelen er ikke den samme som sist. Sending er stoppet.",
+    "keypin.markVerified": "Marker som bekreftet",
+    "keypin.unmark": "Fjern bekreftelsen",
+    "keypin.inconsistent": "Serveren gir ulik n\xF8kkel og avtrykk. Det er ikke trygt \xE5 stole p\xE5 den."
   };
 
   // src/i18n/index.ts
@@ -4475,6 +4551,79 @@ var PrekUnread = (() => {
     return first ? [] : msgs.filter((m) => !m.mine && m.id > maxSeen);
   }
   return __toCommonJS(unread_exports);
+})();
+
+"use strict";
+var PrekKeypin = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // src/keypin.ts
+  var keypin_exports = {};
+  __export(keypin_exports, {
+    acceptNew: () => acceptNew,
+    checkKey: () => checkKey,
+    clearVerified: () => clearVerified,
+    markVerified: () => markVerified,
+    parsePins: () => parsePins,
+    rowState: () => rowState
+  });
+  var FP = /^[0-9a-f]{32}$/;
+  function parsePins(text) {
+    let j = null;
+    try {
+      j = text ? JSON.parse(text) : null;
+    } catch {
+      return {};
+    }
+    const out = {};
+    if (!j || typeof j !== "object" || Array.isArray(j)) return out;
+    for (const [id, v] of Object.entries(j)) {
+      const p = v;
+      if (!p || typeof p.fp !== "string" || !FP.test(p.fp) || typeof p.seen !== "number") continue;
+      out[id] = { fp: p.fp, seen: p.seen, ...typeof p.verified === "number" ? { verified: p.verified } : {} };
+    }
+    return out;
+  }
+  function checkKey(pins, id, fromKey, stated, now) {
+    if (fromKey !== stated || !FP.test(fromKey)) return { state: "changed", pins };
+    const have = pins[id];
+    if (!have) return { state: "new", pins: { ...pins, [id]: { fp: fromKey, seen: now } } };
+    return { state: have.fp === fromKey ? "ok" : "changed", pins };
+  }
+  function acceptNew(pins, id, fp, now) {
+    return { ...pins, [id]: { fp, seen: now } };
+  }
+  function markVerified(pins, id, now) {
+    const p = pins[id];
+    return p ? { ...pins, [id]: { ...p, verified: now } } : pins;
+  }
+  function clearVerified(pins, id) {
+    const p = pins[id];
+    if (!p || p.verified === void 0) return pins;
+    const { verified: _v, ...rest } = p;
+    return { ...pins, [id]: rest };
+  }
+  function rowState(state, pin) {
+    if (state === "changed") return "changed";
+    return pin && pin.verified !== void 0 ? "verified" : "unverified";
+  }
+  return __toCommonJS(keypin_exports);
 })();
 
 "use strict";
@@ -4973,7 +5122,23 @@ var PrekHelpers = (() => {
     "chat.mutedTitle": "Dempet",
     "img.alt": "Bilde",
     "emo.tabFigures": "Figurer",
-    "emo.tabEmoji": "Emoji"
+    "emo.tabEmoji": "Emoji",
+    "keypin.title": "N\xF8kkelen til {name} er endret",
+    "keypin.body": "Det skal ikke skje. Noen kan ha byttet ut n\xF8kkelen for \xE5 lese samtalen. Sending er stoppet, og meldingene er skjult til du har valgt.",
+    "keypin.compare": "Sammenlign sikkerhetsnummer",
+    "keypin.trust": "Stol p\xE5 ny n\xF8kkel \u2026",
+    "keypin.trusted": "Ny n\xF8kkel godtatt",
+    "keypin.stopped": "N\xF8kkelen til kompisen er endret. Sending er stoppet.",
+    "keypin.hidden": "\u{1F512} Skjult",
+    "keypin.noSend": "Stoppet",
+    "keypin.rowVerified": "Bekreftet \u2713",
+    "keypin.rowChanged": "Endret",
+    "keypin.stUnverified": "Ikke bekreftet. N\xF8kkelen er husket p\xE5 denne enheten, og du f\xE5r varsel hvis den endres.",
+    "keypin.stVerified": "Bekreftet. Du og kompisen din har sammenlignet nummeret.",
+    "keypin.stChanged": "N\xF8kkelen er ikke den samme som sist. Sending er stoppet.",
+    "keypin.markVerified": "Marker som bekreftet",
+    "keypin.unmark": "Fjern bekreftelsen",
+    "keypin.inconsistent": "Serveren gir ulik n\xF8kkel og avtrykk. Det er ikke trygt \xE5 stole p\xE5 den."
   };
 
   // src/i18n/index.ts
@@ -5047,8 +5212,41 @@ async function makeIdentity(uid){
   localStorage.setItem(keyName(uid),JSON.stringify(id));return id;
 }
 const pairCache=new Map();
+/* ---------- husk kompisens nøkkel og se om den endres (src/keypin.ts, claude/noekkelvarsel.md) ----------
+   Nøkkelen til en kompis skal aldri endre seg. Første nøkkel vi ser huskes på denne enheten; avviker en senere,
+   stoppes alt som bruker nøkkelen (pairKey kaster) til personen har valgt. */
+let pins=null,pinsUid=null;const keyBadPubs=new Set(),keyBadIds=new Set();
+const pinKey=()=>"pling_pins_"+S.user.id;
+function pinsNow(){
+  if(!pins||pinsUid!==S.user.id){pinsUid=S.user.id;keyBadPubs.clear();keyBadIds.clear();let t=null;try{t=localStorage.getItem(pinKey())}catch(e){}pins=PrekKeypin.parsePins(t)}
+  return pins;
+}
+function savePins(){try{localStorage.setItem(pinKey(),JSON.stringify(pins))}catch(e){}}
+async function checkKeys(){
+  pinsNow();let dirty=false;
+  for(const id of S.friends){
+    const p=S.profiles.get(id);if(!p||!p.pub||!p.fp)continue;
+    const k=JSON.stringify(p.pub);let fp=null;
+    try{fp=await fpOf(p.pub)}catch(e){}
+    const r=fp?PrekKeypin.checkKey(pins,id,fp,p.fp,Date.now()):{state:"changed",pins};
+    if(r.pins!==pins){pins=r.pins;dirty=true}
+    if(r.state==="changed"){keyBadPubs.add(k);keyBadIds.add(id);pairCache.delete(k)}else{keyBadPubs.delete(k);keyBadIds.delete(id)}
+  }
+  if(dirty)savePins();
+}
+function keyRow(id){return PrekKeypin.rowState(keyBadIds.has(id)?"changed":"ok",pinsNow()[id])}
+async function trustNewKey(id){
+  const p=S.profiles.get(id);if(!p||!p.pub)return false;
+  const fp=await fpOf(p.pub);
+  if(fp!==p.fp){toast(tr("keypin.inconsistent"),true);return false}
+  pins=PrekKeypin.acceptNew(pinsNow(),id,fp,Date.now());savePins();
+  keyBadIds.delete(id);keyBadPubs.delete(JSON.stringify(p.pub));return true;
+}
+function setVerified(id,on){pins=on?PrekKeypin.markVerified(pinsNow(),id,Date.now()):PrekKeypin.clearVerified(pinsNow(),id);savePins()}
 async function pairKey(theirPub){
-  const k=JSON.stringify(theirPub);if(pairCache.has(k))return pairCache.get(k);
+  const k=JSON.stringify(theirPub);
+  if(keyBadPubs.has(k))throw Object.assign(new Error(tr("keypin.stopped")),{keyChanged:true});
+  if(pairCache.has(k))return pairCache.get(k);
   const key=await PrekCrypto.deriveChatKey(S.id.priv,theirPub);
   pairCache.set(k,key);return key;
 }
@@ -5132,7 +5330,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="0fc79f2";
+const PREK_VERSION="0.1.0",PREK_BUILD="1885c99";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -5646,6 +5844,7 @@ function showReport(m){
 /* Logg ut. supabase-js sin signOut() avbryter uten å gjøre noe hvis kallet mot serveren feiler (nett, utløpt økt, uventet svar), og da ble brukeren stående på skjermen. Derfor: prøv vanlig utlogging, ellers lokalt, ellers fjern økten for hånd og last siden på nytt. */
 async function doLogout(){
   try{if(S.user)localStorage.removeItem(flKey())}catch(e){}
+  pins=null;keyBadPubs.clear();keyBadIds.clear();
   await dropPush();
   try{if(S.user&&S.id)await Promise.race([api.setPresence("off",null),new Promise(r=>setTimeout(r,2000))])}catch(e){}
   let bad=false;
@@ -5773,7 +5972,7 @@ async function refresh(){
     const [fr,rq]=await Promise.all([q(api.listFriends(),tr("ctx.friends")),q(api.listRequests(),tr("ctx.requests"))]);
     const rel=relations(S.user.id,fr,rq),ids=rel.ids;
     S.friends=rel.friends;S.reqIn=rel.reqIn;S.reqOut=rel.reqOut;
-    if(ids.length){const ps=await q(api.getProfiles(ids),tr("ctx.profiles"));ps.forEach(p=>S.profiles.set(p.id,p))}
+    if(ids.length){const ps=await q(api.getProfiles(ids),tr("ctx.profiles"));ps.forEach(p=>S.profiles.set(p.id,p));await checkKeys()}
     if(S.nref++%5===0&&S.friends.length){
       try{const as=await q(api.getAvatars(S.friends));for(const a of as)if(okAv(a.data))S.av.set(a.id,a.data)}catch(e){}
     }
@@ -5810,8 +6009,9 @@ async function loadPreviews(){
     const p=S.profiles.get(fid);if(!p)return;
     const rows=await q(api.latestMessages(cid,20),tr("ctx.messages"));
     if(!rows.length){S.last.delete(fid);S.unread.set(fid,0);return}
-    const key=await pairKey(p.pub),top=rows[0],m=await open(key,top.iv,top.ct);
-    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:previewText(m),at:top.created_at});
+    const top=rows[0];let m=null,hid=false;
+    try{m=await open(await pairKey(p.pub),top.iv,top.ct)}catch(e){if(!(e&&e.keyChanged))throw e;hid=true}
+    S.last.set(fid,{id:top.id,mine:top.sender===S.user.id,t:hid?tr("keypin.hidden"):previewText(m),at:top.created_at});
     const isOpen=S.chat&&S.chat.id===cid;
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
@@ -5985,7 +6185,31 @@ function drawChatHead(){
   w.append(el("div",{class:"bud"},avEl(S.profile.name,myAv,mine),el("span",{class:"t"},S.profile.name+" (deg)",el("small",{},S.profile.pm||"")),ff(mine)));
   const o=S.profiles.get(id);
   if(o&&o.fp)safety(o.fp).then(s=>{if(S.chat&&S.chat.other===id)$("#sn").textContent=s});
+  drawKeyUi();
   $("#fp").textContent=o?tr("chat.fingerprint",{fp:o.fp.match(/.{4}/g).join(" ")}):"";
+}
+/* Nøkkelvarsel: rad i menyen, låst skrivefelt og rødt kort i samtalen. Se claude/noekkelvarsel.md. */
+function drawKeyUi(){
+  if(!S.chat)return;
+  const id=S.chat.other,st=keyRow(id),bad=st==="changed",b=$("#snb"),tx=$("#tx");
+  b.classList.toggle("kv",st==="verified");b.classList.toggle("kbad",bad);
+  b.querySelector(".mv").textContent=(st==="verified"?tr("keypin.rowVerified"):bad?tr("keypin.rowChanged"):tr("html.menu.verify"))+(st==="verified"?"":" \u203A");
+  $("#snst").textContent=st==="verified"?tr("keypin.stVerified"):bad?tr("keypin.stChanged"):tr("keypin.stUnverified");
+  const ok=$("#snok");ok.hidden=bad;ok.textContent=st==="verified"?tr("keypin.unmark"):tr("keypin.markVerified");ok.dataset.v=st==="verified"?"1":"";
+  if(!tx.dataset.ph)tx.dataset.ph=tx.placeholder;
+  tx.placeholder=bad?tr("keypin.noSend"):tx.dataset.ph;
+  $("#bar").inert=bad;$("#bar").classList.toggle("keybad",bad);
+  if(!bad&&$("#log .keyalert"))S.sig=null;
+}
+function keyAlert(){
+  const id=S.chat.other,two=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
+    if(!s){s=true;btn.textContent=tr("common.sure");t=setTimeout(()=>{s=false;btn.textContent=label},3500);return}
+    clearTimeout(t);s=false;btn.textContent=label;fn()})};
+  const trust=el("button",{class:"kab2",type:"button"},tr("keypin.trust")),rm=el("button",{class:"kab3",type:"button"},tr("chat.removeFriend"));
+  two(trust,tr("keypin.trust"),async()=>{try{if(await trustNewKey(id)){toast(tr("keypin.trusted"));S.sig=null;drawChatHead();await loadMsgs();refreshSoon()}}catch(e){fail(e)}});
+  two(rm,tr("chat.removeFriend"),async()=>{try{await q(api.removeFriend(id),tr("ctx.removeFriend"));closeChat();refresh()}catch(e){fail(e)}});
+  return el("div",{class:"keyalert",role:"alert"},el("div",{class:"kah"},tr("keypin.title",{name:nameOf(id)})),el("p",{},tr("keypin.body")),
+    el("button",{class:"kab1",type:"button",onclick:()=>{if($("#menu").hidden)$("#mb").click();$("#snbox").classList.add("open");$("#snb").setAttribute("aria-expanded","true")}},tr("keypin.compare")),trust,rm);
 }
 async function safety(otherFp){
   return PrekCrypto.safetyNumber(S.profile.fp,otherFp);
@@ -6009,7 +6233,8 @@ async function loadMsgs(){
   const cid=S.chat.id,other=S.profiles.get(S.chat.other);if(!other)return;
   const rows=(await q(api.latestMessages(cid,PAGE),tr("ctx.messages"))).reverse();
   if(!S.chat||S.chat.id!==cid)return;
-  const key=await pairKey(other.pub),latest=await decodeRows(rows,key);
+  let key;try{key=await pairKey(other.pub)}catch(e){if(e&&e.keyChanged){drawKeyUi();if(!$("#log .keyalert"))drawLog();return}throw e}
+  const latest=await decodeRows(rows,key);
   const rxr=await loadReacts(cid,key);
   if(!S.chat||S.chat.id!==cid)return;
   let rxChanged=false;if(rxr&&rxr.sig!==S.rxSig){S.rx=rxr.map;S.rxSig=rxr.sig;rxChanged=true}
@@ -6043,6 +6268,7 @@ async function loadOlder(){
 function drawLog(keepPos){
   const log=$("#log"),near=log.scrollHeight-log.scrollTop-log.clientHeight<80;
   log.textContent="";
+  if(keyBadIds.has(S.chat.other)){log.append(keyAlert());return}
   const tm=ts=>new Date(ts).toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"});
   if(S.more&&S.msgs.length)log.append(el("button",{class:"glass sm older",type:"button",onclick:loadOlder},tr("chat.showOlder")));
   if(!S.msgs.length)log.append(el("div",{class:"sys"},tr("chat.empty",{name:nameOf(S.chat.other)})));
@@ -6408,6 +6634,7 @@ function wire(){
   $("#fe").addEventListener("keydown",e=>{if(e.key==="Enter")add()});
   /* samtale */
   $("#back").addEventListener("click",closeChat);
+  $("#snok").addEventListener("click",()=>{if(!S.chat)return;setVerified(S.chat.other,!$("#snok").dataset.v);drawKeyUi()});
   $("#snb").addEventListener("click",()=>{const b=$("#snbox"),o=!b.classList.contains("open");b.classList.toggle("open",o);$("#snb").setAttribute("aria-expanded",String(o))});
   $("#mb").addEventListener("click",()=>{const m=$("#menu"),o=m.hidden;m.hidden=!o;$("#mb").setAttribute("aria-expanded",String(o))});
   $("#pr").addEventListener("click",()=>$("#mb").click());

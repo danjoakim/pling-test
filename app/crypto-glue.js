@@ -11,8 +11,41 @@ async function makeIdentity(uid){
   localStorage.setItem(keyName(uid),JSON.stringify(id));return id;
 }
 const pairCache=new Map();
+/* ---------- husk kompisens nøkkel og se om den endres (src/keypin.ts, claude/noekkelvarsel.md) ----------
+   Nøkkelen til en kompis skal aldri endre seg. Første nøkkel vi ser huskes på denne enheten; avviker en senere,
+   stoppes alt som bruker nøkkelen (pairKey kaster) til personen har valgt. */
+let pins=null,pinsUid=null;const keyBadPubs=new Set(),keyBadIds=new Set();
+const pinKey=()=>"pling_pins_"+S.user.id;
+function pinsNow(){
+  if(!pins||pinsUid!==S.user.id){pinsUid=S.user.id;keyBadPubs.clear();keyBadIds.clear();let t=null;try{t=localStorage.getItem(pinKey())}catch(e){}pins=PrekKeypin.parsePins(t)}
+  return pins;
+}
+function savePins(){try{localStorage.setItem(pinKey(),JSON.stringify(pins))}catch(e){}}
+async function checkKeys(){
+  pinsNow();let dirty=false;
+  for(const id of S.friends){
+    const p=S.profiles.get(id);if(!p||!p.pub||!p.fp)continue;
+    const k=JSON.stringify(p.pub);let fp=null;
+    try{fp=await fpOf(p.pub)}catch(e){}
+    const r=fp?PrekKeypin.checkKey(pins,id,fp,p.fp,Date.now()):{state:"changed",pins};
+    if(r.pins!==pins){pins=r.pins;dirty=true}
+    if(r.state==="changed"){keyBadPubs.add(k);keyBadIds.add(id);pairCache.delete(k)}else{keyBadPubs.delete(k);keyBadIds.delete(id)}
+  }
+  if(dirty)savePins();
+}
+function keyRow(id){return PrekKeypin.rowState(keyBadIds.has(id)?"changed":"ok",pinsNow()[id])}
+async function trustNewKey(id){
+  const p=S.profiles.get(id);if(!p||!p.pub)return false;
+  const fp=await fpOf(p.pub);
+  if(fp!==p.fp){toast(tr("keypin.inconsistent"),true);return false}
+  pins=PrekKeypin.acceptNew(pinsNow(),id,fp,Date.now());savePins();
+  keyBadIds.delete(id);keyBadPubs.delete(JSON.stringify(p.pub));return true;
+}
+function setVerified(id,on){pins=on?PrekKeypin.markVerified(pinsNow(),id,Date.now()):PrekKeypin.clearVerified(pinsNow(),id);savePins()}
 async function pairKey(theirPub){
-  const k=JSON.stringify(theirPub);if(pairCache.has(k))return pairCache.get(k);
+  const k=JSON.stringify(theirPub);
+  if(keyBadPubs.has(k))throw Object.assign(new Error(tr("keypin.stopped")),{keyChanged:true});
+  if(pairCache.has(k))return pairCache.get(k);
   const key=await PrekCrypto.deriveChatKey(S.id.priv,theirPub);
   pairCache.set(k,key);return key;
 }
