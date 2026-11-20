@@ -425,7 +425,7 @@ async function loadPreviews(){
     if(isOpen)setRead(cid,top.id);
     const rd=getRead(cid);
     if(!S.firstRef)for(const r of rows)if(dpCandidate(r,S.user.id,rd,dpSeen,Date.now())){
-      const mm=await open(key,r.iv,r.ct);if(mm&&mm.dp)alertDp(fid,r.id,r.created_at)}
+      if(hid)continue;const mm=await open(await pairKey(p.pub),r.iv,r.ct);if(mm&&mm.dp)alertDp(fid,r.id,r.created_at)}
     const n=unreadCount(rows,S.user.id,rd,!!isOpen);
     if(shouldRing(S.firstRef,n,S.unread.get(fid),muted(fid)))more=true;
     S.unread.set(fid,n);
