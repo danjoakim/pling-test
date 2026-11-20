@@ -436,7 +436,7 @@ const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
 function paintMe(){
   const i=$("#avimg"),s=$("#avini"),nm=S.profile.name;
   if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=initial(nm);s.dataset.i2=initials2(nm)}
-  $("#avwrap").className="av "+ST[S.status];
+  $("#avwrap").className="av "+ST[S.status]+(okAv(myAv)?"":" noimg");
   document.documentElement.style.setProperty("--dot",DOT[ST[S.status]]||DOT.on);
   $("#men").textContent=nm;
   const na=$("#navav");if(na){na.textContent="";na.append(avEl(nm,okAv(myAv)?myAv:null,ST[S.status]));$("#navnm").textContent=nm}
@@ -540,7 +540,7 @@ async function openChat(otherId){
     S.chat={id:cid,other:otherId};S.msgs=[];S.older=[];S.more=false;S.sig=null;S.first=true;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
     $("#shell").classList.add("inchat");
     $("#empty").hidden=true;for(const i of ["ch","log","bar"])$("#"+i).hidden=false;
-    $("#menu").hidden=true;$("#emo").hidden=true;$("#mb").setAttribute("aria-expanded","false");
+    $("#menu").hidden=true;$("#emo").hidden=true;$("#snbox").classList.remove("open");$("#snb").setAttribute("aria-expanded","false");$("#mb").setAttribute("aria-expanded","false");
     drawExp();
     $("#log").textContent="";
     drawChatHead();drawFriends();drawTyping();await loadMsgs();
@@ -558,7 +558,7 @@ function drawChatHead(){
   const pr=$("#pr");pr.textContent="";pr.append(pav(id,st));
   const w=$("#who");w.textContent="";
   const p=S.profiles.get(id)||{};
-  w.append(el("div",{class:"bud"},pav(id,st),el("span",{class:"t"},nameOf(id),el("small",{},p.pm||"")),ff(st)));
+  w.append(el("div",{class:"bud"},pav(id,st),el("span",{class:"t"},nameOf(id),el("small",{},p.pm||""),el("span",{class:"mst"},{on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")}[ST[stOf(id)]||"off"])),ff(st)));
   const mine=ST[S.status];
   w.append(el("div",{class:"bud"},avEl(S.profile.name,myAv,mine),el("span",{class:"t"},S.profile.name+" (deg)",el("small",{},S.profile.pm||"")),ff(mine)));
   const o=S.profiles.get(id);
@@ -888,7 +888,7 @@ function wire(){
     S.status=$("#st").value;try{localStorage.setItem("pling_st_"+S.user.id,S.status)}catch(e){}
     paintMe();trackMe(true);drawChatHead();
   });
-  $("#avf").addEventListener("change",async e=>{
+  const avPick=async e=>{
     const f=e.target.files[0];e.target.value="";if(!f)return;
     try{
       const a=await toAvatar(f);if(!okAv(a))throw new Error(tr("img.avatarTooBig"));
@@ -896,6 +896,21 @@ function wire(){
       myAv=a;try{localStorage.setItem("pling_av_"+S.user.id,a);localStorage.setItem("pling_last_av",a)}catch(x){}
       paintMe();drawChatHead();toast(tr("avatar.saved"));
     }catch(err){fail(err)}
+  };
+  $("#avf").addEventListener("change",avPick);$("#avc").addEventListener("change",avPick);
+  async function avRemove(){
+    try{await q(api.deleteAvatar(S.user.id),tr("ctx.saveAvatar"));myAv=null;try{localStorage.removeItem("pling_av_"+S.user.id);localStorage.removeItem("pling_last_av")}catch(x){}paintMe();drawChatHead();toast(tr("avatar.removed"))}catch(err){fail(err)}
+  }
+  // Phone, Meg tab: the photo itself is the button. A small sheet offers pick / take / remove.
+  $("#avwrap").addEventListener("click",ev=>{
+    if(!narrow()||!$("#shell").classList.contains("tab-me"))return;
+    ev.stopPropagation();if($("#avsheet"))return;
+    const shut=()=>{const x=$("#avsheet");if(x)x.remove()};
+    const b=(cls,txt,fn)=>el("button",{type:"button",class:"avs "+cls,onclick:()=>{shut();fn()}},txt);
+    const items=[b("pick",tr("avatar.pick"),()=>$("#avf").click()),b("take",tr("avatar.take"),()=>$("#avc").click())];
+    if(okAv(myAv))items.push(b("del",tr("avatar.remove"),avRemove));
+    const sh=el("div",{class:"avsheet",id:"avsheet",role:"dialog","aria-label":tr("avatar.change")},el("div",{class:"avbk",onclick:shut}),el("div",{class:"avbox"},el("span",{class:"avh","aria-hidden":"true"}),...items,b("cx",tr("common.close"),()=>{})));
+    document.body.append(sh);
   });
   // Phone bottom menu (Kompiser / Legg til / Meg): shows the friend list, the add panel or the profile panel full screen. Only visible on narrow screens (mobil.css).
   function navTo(t){
@@ -951,7 +966,6 @@ function wire(){
     stat.after(rows);rows.after(ab);
     S.paintAbout=()=>{const t=$("#abouttxt");if(!t)return;const a=S.profile&&S.profile.about;t.textContent=a||tr("me.aboutEmpty");t.classList.toggle("empty",!a)};
   }
-  $("#hdp").addEventListener("click",()=>$("#dp").click());
   $("#scanbtn").addEventListener("click",scanOpen);
   $("#emailtog").addEventListener("click",()=>{const sh=$("#addfp").classList.toggle("showem");$("#emailtog").setAttribute("aria-expanded",String(sh))});
   $("#cdgo").addEventListener("click",()=>redeemCode($("#cd2").value));
@@ -972,6 +986,7 @@ function wire(){
   $("#fe").addEventListener("keydown",e=>{if(e.key==="Enter")add()});
   /* samtale */
   $("#back").addEventListener("click",closeChat);
+  $("#snb").addEventListener("click",()=>{const b=$("#snbox"),o=!b.classList.contains("open");b.classList.toggle("open",o);$("#snb").setAttribute("aria-expanded",String(o))});
   $("#mb").addEventListener("click",()=>{const m=$("#menu"),o=m.hidden;m.hidden=!o;$("#mb").setAttribute("aria-expanded",String(o))});
   $("#pr").addEventListener("click",()=>$("#mb").click());
   $("#ex").addEventListener("change",async()=>{
@@ -1040,6 +1055,13 @@ function wire(){
   /* Flere måter å lukke velgeren på (Dan 19. nov: «får ikke stengt det igjen»): håndtaket øverst, trykk i samtalen, eller send. */
   const emoShut=()=>{emo.hidden=true};
   emo.querySelector(".emoh").addEventListener("click",emoShut);
+  $("#tx").addEventListener("pointerdown",()=>{if(!emo.hidden)emoShut()});
+  // Drag the panel down (from the handle or the tabs) to close it.
+  {let y0=null,dy=0;
+   emo.addEventListener("pointerdown",e=>{if(!e.target.closest(".emoh,.etabs"))return;y0=e.clientY;dy=0;emo.style.transition="none";try{emo.setPointerCapture(e.pointerId)}catch(x){}});
+   emo.addEventListener("pointermove",e=>{if(y0===null)return;dy=Math.max(0,e.clientY-y0);emo.style.transform="translateY("+dy+"px)"});
+   const up=()=>{if(y0===null)return;const go=dy>70;y0=null;emo.style.transition="";emo.style.transform="";if(go)emoShut();dy=0};
+   emo.addEventListener("pointerup",up);emo.addEventListener("pointercancel",up);}
   $("#log").addEventListener("click",()=>{if(!emo.hidden)emoShut()});
   $("#sd").addEventListener("click",emoShut);
   $("#dp").addEventListener("click",async()=>{

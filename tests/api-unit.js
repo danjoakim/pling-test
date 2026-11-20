@@ -41,7 +41,7 @@ const root=path.join(__dirname,"..");
   saveKeyBackup:[{user_id:"u",salt:"s",iv:"i",ct:"c",iter:600000}],getKeyBackup:["u"],getKeyBackupInfo:["u"],
   pendingTransfers:[],getTransfer:["t"],askTransfer:[{id:"t",user_id:"u",eph_pub:{}}],approveTransfer:["t",{sender_pub:{},iv:"i",ct:"c"}],deleteTransfer:["t"],
   getProfile:["u"],getProfiles:[["u"]],createProfile:[{id:"u",fp:"f",name:"n",pub:{}}],updateProfile:["u",{name:"n",pm:"m"}],
-  getAvatars:[["u"]],saveAvatar:[{id:"u",data:"d",updated_at:"t"}],
+  getAvatars:[["u"]],saveAvatar:[{id:"u",data:"d",updated_at:"t"}],deleteAvatar:["u"],
   listFriends:[],listRequests:[],declineRequest:["a","b"],listBlocks:[],listChatMembers:[],listChats:[],listReads:[],
   latestMessages:["c",50],olderMessages:["c",9,50],sendMessage:[{chat_id:"c",sender:"u",iv:"i",ct:"c",file:"c/f",dp:true}],savePushToken:["u","T".repeat(40)],deletePushToken:["T".repeat(40)],setPushMute:["u","f",true],listPushMutes:[],deleteMyMessages:["c","u"],
   listReactions:["c"],saveReaction:[{msg_id:1,chat_id:"c",user_id:"u",iv:"i",ct:"c"}],

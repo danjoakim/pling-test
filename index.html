@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-m/YLCqGSDl9yqcXzb6ne/raFahVu3WxoOgqPcoWzi+4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-YZ6jA/qldXhk+rQC9dfC7FPj+tombvoVFkFRyQBu1Sg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -116,6 +116,11 @@ button.sm{padding:5px 10px;font-size:13px}
 .pr .more{font-size:12px;color:var(--mut)}
 .menu{flex:none;max-height:60%;overflow:auto;display:grid;gap:12px;padding:12px;background:#0f1d44;border-bottom:1px solid var(--line)}
 .who{display:grid;gap:2px}
+.mlab,#snb,.mob,.mst{display:none}
+.xgrp{display:contents}
+.mcard{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mcard .snbox,.msel{flex:1 1 100%}
+.msel{display:grid;gap:4px}
 .bud{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:5px;border-radius:6px}
 .bud .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bud small{display:block;color:var(--mut);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1145,6 +1150,91 @@ html.lys .plusm button::before{background:#e3effb}
 html.lys .plusm button::after{background:#2a5fb8}
 .plusm{gap:2px;padding:8px}
 
+/* ---- 0.1.23: samtale-meny (forslag A), profilbilde-valg, emoji-ark ---- */
+@media(max-width:700px){
+.menu{top:calc(max(env(safe-area-inset-top,0px),44px) + 66px);bottom:0;max-height:none;border-radius:0;overflow-y:auto;padding:20px 16px calc(env(safe-area-inset-bottom,0px) + 28px);display:block;box-shadow:none;border:0;z-index:30;background:#0f2340;color:#eaf3ff}
+html.lys .menu{background:#f1f7fd;color:#10304f}
+.menu .mhere,.menu .mnh{display:none}
+.menu .who{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:4px}
+.menu .who .bud:nth-child(2){display:none}
+.menu .who .bud:first-child{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0}
+.menu .who .bud:first-child>.ff,.menu .who .bud:first-child>svg{display:none}
+.menu .who .bud .t{display:flex;flex-direction:column;align-items:center;gap:2px;font:900 24px var(--ui);font-style:italic;white-space:normal;overflow:visible}
+.menu .who .bud small{font:italic 400 14px var(--ui);color:#8fb0dc;max-width:300px}
+html.lys .menu .who .bud small{color:#4d6f93}
+.menu .who .bud .mst{display:block;font:600 14px var(--ui);font-style:normal;color:#6fe085}
+html.lys .menu .who .bud .mst{color:#1c8a37}
+.menu .pav{width:84px;height:84px;border-radius:50%;font-size:30px;border:0;box-shadow:none;overflow:visible;position:relative;background:linear-gradient(#6aa8ea,#2a5fb8);color:#fff}
+.menu .pav img{border-radius:50%}
+.menu .pav::after{content:"";position:absolute;right:0;bottom:0;width:22px;height:22px;border-radius:50%;background:var(--fc);border:3px solid #0f2340;box-sizing:border-box}
+html.lys .menu .pav::after{border-color:#f1f7fd}
+.menu .pav.off::after{background:#9aa9b9}
+.menu .mlab{display:block;font:600 12px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:#8fb0dc;margin:22px 4px 8px}
+html.lys .menu .mlab{color:#4d6f93}
+.menu .xgrp{display:block}
+.menu .mcard{display:block;background:#122a4d;border-radius:18px;overflow:hidden}
+html.lys .menu .mcard{background:#fff;box-shadow:0 1px 3px rgba(16,48,79,.10)}
+.menu .xrow,.menu .glass.xrow{position:relative;display:flex;align-items:center;gap:14px;width:100%;box-sizing:border-box;min-height:56px;padding:0 16px;margin:0;border:0;border-top:1px solid #1d3a68;border-radius:0;background:none!important;box-shadow:none!important;color:#eaf3ff;font:400 16px var(--ui);text-align:left;cursor:pointer}
+html.lys .menu .xrow,html.lys .menu .glass.xrow{border-top-color:#d3e3f3;color:#10304f}
+.menu .mcard>:first-child{border-top:0}
+.menu #snb{display:flex}
+.menu .xrow::before{content:"";flex:none;width:34px;height:34px;border-radius:10px;background:#1b3a6b}
+html.lys .menu .xrow::before{background:#e3eefa}
+.menu .xrow::after{content:"";position:absolute;left:23px;top:50%;width:20px;height:20px;margin-top:-10px;background:#cfe2ff;-webkit-mask:var(--pi) center/contain no-repeat;mask:var(--pi) center/contain no-repeat}
+html.lys .menu .xrow::after{background:#2a5a96}
+.menu .xrow.red{color:#ff8a8a}.menu .xrow.red::before{background:#3a1f2c}.menu .xrow.red::after{background:#ff8a8a}
+html.lys .menu .xrow.red{color:#c0392b}html.lys .menu .xrow.red::before{background:#fde8e8}html.lys .menu .xrow.red::after{background:#c0392b}
+.menu #snb{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E")}
+.menu #exrow{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='13' r='8'/%3E%3Cpath d='M12 9v4l3 2M9 2h6'/%3E%3C/svg%3E")}
+.menu #bmu{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4'/%3E%3C/svg%3E")}
+.menu #bd{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11M7 11l5 5 5-5M5 20h14'/%3E%3C/svg%3E")}
+.menu #bx{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13'/%3E%3C/svg%3E")}
+.menu #bfr{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21a8 8 0 0 1 16 0'/%3E%3C/svg%3E")}
+.menu #bbl{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M5.6 5.6l12.8 12.8'/%3E%3C/svg%3E")}
+.menu .mtx{white-space:nowrap}
+html.lys .menu .pav{border:0!important;box-shadow:none!important}
+.menu .mv{margin-left:auto;color:#8fb0dc;font-size:15px}
+html.lys .menu .mv{color:#4d6f93}
+.menu .dsk{display:none}.menu .mob{display:inline}
+.menu .msel select{margin-left:auto;appearance:none;-webkit-appearance:none;background:none;border:0;color:#8fb0dc;font:400 15px var(--ui);text-align:right;text-align-last:right;padding:0 0 0 8px;max-width:45%;height:44px}
+html.lys .menu .msel select{color:#4d6f93}
+.menu .snbox{display:none;padding:14px 16px 16px;border-top:1px solid #1d3a68}
+html.lys .menu .snbox{border-top-color:#d3e3f3}
+.menu .snbox.open{display:block}
+.menu .sn{font:600 19px ui-monospace,Menlo,monospace;letter-spacing:.04em;margin:0 0 10px;word-spacing:.35em;max-width:250px}
+.menu .snbox .fine{color:#8fb0dc;font-size:14px}
+html.lys .menu .snbox .fine{color:#4d6f93}
+.menu>#fp{margin:18px 8px 0;text-align:center;color:#6f8fbd;font-size:12px}
+/* navn: kursiv svart overhenger, ikke kutt siste bokstav */
+#men,.me .t b,.shell.tab-me #men{padding-right:.16em;overflow:visible}
+/* Meg: bildet er knappen; ingen kamera-merke */
+.shell.tab-me .lbl{display:none!important}
+.shell.tab-me .av{cursor:pointer;pointer-events:auto}
+.shell.tab-me .av.noimg{outline:3px dashed #9dbbe0;outline-offset:5px}
+.shell.tab-me .av.noimg::before{content:"+";position:absolute;right:-6px;top:-6px;width:32px;height:32px;border-radius:50%;background:#2a6fd0;color:#fff;font:600 24px/32px var(--ui);text-align:center;z-index:2}
+.avsheet{position:fixed;inset:0;z-index:200}
+.avbk{position:absolute;inset:0;background:rgba(5,15,35,.45)}
+.avbox{position:absolute;left:0;right:0;bottom:0;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 14px);border-radius:26px 26px 0 0;background:#fbfdff;box-shadow:0 -6px 24px rgba(16,48,79,.2);display:flex;flex-direction:column;gap:4px}
+html:not(.lys) .avbox{background:#0b1a31;box-shadow:0 -6px 24px rgba(0,0,0,.5)}
+.avh{display:block;width:80px;height:5px;border-radius:3px;background:#c5ddf2;margin:4px auto 8px}
+html:not(.lys) .avh{background:#34517a}
+.avs{background:none!important;box-shadow:none!important;position:relative;display:flex;align-items:center;gap:14px;min-height:56px;padding:0 14px;border:0;border-radius:14px;background:none;color:#10304f;font:400 17px var(--ui);text-align:left}
+html:not(.lys) .avs{color:#e6f0fb}
+.avs.pick::before,.avs.take::before,.avs.del::before{content:"";flex:none;width:34px;height:34px;border-radius:10px;background:#e3eefa}
+html:not(.lys) .avs.pick::before,html:not(.lys) .avs.take::before{background:#1b3a6b}
+.avs.pick::after,.avs.take::after,.avs.del::after{content:"";position:absolute;left:24px;top:50%;width:20px;height:20px;margin-top:-10px;background:#2a5a96;-webkit-mask:var(--pi) center/contain no-repeat;mask:var(--pi) center/contain no-repeat}
+html:not(.lys) .avs.pick::after,html:not(.lys) .avs.take::after{background:#cfe2ff}
+.avs.pick{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='3'/%3E%3Ccircle cx='9' cy='10' r='1.8'/%3E%3Cpath d='M4 18l5-5 4 4 3-3 4 4'/%3E%3C/svg%3E")}
+.avs.take{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8h3l2-3h6l2 3h3v11H4z'/%3E%3Ccircle cx='12' cy='13' r='3.5'/%3E%3C/svg%3E")}
+.avs.del{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13'/%3E%3C/svg%3E");color:#c0392b}
+.avs.del::before{background:#fde8e8}.avs.del::after{background:#c0392b}
+html:not(.lys) .avs.del{color:#ff8a8a}html:not(.lys) .avs.del::before{background:#3a1f2c}html:not(.lys) .avs.del::after{background:#ff8a8a}
+.avs.cx{justify-content:center;margin-top:6px;font-weight:600;background:#e9f1f9!important}
+html:not(.lys) .avs.cx{background:#14294a!important}
+.emoh,.emo .etabs{touch-action:none}
+.chatpane .emo{transition:transform .18s ease}
+}
+
 </style>
 </head>
 <body>
@@ -1170,6 +1260,7 @@ html.lys .plusm button::after{background:#2a5fb8}
     <select id="thm" aria-label="Utseende"><option value="auto">Utseende: automatisk</option><option value="lys">Utseende: lys (dag)</option><option value="natt">Utseende: mørk (kveld)</option></select>
     <select id="lpv" aria-label="Forhåndsvisning av lenker" title="Når du sender en lenke, henter en tjeneste hos oss tittel og bilde. Mottakeren kontakter aldri nettstedet."><option value="on">Forhåndsvisning av lenker: på</option><option value="off">Forhåndsvisning av lenker: av</option></select>
     <label class="lbl" title="Bildet vises bare for kompisene dine">Bytt bilde<input class="vh" id="avf" type="file" accept="image/*"></label>
+    <input class="vh" id="avc" type="file" accept="image/*" capture="user" tabindex="-1">
     <div class="grp">Sikkerhet</div>
     <div id="seccard" class="seccard"></div>
     <div class="grp" id="bgrp" hidden>Blokkerte</div>
@@ -1212,15 +1303,25 @@ html.lys .plusm button::after{background:#2a5fb8}
     <button class="glass back" id="back" type="button" aria-label="Lukk samtalen">‹</button>
     <div class="ti" id="title"></div>
     <div class="pr" id="pr" title="Hvem som er her"></div>
-    <button class="glass hdp" id="hdp" type="button" aria-label="Dobbeltpling" title="Spiller to plinger og vibrerer hos mottakeren"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v10.5" fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="round"/><circle cx="12" cy="19.3" r="2.5" fill="currentColor"/></svg></button>
     <button class="glass" id="mb" type="button" aria-expanded="false" aria-label="Innstillinger for samtalen">⋯</button>
    </div>
    <div class="menu" id="menu" hidden>
-    <div><div class="grp">Her nå</div><div class="who" id="who"></div></div>
-    <div><div class="grp">Sikkerhetsnummer</div><div class="sn" id="sn"></div><div class="fine">Sammenlign nummeret med kompisen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.</div></div>
-    <div><div class="fine" style="margin-bottom:4px">Utløp for nye meldinger i samtalen (gjelder begge)</div>
-     <select id="ex" aria-label="Utløp for nye meldinger i samtalen (gjelder begge)"><option value="0">Utløper ikke</option><option value="1">Etter 1 dag</option><option value="7">Etter 7 dager</option><option value="30">Etter 30 dager</option></select></div>
-    <div class="row"><button class="glass" id="bd" type="button">Last ned</button><button class="glass" id="bx" type="button">Slett mine meldinger</button><button class="glass" id="bfr" type="button">Fjern kompis</button><button class="glass" id="bmu" type="button">Demp</button><button class="glass" id="bbl" type="button">Blokker</button></div>
+    <div class="mhero"><div class="grp mhere">Her nå</div><div class="who" id="who"></div></div>
+    <div class="xgrp"><div class="mlab">Sikkerhet</div>
+     <div class="mcard"><button class="xrow" id="snb" type="button" aria-expanded="false"><span class="mtx">Sikkerhetsnummer</span><span class="mv">Bekreft &#8250;</span></button>
+     <div class="snbox" id="snbox"><div class="grp mnh">Sikkerhetsnummer</div><div class="sn" id="sn"></div><div class="fine">Sammenlign nummeret med kompisen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.</div></div></div>
+    </div>
+    <div class="xgrp"><div class="mlab">Samtale</div>
+     <div class="mcard"><label class="xrow msel" id="exrow"><span class="mtx"><span class="dsk fine">Utløp for nye meldinger i samtalen (gjelder begge)</span><span class="mob">Meldinger utløper</span></span>
+     <select id="ex" aria-label="Utløp for nye meldinger i samtalen (gjelder begge)"><option value="0">Utløper ikke</option><option value="1">Etter 1 dag</option><option value="7">Etter 7 dager</option><option value="30">Etter 30 dager</option></select></label>
+     <button class="glass xrow" id="bmu" type="button">Demp</button></div>
+    </div>
+    <div class="xgrp"><div class="mlab">Verktøy</div>
+     <div class="mcard"><button class="glass xrow" id="bd" type="button">Last ned</button></div>
+    </div>
+    <div class="xgrp"><div class="mlab">Fare</div>
+     <div class="mcard"><button class="glass xrow red" id="bx" type="button">Slett mine meldinger</button><button class="glass xrow red" id="bfr" type="button">Fjern kompis</button><button class="glass xrow red" id="bbl" type="button">Blokker</button></div>
+    </div>
     <div class="fine" id="fp"></div>
    </div>
    <div class="expn" id="expn" hidden></div>
@@ -1522,6 +1623,11 @@ var PrekI18n = (() => {
     "gif.cannotShrink": "Klarte ikke \xE5 gj\xF8re GIF-en liten nok",
     "gif.shrinking": "GIF-en er stor, gj\xF8r den mindre ({i}/{n}) \u2026",
     "cam.denied": "Fikk ikke tilgang til kameraet. Sjekk tillatelsen i nettleseren, eller velg et bilde fra enheten med binders-knappen.",
+    "avatar.pick": "Velg fra bilder",
+    "avatar.take": "Ta bilde",
+    "avatar.remove": "Fjern bilde",
+    "avatar.removed": "Bildet er fjernet.",
+    "avatar.change": "Endre profilbilde",
     "avatar.saved": "Bildet er lagret. Bare kompisene dine ser det.",
     // keys and recovery
     "key.noBackup": "Det finnes ingen sikkerhetskopi p\xE5 denne kontoen",
@@ -1815,6 +1921,12 @@ var PrekI18n = (() => {
     "html.add.explain": "Skriv e-posten til en kompis som har konto i Prek!.",
     "html.menu.hereNow": "Her n\xE5",
     "html.menu.safetyNumber": "Sikkerhetsnummer",
+    "html.menu.secLabel": "Sikkerhet",
+    "html.menu.convLabel": "Samtale",
+    "html.menu.toolsLabel": "Verkt\xF8y",
+    "html.menu.dangerLabel": "Fare",
+    "html.menu.verify": "Bekreft",
+    "html.menu.expiryShort": "Meldinger utl\xF8per",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
     "html.menu.expiryLabel": "Utl\xF8p for nye meldinger i samtalen (gjelder begge)",
     "html.profile.blocked": "Blokkerte",
@@ -1940,6 +2052,7 @@ var PrekApi = (() => {
       createProfile: (row) => c.from("profiles").insert(row),
       updateProfile: (id, patch) => c.from("profiles").update(patch).eq("id", id),
       getAvatars: (ids) => c.from("avatars").select("id,data").in("id", ids),
+      deleteAvatar: (id) => c.from("avatars").delete().eq("id", id),
       saveAvatar: (row) => c.from("avatars").upsert(row),
       // friends, requests, blocks
       listFriends: () => c.from("friends").select("*"),
@@ -2518,6 +2631,11 @@ var PrekShrink = (() => {
     "gif.cannotShrink": "Klarte ikke \xE5 gj\xF8re GIF-en liten nok",
     "gif.shrinking": "GIF-en er stor, gj\xF8r den mindre ({i}/{n}) \u2026",
     "cam.denied": "Fikk ikke tilgang til kameraet. Sjekk tillatelsen i nettleseren, eller velg et bilde fra enheten med binders-knappen.",
+    "avatar.pick": "Velg fra bilder",
+    "avatar.take": "Ta bilde",
+    "avatar.remove": "Fjern bilde",
+    "avatar.removed": "Bildet er fjernet.",
+    "avatar.change": "Endre profilbilde",
     "avatar.saved": "Bildet er lagret. Bare kompisene dine ser det.",
     // keys and recovery
     "key.noBackup": "Det finnes ingen sikkerhetskopi p\xE5 denne kontoen",
@@ -2811,6 +2929,12 @@ var PrekShrink = (() => {
     "html.add.explain": "Skriv e-posten til en kompis som har konto i Prek!.",
     "html.menu.hereNow": "Her n\xE5",
     "html.menu.safetyNumber": "Sikkerhetsnummer",
+    "html.menu.secLabel": "Sikkerhet",
+    "html.menu.convLabel": "Samtale",
+    "html.menu.toolsLabel": "Verkt\xF8y",
+    "html.menu.dangerLabel": "Fare",
+    "html.menu.verify": "Bekreft",
+    "html.menu.expiryShort": "Meldinger utl\xF8per",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
     "html.menu.expiryLabel": "Utl\xF8p for nye meldinger i samtalen (gjelder begge)",
     "html.profile.blocked": "Blokkerte",
@@ -3678,6 +3802,11 @@ var PrekPreviews = (() => {
     "gif.cannotShrink": "Klarte ikke \xE5 gj\xF8re GIF-en liten nok",
     "gif.shrinking": "GIF-en er stor, gj\xF8r den mindre ({i}/{n}) \u2026",
     "cam.denied": "Fikk ikke tilgang til kameraet. Sjekk tillatelsen i nettleseren, eller velg et bilde fra enheten med binders-knappen.",
+    "avatar.pick": "Velg fra bilder",
+    "avatar.take": "Ta bilde",
+    "avatar.remove": "Fjern bilde",
+    "avatar.removed": "Bildet er fjernet.",
+    "avatar.change": "Endre profilbilde",
     "avatar.saved": "Bildet er lagret. Bare kompisene dine ser det.",
     // keys and recovery
     "key.noBackup": "Det finnes ingen sikkerhetskopi p\xE5 denne kontoen",
@@ -3971,6 +4100,12 @@ var PrekPreviews = (() => {
     "html.add.explain": "Skriv e-posten til en kompis som har konto i Prek!.",
     "html.menu.hereNow": "Her n\xE5",
     "html.menu.safetyNumber": "Sikkerhetsnummer",
+    "html.menu.secLabel": "Sikkerhet",
+    "html.menu.convLabel": "Samtale",
+    "html.menu.toolsLabel": "Verkt\xF8y",
+    "html.menu.dangerLabel": "Fare",
+    "html.menu.verify": "Bekreft",
+    "html.menu.expiryShort": "Meldinger utl\xF8per",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
     "html.menu.expiryLabel": "Utl\xF8p for nye meldinger i samtalen (gjelder begge)",
     "html.profile.blocked": "Blokkerte",
@@ -4447,6 +4582,11 @@ var PrekHelpers = (() => {
     "gif.cannotShrink": "Klarte ikke \xE5 gj\xF8re GIF-en liten nok",
     "gif.shrinking": "GIF-en er stor, gj\xF8r den mindre ({i}/{n}) \u2026",
     "cam.denied": "Fikk ikke tilgang til kameraet. Sjekk tillatelsen i nettleseren, eller velg et bilde fra enheten med binders-knappen.",
+    "avatar.pick": "Velg fra bilder",
+    "avatar.take": "Ta bilde",
+    "avatar.remove": "Fjern bilde",
+    "avatar.removed": "Bildet er fjernet.",
+    "avatar.change": "Endre profilbilde",
     "avatar.saved": "Bildet er lagret. Bare kompisene dine ser det.",
     // keys and recovery
     "key.noBackup": "Det finnes ingen sikkerhetskopi p\xE5 denne kontoen",
@@ -4740,6 +4880,12 @@ var PrekHelpers = (() => {
     "html.add.explain": "Skriv e-posten til en kompis som har konto i Prek!.",
     "html.menu.hereNow": "Her n\xE5",
     "html.menu.safetyNumber": "Sikkerhetsnummer",
+    "html.menu.secLabel": "Sikkerhet",
+    "html.menu.convLabel": "Samtale",
+    "html.menu.toolsLabel": "Verkt\xF8y",
+    "html.menu.dangerLabel": "Fare",
+    "html.menu.verify": "Bekreft",
+    "html.menu.expiryShort": "Meldinger utl\xF8per",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
     "html.menu.expiryLabel": "Utl\xF8p for nye meldinger i samtalen (gjelder begge)",
     "html.profile.blocked": "Blokkerte",
@@ -4939,7 +5085,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="6d0c744";
+const PREK_VERSION="0.1.0",PREK_BUILD="790a529";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -5636,7 +5782,7 @@ const nameOf=id=>{const p=S.profiles.get(id);return p?p.name:"…"};
 function paintMe(){
   const i=$("#avimg"),s=$("#avini"),nm=S.profile.name;
   if(okAv(myAv)){i.src=myAv;i.hidden=false;s.hidden=true}else{i.hidden=true;s.hidden=false;s.textContent=initial(nm);s.dataset.i2=initials2(nm)}
-  $("#avwrap").className="av "+ST[S.status];
+  $("#avwrap").className="av "+ST[S.status]+(okAv(myAv)?"":" noimg");
   document.documentElement.style.setProperty("--dot",DOT[ST[S.status]]||DOT.on);
   $("#men").textContent=nm;
   const na=$("#navav");if(na){na.textContent="";na.append(avEl(nm,okAv(myAv)?myAv:null,ST[S.status]));$("#navnm").textContent=nm}
@@ -5740,7 +5886,7 @@ async function openChat(otherId){
     S.chat={id:cid,other:otherId};S.msgs=[];S.older=[];S.more=false;S.sig=null;S.first=true;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
     $("#shell").classList.add("inchat");
     $("#empty").hidden=true;for(const i of ["ch","log","bar"])$("#"+i).hidden=false;
-    $("#menu").hidden=true;$("#emo").hidden=true;$("#mb").setAttribute("aria-expanded","false");
+    $("#menu").hidden=true;$("#emo").hidden=true;$("#snbox").classList.remove("open");$("#snb").setAttribute("aria-expanded","false");$("#mb").setAttribute("aria-expanded","false");
     drawExp();
     $("#log").textContent="";
     drawChatHead();drawFriends();drawTyping();await loadMsgs();
@@ -5758,7 +5904,7 @@ function drawChatHead(){
   const pr=$("#pr");pr.textContent="";pr.append(pav(id,st));
   const w=$("#who");w.textContent="";
   const p=S.profiles.get(id)||{};
-  w.append(el("div",{class:"bud"},pav(id,st),el("span",{class:"t"},nameOf(id),el("small",{},p.pm||"")),ff(st)));
+  w.append(el("div",{class:"bud"},pav(id,st),el("span",{class:"t"},nameOf(id),el("small",{},p.pm||""),el("span",{class:"mst"},{on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")}[ST[stOf(id)]||"off"])),ff(st)));
   const mine=ST[S.status];
   w.append(el("div",{class:"bud"},avEl(S.profile.name,myAv,mine),el("span",{class:"t"},S.profile.name+" (deg)",el("small",{},S.profile.pm||"")),ff(mine)));
   const o=S.profiles.get(id);
@@ -6088,7 +6234,7 @@ function wire(){
     S.status=$("#st").value;try{localStorage.setItem("pling_st_"+S.user.id,S.status)}catch(e){}
     paintMe();trackMe(true);drawChatHead();
   });
-  $("#avf").addEventListener("change",async e=>{
+  const avPick=async e=>{
     const f=e.target.files[0];e.target.value="";if(!f)return;
     try{
       const a=await toAvatar(f);if(!okAv(a))throw new Error(tr("img.avatarTooBig"));
@@ -6096,6 +6242,21 @@ function wire(){
       myAv=a;try{localStorage.setItem("pling_av_"+S.user.id,a);localStorage.setItem("pling_last_av",a)}catch(x){}
       paintMe();drawChatHead();toast(tr("avatar.saved"));
     }catch(err){fail(err)}
+  };
+  $("#avf").addEventListener("change",avPick);$("#avc").addEventListener("change",avPick);
+  async function avRemove(){
+    try{await q(api.deleteAvatar(S.user.id),tr("ctx.saveAvatar"));myAv=null;try{localStorage.removeItem("pling_av_"+S.user.id);localStorage.removeItem("pling_last_av")}catch(x){}paintMe();drawChatHead();toast(tr("avatar.removed"))}catch(err){fail(err)}
+  }
+  // Phone, Meg tab: the photo itself is the button. A small sheet offers pick / take / remove.
+  $("#avwrap").addEventListener("click",ev=>{
+    if(!narrow()||!$("#shell").classList.contains("tab-me"))return;
+    ev.stopPropagation();if($("#avsheet"))return;
+    const shut=()=>{const x=$("#avsheet");if(x)x.remove()};
+    const b=(cls,txt,fn)=>el("button",{type:"button",class:"avs "+cls,onclick:()=>{shut();fn()}},txt);
+    const items=[b("pick",tr("avatar.pick"),()=>$("#avf").click()),b("take",tr("avatar.take"),()=>$("#avc").click())];
+    if(okAv(myAv))items.push(b("del",tr("avatar.remove"),avRemove));
+    const sh=el("div",{class:"avsheet",id:"avsheet",role:"dialog","aria-label":tr("avatar.change")},el("div",{class:"avbk",onclick:shut}),el("div",{class:"avbox"},el("span",{class:"avh","aria-hidden":"true"}),...items,b("cx",tr("common.close"),()=>{})));
+    document.body.append(sh);
   });
   // Phone bottom menu (Kompiser / Legg til / Meg): shows the friend list, the add panel or the profile panel full screen. Only visible on narrow screens (mobil.css).
   function navTo(t){
@@ -6151,7 +6312,6 @@ function wire(){
     stat.after(rows);rows.after(ab);
     S.paintAbout=()=>{const t=$("#abouttxt");if(!t)return;const a=S.profile&&S.profile.about;t.textContent=a||tr("me.aboutEmpty");t.classList.toggle("empty",!a)};
   }
-  $("#hdp").addEventListener("click",()=>$("#dp").click());
   $("#scanbtn").addEventListener("click",scanOpen);
   $("#emailtog").addEventListener("click",()=>{const sh=$("#addfp").classList.toggle("showem");$("#emailtog").setAttribute("aria-expanded",String(sh))});
   $("#cdgo").addEventListener("click",()=>redeemCode($("#cd2").value));
@@ -6172,6 +6332,7 @@ function wire(){
   $("#fe").addEventListener("keydown",e=>{if(e.key==="Enter")add()});
   /* samtale */
   $("#back").addEventListener("click",closeChat);
+  $("#snb").addEventListener("click",()=>{const b=$("#snbox"),o=!b.classList.contains("open");b.classList.toggle("open",o);$("#snb").setAttribute("aria-expanded",String(o))});
   $("#mb").addEventListener("click",()=>{const m=$("#menu"),o=m.hidden;m.hidden=!o;$("#mb").setAttribute("aria-expanded",String(o))});
   $("#pr").addEventListener("click",()=>$("#mb").click());
   $("#ex").addEventListener("change",async()=>{
@@ -6240,6 +6401,13 @@ function wire(){
   /* Flere måter å lukke velgeren på (Dan 19. nov: «får ikke stengt det igjen»): håndtaket øverst, trykk i samtalen, eller send. */
   const emoShut=()=>{emo.hidden=true};
   emo.querySelector(".emoh").addEventListener("click",emoShut);
+  $("#tx").addEventListener("pointerdown",()=>{if(!emo.hidden)emoShut()});
+  // Drag the panel down (from the handle or the tabs) to close it.
+  {let y0=null,dy=0;
+   emo.addEventListener("pointerdown",e=>{if(!e.target.closest(".emoh,.etabs"))return;y0=e.clientY;dy=0;emo.style.transition="none";try{emo.setPointerCapture(e.pointerId)}catch(x){}});
+   emo.addEventListener("pointermove",e=>{if(y0===null)return;dy=Math.max(0,e.clientY-y0);emo.style.transform="translateY("+dy+"px)"});
+   const up=()=>{if(y0===null)return;const go=dy>70;y0=null;emo.style.transition="";emo.style.transform="";if(go)emoShut();dy=0};
+   emo.addEventListener("pointerup",up);emo.addEventListener("pointercancel",up);}
   $("#log").addEventListener("click",()=>{if(!emo.hidden)emoShut()});
   $("#sd").addEventListener("click",emoShut);
   $("#dp").addEventListener("click",async()=>{

@@ -104,6 +104,11 @@ button.sm{padding:5px 10px;font-size:13px}
 .pr .more{font-size:12px;color:var(--mut)}
 .menu{flex:none;max-height:60%;overflow:auto;display:grid;gap:12px;padding:12px;background:#0f1d44;border-bottom:1px solid var(--line)}
 .who{display:grid;gap:2px}
+.mlab,#snb,.mob,.mst{display:none}
+.xgrp{display:contents}
+.mcard{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mcard .snbox,.msel{flex:1 1 100%}
+.msel{display:grid;gap:4px}
 .bud{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:5px;border-radius:6px}
 .bud .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bud small{display:block;color:var(--mut);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

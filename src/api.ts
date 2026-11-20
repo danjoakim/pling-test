@@ -109,6 +109,7 @@ export function createApi(c: RpcClient) {
     createProfile: (row: { id: string; fp: string; name: string; pub: unknown }) => c.from("profiles").insert(row) as Query<null>,
     updateProfile: (id: string, patch: { name?: string; pm?: string | null; about?: string | null }) => c.from("profiles").update(patch).eq("id", id) as Query<null>,
     getAvatars: (ids: string[]) => c.from("avatars").select("id,data").in("id", ids) as Query<{ id: string; data: string }[]>,
+    deleteAvatar: (id: string) => c.from("avatars").delete().eq("id", id) as Query<null>,
     saveAvatar: (row: { id: string; data: string; updated_at: string }) => c.from("avatars").upsert(row) as Query<null>,
     // friends, requests, blocks
     listFriends: () => c.from("friends").select("*") as Query<FriendRow[]>,
