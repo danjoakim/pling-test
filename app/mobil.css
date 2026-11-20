@@ -569,7 +569,6 @@ h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:ital
 .shell.tab-me .home{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 .shell.tab-me .mewrap{flex:none}
 .shell.tab-me #prof,html.lys .shell.tab-me #prof{flex:none;overflow:visible;background:none;border-radius:0;padding:8px 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
-.shell.tab-me .stw{display:flex;justify-content:center;margin-top:2px}
 .shell.tab-me .me b{font:900 28px var(--ui);font-style:italic;letter-spacing:-.01em}
 /* «Om meg»: forklaringen skjules bak et lite info-ikon nede til høyre i kortet (Dan 20. nov) */
 .shell.tab-me .mabout{position:relative;padding-bottom:46px}
