@@ -205,7 +205,7 @@ function pageAbout(){
     const cnt=el("div",{class:"pgcnt"});const pc=()=>{cnt.textContent=t.value.length+"/200"};pc();t.addEventListener("input",pc);
     const msg=el("div",{class:"fine err"}),go=el("button",{class:"glass pgprim",type:"button"},tr("me.save"));
     go.onclick=async()=>{go.disabled=true;await saveProfile({about:t.value.trim().slice(0,200)||null});go.disabled=false;if(S.paintAbout)S.paintAbout();closeInfo()};
-    body.append(t,cnt,el("div",{class:"mal"},tr("me.aboutNote")),el("div",{class:"pgsp"}),go,msg);
+    body.append(t,cnt,el("div",{class:"mal",id:"aboutnote",hidden:true},tr("me.aboutNote")),el("button",{type:"button",class:"mai",id:"aboutinfo","aria-label":tr("me.aboutInfo"),"aria-expanded":"false",onclick:()=>{const n=$("#aboutnote"),sh=n.hidden;n.hidden=!sh;$("#aboutinfo").setAttribute("aria-expanded",String(sh))}},"i"),el("div",{class:"pgsp"}),go,msg);
   });
 }
 function pageDevices(){

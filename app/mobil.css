@@ -571,5 +571,8 @@ h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:ital
 .shell.tab-me #prof,html.lys .shell.tab-me #prof{flex:none;overflow:visible;background:none;border-radius:0;padding:8px 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
 .shell.tab-me .stw{display:flex;justify-content:center;margin-top:2px}
 .shell.tab-me .me b{font:900 28px var(--ui);font-style:italic;letter-spacing:-.01em}
-.shell.tab-me .mabout .mah b{display:none}
-.shell.tab-me .mabout .mah{justify-content:flex-end}
+/* «Om meg»: forklaringen skjules bak et lite info-ikon nede til høyre i kortet (Dan 20. nov) */
+.shell.tab-me .mabout{position:relative;padding-bottom:46px}
+.shell.tab-me .mabout .mal{margin-top:10px;padding-right:44px;font-size:14px;line-height:1.35}
+.shell.tab-me .mabout .mai{position:absolute;right:12px;bottom:10px;width:32px;height:32px;border-radius:50%;border:1.5px solid #7db3f2;background:none;color:#7db3f2;font:italic 900 16px Georgia,serif;padding:0;display:grid;place-items:center}
+.mal[hidden]{display:none}
