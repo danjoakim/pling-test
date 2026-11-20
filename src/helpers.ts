@@ -37,7 +37,7 @@ export function inviteFromHash(hash: string): { token: string | null; rest: stri
   const h = new URLSearchParams(hash.replace(/^#/, "")), t = h.get("inv");
   const token = t && TOKEN_RE.test(t) ? t : null;
   if (!h.has("inv")) return { token, rest: null };
-  h.delete("inv");
+  h.delete("inv");h.delete("fp");
   return { token, rest: h.toString() };
 }
 

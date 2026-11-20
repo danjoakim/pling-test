@@ -6,4 +6,5 @@ for(const f of ["index.html","lib/supabase.js","lib/qrcode.js","lib/jsqr.js"])if
 fs.rmSync(dist,{recursive:true,force:true});fs.mkdirSync(dist,{recursive:true});
 fs.copyFileSync(path.join(root,"index.html"),path.join(dist,"index.html"));
 fs.cpSync(path.join(root,"lib"),path.join(dist,"lib"),{recursive:true,filter:s=>!/README\.md$|LICENSE/.test(s)});
+fs.cpSync(path.join(__dirname,"sounds"),path.join(dist,"sounds"),{recursive:true}); // the app sounds for the native sound player (sound.js)
 console.log("www:",fs.readdirSync(dist).join(", "));

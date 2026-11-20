@@ -37,6 +37,16 @@ const esbuild=require("esbuild");
  assert.strictEqual(K.rowState("ok",{fp:A,seen:1}),"unverified");
  assert.strictEqual(K.rowState("new",undefined),"unverified");
  console.log("ok   row state");
+ // invitation links carry the inviter's fingerprint
+ assert.strictEqual(K.inviteFp("#inv=abc&fp="+A),A);assert.strictEqual(K.inviteFp("inv=abc&fp="+A),A);
+ assert.strictEqual(K.inviteFp("#inv=abc"),null);assert.strictEqual(K.inviteFp("#inv=abc&fp=XYZ"),null);assert.strictEqual(K.inviteFp("#fp="+A+"0"),null);
+ let q=K.pinFromInvite({},"f",A,7);assert.deepStrictEqual(q.f,{fp:A,seen:7,verified:7,via:"invite"});
+ assert.strictEqual(K.rowState("ok",q.f),"verified");assert.strictEqual(K.checkKey(q,"f",A,A,8).state,"ok");assert.strictEqual(K.checkKey(q,"f",B,B,8).state,"changed");
+ q=K.pinFromInvite({f:{fp:A,seen:1}},"f",A,9);assert.deepStrictEqual(q.f,{fp:A,seen:1,verified:9,via:"invite"});
+ const keep={f:{fp:B,seen:1}};assert.strictEqual(K.pinFromInvite(keep,"f",A,9),keep);
+ assert.deepStrictEqual(K.clearVerified(K.pinFromInvite({},"f",A,7),"f").f,{fp:A,seen:7});
+ assert.deepStrictEqual(K.parsePins(JSON.stringify(K.pinFromInvite({},"f",A,7))).f,{fp:A,seen:7,verified:7,via:"invite"});
+ console.log("ok   invitation fingerprint: read, remembered as compared, never replaces a different key");
  // damaged storage is ignored piece by piece
  assert.deepStrictEqual(K.parsePins(null),{});assert.deepStrictEqual(K.parsePins("{oops"),{});assert.deepStrictEqual(K.parsePins("[1]"),{});
  const t=K.parsePins(JSON.stringify({good:{fp:A,seen:1,verified:2},bad1:{fp:"zz",seen:1},bad2:{fp:A},bad3:null,bad4:{fp:A,seen:1,verified:"x"}}));

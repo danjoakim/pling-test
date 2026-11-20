@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-z6498rG3fP+TN10EuuEwrdIRxaxhzsnq4ltC6kJ/hAM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-ecdGLFcVq/U9UgE66WyRZDVHDG2zLkPoE7QWL9uAYU0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -572,6 +572,9 @@ html.lys .keyalert .kab2{border-color:#f0b4b4}
 html.lys .keyalert .kab1{background:#2a6fd0}
 html.lys #snb.kv .mv{color:#1c8a37}
 html.lys #snb.kbad .mv{color:#c0392b}
+
+/* Tegnede smilefjes i kompislista: små og stille (ingen «on»-klasse, så ingen animasjon) */
+.conv small .an{width:1.35em;height:1.35em;vertical-align:-.32em}
 
 /*# Telefonvisning (smal skjerm): følger tegningene i designfilen «Prek! mobil» (Kompiser, Samtale, Legg til, Meg). Gjelder bare ≤700px, så PC og skrivebordsappen er uendret. Kommer etter extra.css. */
 .mnav{display:none}
@@ -2041,6 +2044,7 @@ var PrekI18n = (() => {
     "keypin.noSend": "Stoppet",
     "keypin.rowVerified": "Bekreftet \u2713",
     "keypin.rowChanged": "Endret",
+    "keypin.stInvite": "Bekreftet via invitasjonen. N\xF8kkelen stemte med lenken du fikk.",
     "keypin.stUnverified": "Ikke bekreftet. N\xF8kkelen er husket p\xE5 denne enheten, og du f\xE5r varsel hvis den endres.",
     "keypin.stVerified": "Bekreftet. Du og kompisen din har sammenlignet nummeret.",
     "keypin.stChanged": "N\xF8kkelen er ikke den samme som sist. Sending er stoppet.",
@@ -3069,6 +3073,7 @@ var PrekShrink = (() => {
     "keypin.noSend": "Stoppet",
     "keypin.rowVerified": "Bekreftet \u2713",
     "keypin.rowChanged": "Endret",
+    "keypin.stInvite": "Bekreftet via invitasjonen. N\xF8kkelen stemte med lenken du fikk.",
     "keypin.stUnverified": "Ikke bekreftet. N\xF8kkelen er husket p\xE5 denne enheten, og du f\xE5r varsel hvis den endres.",
     "keypin.stVerified": "Bekreftet. Du og kompisen din har sammenlignet nummeret.",
     "keypin.stChanged": "N\xF8kkelen er ikke den samme som sist. Sending er stoppet.",
@@ -4260,6 +4265,7 @@ var PrekPreviews = (() => {
     "keypin.noSend": "Stoppet",
     "keypin.rowVerified": "Bekreftet \u2713",
     "keypin.rowChanged": "Endret",
+    "keypin.stInvite": "Bekreftet via invitasjonen. N\xF8kkelen stemte med lenken du fikk.",
     "keypin.stUnverified": "Ikke bekreftet. N\xF8kkelen er husket p\xE5 denne enheten, og du f\xE5r varsel hvis den endres.",
     "keypin.stVerified": "Bekreftet. Du og kompisen din har sammenlignet nummeret.",
     "keypin.stChanged": "N\xF8kkelen er ikke den samme som sist. Sending er stoppet.",
@@ -4579,8 +4585,10 @@ var PrekKeypin = (() => {
     acceptNew: () => acceptNew,
     checkKey: () => checkKey,
     clearVerified: () => clearVerified,
+    inviteFp: () => inviteFp,
     markVerified: () => markVerified,
     parsePins: () => parsePins,
+    pinFromInvite: () => pinFromInvite,
     rowState: () => rowState
   });
   var FP = /^[0-9a-f]{32}$/;
@@ -4596,7 +4604,7 @@ var PrekKeypin = (() => {
     for (const [id, v] of Object.entries(j)) {
       const p = v;
       if (!p || typeof p.fp !== "string" || !FP.test(p.fp) || typeof p.seen !== "number") continue;
-      out[id] = { fp: p.fp, seen: p.seen, ...typeof p.verified === "number" ? { verified: p.verified } : {} };
+      out[id] = { fp: p.fp, seen: p.seen, ...typeof p.verified === "number" ? { verified: p.verified } : {}, ...p.via === "invite" ? { via: "invite" } : {} };
     }
     return out;
   }
@@ -4613,10 +4621,19 @@ var PrekKeypin = (() => {
     const p = pins[id];
     return p ? { ...pins, [id]: { ...p, verified: now } } : pins;
   }
+  function inviteFp(hash) {
+    const v = new URLSearchParams(hash.replace(/^#/, "")).get("fp");
+    return v && FP.test(v) ? v : null;
+  }
+  function pinFromInvite(pins, id, fp, now) {
+    const have = pins[id];
+    if (have && have.fp !== fp) return pins;
+    return { ...pins, [id]: { fp, seen: have ? have.seen : now, verified: now, via: "invite" } };
+  }
   function clearVerified(pins, id) {
     const p = pins[id];
     if (!p || p.verified === void 0) return pins;
-    const { verified: _v, ...rest } = p;
+    const { verified: _v, via: _w, ...rest } = p;
     return { ...pins, [id]: rest };
   }
   function rowState(state, pin) {
@@ -5133,6 +5150,7 @@ var PrekHelpers = (() => {
     "keypin.noSend": "Stoppet",
     "keypin.rowVerified": "Bekreftet \u2713",
     "keypin.rowChanged": "Endret",
+    "keypin.stInvite": "Bekreftet via invitasjonen. N\xF8kkelen stemte med lenken du fikk.",
     "keypin.stUnverified": "Ikke bekreftet. N\xF8kkelen er husket p\xE5 denne enheten, og du f\xE5r varsel hvis den endres.",
     "keypin.stVerified": "Bekreftet. Du og kompisen din har sammenlignet nummeret.",
     "keypin.stChanged": "N\xF8kkelen er ikke den samme som sist. Sending er stoppet.",
@@ -5160,6 +5178,7 @@ var PrekHelpers = (() => {
     const token = t && TOKEN_RE.test(t) ? t : null;
     if (!h.has("inv")) return { token, rest: null };
     h.delete("inv");
+    h.delete("fp");
     return { token, rest: h.toString() };
   }
   function b64url(u8) {
@@ -5299,8 +5318,27 @@ async function acReady(){const c=ac();if(!c)return null;if(acLive(c))return c;tr
 function wakeAc(){try{const c=ac();if(c&&!acLive(c))c.resume()}catch(e){}}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)wakeAc()});window.addEventListener("pageshow",wakeAc);
 function playNow(fn){const c=ac();if(!c)return;if(acLive(c)){fn(c);return}acReady().then(r=>{if(r)fn(r)})}
-function pling(v,at){if(!soundOn())return;playNow(c=>PrekSound.pling(c,v,at))}
-function dobbelt(){if(!soundOn())return;playNow(c=>PrekSound.dobbelt(c))}
+/* HVORFOR (20. nov, Dan): lydmotoren i nettvisningen sovner og våkner ikke før man åpner appen igjen. I iPhone-appen spilles derfor lydene av iPhonens egen lydspiller
+   (@capgo/native-audio, filene ios/sounds/*.wav er laget av nøyaktig samme kode som lydene her). Faller tilbake til lydmotoren hvis pluginen ikke finnes eller noe feiler. Se claude/lyd.md. */
+const NA_FILES={pling:"sounds/pling.wav",dobbelt:"sounds/dobbelt.wav"},naOk={};let naP;
+function nativeAudio(){
+  if(naP!==undefined)return naP;naP=null;
+  try{const cap=window.Capacitor;if(cap&&cap.isNativePlatform&&cap.isNativePlatform())naP=(cap.Plugins&&cap.Plugins.NativeAudio)||(cap.registerPlugin?cap.registerPlugin("NativeAudio"):null)}catch(e){naP=null}
+  return naP;
+}
+async function nativeAudioInit(){
+  const n=nativeAudio();if(!n)return;
+  try{await n.configure({focus:false,fade:false,background:false})}catch(e){}
+  for(const id of Object.keys(NA_FILES))try{await n.preload({assetId:id,assetPath:NA_FILES[id],audioChannelNum:2,isUrl:false});naOk[id]=true}catch(e){naOk[id]=false}
+}
+nativeAudioInit();
+function nativePlay(id,fallback){
+  const n=nativeAudio();if(!n||!naOk[id])return false;
+  try{Promise.resolve(n.play({assetId:id})).catch(()=>{naOk[id]=false;fallback()})}catch(e){naOk[id]=false;return false}
+  return true;
+}
+function pling(v,at){if(!soundOn())return;const f=()=>playNow(c=>PrekSound.pling(c,v,at));if(v===undefined&&at===undefined&&nativePlay("pling",f))return;f()}
+function dobbelt(){if(!soundOn())return;const f=()=>playNow(c=>PrekSound.dobbelt(c));if(nativePlay("dobbelt",f))return;f()}
 function stor(){const a=$("#app");a.classList.remove("dp");void a.offsetWidth;a.classList.add("dp");dobbelt();try{if(navigator.vibrate)navigator.vibrate([200,60,200,60,200,60,200,60,300])}catch(e){}}
 const {okAv,toAvatar,hue,avEl,initial,initials2}=PrekAvatar;
 const {GIF_MAX,gifEncode,readGif}=PrekGif;
@@ -5330,7 +5368,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="4c62828";
+const PREK_VERSION="0.1.0",PREK_BUILD="36b0ce1";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -5637,15 +5675,17 @@ async function checkTransfers(){
    så lenken skal bare deles med den man vil ha som kompis. Tokenet lagres i nettleseren til personen har logget inn og har profil (pling_inv), og slettes når den er brukt. */
 (function(){try{
   const iv=inviteFromHash(location.hash);
-  if(iv.token){localStorage.setItem("pling_inv",iv.token);S.mode="up"}
+  if(iv.token){localStorage.setItem("pling_inv",iv.token);const f=PrekKeypin.inviteFp(location.hash);if(f)localStorage.setItem("pling_inv_fp",f);else localStorage.removeItem("pling_inv_fp");S.mode="up"}
   if(iv.rest!==null)history.replaceState(null,"",location.pathname+location.search+(iv.rest?"#"+iv.rest:""))
 }catch(e){}})();
 async function redeemPending(){
   let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
   if(!t)return;
-  try{localStorage.removeItem("pling_inv")}catch(e){}
+  let ifp=null;try{localStorage.removeItem("pling_inv");ifp=localStorage.getItem("pling_inv_fp");localStorage.removeItem("pling_inv_fp")}catch(e){}
   try{
     const r=await q(api.redeemInvite(t),tr("ctx.invitation")),f=r&&r[0];
+    /* Lenken kan bære avtrykket til den som inviterte. Det kom en annen vei enn serveren, så vi husker det som sjekket; avviker nøkkelen serveren gir, stopper nøkkelvarselet (src/keypin.ts). */
+    if(ifp&&f&&f.id){pinsNow();pins=PrekKeypin.pinFromInvite(pins,f.id,ifp,Date.now());savePins()}
     toast(tr("invite.nowFriends",{name:f?f.name:tr("invite.fallbackName")}));await refresh();
   }catch(e){toast(tr("invite.failed"),true)}
 }
@@ -5654,7 +5694,7 @@ async function redeemCode(txt){
   txt=String(txt||"").trim();if(!txt)return;
   const iv=inviteFromHash(txt.includes("#")?txt.slice(txt.indexOf("#")):"#inv="+txt);
   if(!iv.token)return toast(tr("invite.badCode"),true);
-  try{localStorage.setItem("pling_inv",iv.token)}catch(e){}
+  try{localStorage.setItem("pling_inv",iv.token);const f=txt.includes("#")?PrekKeypin.inviteFp(txt.slice(txt.indexOf("#"))):null;if(f)localStorage.setItem("pling_inv_fp",f);else localStorage.removeItem("pling_inv_fp")}catch(e){}
   await redeemPending();$("#cd2").value="";
 }
 /* Skann kompisens kode (telefon): kameraet leser QR-koden i invitasjonen. Biblioteket lib/jsqr.js lastes først når skanneren åpnes. */
@@ -5702,7 +5742,7 @@ function drawInvite(){
         const ex=await q(api.createInvite(hs),tr("ctx.createInvite"));
         try{localStorage.setItem(key,JSON.stringify({t:tok,e:ex}))}catch(e){}
       }
-      const link=appUrl()+"#inv="+tok;
+      const link=appUrl()+"#inv="+tok+"&fp="+S.profile.fp;
       box.textContent="";
       const q1=el("div",{class:"qr",id:"invqr"});q1.innerHTML=qrSvg(link);
       const inp=el("input",{id:"invlink",readonly:true,value:link,"aria-label":tr("invite.linkAria")});
@@ -6082,6 +6122,12 @@ function fmtWhen(ts){
 function applyFilter(){const q=(($("#fq")||{}).value||"").trim().toLowerCase();$("#friends").classList.toggle("srch",!!q);for(const b of document.querySelectorAll("#friends .conv"))b.hidden=!!q&&!b.textContent.toLowerCase().includes(q)}
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
 function prev(id){return listLine(S.last.get(id))}
+/* Siste melding i lista med våre tegnede figurer (uten animasjon) i stedet for vanlig emoji, så lista ser lik ut som samtalen (Dan 20. nov). Samme regler som listLine ellers. */
+function prevNodes(id){
+  const l=S.last.get(id);if(!l)return[];
+  const t=String(l.t).replace(/\s+/g," ");
+  return [(l.mine?tr("chat.youPrefix"):"")+""].concat(emojiNodes(t.length>60?t.slice(0,60)+"…":t));
+}
 function drawTitle(){
   const t=$("#title");if(!S.chat){t.textContent="";return}
   const id=S.chat.other,pm=(S.profiles.get(id)||{}).pm;t.textContent="";
@@ -6111,7 +6157,7 @@ function drawFriends(){
       box.append(h)}
     const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":"")+(phone&&shutG.has(g)?" gc":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
-      el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
+      el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},...(prev(r.id)?prevNodes(r.id):[word[r.st]]))),
       el("span",{class:"rt"},fmtWhen((S.last.get(r.id)||{}).at),S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
     if(S.unread.get(r.id))b.classList.add("unread");
     b.addEventListener("click",()=>openChat(r.id)); // one click or tap opens the chat, on desktop and phone alike (Dan Joakim 5 Nov)
@@ -6194,7 +6240,7 @@ function drawKeyUi(){
   const id=S.chat.other,st=keyRow(id),bad=st==="changed",b=$("#snb"),tx=$("#tx");
   b.classList.toggle("kv",st==="verified");b.classList.toggle("kbad",bad);
   b.querySelector(".mv").textContent=(st==="verified"?tr("keypin.rowVerified"):bad?tr("keypin.rowChanged"):tr("html.menu.verify"))+(st==="verified"?"":" \u203A");
-  $("#snst").textContent=st==="verified"?tr("keypin.stVerified"):bad?tr("keypin.stChanged"):tr("keypin.stUnverified");
+  $("#snst").textContent=st==="verified"?tr(pinsNow()[id]&&pinsNow()[id].via==="invite"?"keypin.stInvite":"keypin.stVerified"):bad?tr("keypin.stChanged"):tr("keypin.stUnverified");
   const ok=$("#snok");ok.hidden=bad;ok.textContent=st==="verified"?tr("keypin.unmark"):tr("keypin.markVerified");ok.dataset.v=st==="verified"?"1":"";
   if(!tx.dataset.ph)tx.dataset.ph=tx.placeholder;
   tx.placeholder=bad?tr("keypin.noSend"):tx.dataset.ph;

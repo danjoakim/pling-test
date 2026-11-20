@@ -57,6 +57,20 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  assert.ok(await A.$(".keyalert"),"still blocked");
  assert.ok(await A.evaluate(()=>document.getElementById("bar").inert),"still locked");
  console.log("5 inconsistent server is never trusted");
+ // 5b. an invitation link's fingerprint: a matching key is remembered as compared; a link that disagrees with the server's key stops the friend
+ await A.evaluate(async()=>{ // start clean: a good key for Bob in the database, no memory of him
+   const id=await PrekCrypto.generateIdentity(),fp=await fpOf(id.pub),d=JSON.parse(localStorage.getItem("mockdb"));
+   const p=d.profiles.find(x=>x.id===S.chat.other);p.pub=id.pub;p.fp=fp;localStorage.setItem("mockdb",JSON.stringify(d));window.__good=fp;
+   pins=PrekKeypin.parsePins("{}");savePins();keyBadIds.clear();keyBadPubs.clear()});
+ await A.evaluate(()=>{pins=PrekKeypin.pinFromInvite(pins,S.chat.other,__good,Date.now());savePins()});
+ await A.evaluate(()=>refresh());await A.waitForTimeout(500);
+ assert.ok(!(await A.$(".keyalert")),"matching link: no warning");assert.ok(/Bekreftet/.test(await A.textContent("#snb .mv")),"row says confirmed");
+ assert.ok(/invitasjonen/.test(await A.textContent("#snst")),"status says via the invitation: "+await A.textContent("#snst"));
+ await A.evaluate(()=>{pins=PrekKeypin.parsePins("{}");savePins();keyBadIds.clear();keyBadPubs.clear()});
+ await A.evaluate(()=>{pins=PrekKeypin.pinFromInvite(pins,S.chat.other,"c".repeat(32),Date.now());savePins()});
+ await A.evaluate(()=>refresh());await A.waitForSelector(".keyalert",{timeout:5000});
+ assert.ok(await A.evaluate(()=>document.getElementById("bar").inert),"a key that does not match the link is stopped");
+ console.log("5b invitation fingerprint checked");
  // 6. logout forgets the in-memory flags
  await A.evaluate(()=>{window.__k=pinKey()});await A.evaluate(()=>doLogout());await A.waitForTimeout(1500);
  assert.ok(await A.evaluate(()=>keyBadIds.size===0&&pins===null),"flags cleared at logout");

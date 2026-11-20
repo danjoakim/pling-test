@@ -414,3 +414,6 @@ html.lys .keyalert .kab2{border-color:#f0b4b4}
 html.lys .keyalert .kab1{background:#2a6fd0}
 html.lys #snb.kv .mv{color:#1c8a37}
 html.lys #snb.kbad .mv{color:#c0392b}
+
+/* Tegnede smilefjes i kompislista: små og stille (ingen «on»-klasse, så ingen animasjon) */
+.conv small .an{width:1.35em;height:1.35em;vertical-align:-.32em}

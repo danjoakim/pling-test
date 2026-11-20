@@ -474,6 +474,7 @@ export const nb = {
   "keypin.noSend": "Stoppet",
   "keypin.rowVerified": "Bekreftet ✓",
   "keypin.rowChanged": "Endret",
+  "keypin.stInvite": "Bekreftet via invitasjonen. Nøkkelen stemte med lenken du fikk.",
   "keypin.stUnverified": "Ikke bekreftet. Nøkkelen er husket på denne enheten, og du får varsel hvis den endres.",
   "keypin.stVerified": "Bekreftet. Du og kompisen din har sammenlignet nummeret.",
   "keypin.stChanged": "Nøkkelen er ikke den samme som sist. Sending er stoppet.",

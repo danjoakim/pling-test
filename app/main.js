@@ -46,15 +46,17 @@ async function checkTransfers(){
    så lenken skal bare deles med den man vil ha som kompis. Tokenet lagres i nettleseren til personen har logget inn og har profil (pling_inv), og slettes når den er brukt. */
 (function(){try{
   const iv=inviteFromHash(location.hash);
-  if(iv.token){localStorage.setItem("pling_inv",iv.token);S.mode="up"}
+  if(iv.token){localStorage.setItem("pling_inv",iv.token);const f=PrekKeypin.inviteFp(location.hash);if(f)localStorage.setItem("pling_inv_fp",f);else localStorage.removeItem("pling_inv_fp");S.mode="up"}
   if(iv.rest!==null)history.replaceState(null,"",location.pathname+location.search+(iv.rest?"#"+iv.rest:""))
 }catch(e){}})();
 async function redeemPending(){
   let t=null;try{t=localStorage.getItem("pling_inv")}catch(e){}
   if(!t)return;
-  try{localStorage.removeItem("pling_inv")}catch(e){}
+  let ifp=null;try{localStorage.removeItem("pling_inv");ifp=localStorage.getItem("pling_inv_fp");localStorage.removeItem("pling_inv_fp")}catch(e){}
   try{
     const r=await q(api.redeemInvite(t),tr("ctx.invitation")),f=r&&r[0];
+    /* Lenken kan bære avtrykket til den som inviterte. Det kom en annen vei enn serveren, så vi husker det som sjekket; avviker nøkkelen serveren gir, stopper nøkkelvarselet (src/keypin.ts). */
+    if(ifp&&f&&f.id){pinsNow();pins=PrekKeypin.pinFromInvite(pins,f.id,ifp,Date.now());savePins()}
     toast(tr("invite.nowFriends",{name:f?f.name:tr("invite.fallbackName")}));await refresh();
   }catch(e){toast(tr("invite.failed"),true)}
 }
@@ -63,7 +65,7 @@ async function redeemCode(txt){
   txt=String(txt||"").trim();if(!txt)return;
   const iv=inviteFromHash(txt.includes("#")?txt.slice(txt.indexOf("#")):"#inv="+txt);
   if(!iv.token)return toast(tr("invite.badCode"),true);
-  try{localStorage.setItem("pling_inv",iv.token)}catch(e){}
+  try{localStorage.setItem("pling_inv",iv.token);const f=txt.includes("#")?PrekKeypin.inviteFp(txt.slice(txt.indexOf("#"))):null;if(f)localStorage.setItem("pling_inv_fp",f);else localStorage.removeItem("pling_inv_fp")}catch(e){}
   await redeemPending();$("#cd2").value="";
 }
 /* Skann kompisens kode (telefon): kameraet leser QR-koden i invitasjonen. Biblioteket lib/jsqr.js lastes først når skanneren åpnes. */
@@ -111,7 +113,7 @@ function drawInvite(){
         const ex=await q(api.createInvite(hs),tr("ctx.createInvite"));
         try{localStorage.setItem(key,JSON.stringify({t:tok,e:ex}))}catch(e){}
       }
-      const link=appUrl()+"#inv="+tok;
+      const link=appUrl()+"#inv="+tok+"&fp="+S.profile.fp;
       box.textContent="";
       const q1=el("div",{class:"qr",id:"invqr"});q1.innerHTML=qrSvg(link);
       const inp=el("input",{id:"invlink",readonly:true,value:link,"aria-label":tr("invite.linkAria")});
@@ -491,6 +493,12 @@ function fmtWhen(ts){
 function applyFilter(){const q=(($("#fq")||{}).value||"").trim().toLowerCase();$("#friends").classList.toggle("srch",!!q);for(const b of document.querySelectorAll("#friends .conv"))b.hidden=!!q&&!b.textContent.toLowerCase().includes(q)}
 function pav(id,st){return avEl(nameOf(id),S.av.get(id),st)}
 function prev(id){return listLine(S.last.get(id))}
+/* Siste melding i lista med våre tegnede figurer (uten animasjon) i stedet for vanlig emoji, så lista ser lik ut som samtalen (Dan 20. nov). Samme regler som listLine ellers. */
+function prevNodes(id){
+  const l=S.last.get(id);if(!l)return[];
+  const t=String(l.t).replace(/\s+/g," ");
+  return [(l.mine?tr("chat.youPrefix"):"")+""].concat(emojiNodes(t.length>60?t.slice(0,60)+"…":t));
+}
 function drawTitle(){
   const t=$("#title");if(!S.chat){t.textContent="";return}
   const id=S.chat.other,pm=(S.profiles.get(id)||{}).pm;t.textContent="";
@@ -520,7 +528,7 @@ function drawFriends(){
       box.append(h)}
     const p=S.profiles.get(r.id)||{},b=el("button",{class:"conv"+(S.chat&&S.chat.other===r.id?" act":"")+(dpFlash.has(r.id)?" dpflash":"")+(phone&&shutG.has(g)?" gc":""),type:"button","data-id":r.id});
     b.append(pav(r.id,r.st),
-      el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},prev(r.id)||word[r.st])),
+      el("span",{class:"t"},el("span",{class:"nl"},el("b",{},nameOf(r.id)),muted(r.id)?el("span",{class:"mu",title:tr("chat.mutedTitle")}," 🔕"):null,p.pm?el("span",{class:"npm"}," – "+p.pm):null),el("small",{},...(prev(r.id)?prevNodes(r.id):[word[r.st]]))),
       el("span",{class:"rt"},fmtWhen((S.last.get(r.id)||{}).at),S.unread.get(r.id)?el("span",{class:"badge",title:tr("friends.unreadTitle")},S.unread.get(r.id)>=20?"20+":String(S.unread.get(r.id))):null,ff(r.st)));
     if(S.unread.get(r.id))b.classList.add("unread");
     b.addEventListener("click",()=>openChat(r.id)); // one click or tap opens the chat, on desktop and phone alike (Dan Joakim 5 Nov)
@@ -603,7 +611,7 @@ function drawKeyUi(){
   const id=S.chat.other,st=keyRow(id),bad=st==="changed",b=$("#snb"),tx=$("#tx");
   b.classList.toggle("kv",st==="verified");b.classList.toggle("kbad",bad);
   b.querySelector(".mv").textContent=(st==="verified"?tr("keypin.rowVerified"):bad?tr("keypin.rowChanged"):tr("html.menu.verify"))+(st==="verified"?"":" \u203A");
-  $("#snst").textContent=st==="verified"?tr("keypin.stVerified"):bad?tr("keypin.stChanged"):tr("keypin.stUnverified");
+  $("#snst").textContent=st==="verified"?tr(pinsNow()[id]&&pinsNow()[id].via==="invite"?"keypin.stInvite":"keypin.stVerified"):bad?tr("keypin.stChanged"):tr("keypin.stUnverified");
   const ok=$("#snok");ok.hidden=bad;ok.textContent=st==="verified"?tr("keypin.unmark"):tr("keypin.markVerified");ok.dataset.v=st==="verified"?"1":"";
   if(!tx.dataset.ph)tx.dataset.ph=tx.placeholder;
   tx.placeholder=bad?tr("keypin.noSend"):tx.dataset.ph;

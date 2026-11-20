@@ -10,7 +10,7 @@
  */
 
 /** What is remembered about one friend: the fingerprint, when we first saw it, and when the two compared numbers (if they did). */
-export interface Pin { fp: string; seen: number; verified?: number }
+export interface Pin { fp: string; seen: number; verified?: number; via?: "invite" }
 export type Pins = Record<string, Pin>
 /** new = seen for the first time (now remembered), ok = same as before, changed = different, or the stated fingerprint is not the key's. */
 export type KeyState = "new" | "ok" | "changed"
@@ -26,7 +26,7 @@ export function parsePins(text: string | null): Pins {
   for (const [id, v] of Object.entries(j as Record<string, unknown>)) {
     const p = v as Partial<Pin> | null;
     if (!p || typeof p.fp !== "string" || !FP.test(p.fp) || typeof p.seen !== "number") continue;
-    out[id] = { fp: p.fp, seen: p.seen, ...(typeof p.verified === "number" ? { verified: p.verified } : {}) };
+    out[id] = { fp: p.fp, seen: p.seen, ...(typeof p.verified === "number" ? { verified: p.verified } : {}), ...(p.via === "invite" ? { via: "invite" as const } : {}) };
   }
   return out;
 }
@@ -54,11 +54,30 @@ export function markVerified(pins: Pins, id: string, now: number): Pins {
   return p ? { ...pins, [id]: { ...p, verified: now } } : pins;
 }
 
+/**
+ * An invitation link can carry the inviter's fingerprint (`#inv=<token>&fp=<32 hex>`). The link reaches the new friend by another road than the
+ * server (sent by message, shown as a QR code), so a key that matches it is checked without anyone comparing numbers. Returns the fingerprint or null.
+ */
+export function inviteFp(hash: string): string | null {
+  const v = new URLSearchParams(hash.replace(/^#/, "")).get("fp");
+  return v && FP.test(v) ? v : null;
+}
+
+/**
+ * Remembers a friend's key from an invitation link: marked as compared (via the link). A key that is already remembered and differs is
+ * not replaced (the change warning stays); the same key is upgraded to compared.
+ */
+export function pinFromInvite(pins: Pins, id: string, fp: string, now: number): Pins {
+  const have = pins[id];
+  if (have && have.fp !== fp) return pins;
+  return { ...pins, [id]: { fp, seen: have ? have.seen : now, verified: now, via: "invite" } };
+}
+
 /** Removes the mark (the person changed their mind). */
 export function clearVerified(pins: Pins, id: string): Pins {
   const p = pins[id];
   if (!p || p.verified === undefined) return pins;
-  const { verified: _v, ...rest } = p;
+  const { verified: _v, via: _w, ...rest } = p;
   return { ...pins, [id]: rest };
 }
 
