@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-KaGmLMNVkTyOR1Ok7o+0fZMqMU36r2tixVhs1yNeMvA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-08ynywhcChNxSWL5gRy6JNKkvaaxuGDnzzP8EjfK9uA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -1099,6 +1099,14 @@ button{font-family:inherit}
 h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.sechd,.ch2,.ch .ti,.grph .gt,.tb,.tbn{font-weight:900}
 /* Titler skrås som logoen (skewX -12, Dan Joakim 20. nov: overskriftene skal ha samme font som logoen). Små etiketter, chat-navn og knapper står rett. */
 h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:italic;letter-spacing:-.01em}
+/* Legg til: e-postfeltet ligger åpent, ingen lenke (Dan 20. nov), og mer luft mellom seksjonene */
+.shell.tab-add .emailtog{display:none!important}
+.shell.tab-add #addfp .eh,.shell.tab-add #addfp .exp,.shell.tab-add #addfp #ferr{display:block}
+.shell.tab-add #addfp .row:not(.coderow){display:flex;gap:12px}
+.shell.tab-add #addfp{gap:14px;padding:4px 20px 24px}
+.shell.tab-add .sechd,.shell.tab-add .ch2{margin:26px 0 6px}
+.shell.tab-add .scanbtn{margin:20px 0 0}
+.shell.tab-add .ptitle{padding-bottom:24px}
 
 </style>
 </head>
@@ -1141,7 +1149,7 @@ h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:ital
     <div class="homebar"><span class="grp">Kompiser</span><button class="glass" id="addf" type="button" aria-expanded="false">+ Legg til kompis</button></div>
     <div class="add" id="addfp" hidden>
      <div class="sechd eh">Legg til med e-post</div>
-     <div class="fine exp">Skriv e-posten til en kompis som har laget konto i Prek!. Personen får en forespørsel som kan godtas eller avslås.</div>
+     <div class="fine exp">Skriv e-posten til en kompis som har konto i Prek!.</div>
      <div class="row"><input id="fe" type="email" placeholder="Kompis' e-post" autocomplete="off" aria-label="Kompis' e-postadresse"><button class="glass sm" id="fadd" type="button">Legg til</button></div>
      <div class="fine err" id="ferr" role="status"></div>
      <div class="sechd ih">Inviter en kompis</div>
@@ -1766,7 +1774,7 @@ var PrekI18n = (() => {
     "html.dp.title": "Spiller to plinger og vibrerer hos mottakeren",
     "html.profile.security": "Sikkerhet",
     "html.home.friendsHeading": "Kompiser",
-    "html.add.explain": "Skriv e-posten til en kompis som har laget konto i Prek!. Personen f\xE5r en foresp\xF8rsel som kan godtas eller avsl\xE5s.",
+    "html.add.explain": "Skriv e-posten til en kompis som har konto i Prek!.",
     "html.menu.hereNow": "Her n\xE5",
     "html.menu.safetyNumber": "Sikkerhetsnummer",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
@@ -2761,7 +2769,7 @@ var PrekShrink = (() => {
     "html.dp.title": "Spiller to plinger og vibrerer hos mottakeren",
     "html.profile.security": "Sikkerhet",
     "html.home.friendsHeading": "Kompiser",
-    "html.add.explain": "Skriv e-posten til en kompis som har laget konto i Prek!. Personen f\xE5r en foresp\xF8rsel som kan godtas eller avsl\xE5s.",
+    "html.add.explain": "Skriv e-posten til en kompis som har konto i Prek!.",
     "html.menu.hereNow": "Her n\xE5",
     "html.menu.safetyNumber": "Sikkerhetsnummer",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
@@ -3920,7 +3928,7 @@ var PrekPreviews = (() => {
     "html.dp.title": "Spiller to plinger og vibrerer hos mottakeren",
     "html.profile.security": "Sikkerhet",
     "html.home.friendsHeading": "Kompiser",
-    "html.add.explain": "Skriv e-posten til en kompis som har laget konto i Prek!. Personen f\xE5r en foresp\xF8rsel som kan godtas eller avsl\xE5s.",
+    "html.add.explain": "Skriv e-posten til en kompis som har konto i Prek!.",
     "html.menu.hereNow": "Her n\xE5",
     "html.menu.safetyNumber": "Sikkerhetsnummer",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
@@ -4688,7 +4696,7 @@ var PrekHelpers = (() => {
     "html.dp.title": "Spiller to plinger og vibrerer hos mottakeren",
     "html.profile.security": "Sikkerhet",
     "html.home.friendsHeading": "Kompiser",
-    "html.add.explain": "Skriv e-posten til en kompis som har laget konto i Prek!. Personen f\xE5r en foresp\xF8rsel som kan godtas eller avsl\xE5s.",
+    "html.add.explain": "Skriv e-posten til en kompis som har konto i Prek!.",
     "html.menu.hereNow": "Her n\xE5",
     "html.menu.safetyNumber": "Sikkerhetsnummer",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
@@ -4890,7 +4898,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="9205c43";
+const PREK_VERSION="0.1.0",PREK_BUILD="d8248f7";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;

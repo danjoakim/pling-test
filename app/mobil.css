@@ -549,3 +549,11 @@ button{font-family:inherit}
 h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.sechd,.ch2,.ch .ti,.grph .gt,.tb,.tbn{font-weight:900}
 /* Titler skrås som logoen (skewX -12, Dan Joakim 20. nov: overskriftene skal ha samme font som logoen). Små etiketter, chat-navn og knapper står rett. */
 h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:italic;letter-spacing:-.01em}
+/* Legg til: e-postfeltet ligger åpent, ingen lenke (Dan 20. nov), og mer luft mellom seksjonene */
+.shell.tab-add .emailtog{display:none!important}
+.shell.tab-add #addfp .eh,.shell.tab-add #addfp .exp,.shell.tab-add #addfp #ferr{display:block}
+.shell.tab-add #addfp .row:not(.coderow){display:flex;gap:12px}
+.shell.tab-add #addfp{gap:14px;padding:4px 20px 24px}
+.shell.tab-add .sechd,.shell.tab-add .ch2{margin:26px 0 6px}
+.shell.tab-add .scanbtn{margin:20px 0 0}
+.shell.tab-add .ptitle{padding-bottom:24px}

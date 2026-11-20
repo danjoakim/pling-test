@@ -388,7 +388,7 @@ export const nb = {
   "html.dp.title": "Spiller to plinger og vibrerer hos mottakeren",
   "html.profile.security": "Sikkerhet",
   "html.home.friendsHeading": "Kompiser",
-  "html.add.explain": "Skriv e-posten til en kompis som har laget konto i Prek!. Personen får en forespørsel som kan godtas eller avslås.",
+  "html.add.explain": "Skriv e-posten til en kompis som har konto i Prek!.",
   "html.menu.hereNow": "Her nå",
   "html.menu.safetyNumber": "Sikkerhetsnummer",
   "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel på telefonen. Er det likt hos begge, kan ingen ha byttet ut nøklene.",
