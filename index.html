@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-/ZSzQSGHltsURUISpCm7v4mGzow4cnuMfNB4Ya1d4jA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-6QF/mUGIrvW9KVf2CDCpqdzIq3eD5doXMtO2DsvTsPY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -1125,6 +1125,12 @@ h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:ital
 .shell.tab-me .mabout .mal{margin-top:10px;padding-right:44px;font-size:14px;line-height:1.35}
 .shell.tab-me .mabout .mai{position:absolute;right:12px;bottom:10px;width:32px;height:32px;border-radius:50%;border:1.5px solid #7db3f2;background:none;color:#7db3f2;font:italic 900 16px Georgia,serif;padding:0;display:grid;place-items:center}
 .mal[hidden]{display:none}
+/* Meg: statusvelgeren (pillen) under den personlige meldingen erstatter de tre statusknappene (Dan 20. nov) */
+.shell.tab-me .mstat{display:none!important}
+.shell.tab-me .stw{display:block;position:relative;right:auto;top:auto;transform:none;margin-top:14px}
+.shell.tab-me .stw .stpill{width:200px}
+html:not(.lys) .shell.tab-me .stw .stpill{background:#12294d;color:#e6f0fb;border:1px solid #2a4468;box-shadow:none}
+html:not(.lys) .shell.tab-me .stw::after{border-color:#8fb0d2}
 
 </style>
 </head>
@@ -4920,7 +4926,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="97368a7";
+const PREK_VERSION="0.1.0",PREK_BUILD="d8c4add";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;

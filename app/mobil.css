@@ -575,3 +575,9 @@ h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:ital
 .shell.tab-me .mabout .mal{margin-top:10px;padding-right:44px;font-size:14px;line-height:1.35}
 .shell.tab-me .mabout .mai{position:absolute;right:12px;bottom:10px;width:32px;height:32px;border-radius:50%;border:1.5px solid #7db3f2;background:none;color:#7db3f2;font:italic 900 16px Georgia,serif;padding:0;display:grid;place-items:center}
 .mal[hidden]{display:none}
+/* Meg: statusvelgeren (pillen) under den personlige meldingen erstatter de tre statusknappene (Dan 20. nov) */
+.shell.tab-me .mstat{display:none!important}
+.shell.tab-me .stw{display:block;position:relative;right:auto;top:auto;transform:none;margin-top:14px}
+.shell.tab-me .stw .stpill{width:200px}
+html:not(.lys) .shell.tab-me .stw .stpill{background:#12294d;color:#e6f0fb;border:1px solid #2a4468;box-shadow:none}
+html:not(.lys) .shell.tab-me .stw::after{border-color:#8fb0d2}
