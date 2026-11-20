@@ -581,3 +581,5 @@ h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:ital
 .shell.tab-me .stw .stpill{width:200px}
 html:not(.lys) .shell.tab-me .stw .stpill{background:#12294d;color:#e6f0fb;border:1px solid #2a4468;box-shadow:none}
 html:not(.lys) .shell.tab-me .stw::after{border-color:#8fb0d2}
+/* Menylinjen nederst står fast på alle tre fanene, også når Meg-siden scroller (Dan 20. nov) */
+.mnav{position:sticky;bottom:0;margin-top:auto;z-index:20}
