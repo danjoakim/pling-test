@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-hL3eS2Yg489XusGTGytQzKZ5cSPnKTEXOwEujpsToQM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-B59c1KWP53TRIP7NWDVGFTa7gSnNsNTzGf6JSf9NDyc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -5078,8 +5078,15 @@ document.addEventListener("pointerdown",ac);
 /* Lyd på/av for hele appen (Meg > Lyd). Lagres bare på enheten. */
 function soundOn(){try{return localStorage.getItem("prek_sound")!=="off"}catch(e){return true}}
 function setSound(on){try{localStorage.setItem("prek_sound",on?"on":"off")}catch(e){}}
-function pling(v,at){if(!soundOn())return;const c=ac();if(c)PrekSound.pling(c,v,at)}
-function dobbelt(){if(!soundOn())return;const c=ac();if(c)PrekSound.dobbelt(c)}
+/* HVORFOR (20. nov): på iPhone står lydmotoren på pause etter en tid i bakgrunnen. En lyd som settes i kø da, spilles først når man trykker på skjermen, ofte minutter etter at meldingen kom
+   (Dan: «plutselig kommer en lyd når jeg går et annet sted i appen»). Nå: vekk motoren; er den ikke våken innen 0,5 s, spilles ingenting senere. */
+const acLive=c=>c.state==="running"||(typeof OfflineAudioContext!=="undefined"&&c instanceof OfflineAudioContext);
+async function acReady(){const c=ac();if(!c)return null;if(acLive(c))return c;try{await Promise.race([c.resume(),new Promise(r=>setTimeout(r,500))])}catch(e){}return acLive(c)?c:null}
+function wakeAc(){try{const c=ac();if(c&&!acLive(c))c.resume()}catch(e){}}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)wakeAc()});window.addEventListener("pageshow",wakeAc);
+function playNow(fn){const c=ac();if(!c)return;if(acLive(c)){fn(c);return}acReady().then(r=>{if(r)fn(r)})}
+function pling(v,at){if(!soundOn())return;playNow(c=>PrekSound.pling(c,v,at))}
+function dobbelt(){if(!soundOn())return;playNow(c=>PrekSound.dobbelt(c))}
 function stor(){const a=$("#app");a.classList.remove("dp");void a.offsetWidth;a.classList.add("dp");dobbelt();try{if(navigator.vibrate)navigator.vibrate([200,60,200,60,200,60,200,60,300])}catch(e){}}
 const {okAv,toAvatar,hue,avEl,initial,initials2}=PrekAvatar;
 const {GIF_MAX,gifEncode,readGif}=PrekGif;
@@ -5109,7 +5116,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="495efbc";
+const PREK_VERSION="0.1.0",PREK_BUILD="4180de4";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -5650,12 +5657,22 @@ async function start(){
   drawInvite();await redeemPending();
   startPresence();
   api.subscribeLive({
-    onMessage:p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id&&S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}refreshSoon()},
+    onMessage:p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id){if(S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}fastAlert(p,r)}refreshSoon()},
     onChange:()=>refreshSoon(),
     onPresence:p=>presEvt(p)});
-  clearInterval(S.poll);S.poll=setInterval(()=>{if(S.user&&!document.hidden)refresh()},8000);
+  clearInterval(S.poll);S.poll=setInterval(()=>{if(S.user&&!document.hidden)refresh()},5000);
   clearInterval(S.pp);S.pp=setInterval(()=>{if(!document.hidden)checkTransfers()},3000);checkTransfers();
   paintAvAll();
+}
+/* Hurtigspor: lyden spilles når beskjeden kommer, uten å vente på henting og dekryptering (som tok 1-3 s eller mer). Selve meldingen kommer som før.
+   dobbeltpling-flagget ligger åpent i raden (brukes også av push); alertDp husker id-en, så den vanlige koden ringer ikke igjen. fastAt hindrer dobbel meldingslyd. */
+let fastAt=0;
+function fastAlert(p,r){
+  if(p.eventType&&p.eventType!=="INSERT")return;
+  if(!S.friends.includes(r.sender))return;
+  if(r.dp){alertDp(r.sender,r.id,r.created_at);return}
+  if(muted(r.sender))return;
+  fastAt=Date.now();pling();
 }
 let rT=0;function refreshSoon(){clearTimeout(rT);rT=setTimeout(refresh,150)}
 
@@ -5771,7 +5788,7 @@ async function loadPreviews(){
     S.unread.set(fid,n);
   }));
   S.firstRef=false;
-  if(more)pling();
+  if(more&&Date.now()-fastAt>6000)pling();
   setTitle();
 }
 /* HVORFOR: dobbeltpling skal fange oppmerksomheten uansett hvor mottakeren er i appen, ikke bare når samtalen er åpen
@@ -5973,7 +5990,7 @@ async function loadMsgs(){
   if(fresh.length){
     const bigs=fresh.filter(m=>m.dp);
     for(const m of bigs)alertDp(S.chat.other,m.id,m.ts);
-    if(!bigs.length&&!muted(S.chat.other))pling();
+    if(!bigs.length&&!muted(S.chat.other)&&Date.now()-fastAt>6000)pling();
   }
 }
 async function loadOlder(){

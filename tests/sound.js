@@ -40,6 +40,24 @@ function peakHz(x,from,to,lo,hi){let best=0,bf=0;for(let f=lo;f<=hi;f+=1){const 
  assert.ok(peak(dbl)<0.99&&peak(dbl)>0.4,"double ping level ok ("+peak(dbl).toFixed(2)+")");
  console.log("2 double ping: bell 1480/1870 Hz amplitudes",bell.map(v=>v.toFixed(3)).join(" / "),", peak",peak(dbl).toFixed(2));
 
+ // 3. a sound is never queued on a paused audio engine (iPhone after background): nothing plays later when it wakes up
+ const late=await p.evaluate(async()=>{
+  // fake audio context: counts how often a sound is built (createGain), accepts everything else
+  let built=0;const chain=new Proxy(function(){},{get:()=>chain,apply:()=>chain,set:()=>true});
+  const mk=(state,resume)=>{const t={state,resume,currentTime:0,destination:chain,sampleRate:44100};
+   return new Proxy(t,{get:(o,k)=>k in o?o[k]:k==="then"?undefined:(k==="createGain"?()=>{built++;return chain}:()=>chain),set:(o,k,v)=>{o[k]=v;return true}})};
+  const fake=mk("suspended",()=>new Promise(()=>{}));AC=fake;
+  pling();await new Promise(r=>setTimeout(r,800));fake.state="running";await new Promise(r=>setTimeout(r,200));
+  const whileDead=built;
+  AC=mk("running",()=>Promise.resolve());pling();
+  const whileLive=built-whileDead;
+  const slow=mk("suspended",()=>new Promise(r=>setTimeout(()=>{slow.state="running";r()},150)));AC=slow;pling();await new Promise(r=>setTimeout(r,400));
+  return {whileDead,whileLive,afterWake:built-whileDead-whileLive}});
+ assert.strictEqual(late.whileDead,0,"no late sound from a paused engine");
+ assert.strictEqual(late.whileLive>0,true,"running engine plays at once");
+ assert.strictEqual(late.afterWake>0,true,"engine that wakes within 0.5 s plays");
+ console.log("3 paused engine: no late sound; running plays at once; quick wake plays");
+
  assert.deepStrictEqual(errs,[],"no page errors");
  console.log("FEIL: ingen");
  await br.close();srv.close();

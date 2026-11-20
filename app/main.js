@@ -280,12 +280,22 @@ async function start(){
   drawInvite();await redeemPending();
   startPresence();
   api.subscribeLive({
-    onMessage:p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id&&S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}refreshSoon()},
+    onMessage:p=>{const r=p&&p.new;if(r&&r.sender&&S.user&&r.sender!==S.user.id){if(S.typ.has(r.sender)){S.typ.delete(r.sender);drawTyping()}fastAlert(p,r)}refreshSoon()},
     onChange:()=>refreshSoon(),
     onPresence:p=>presEvt(p)});
-  clearInterval(S.poll);S.poll=setInterval(()=>{if(S.user&&!document.hidden)refresh()},8000);
+  clearInterval(S.poll);S.poll=setInterval(()=>{if(S.user&&!document.hidden)refresh()},5000);
   clearInterval(S.pp);S.pp=setInterval(()=>{if(!document.hidden)checkTransfers()},3000);checkTransfers();
   paintAvAll();
+}
+/* Hurtigspor: lyden spilles når beskjeden kommer, uten å vente på henting og dekryptering (som tok 1-3 s eller mer). Selve meldingen kommer som før.
+   dobbeltpling-flagget ligger åpent i raden (brukes også av push); alertDp husker id-en, så den vanlige koden ringer ikke igjen. fastAt hindrer dobbel meldingslyd. */
+let fastAt=0;
+function fastAlert(p,r){
+  if(p.eventType&&p.eventType!=="INSERT")return;
+  if(!S.friends.includes(r.sender))return;
+  if(r.dp){alertDp(r.sender,r.id,r.created_at);return}
+  if(muted(r.sender))return;
+  fastAt=Date.now();pling();
 }
 let rT=0;function refreshSoon(){clearTimeout(rT);rT=setTimeout(refresh,150)}
 
@@ -401,7 +411,7 @@ async function loadPreviews(){
     S.unread.set(fid,n);
   }));
   S.firstRef=false;
-  if(more)pling();
+  if(more&&Date.now()-fastAt>6000)pling();
   setTitle();
 }
 /* HVORFOR: dobbeltpling skal fange oppmerksomheten uansett hvor mottakeren er i appen, ikke bare når samtalen er åpen
@@ -603,7 +613,7 @@ async function loadMsgs(){
   if(fresh.length){
     const bigs=fresh.filter(m=>m.dp);
     for(const m of bigs)alertDp(S.chat.other,m.id,m.ts);
-    if(!bigs.length&&!muted(S.chat.other))pling();
+    if(!bigs.length&&!muted(S.chat.other)&&Date.now()-fastAt>6000)pling();
   }
 }
 async function loadOlder(){
