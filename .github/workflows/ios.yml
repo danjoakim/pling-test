@@ -75,6 +75,9 @@ jobs:
           KEY="$HOME/.appstoreconnect/private_keys/AuthKey_$ASC_KEY_ID.p8"
           printf '%s\n' "$ASC_KEY_P8" > "$KEY"
           AUTH="-authenticationKeyPath $KEY -authenticationKeyID $ASC_KEY_ID -authenticationKeyIssuerID $ASC_ISSUER_ID"
+          # remove old "Created via API" development certificates first (Apple allows only a few; every build makes one). Never fails the build.
+          "$RUNNER_TEMP/v/bin/pip" install -q pyjwt cryptography || true
+          "$RUNNER_TEMP/v/bin/python" revoke-old-certs.py "$KEY" || echo "::warning title=certificates::cleanup script failed (build goes on)"
           cd ios/App
           step archive xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -destination generic/platform=iOS -archivePath "$RUNNER_TEMP/Prek.xcarchive" -allowProvisioningUpdates $AUTH DEVELOPMENT_TEAM=$TEAM CODE_SIGN_STYLE=Automatic archive
           step diag bash -c 'A="$RUNNER_TEMP/Prek.xcarchive/Products/Applications/App.app"; echo "--- signed entitlements"; codesign -d --entitlements - "$A" 2>&1; echo "--- bundle sounds"; ls -la "$A" | grep -iE "ring|\.caf|\.wav" || echo "NO ring.caf IN BUNDLE"; afinfo "$A/ring.caf" 2>&1 | head -8; echo "--- profile"; security cms -D -i "$A/embedded.mobileprovision" 2>/dev/null | grep -A1 -E "aps-environment|time-sensitive|ProfileDistributionType|Name" | head -30' || true
