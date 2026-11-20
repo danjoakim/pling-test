@@ -557,3 +557,11 @@ h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:ital
 .shell.tab-add .sechd,.shell.tab-add .ch2{margin:26px 0 6px}
 .shell.tab-add .scanbtn{margin:20px 0 0}
 .shell.tab-add .ptitle{padding-bottom:24px}
+/* Mer luft på alle sider på telefon (Dan 20. nov: det blir ikke så trang romfølelse). Ligger sist, så den vinner over tidligere verdier. */
+.conv,html.lys .conv{padding:14px 20px;gap:16px;min-height:84px}
+.shell.tab-me #prof{gap:16px;padding:24px 20px calc(env(safe-area-inset-bottom,0px) + 24px)}
+.shell.tab-me #prof .grp{margin:24px 0 2px}
+#log{padding:18px 16px;gap:6px}
+.m,html.lys .m{padding:11px 15px;margin-top:8px}
+.pg .infoh,html.lys .pg .infoh{padding-bottom:22px}
+.pg .pgf{gap:10px}.pg .pgblk{gap:14px}

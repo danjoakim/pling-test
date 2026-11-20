@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-08ynywhcChNxSWL5gRy6JNKkvaaxuGDnzzP8EjfK9uA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-d5NMAqYKEYYEVhZ2TqoC4IcewI02wLLSKUv5P05+9cw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -1107,6 +1107,14 @@ h1,h2,h3,.ptitle,.pgt,.pgh2,.sc h1,.empty h1,.infot h3,.grph .gt{font-style:ital
 .shell.tab-add .sechd,.shell.tab-add .ch2{margin:26px 0 6px}
 .shell.tab-add .scanbtn{margin:20px 0 0}
 .shell.tab-add .ptitle{padding-bottom:24px}
+/* Mer luft på alle sider på telefon (Dan 20. nov: det blir ikke så trang romfølelse). Ligger sist, så den vinner over tidligere verdier. */
+.conv,html.lys .conv{padding:14px 20px;gap:16px;min-height:84px}
+.shell.tab-me #prof{gap:16px;padding:24px 20px calc(env(safe-area-inset-bottom,0px) + 24px)}
+.shell.tab-me #prof .grp{margin:24px 0 2px}
+#log{padding:18px 16px;gap:6px}
+.m,html.lys .m{padding:11px 15px;margin-top:8px}
+.pg .infoh,html.lys .pg .infoh{padding-bottom:22px}
+.pg .pgf{gap:10px}.pg .pgblk{gap:14px}
 
 </style>
 </head>
@@ -4898,7 +4906,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="d8248f7";
+const PREK_VERSION="0.1.0",PREK_BUILD="182c876";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
