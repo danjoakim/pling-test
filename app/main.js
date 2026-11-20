@@ -205,7 +205,7 @@ function pageAbout(){
     const cnt=el("div",{class:"pgcnt"});const pc=()=>{cnt.textContent=t.value.length+"/200"};pc();t.addEventListener("input",pc);
     const msg=el("div",{class:"fine err"}),go=el("button",{class:"glass pgprim",type:"button"},tr("me.save"));
     go.onclick=async()=>{go.disabled=true;await saveProfile({about:t.value.trim().slice(0,200)||null});go.disabled=false;if(S.paintAbout)S.paintAbout();closeInfo()};
-    body.append(t,cnt,el("div",{class:"mal",id:"aboutnote",hidden:true},tr("me.aboutNote")),el("button",{type:"button",class:"mai",id:"aboutinfo","aria-label":tr("me.aboutInfo"),"aria-expanded":"false",onclick:()=>{const n=$("#aboutnote"),sh=n.hidden;n.hidden=!sh;$("#aboutinfo").setAttribute("aria-expanded",String(sh))}},"i"),el("div",{class:"pgsp"}),go,msg);
+    body.append(t,cnt,el("div",{class:"mal"},tr("me.aboutNote")),el("div",{class:"pgsp"}),go,msg);
   });
 }
 function pageDevices(){
@@ -937,7 +937,11 @@ function wire(){
     row("M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM11 18h2",tr("me.rowDevices"),"",()=>pageDevices());
     row("M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14.3 3h-4l-.3 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2l.3 2.6h4l.3-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z",tr("me.rowSettings"),"",()=>pageSettings());
     row("M10 4H5v16h5M15 8l4 4-4 4M19 12H9",tr("common.logout"),"",doLogout);
-    const ab=el("div",{class:"mnew mabout"},el("div",{class:"mah"},el("b",{},tr("me.about")),el("button",{type:"button",class:"mae",onclick:()=>pageAbout()},tr("me.aboutEdit"))),el("p",{class:"mat",id:"abouttxt"}),el("div",{class:"mal"},tr("me.aboutNote")));
+    const ab=el("div",{class:"mnew mabout"},el("div",{class:"mah"},el("b",{},tr("me.about")),el("button",{type:"button",class:"mae",onclick:()=>pageAbout()},tr("me.aboutEdit"))),el("p",{class:"mat",id:"abouttxt"}),el("button",{type:"button",class:"mai",id:"aboutinfo","aria-label":tr("me.aboutInfo"),"aria-expanded":"false"},"i"),el("div",{class:"maipop",id:"aboutpop",role:"note",hidden:true},tr("me.aboutNote")));
+    {const ai=ab.querySelector("#aboutinfo"),ap=ab.querySelector("#aboutpop");
+      const shut=()=>{ap.hidden=true;ai.setAttribute("aria-expanded","false")};
+      ai.onclick=e=>{e.stopPropagation();const o=ap.hidden;ap.hidden=!o;ai.setAttribute("aria-expanded",String(o))};
+      document.addEventListener("click",e=>{if(!ap.hidden&&!ap.contains(e.target))shut()})}
     stat.after(rows);rows.after(ab);
     S.paintAbout=()=>{const t=$("#abouttxt");if(!t)return;const a=S.profile&&S.profile.about;t.textContent=a||tr("me.aboutEmpty");t.classList.toggle("empty",!a)};
   }
