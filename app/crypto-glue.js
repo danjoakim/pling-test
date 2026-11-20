@@ -37,4 +37,13 @@ async function adoptIdentity(id){
 }
 const pairFresh=r=>Date.now()-new Date(r.created_at).getTime()<10*60*1000;
 function qrSvg(text){const qr=qrcode(0,"M");qr.addData(text);qr.make();return qr.createSvgTag({cellSize:5,margin:0,scalable:true})}
-const download=(name,text)=>{const a=el("a",{href:URL.createObjectURL(new Blob([text],{type:"text/plain"})),download:name});document.body.append(a);a.click();a.remove()};
+// Phone app (WKWebView) ignores <a download>: there the share sheet is used (Files, Mail, copy), and as a last resort the text is copied.
+const download=async(name,text)=>{
+  const cap=window.Capacitor;
+  if(cap&&cap.isNativePlatform&&cap.isNativePlatform()){
+    try{const f=new File([text],name,{type:"text/plain"});
+      if(navigator.share){await navigator.share(navigator.canShare&&navigator.canShare({files:[f]})?{files:[f]}:{text});return}
+    }catch(e){if(e&&e.name==="AbortError")return}
+    try{await navigator.clipboard.writeText(text);toast(tr("chat.dlCopied"));return}catch(e){}
+  }
+  const a=el("a",{href:URL.createObjectURL(new Blob([text],{type:"text/plain"})),download:name});document.body.append(a);a.click();a.remove()};

@@ -74,13 +74,11 @@
     <div class="xgrp"><div class="mlab">{{html.menu.convLabel}}</div>
      <div class="mcard"><label class="xrow msel" id="exrow"><span class="mtx"><span class="dsk fine">{{html.menu.expiryLabel}}</span><span class="mob">{{html.menu.expiryShort}}</span></span>
      <select id="ex" aria-label="{{html.ex.aria}}"><option value="0">{{html.ex.opt0}}</option><option value="1">{{html.ex.opt1}}</option><option value="7">{{html.ex.opt7}}</option><option value="30">{{html.ex.opt30}}</option></select></label>
-     <button class="glass xrow" id="bmu" type="button">{{mute.muteButton}}</button></div>
+     <button class="glass xrow" id="bmu" type="button">{{mute.muteButton}}</button>
+     <button class="glass xrow" id="bd" type="button">{{chat.export}}</button></div>
     </div>
-    <div class="xgrp"><div class="mlab">{{html.menu.toolsLabel}}</div>
-     <div class="mcard"><button class="glass xrow" id="bd" type="button">{{img.download}}</button></div>
-    </div>
-    <div class="xgrp"><div class="mlab">{{html.menu.dangerLabel}}</div>
-     <div class="mcard"><button class="glass xrow red" id="bx" type="button">{{chat.deleteMine}}</button><button class="glass xrow red" id="bfr" type="button">{{chat.removeFriend}}</button><button class="glass xrow red" id="bbl" type="button">{{chat.block}}</button></div>
+    <div class="xgrp xdanger">
+     <div class="mcard"><button class="glass xrow red" id="bx" type="button"><span class="xt"><span class="xl">{{chat.deleteMine}}</span><span class="xs">{{html.menu.hintDeleteMine}}</span></span></button><button class="glass xrow red" id="bfr" type="button"><span class="xt"><span class="xl">{{chat.removeFriend}}</span><span class="xs">{{html.menu.hintRemove}}</span></span></button><button class="glass xrow red" id="bbl" type="button"><span class="xt"><span class="xl">{{chat.block}}</span><span class="xs">{{html.menu.hintBlock}}</span></span></button></div>
     </div>
     <div class="fine" id="fp"></div>
    </div>

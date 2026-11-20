@@ -994,9 +994,9 @@ function wire(){
     try{await q(api.setChatExpiry(cid,v),tr("ctx.changeExpiry"));S.exp.set(cid,v);drawExp();toast(v?tr("exp.on",{when:daysText(v)}):tr("exp.off"))}
     catch(e){fail(e);drawExp()}
   });
-  const sure=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
-    if(!s){s=true;btn.textContent=tr("common.sure");t=setTimeout(()=>{s=false;btn.textContent=label},3500);return}
-    clearTimeout(t);s=false;btn.textContent=label;fn()})};
+  const sure=(btn,label,fn)=>{let s=false,t;const L=btn.querySelector(".xl")||btn;btn.addEventListener("click",()=>{
+    if(!s){s=true;L.textContent=tr("common.sure");t=setTimeout(()=>{s=false;L.textContent=label},3500);return}
+    clearTimeout(t);s=false;L.textContent=label;fn()})};
   sure($("#bx"),tr("chat.deleteMine"),async()=>{try{
     const mine=S.msgs.filter(m=>m.mine&&m.img).map(m=>m.img.p);
     if(mine.length)await api.removeFiles(mine);

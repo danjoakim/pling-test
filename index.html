@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-YZ6jA/qldXhk+rQC9dfC7FPj+tombvoVFkFRyQBu1Sg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-hL3eS2Yg489XusGTGytQzKZ5cSPnKTEXOwEujpsToQM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -116,7 +116,7 @@ button.sm{padding:5px 10px;font-size:13px}
 .pr .more{font-size:12px;color:var(--mut)}
 .menu{flex:none;max-height:60%;overflow:auto;display:grid;gap:12px;padding:12px;background:#0f1d44;border-bottom:1px solid var(--line)}
 .who{display:grid;gap:2px}
-.mlab,#snb,.mob,.mst{display:none}
+.mlab,#snb,.mob,.mst,.xs{display:none}
 .xgrp{display:contents}
 .mcard{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .mcard .snbox,.msel{flex:1 1 100%}
@@ -1192,6 +1192,11 @@ html.lys .menu .xrow.red{color:#c0392b}html.lys .menu .xrow.red::before{backgrou
 .menu #bfr{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21a8 8 0 0 1 16 0'/%3E%3C/svg%3E")}
 .menu #bbl{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M5.6 5.6l12.8 12.8'/%3E%3C/svg%3E")}
 .menu .mtx{white-space:nowrap}
+.menu .xdanger{margin-top:26px}
+.menu .xt{display:flex;flex-direction:column;gap:2px;line-height:1.25;text-align:left}
+.menu .xs{display:block;font-size:13px;color:#6f8fbd}
+html.lys .menu .xs{color:#5b7a9e}
+.menu .xrow.red{min-height:72px;padding-top:10px;padding-bottom:10px}
 html.lys .menu .pav{border:0!important;box-shadow:none!important}
 .menu .mv{margin-left:auto;color:#8fb0dc;font-size:15px}
 html.lys .menu .mv{color:#4d6f93}
@@ -1314,13 +1319,11 @@ html:not(.lys) .avs.cx{background:#14294a!important}
     <div class="xgrp"><div class="mlab">Samtale</div>
      <div class="mcard"><label class="xrow msel" id="exrow"><span class="mtx"><span class="dsk fine">Utløp for nye meldinger i samtalen (gjelder begge)</span><span class="mob">Meldinger utløper</span></span>
      <select id="ex" aria-label="Utløp for nye meldinger i samtalen (gjelder begge)"><option value="0">Utløper ikke</option><option value="1">Etter 1 dag</option><option value="7">Etter 7 dager</option><option value="30">Etter 30 dager</option></select></label>
-     <button class="glass xrow" id="bmu" type="button">Demp</button></div>
+     <button class="glass xrow" id="bmu" type="button">Demp</button>
+     <button class="glass xrow" id="bd" type="button">Eksporter samtalen</button></div>
     </div>
-    <div class="xgrp"><div class="mlab">Verktøy</div>
-     <div class="mcard"><button class="glass xrow" id="bd" type="button">Last ned</button></div>
-    </div>
-    <div class="xgrp"><div class="mlab">Fare</div>
-     <div class="mcard"><button class="glass xrow red" id="bx" type="button">Slett mine meldinger</button><button class="glass xrow red" id="bfr" type="button">Fjern kompis</button><button class="glass xrow red" id="bbl" type="button">Blokker</button></div>
+    <div class="xgrp xdanger">
+     <div class="mcard"><button class="glass xrow red" id="bx" type="button"><span class="xt"><span class="xl">Slett mine meldinger</span><span class="xs">Fjerner dine meldinger hos begge to.</span></span></button><button class="glass xrow red" id="bfr" type="button"><span class="xt"><span class="xl">Fjern kompis</span><span class="xs">Dere er ikke lenger kompiser. Dere kan legge hverandre til igjen.</span></span></button><button class="glass xrow red" id="bbl" type="button"><span class="xt"><span class="xl">Blokker</span><span class="xs">Fjerner kompisen og stopper kontakt fra vedkommende.</span></span></button></div>
     </div>
     <div class="fine" id="fp"></div>
    </div>
@@ -1923,8 +1926,11 @@ var PrekI18n = (() => {
     "html.menu.safetyNumber": "Sikkerhetsnummer",
     "html.menu.secLabel": "Sikkerhet",
     "html.menu.convLabel": "Samtale",
-    "html.menu.toolsLabel": "Verkt\xF8y",
-    "html.menu.dangerLabel": "Fare",
+    "html.menu.hintDeleteMine": "Fjerner dine meldinger hos begge to.",
+    "html.menu.hintRemove": "Dere er ikke lenger kompiser. Dere kan legge hverandre til igjen.",
+    "html.menu.hintBlock": "Fjerner kompisen og stopper kontakt fra vedkommende.",
+    "chat.export": "Eksporter samtalen",
+    "chat.dlCopied": "Samtalen er kopiert. Lim den inn der du vil ta vare p\xE5 den.",
     "html.menu.verify": "Bekreft",
     "html.menu.expiryShort": "Meldinger utl\xF8per",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
@@ -2931,8 +2937,11 @@ var PrekShrink = (() => {
     "html.menu.safetyNumber": "Sikkerhetsnummer",
     "html.menu.secLabel": "Sikkerhet",
     "html.menu.convLabel": "Samtale",
-    "html.menu.toolsLabel": "Verkt\xF8y",
-    "html.menu.dangerLabel": "Fare",
+    "html.menu.hintDeleteMine": "Fjerner dine meldinger hos begge to.",
+    "html.menu.hintRemove": "Dere er ikke lenger kompiser. Dere kan legge hverandre til igjen.",
+    "html.menu.hintBlock": "Fjerner kompisen og stopper kontakt fra vedkommende.",
+    "chat.export": "Eksporter samtalen",
+    "chat.dlCopied": "Samtalen er kopiert. Lim den inn der du vil ta vare p\xE5 den.",
     "html.menu.verify": "Bekreft",
     "html.menu.expiryShort": "Meldinger utl\xF8per",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
@@ -4102,8 +4111,11 @@ var PrekPreviews = (() => {
     "html.menu.safetyNumber": "Sikkerhetsnummer",
     "html.menu.secLabel": "Sikkerhet",
     "html.menu.convLabel": "Samtale",
-    "html.menu.toolsLabel": "Verkt\xF8y",
-    "html.menu.dangerLabel": "Fare",
+    "html.menu.hintDeleteMine": "Fjerner dine meldinger hos begge to.",
+    "html.menu.hintRemove": "Dere er ikke lenger kompiser. Dere kan legge hverandre til igjen.",
+    "html.menu.hintBlock": "Fjerner kompisen og stopper kontakt fra vedkommende.",
+    "chat.export": "Eksporter samtalen",
+    "chat.dlCopied": "Samtalen er kopiert. Lim den inn der du vil ta vare p\xE5 den.",
     "html.menu.verify": "Bekreft",
     "html.menu.expiryShort": "Meldinger utl\xF8per",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
@@ -4882,8 +4894,11 @@ var PrekHelpers = (() => {
     "html.menu.safetyNumber": "Sikkerhetsnummer",
     "html.menu.secLabel": "Sikkerhet",
     "html.menu.convLabel": "Samtale",
-    "html.menu.toolsLabel": "Verkt\xF8y",
-    "html.menu.dangerLabel": "Fare",
+    "html.menu.hintDeleteMine": "Fjerner dine meldinger hos begge to.",
+    "html.menu.hintRemove": "Dere er ikke lenger kompiser. Dere kan legge hverandre til igjen.",
+    "html.menu.hintBlock": "Fjerner kompisen og stopper kontakt fra vedkommende.",
+    "chat.export": "Eksporter samtalen",
+    "chat.dlCopied": "Samtalen er kopiert. Lim den inn der du vil ta vare p\xE5 den.",
     "html.menu.verify": "Bekreft",
     "html.menu.expiryShort": "Meldinger utl\xF8per",
     "html.menu.safetyHint": "Sammenlign nummeret med kompisen din, for eksempel p\xE5 telefonen. Er det likt hos begge, kan ingen ha byttet ut n\xF8klene.",
@@ -5042,7 +5057,16 @@ async function adoptIdentity(id){
 }
 const pairFresh=r=>Date.now()-new Date(r.created_at).getTime()<10*60*1000;
 function qrSvg(text){const qr=qrcode(0,"M");qr.addData(text);qr.make();return qr.createSvgTag({cellSize:5,margin:0,scalable:true})}
-const download=(name,text)=>{const a=el("a",{href:URL.createObjectURL(new Blob([text],{type:"text/plain"})),download:name});document.body.append(a);a.click();a.remove()};
+// Phone app (WKWebView) ignores <a download>: there the share sheet is used (Files, Mail, copy), and as a last resort the text is copied.
+const download=async(name,text)=>{
+  const cap=window.Capacitor;
+  if(cap&&cap.isNativePlatform&&cap.isNativePlatform()){
+    try{const f=new File([text],name,{type:"text/plain"});
+      if(navigator.share){await navigator.share(navigator.canShare&&navigator.canShare({files:[f]})?{files:[f]}:{text});return}
+    }catch(e){if(e&&e.name==="AbortError")return}
+    try{await navigator.clipboard.writeText(text);toast(tr("chat.dlCopied"));return}catch(e){}
+  }
+  const a=el("a",{href:URL.createObjectURL(new Blob([text],{type:"text/plain"})),download:name});document.body.append(a);a.click();a.remove()};
 
 const {$,el,toast,fail,q}=PrekDom;
 const {EMO,EMO_LC,EMO_RE,EMO_CS,EMO_CS_RE,emoji}=PrekEmoji;
@@ -5085,7 +5109,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="790a529";
+const PREK_VERSION="0.1.0",PREK_BUILD="495efbc";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -6340,9 +6364,9 @@ function wire(){
     try{await q(api.setChatExpiry(cid,v),tr("ctx.changeExpiry"));S.exp.set(cid,v);drawExp();toast(v?tr("exp.on",{when:daysText(v)}):tr("exp.off"))}
     catch(e){fail(e);drawExp()}
   });
-  const sure=(btn,label,fn)=>{let s=false,t;btn.addEventListener("click",()=>{
-    if(!s){s=true;btn.textContent=tr("common.sure");t=setTimeout(()=>{s=false;btn.textContent=label},3500);return}
-    clearTimeout(t);s=false;btn.textContent=label;fn()})};
+  const sure=(btn,label,fn)=>{let s=false,t;const L=btn.querySelector(".xl")||btn;btn.addEventListener("click",()=>{
+    if(!s){s=true;L.textContent=tr("common.sure");t=setTimeout(()=>{s=false;L.textContent=label},3500);return}
+    clearTimeout(t);s=false;L.textContent=label;fn()})};
   sure($("#bx"),tr("chat.deleteMine"),async()=>{try{
     const mine=S.msgs.filter(m=>m.mine&&m.img).map(m=>m.img.p);
     if(mine.length)await api.removeFiles(mine);

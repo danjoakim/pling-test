@@ -637,6 +637,11 @@ html.lys .menu .xrow.red{color:#c0392b}html.lys .menu .xrow.red::before{backgrou
 .menu #bfr{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21a8 8 0 0 1 16 0'/%3E%3C/svg%3E")}
 .menu #bbl{--pi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M5.6 5.6l12.8 12.8'/%3E%3C/svg%3E")}
 .menu .mtx{white-space:nowrap}
+.menu .xdanger{margin-top:26px}
+.menu .xt{display:flex;flex-direction:column;gap:2px;line-height:1.25;text-align:left}
+.menu .xs{display:block;font-size:13px;color:#6f8fbd}
+html.lys .menu .xs{color:#5b7a9e}
+.menu .xrow.red{min-height:72px;padding-top:10px;padding-bottom:10px}
 html.lys .menu .pav{border:0!important;box-shadow:none!important}
 .menu .mv{margin-left:auto;color:#8fb0dc;font-size:15px}
 html.lys .menu .mv{color:#4d6f93}
