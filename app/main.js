@@ -103,8 +103,14 @@ function drawInvite(){
   const box=$("#invbox");if(!box)return;box.textContent="";
   const mk=el("button",{class:"glass sm",id:"mkinv",type:"button",onclick:async()=>{
     try{
-      const tok=b64url(crypto.getRandomValues(new Uint8Array(16))),hs=await PrekCrypto.inviteHash(tok);
-      await q(api.createInvite(hs),tr("ctx.createInvite"));
+      /* Gjenbruk lenken fra sist så lenge den er gyldig (over 1 time igjen), ellers lages én ny. */
+      const key="pling_myinv_"+(S.user&&S.user.id);let tok=null;
+      try{const o=JSON.parse(localStorage.getItem(key)||"null");if(o&&o.t&&o.e&&new Date(o.e).getTime()>Date.now()+36e5)tok=o.t}catch(e){}
+      if(!tok){
+        tok=b64url(crypto.getRandomValues(new Uint8Array(16)));const hs=await PrekCrypto.inviteHash(tok);
+        const ex=await q(api.createInvite(hs),tr("ctx.createInvite"));
+        try{localStorage.setItem(key,JSON.stringify({t:tok,e:ex}))}catch(e){}
+      }
       const link=appUrl()+"#inv="+tok;
       box.textContent="";
       const q1=el("div",{class:"qr",id:"invqr"});q1.innerHTML=qrSvg(link);
@@ -115,7 +121,7 @@ function drawInvite(){
       if(!navigator.share)row.classList.add("noshare");
       if(navigator.share)row.append(el("button",{class:"glass sm",type:"button",onclick:()=>navigator.share({title:"Prek!",text:tr("invite.shareText"),url:link}).catch(()=>{})},el("span",{class:"shic","aria-hidden":"true"}),tr("nav.shareLink")));
       box.append(q1,el("div",{class:"scantxt"},tr("nav.scanText")),inp,row,el("div",{class:"fine"},tr("invite.validity")),
-        el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(api.revokeInvites(),tr("ctx.revokeInvites"));toast(tr("invite.revoked",{n}));drawInvite()}catch(e){fail(e)}}},tr("invite.revokeAll")));
+        el("button",{class:"llink",type:"button",onclick:async()=>{try{const n=await q(api.revokeInvites(),tr("ctx.revokeInvites"));try{localStorage.removeItem("pling_myinv_"+(S.user&&S.user.id))}catch(e){}toast(tr("invite.revoked",{n}));drawInvite()}catch(e){fail(e)}}},tr("invite.revokeAll")));
     }catch(e){fail(e)}
   }},tr("invite.create"));
   box.append(el("div",{class:"fine"},tr("invite.orSendLink")),mk);
