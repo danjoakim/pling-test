@@ -383,7 +383,7 @@ export const nb = {
   "html.ab.title": "Send et bilde",
   "html.cb.aria": "Ta bilde med kameraet",
   "html.cb.title": "Ta bilde med kameraet",
-  "html.tx.placeholder": "Skriv en melding …",
+  "html.tx.placeholder": "Hva skjer?",
   "html.tx.aria": "Melding",
   "html.dp.title": "Spiller to plinger og vibrerer hos mottakeren",
   "html.profile.security": "Sikkerhet",

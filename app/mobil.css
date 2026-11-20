@@ -414,10 +414,15 @@ html.lys .ch{background:linear-gradient(#d9ecfd,#bcd9f3)}
 html.lys .bar{background:none}
 .bar .plusb{display:grid;place-items:center;order:1;flex:none;width:48px;height:48px;padding:0;border-radius:50%;border:0;background:#e3eef9!important;box-shadow:none;color:#2a5fb8}
 .plusb svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
-.bar #ab,.bar #cb,.bar #dp{display:none!important}
+.bar #ab,.bar #cb{display:none!important}
+/* Bjella (dobbeltpling) rett ved siden av Send, utenfor skrivefeltet (Dan 20. nov). Teksten (nedtelling) skjules, ikonet tegnes med maske. */
+.bar #dp{display:block!important;order:4;flex:none;position:relative;width:46px;height:46px;min-width:46px;min-height:46px;padding:0;border-radius:50%;border:1.5px solid #a6ff3d;background:#17335f!important;box-shadow:none;font-size:0;color:#d9ffa6}
+.bar #dp::before{content:"";position:absolute;inset:0;margin:auto;width:24px;height:24px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4'/%3E%3C/svg%3E") center/contain no-repeat}
+.bar #dp:disabled{opacity:.45}
+html.lys .bar #dp{background:#eef7e2!important;color:#3d6b00;border-color:#7cc400}
 .bar input#tx,.win .bar input#tx{order:2;flex:1 1 0;height:50px;border-radius:25px;border:1px solid #c5ddf2;background:#fff;padding:0 52px 0 18px;font-size:17px;color:#10304f}
 .bar #eb{order:3;flex:none;width:44px;min-width:44px;margin:0 6px 0 -58px;color:#1f5fbf;z-index:1;position:relative}
-.bar #sd{order:4;flex:none;width:50px;height:50px;min-width:50px;min-height:50px;border-radius:50%;border:0;background:linear-gradient(#4f93e0,#2a5fb8)!important;color:#fff;box-shadow:none;font-size:0;position:relative}
+.bar #sd{order:5;flex:none;width:50px;height:50px;min-width:50px;min-height:50px;border-radius:50%;border:0;background:linear-gradient(#4f93e0,#2a5fb8)!important;color:#fff;box-shadow:none;font-size:0;position:relative}
 .bar #sd::before{content:"";position:absolute;inset:0;margin:auto;width:24px;height:24px;background:#fff;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='M3 11.5L21 3l-5.5 18-4-7.5z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='M3 11.5L21 3l-5.5 18-4-7.5z'/%3E%3C/svg%3E") center/contain no-repeat;font-size:0}
 .plusm{display:flex;position:absolute;left:10px;bottom:calc(100% - 4px);flex-direction:column;min-width:220px;padding:6px;border-radius:18px;background:#fff;border:1px solid #c5ddf2;box-shadow:0 8px 24px rgba(16,48,79,.2);z-index:5}
 .plusm button{min-height:48px;padding:0 14px;border:0;background:none;text-align:left;font:500 16px var(--ui);color:#10304f;border-radius:12px}
