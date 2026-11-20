@@ -611,7 +611,7 @@ function drawKeyUi(){
   const id=S.chat.other,st=keyRow(id),bad=st==="changed",b=$("#snb"),tx=$("#tx");
   b.classList.toggle("kv",st==="verified");b.classList.toggle("kbad",bad);
   b.querySelector(".mv").textContent=(st==="verified"?tr("keypin.rowVerified"):bad?tr("keypin.rowChanged"):tr("html.menu.verify"))+(st==="verified"?"":" \u203A");
-  $("#snst").textContent=st==="verified"?tr(pinsNow()[id]&&pinsNow()[id].via==="invite"?"keypin.stInvite":"keypin.stVerified"):bad?tr("keypin.stChanged"):tr("keypin.stUnverified");
+  $("#snst").textContent=st==="verified"?(pinsNow()[id]&&pinsNow()[id].via==="invite"?tr("keypin.stInvite"):tr("keypin.stVerified")):bad?tr("keypin.stChanged"):tr("keypin.stUnverified");
   const ok=$("#snok");ok.hidden=bad;ok.textContent=st==="verified"?tr("keypin.unmark"):tr("keypin.markVerified");ok.dataset.v=st==="verified"?"1":"";
   if(!tx.dataset.ph)tx.dataset.ph=tx.placeholder;
   tx.placeholder=bad?tr("keypin.noSend"):tx.dataset.ph;

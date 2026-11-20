@@ -44,7 +44,8 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
 
  // 4. invite: link has a token, server only has its SHA-256
  await A.keyboard.press("Escape");if(!(await A.isVisible("#addfp")))await A.click("#addf");await A.click("#mkinv");await A.waitForSelector("#invlink");
- const link=await A.inputValue("#invlink");const tok=link.split("#inv=")[1];assert.ok(tok&&tok.length>=20,"token in link");
+ const link=await A.inputValue("#invlink");const tok=link.split("#inv=")[1].split("&")[0];assert.ok(tok&&tok.length>=20,"token in link");
+ assert.strictEqual(link.split("&fp=")[1],await A.evaluate(()=>S.profile.fp),"the link carries the inviter's fingerprint");
  const stored=await A.evaluate(()=>JSON.parse(localStorage.getItem("mockdb")).invites.map(i=>i.hash));
  const want=await A.evaluate(async t=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,"0")).join(""),tok);
  assert.deepStrictEqual(stored,[want],"server holds only the hash of the token");
