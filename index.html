@@ -2,7 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-wX+YAE3Lwey3qc01VLO4ULD48gBPaixzIQN1cnnr0r8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-db1VfiY0jc8Nnpd72uAC/QLV8lrLdZcjzRa8h1Hkpw8=' 'sha256-mrCHnqyz4yyMzT7OUlcCPlevhmsS77bByGnYq7AD6l8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: https://frvnbcltyvcnyympmjua.supabase.co wss://frvnbcltyvcnyympmjua.supabase.co ipc: http://ipc.localhost; font-src 'self' data:; object-src 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>Prek! testside</title>
 <script>(function(){var t="auto";try{t=localStorage.getItem("pling_theme")||"auto"}catch(e){}
@@ -5368,7 +5368,7 @@ const {applyPresenceEvent,presenceFromRows,trackPlan,typingToSend,typingShown}=P
 const {dmChats,unreadCount,shouldRing,dpCandidate,dpDecision,freshMessages}=PrekUnread;
 const {inviteFromHash,b64url,isMuted,withMuted,daysText,appBase,externalLink}=PrekHelpers;
 const appUrl=()=>appBase(location); // where links to this app point (the web address, also inside the desktop app)
-const PREK_VERSION="0.1.0",PREK_BUILD="289203a";
+const PREK_VERSION="0.1.0",PREK_BUILD="2cb4f27";
 if(window.__TAURI_INTERNALS__)document.documentElement.classList.add("desk");
 if(window.__TAURI_INTERNALS__)document.addEventListener("click",e=>{
   const a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
@@ -6520,7 +6520,8 @@ async function initPush(){
   try{
     if(!pushWired){pushWired=true;
       pn.addListener("registration",t=>{const tok=t&&t.value;if(!tok||!S.user)return;try{localStorage.setItem(pushKey,tok)}catch(e){}
-        api.savePushToken(S.user.id,tok)});
+        /* Spørringen sendes først når noen venter på den (Query er PromiseLike). Uten Promise.resolve ble tokenet aldri lagret (feil fra 0.1.20, Dan 21. nov: ingen push). */
+        Promise.resolve(api.savePushToken(S.user.id,tok)).catch(()=>{})});
       pn.addListener("pushNotificationActionPerformed",a=>{const d=a&&a.notification&&a.notification.data;if(d&&d.from&&S.profiles.has(d.from))openChat(d.from)})}
     let p=await pn.checkPermissions();
     if(p.receive==="prompt")p=await pn.requestPermissions();

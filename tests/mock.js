@@ -54,6 +54,11 @@ function from(t){
       if(op==="update"){d.key_transfers.forEach(r=>{if(r.user_id===me&&fl.every(f=>f(r)))Object.assign(r,payload)});save(d);return ok(null)}
       if(op==="delete"){d.key_transfers=d.key_transfers.filter(r=>!(r.user_id===me&&fl.every(f=>f(r))));save(d);return ok(null)}
     }
+    if(t==="push_tokens"){d.push_tokens=d.push_tokens||[];
+      if(op==="upsert"){if(payload.user_id!==me)return err("RLS: push_tokens");d.push_tokens=d.push_tokens.filter(r=>r.token!==payload.token);d.push_tokens.push({...payload});save(d);return ok(null)}
+      if(op==="delete"){d.push_tokens=d.push_tokens.filter(r=>!(r.user_id===me&&fl.every(f=>f(r))));save(d);return ok(null)}
+    }
+    if(t==="push_mutes"&&op==="select")return ok([]);
     if(t==="profiles"&&op==="update"){
       const bad=Object.keys(payload).filter(k=>!["name","pm","about"].includes(k));if(bad.length)return err("permission denied for table profiles");
       if(payload.pm&&payload.pm.length>60)return err("check constraint pm");

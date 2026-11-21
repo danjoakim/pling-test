@@ -891,7 +891,8 @@ async function initPush(){
   try{
     if(!pushWired){pushWired=true;
       pn.addListener("registration",t=>{const tok=t&&t.value;if(!tok||!S.user)return;try{localStorage.setItem(pushKey,tok)}catch(e){}
-        api.savePushToken(S.user.id,tok)});
+        /* Spørringen sendes først når noen venter på den (Query er PromiseLike). Uten Promise.resolve ble tokenet aldri lagret (feil fra 0.1.20, Dan 21. nov: ingen push). */
+        Promise.resolve(api.savePushToken(S.user.id,tok)).catch(()=>{})});
       pn.addListener("pushNotificationActionPerformed",a=>{const d=a&&a.notification&&a.notification.data;if(d&&d.from&&S.profiles.has(d.from))openChat(d.from)})}
     let p=await pn.checkPermissions();
     if(p.receive==="prompt")p=await pn.requestPermissions();
