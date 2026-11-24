@@ -54,6 +54,32 @@ export function splitLinks(t: string): LinkPart[] {
   return out;
 }
 
+/** The site a link really goes to, for the card ("www." cut). Taken from the address itself, never from what the page says about itself. */
+export function hostOf(u: string): string {
+  try { return new URL(u).hostname.replace(/^www\./i, ""); } catch { return ""; }
+}
+
+/**
+ * Like `splitLinks`, but the address the card stands for is left out, so the message shows the card instead of the address
+ * (Dan 24 Nov). Only the FIRST link that is exactly the card's address goes; if the card names another address than the text
+ * (a sender that lies) nothing is hidden. Text left around it is trimmed and a lone punctuation tail is dropped.
+ */
+export function splitLinksForCard(t: string, lk: { u: string } | null | undefined): LinkPart[] {
+  const parts = splitLinks(t);
+  if (!lk) return parts;
+  const i = parts.findIndex(p => "url" in p && p.url === lk.u);
+  if (i < 0) return parts;
+  const out: LinkPart[] = [];
+  parts.forEach((p, j) => {
+    if (j === i) return;
+    if ("text" in p) {
+      const x = j < i ? p.text.replace(/\s+$/, "") : p.text.replace(/^\s+/, "");
+      if (x) out.push({ text: j > i && out.length ? " " + x : x });
+    } else out.push(p);
+  });
+  return out;
+}
+
 /** Checks a link card that came from another person's message. Returns a clean copy, or null if it cannot be shown. */
 export function validLk(x: unknown): LinkCard | null {
   const v = x as Record<string, unknown> | null | undefined;

@@ -663,6 +663,7 @@ async function loadMsgs(){
   S.seen.set(cid,out.length?out[out.length-1].id:0);
   if(out.length){setRead(cid,out[out.length-1].id);const l=out[out.length-1];S.last.set(S.chat.other,{id:l.id,mine:l.mine,t:previewText(l.ok?l:null),at:l.ts});S.unread.set(S.chat.other,0);setTitle();drawFriends()}
   if(S.first)for(const x of out)S.anSeen.set(String(x.id),0);
+  if(S.first){drawn.delete(cid);newCount=0}
   S.first=false;S.msgs=pend.length?[...out,...pend.filter(x=>x.cid===cid)]:out;drawLog();
   if(fresh.length){
     const bigs=fresh.filter(m=>m.dp);
@@ -682,8 +683,19 @@ async function loadOlder(){
     const h=log.scrollHeight,t=log.scrollTop;drawLog(true);log.scrollTop=t+(log.scrollHeight-h);
   }catch(e){fail(e)}
 }
+/* Innsliding (valgt 24. nov, forslag C): en ny boble glir ca. 22 px inn fra sin egen side og toner inn. Kompisens meldinger som ikke er tegnet før, og
+   egne meldinger mens de venter. Første tegning av en samtale, og egne meldinger som bekreftes (de er tegnet som ventende), animeres ikke.
+   Leser du lenger opp, hopper ikke chatten ned: en pille «Ny melding ↓» sitter nederst til du trykker på den eller blar ned. */
+const drawn=new Map();let newCount=0;
+const atEnd=log=>log.scrollHeight-log.scrollTop-log.clientHeight<80;
+function npill(log){
+  const b=el("button",{class:"npill",type:"button",onclick:()=>{newCount=0;b.remove();log.scrollTo({top:log.scrollHeight,behavior:"smooth"})}},newCount>1?tr("chat.newMsgs",{n:newCount}):tr("chat.newMsg"));
+  return b;
+}
 function drawLog(keepPos){
-  const log=$("#log"),near=log.scrollHeight-log.scrollTop-log.clientHeight<80;
+  const log=$("#log"),near=atEnd(log),prevTop=log.scrollTop,cid=S.chat.id;
+  let seen=drawn.get(cid);const firstDraw=!seen;if(!seen){seen=new Map();drawn.set(cid,seen)}
+  let incoming=0;
   log.textContent="";
   if(keyBadIds.has(S.chat.other)){log.append(keyAlert());return}
   const tm=ts=>new Date(ts).toLocaleTimeString("nb-NO",{hour:"2-digit",minute:"2-digit"});
@@ -696,9 +708,13 @@ function drawLog(keepPos){
     if(m.ts){const dk=new Date(m.ts).toDateString();if(dk!==prevDay){prevDay=dk;log.append(el("span",{class:"dday"},dayWord(m.ts)));prevM=null}}
     if(m.dp){log.append(el("div",{class:"sys"},tr("chat.sentDp",{who:m.mine?tr("chat.you"):nameOf(S.chat.other),time:tm(m.ts)})));prevM=null;continue}
     const cont=prevM&&prevM.mine===m.mine&&Math.abs(new Date(m.ts)-new Date(prevM.ts))<18e4;prevM=m;
-    const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")+(m.pending?" pending":"")+(cont?" cont":"")});d.dataset.mid=m.id;
+    /* Tegnes alt om igjen mens boblen glir (ny melding, kvittering, reaksjon), fortsetter bevegelsen der den var (negativ forsinkelse) i stedet for å starte på nytt. */
+    const t0=seen.get(m.id),isNew=!firstDraw&&t0===undefined&&(m.mine?!!m.pending:true);if(!firstDraw&&t0===undefined&&!m.mine)incoming++;
+    if(t0===undefined)seen.set(m.id,firstDraw?0:Date.now());
+    const age=isNew?0:(t0?Date.now()-t0:Infinity),enter=isNew||age<250;
+    const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")+(m.pending?" pending":"")+(cont?" cont":"")+(enter?" enter":"")});d.dataset.mid=m.id;if(enter&&age>0)d.style.animationDelay="-"+age+"ms";
     if(m.img)d.append(picEl(m.img));else
-    if(m.ok)d.append(...linkify(m.t==null?"":m.t));else d.append(tr("chat.undecryptable"));
+    if(m.ok)d.append(...linkify(m.t==null?"":m.t,m.lk));else d.append(tr("chat.undecryptable"));
     if(m.lk)d.append(lkCard(m.lk));
     d.append(el("br"),el("time",{},tm(m.ts)));
     if((m.ok||m.img)&&!m.pending){const ch=rxChips(m);if(ch)d.append(ch);d.append(el("button",{type:"button",class:"rxb","aria-label":tr("rx.ariaReact"),title:tr("rx.react"),onclick:e=>{e.stopPropagation();openRx(m,e.currentTarget)}},"☺"))}
@@ -711,8 +727,13 @@ function drawLog(keepPos){
     }
   }
   markAn();
-  if(!keepPos&&(near||S.justSent))log.scrollTop=log.scrollHeight;S.justSent=false;
+  if(near||S.justSent)newCount=0;else if(incoming&&!keepPos)newCount+=incoming;
+  if(!keepPos&&(near||S.justSent))log.scrollTop=log.scrollHeight;
+  else if(!near)log.scrollTop=prevTop; // tegner vi om alt, nullstilles posisjonen; den som leser oppover blir stående
+  S.justSent=false;
+  if(newCount&&!near&&!firstDraw)log.append(npill(log));
 }
+{const lg=$("#log");lg.addEventListener("scroll",()=>{if(newCount&&atEnd(lg)){newCount=0;const p=lg.querySelector(".npill");if(p)p.remove()}},{passive:true})}
 /* ---------- reaksjoner (kryptert som meldinger; se claude/reaksjoner.md) ---------- */
 const RX=[["rofl",tr("rx.name.rofl")],["thumbup",tr("rx.name.thumbup")],["heart",tr("rx.name.heart")],["surprised",tr("rx.name.surprised")],["cry",tr("rx.name.cry")],["thumbdown",tr("rx.name.thumbdown")]];
 const RX_OK=new Set(RX.map(x=>x[0]));

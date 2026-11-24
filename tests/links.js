@@ -22,14 +22,15 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  const last=p=>p.evaluate(()=>{const m=[...document.querySelectorAll("#log .m")].pop();if(!m)return null;
   const a=m.querySelector("a.ulink"),c=m.querySelector("a.lkc"),im=c&&c.querySelector("img.lki");
   return{text:m.textContent,link:a?{href:a.getAttribute("href"),text:a.textContent,rel:a.rel,target:a.target,next:a.nextSibling&&a.nextSibling.textContent}:null,
-   card:c?{href:c.getAttribute("href"),title:c.querySelector("b").textContent,site:c.querySelector("small").textContent,desc:(c.querySelector(".lkd")||{}).textContent||"",img:im?im.getAttribute("src").slice(0,23):null,imgLen:im?im.getAttribute("src").length:0}:null}});
+   card:c?{href:c.getAttribute("href"),title:c.querySelector(".lkt").textContent,site:c.querySelector(".lks,.lkh").textContent,desc:(c.querySelector(".lkd")||{}).textContent||"",img:im?im.getAttribute("src").slice(0,23):null,imgLen:im?im.getAttribute("src").length:0}:null}});
  const seen=async p=>{await p.evaluate(()=>refresh());await p.waitForTimeout(400)};
 
  // 1. a link with a preview: A fetches it once, B sees link and card; the "." after the link is not part of it
  await send("Se https://example.org/side. Hei :)");
  const a1=await last(A);
- assert.deepStrictEqual(a1.link,{href:"https://example.org/side",text:"https://example.org/side",rel:"noopener noreferrer nofollow",target:"_blank",next:"."});
- assert.deepStrictEqual([a1.card.href,a1.card.title,a1.card.site,a1.card.img],["https://example.org/side","Viktig sak i Bergen","Avisen","data:image/jpeg;base64,"]);
+ assert.strictEqual(a1.link,null,"lenketeksten er skjult når kortet vises");
+ assert.ok(!a1.text.includes("https://")&&a1.text.includes("Se")&&a1.text.includes("Hei"),"teksten rundt står igjen: "+a1.text);
+ assert.deepStrictEqual([a1.card.href,a1.card.title,a1.card.site,a1.card.img],["https://example.org/side","Viktig sak i Bergen","example.org","data:image/jpeg;base64,"],"pillen viser det ekte domenet, ikke nettstedsnavnet siden oppgir («Avisen»)");
  assert.ok(a1.card.desc.startsWith("En lengre beskrivelse"));
  assert.deepStrictEqual(await A.evaluate(()=>[window.__lpCalls,window.__lpLast.body.url]),[1,"https://example.org/side"],"the preview was fetched once, for the first link");
  await seen(B);const b1=await last(B);assert.deepStrictEqual(b1,a1);
@@ -75,16 +76,17 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  const sendRaw=lk=>A.evaluate(lk=>sendMsg({t:"rå melding",lk,ts:Date.now()}),lk);
  await sendRaw({u:"javascript:alert(1)",ti:"ond"});await sendRaw({u:"https://ok.example/",ti:"T".repeat(300),d:"D".repeat(500),s:"S".repeat(200),i:"data:image/svg+xml;base64,PHN2Zz48L3N2Zz4="});
  await seen(B);
- const hostile=await B.evaluate(()=>[...document.querySelectorAll("#log .m")].slice(-2).map(m=>{const c=m.querySelector("a.lkc");return c?{href:c.getAttribute("href"),t:c.querySelector("b").textContent.length,d:c.querySelector(".lkd").textContent.length,s:c.querySelector("small").textContent.length,img:!!c.querySelector("img")}:null}));
- assert.deepStrictEqual(hostile,[null,{href:"https://ok.example/",t:140,d:240,s:60,img:false}]);
+ const hostile=await B.evaluate(()=>[...document.querySelectorAll("#log .m")].slice(-2).map(m=>{const c=m.querySelector("a.lkc");return c?{href:c.getAttribute("href"),t:c.querySelector(".lkt").textContent.length,d:c.querySelector(".lkd").textContent.length,s:c.querySelector(".lks,.lkh").textContent,img:!!c.querySelector("img")}:null}));
+ assert.deepStrictEqual(hostile,[null,{href:"https://ok.example/",t:140,d:240,s:"ok.example",img:false}]);
  console.log("6 hostile preview: javascript: link dropped; text cut to 140/240/60; svg picture refused");
 
  // 7. several links in one message, links next to emoji codes
  await A.evaluate(()=>{api.linkPreview=window.__oldLp});
  await send("(https://a.example/x) og https://b.example/y, :D");
- const a8=await last(A);assert.strictEqual(a8.link.href,"https://a.example/x");
+ const a8=await last(A);assert.strictEqual(a8.link.href,"https://b.example/y");
  const all=await A.evaluate(()=>[...[...document.querySelectorAll("#log .m")].pop().querySelectorAll("a.ulink")].map(a=>a.getAttribute("href")));
- assert.deepStrictEqual(all,["https://a.example/x","https://b.example/y"]);
+ assert.strictEqual(a8.card.href,"https://a.example/x","kortet hører til første lenke");
+ assert.deepStrictEqual(all,["https://b.example/y"],"første lenke er skjult bak kortet, andre lenke står som vanlig");
  console.log("7 two links in one message");
 
  assert.deepStrictEqual([A.errs,B.errs],[[],[]],"no page errors: "+JSON.stringify([A.errs,B.errs]));

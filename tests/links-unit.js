@@ -28,6 +28,17 @@ const esbuild=require("esbuild");
  assert.strictEqual(L.firstUrl("ingenting her"),null);assert.strictEqual(L.firstUrl("javascript:alert(1)"),null);
  assert.strictEqual(L.validLk({u:"javascript:alert(1)"}),null);
  assert.strictEqual(L.validLk({u:"https://a.b",i:"data:image/svg+xml;base64,AAAA"}).i,undefined);
+ // skjult lenketekst når kortet vises (24. nov): bare lenken som er kortets adresse, aldri en annen
+ {const lk={u:"https://x.y/z"};
+  assert.deepStrictEqual(L.splitLinksForCard("https://x.y/z",lk),[],"bare lenke: ingenting igjen");
+  assert.deepStrictEqual(L.splitLinksForCard("Se denne https://x.y/z.",lk),[{text:"Se denne"}],"tekst foran, tegnsetting borte");
+  assert.deepStrictEqual(L.splitLinksForCard("a https://x.y/z b",lk),[{text:"a"},{text:" b"}],"tekst på begge sider");
+  assert.deepStrictEqual(L.splitLinksForCard("a https://other.no b",lk),L.splitLinks("a https://other.no b"),"kortet nevner en annen adresse: ingenting skjules");
+  assert.deepStrictEqual(L.splitLinksForCard("https://x.y/z og https://x.y/z",lk).filter(p=>"url" in p).length,1,"bare den første lenken skjules");
+  assert.deepStrictEqual(L.splitLinksForCard("a https://x.y/z",null),L.splitLinks("a https://x.y/z"),"uten kort: som før");
+  assert.strictEqual(L.hostOf("https://www.eksempel.no/a?b=1"),"eksempel.no");
+  assert.strictEqual(L.hostOf("https://Sub.Eksempel.no:8443/"),"sub.eksempel.no");
+  assert.strictEqual(L.hostOf("ikke en lenke"),"");}
  assert.deepStrictEqual(L.splitLinks("a https://x.y/z, b"),[{text:"a "},{url:"https://x.y/z",tail:","},{text:" b"}]);
  console.log("ok   hand-checked cases");
 })().catch(e=>{console.error("TESTFEIL",e.message);process.exit(1)});

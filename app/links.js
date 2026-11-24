@@ -3,18 +3,23 @@
 //# The reasons (why the sender fetches the preview, why the receiver validates) are in src/links.ts. (Lines starting with //# are not built into the page.)
 const {firstUrl,validLk}=PrekLinks;
 const LP_ON=()=>{try{return localStorage.getItem("pling_lp")!=="0"}catch(e){return true}};
-function linkify(t){
+/* Når meldingen har et kort, skjules lenketeksten som er kortets adresse (Dan 24. nov); kortet er lenken. */
+function linkify(t,lk){
   const out=[];
-  for(const p of PrekLinks.splitLinks(t)){
+  for(const p of PrekLinks.splitLinksForCard(t,lk)){
     if("url" in p){out.push(el("a",{class:"ulink",href:p.url,target:"_blank",rel:"noopener noreferrer nofollow"},p.url));if(p.tail)out.push(p.tail)}
     else out.push(...emojiNodes(p.text));
   }
   return out;
 }
+/* Kortet (forslag B, 24. nov): stort bilde med nettstedet som pille, skrå tittel, to linjer tekst. Nettstedet vises med det ekte domenet fra
+   selve adressen (`hostOf`), ikke med navnet siden oppgir selv, fordi lenketeksten er skjult og et kort ellers kunne utgi seg for en annen avsender. */
+const LK_ARROW='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+function lkSite(host,cls){const s=el("span",{class:cls},host);const a=el("i",{});a.innerHTML=LK_ARROW;s.append(a);return s}
 function lkCard(l){
-  const a=el("a",{class:"lkc",href:l.u,target:"_blank",rel:"noopener noreferrer nofollow"});
-  if(l.i)a.append(el("img",{class:"lki",src:l.i,alt:""}));
-  a.append(el("span",{class:"lkb"},el("small",{},l.s||""),el("b",{},l.ti||l.u),l.d?el("span",{class:"lkd"},l.d):null));
+  const host=PrekLinks.hostOf(l.u),a=el("a",{class:"lkc"+(l.i?"":" noimg"),href:l.u,target:"_blank",rel:"noopener noreferrer nofollow"});
+  if(l.i)a.append(el("span",{class:"lkw"},el("img",{class:"lki",src:l.i,alt:""}),lkSite(host,"lks")));
+  a.append(el("span",{class:"lkb"},l.i?null:lkSite(host,"lkh"),el("span",{class:"lkt"},l.ti||host),l.d?el("span",{class:"lkd"},l.d):null));
   return a;
 }
 const fetchPreview=u=>PrekLinks.fetchPreview(api.linkPreview,u);

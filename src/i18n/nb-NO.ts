@@ -216,6 +216,8 @@ export const nb = {
   "chat.youPrefix": "Du: ",
   "chat.fingerprint": "Nøkkelavtrykk, din kompis: {fp}",
   "chat.showOlder": "Vis eldre meldinger",
+  "chat.newMsg": "Ny melding ↓",
+  "chat.newMsgs": "{n} nye meldinger ↓",
   "chat.empty": "Samtalen er ende-til-ende-kryptert. Si hei til {name}!",
   "chat.sentDp": "{who} sendte en dobbeltpling · {time}",
   "chat.you": "Du",
