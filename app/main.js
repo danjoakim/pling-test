@@ -504,7 +504,14 @@ function drawTitle(){
   const id=S.chat.other,pm=(S.profiles.get(id)||{}).pm;t.textContent="";
   t.append(nameOf(id));if(pm){t.append(el("span",{class:"tpm"}," – "+pm));t.title=nameOf(id)+" – "+pm}else t.removeAttribute("title");
   const sw={on:tr("status.on"),away:tr("status.away"),busy:tr("status.busy"),off:tr("status.off")}[ST[stOf(id)]||"off"];
-  t.append(el("span",{class:"tsub"},pm?sw+" · "+pm:sw)); // phone layout only (mobil.css)
+  /* Telefon (forslag D, Dan 26. nov): statusordet står alltid under navnet i statusfargen; den personlige meldingen får en egen stripe under toppen, med «Vis» for å åpne hele. */
+  t.append(el("span",{class:"tsub s-"+(ST[stOf(id)]||"off")},sw)); // phone layout only (mobil.css)
+  const ch=$("#ch"),old=ch.querySelector(".pmstrip");if(old)old.remove();
+  if(pm){
+    const st=el("div",{class:"pmstrip"}),tx=el("span",{class:"pmt"},"\u00AB"+pm+"\u00BB"),vb=el("button",{type:"button",class:"pmv"},tr("chat.pmShow"));
+    vb.onclick=()=>{const o=st.classList.toggle("open");vb.textContent=o?tr("chat.pmHide"):tr("chat.pmShow")};
+    st.append(tx,vb);ch.append(st);
+  }
 }
 // Which friend groups are folded (phone), kept per person in this browser. Offline starts folded.
 let grpSet=null;
@@ -566,7 +573,7 @@ function drawSec(){
 
 /* ---------- samtale ---------- */
 function closeChat(){
-  S.chat=null;S.msgs=[];S.older=[];S.sig=null;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
+  clearReply();S.chat=null;S.msgs=[];S.older=[];S.sig=null;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
   $("#shell").classList.remove("inchat");
   for(const i of ["ch","menu","log","typ","emo","bar"])$("#"+i).hidden=true;
   $("#empty").hidden=false;$("#mb").setAttribute("aria-expanded","false");
@@ -576,7 +583,7 @@ async function openChat(otherId){
   try{
     if(warm&&warmP)await warmP;
     const cid=await q(api.openDm(otherId),tr("ctx.openChat"));
-    S.chat={id:cid,other:otherId};S.msgs=[];S.older=[];S.more=false;S.sig=null;S.first=true;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
+    clearReply();S.chat={id:cid,other:otherId};S.msgs=[];S.older=[];S.more=false;S.sig=null;S.first=true;S.anSeen=new Map();S.rx=new Map();S.rxSig="";
     $("#shell").classList.add("inchat");
     $("#empty").hidden=true;for(const i of ["ch","log","bar"])$("#"+i).hidden=false;
     $("#menu").hidden=true;$("#emo").hidden=true;$("#snbox").classList.remove("open");$("#snb").setAttribute("aria-expanded","false");$("#mb").setAttribute("aria-expanded","false");
@@ -635,14 +642,17 @@ function drawTyping(){
   const t=$("#typ");
   if(!S.chat){t.hidden=true;return}
   const sh=typingShown(S.typ.get(S.chat.other),S.chat,S.pres,Date.now());
+  /* Prikkene tar plass over skrivefeltet og gjør loggen kortere. Sto du nederst, scroller vi med, så de ikke dekker siste melding (Dan 26. nov). */
+  const lg=$("#log"),h0=lg.clientHeight,bot=!lg.hidden&&atEnd(lg);
   t.hidden=false;t.textContent=sh.on?tr("chat.typing",{name:nameOf(S.chat.other)}):"";
+  if(bot&&lg.clientHeight!==h0)lg.scrollTop=lg.scrollHeight;
   if(sh.on){clearTimeout(S.tT);S.tT=setTimeout(drawTyping,sh.again)}
 }
 const PAGE=50;
 /* ---------- lenker og forhåndsvisning: src/links.ts, glue i app/links.js ---------- */
 async function decodeRows(rows,key){
   const out=[];
-  for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),img:(m&&m.img&&typeof m.img.p==="string")?m.img:null,lk:validLk(m&&m.lk),ok:!!m,ts:r.created_at})}
+  for(const r of rows){const m=await open(key,r.iv,r.ct);out.push({id:r.id,mine:r.sender===S.user.id,t:m&&m.t!=null?String(m.t):null,dp:!!(m&&m.dp),img:(m&&m.img&&typeof m.img.p==="string")?m.img:null,lk:validLk(m&&m.lk),rp:validReply(m&&m.rp),ok:!!m,ts:r.created_at})}
   return out;
 }
 async function loadMsgs(){
@@ -713,11 +723,12 @@ function drawLog(keepPos){
     if(t0===undefined)seen.set(m.id,firstDraw?0:Date.now());
     const age=isNew?0:(t0?Date.now()-t0:Infinity),enter=isNew||age<250;
     const d=el("div",{class:"m"+(m.mine?" mine":"")+(m.img?" pic":"")+(m.pending?" pending":"")+(cont?" cont":"")+(enter?" enter":"")});d.dataset.mid=m.id;if(enter&&age>0)d.style.animationDelay="-"+age+"ms";
+    if(m.rp)d.append(quoteEl(m));
     if(m.img)d.append(picEl(m.img));else
     if(m.ok)d.append(...linkify(m.t==null?"":m.t,m.lk));else d.append(tr("chat.undecryptable"));
     if(m.lk)d.append(lkCard(m.lk));
     d.append(el("br"),el("time",{},tm(m.ts)));
-    if((m.ok||m.img)&&!m.pending){const ch=rxChips(m);if(ch)d.append(ch);d.append(el("button",{type:"button",class:"rxb","aria-label":tr("rx.ariaReact"),title:tr("rx.react"),onclick:e=>{e.stopPropagation();openRx(m,e.currentTarget)}},"☺"))}
+    if((m.ok||m.img)&&!m.pending){const ch=rxChips(m);if(ch)d.append(ch);if(typeof m.id==="number"&&makeReply(m))d.append(el("button",{type:"button",class:"rpb","aria-label":tr("reply.menu"),title:tr("reply.menu"),onclick:e=>{e.stopPropagation();startReply(m)}},"\u21A9\uFE0E"));d.append(el("button",{type:"button",class:"rxb","aria-label":tr("rx.ariaReact"),title:tr("rx.react"),onclick:e=>{e.stopPropagation();openRx(m,e.currentTarget)}},"☺"))}
     log.append(d);
     const nx=S.msgs[i+1],last=!nx||nx.dp||nx.mine!==m.mine||Math.abs(new Date(nx.ts)-new Date(m.ts))>=18e4||new Date(nx.ts).toDateString()!==new Date(m.ts).toDateString();
     if(last&&!m.pending){ // phone layout: time (and read ticks on mine) under the last bubble of a run; hidden on desktop
@@ -758,8 +769,12 @@ function openRx(m,anchor){
     const b=el("button",{type:"button",class:"rxo"+(mine===r?" me":""),title:nm,"aria-label":nm,onclick:e=>{e.stopPropagation();closeRx();setReact(m.id,mine===r?null:r)}});
     b.append(anEl(r));p.append(b);
   }
-  if(m.ok&&m.t!=null&&!m.img)p.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();copyText(String(m.t))}},tr("common.copy")));
-  if(!m.mine&&(m.ok||m.img)&&!m.pending&&typeof m.id==="number")p.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();showReport(m)}},tr("rpt.menu")));
+  /* Reaksjonene på én rad, handlingene på en rad under, så menyen aldri blir bredere enn skjermen (Dan 26. nov). */
+  const ac=el("div",{class:"rxa"});
+  if((m.ok||m.img)&&!m.pending&&typeof m.id==="number")ac.append(el("button",{type:"button",class:"rxk rxr",onclick:e=>{e.stopPropagation();closeRx();startReply(m)}},tr("reply.menu")));
+  if(m.ok&&m.t!=null&&!m.img)ac.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();copyText(String(m.t))}},tr("common.copy")));
+  if(!m.mine&&(m.ok||m.img)&&!m.pending&&typeof m.id==="number")ac.append(el("button",{type:"button",class:"rxk",onclick:e=>{e.stopPropagation();closeRx();showReport(m)}},tr("rpt.menu")));
+  if(ac.children.length)p.append(ac);
   document.body.append(p);rxPop=p;
   const a=anchor.getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight;
   const{x,y}=menuPosition(a,w,h,innerWidth);
@@ -793,6 +808,75 @@ document.addEventListener("contextmenu",e=>{if(e.target.closest&&e.target.closes
 /* fingeren løftes etter trykk-og-hold: ikke la det åpne for eksempel bildevisning */
 document.addEventListener("click",e=>{if(Date.now()-lpFired<800&&e.target.closest&&e.target.closest("#log")){e.stopPropagation();e.preventDefault()}},true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeRx()});
+/* ---------- svar på enkeltmeldinger (Dan 26. nov; se claude/feel-chat.md punkt 8 og src/reply.ts) ---------- */
+let replyTo=null;
+function startReply(m){
+  const r=makeReply(m);if(!r||!S.chat)return;
+  replyTo=r;drawReply();$("#tx").focus();
+}
+function clearReply(){if(replyTo||document.querySelector("#rps:not([hidden])")){replyTo=null;drawReply()}}
+function drawReply(){
+  const b=$("#rps");if(!b)return;
+  const lg=$("#log"),h0=lg.clientHeight,bot=!lg.hidden&&atEnd(lg);
+  drawReply2(b);
+  if(bot&&lg.clientHeight!==h0)lg.scrollTop=lg.scrollHeight; /* stripen tar plass: siste melding blir ikke dekket */
+}
+function drawReply2(b){
+  b.textContent="";
+  if(!replyTo||!S.chat){b.hidden=true;return}
+  const r=replyTo,x=el("button",{type:"button",class:"rpx","aria-label":tr("reply.cancel"),title:tr("reply.cancel"),onclick:()=>{clearReply();$("#tx").focus()}},"✕");
+  b.append(el("span",{class:"rpl","aria-hidden":"true"}),el("span",{class:"rsm"},
+    el("span",{class:"rpn"},r.a?tr("reply.toMe"):tr("reply.toOther",{name:nameOf(S.chat.other)})),
+    el("span",{class:"rpt"},r.k==="img"?tr("reply.img"):r.q)),x);
+  b.hidden=false;
+}
+/* Sitatet øverst i boblen. Finnes ikke originalen lenger (slettet eller utløpt) står det «Meldingen er slettet». */
+function quoteEl(m){
+  const r=m.rp,me=quoteAuthor(r,m.mine)==="me",nums=S.msgs.filter(z=>typeof z.id==="number"),oldest=nums.length?nums[0].id:null;
+  const gone=r.i!=null&&oldest!=null&&!nums.some(z=>z.id===r.i)&&(r.i>=oldest||!S.more);
+  const q=el("button",{type:"button",class:"qt"+(gone?" gone":""),"aria-label":tr("reply.jump"),onclick:e=>{e.stopPropagation();if(gone)toast(tr("reply.gone"));else jumpTo(r.i)}},
+    el("span",{class:"qtn"},me?tr("reply.me"):nameOf(S.chat.other)));
+  q.append(el("span",{class:"qtt"},...(gone?[tr("reply.gone")]:r.k==="img"?[tr("reply.img")]:emojiNodes(r.q))));
+  return q;
+}
+async function jumpTo(i){
+  if(i==null||!S.chat)return;
+  const find=()=>document.querySelector('#log .m[data-mid="'+i+'"]');
+  for(let n=0;!find()&&S.more&&n<10;n++){const b=S.msgs.length;await loadOlder();if(S.msgs.length===b)break}
+  const d=find();if(!d){toast(tr("reply.gone"));return}
+  d.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});
+  d.classList.remove("hl");void d.offsetWidth;d.classList.add("hl");setTimeout(()=>d.classList.remove("hl"),1400);
+}
+/* Sveip meldingen: kompisens mot høyre, egne mot venstre (bort fra kanten). Over terskelen ved slipp åpnes svaret. */
+{const SW=56;let sw=null;
+ const REPLYI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 8L4 14l6 6M4 14h10a6 6 0 016 6"/></svg>';
+ document.addEventListener("pointerdown",e=>{
+  sw=null;if(e.pointerType!=="touch"||!S.chat)return;
+  const b=e.target.closest&&e.target.closest("#log .m[data-mid]");if(!b||e.target.closest("a,button,.rxs"))return;
+  const m=S.msgs.find(z=>String(z.id)===b.dataset.mid);if(!m||!(m.ok||m.img)||m.pending||!makeReply(m))return;
+  sw={b,m,x:e.clientX,y:e.clientY,id:e.pointerId,dir:m.mine?-1:1,on:false,dx:0,hit:false};
+ });
+ document.addEventListener("pointermove",e=>{
+  if(!sw||e.pointerId!==sw.id)return;
+  const dx=sw.dir*(e.clientX-sw.x),dy=e.clientY-sw.y;
+  if(!sw.on){
+   if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){sw=null;return}
+   if(dx>14&&dx>Math.abs(dy)*1.5){sw.on=true;lpCancel();sw.b.style.transition="none";
+    sw.ic=el("span",{class:"swi"+(sw.m.mine?" mine":"")});sw.ic.innerHTML=REPLYI;sw.b.append(sw.ic)}
+   else return;
+  }
+  sw.dx=Math.max(0,Math.min(dx,90));
+  sw.b.style.transform="translateX("+sw.dir*sw.dx*.5+"px)";
+  sw.ic.style.opacity=String(Math.min(1,sw.dx/SW));
+  const hit=sw.dx>=SW;if(hit&&!sw.hit){try{navigator.vibrate&&navigator.vibrate(8)}catch(x){}}sw.hit=hit;sw.ic.classList.toggle("hit",hit);
+ });
+ const end=e=>{
+  if(!sw||e.pointerId!==sw.id)return;const s=sw;sw=null;if(!s.on)return;
+  s.b.style.transition="transform .18s ease-out";s.b.style.transform="";
+  setTimeout(()=>{s.b.style.transition="";if(s.ic)s.ic.remove()},200);
+  if(e.type==="pointerup"&&s.dx>=SW){lpFired=Date.now();startReply(s.m)}
+ };
+ document.addEventListener("pointerup",end,true);document.addEventListener("pointercancel",end,true);}
 async function setReact(mid,r){
   if(!S.chat)return;
   const cid=S.chat.id,other=S.profiles.get(S.chat.other);if(!other)return;
@@ -817,7 +901,7 @@ async function sendMsg(payload,file){
     if(file)row.file=file;
     if(payload.dp)row.dp=true; /* ren flagg så serveren kan sende ringelyd-push; innholdet er fortsatt kryptert */
     if(payload.t!=null&&!payload.img&&!payload.dp){
-      p={id:"p"+Date.now(),cid:S.chat.id,pending:true,mine:true,t:String(payload.t),dp:false,img:null,lk:payload.lk||null,ok:true,ts:new Date().toISOString()};
+      p={id:"p"+Date.now(),cid:S.chat.id,pending:true,mine:true,t:String(payload.t),dp:false,img:null,lk:payload.lk||null,rp:payload.rp||null,ok:true,ts:new Date().toISOString()};
       pend.push(p);S.msgs=[...S.msgs,p];S.justSent=true;drawLog();
     }
     await q(api.sendMessage(row),tr("ctx.send"));
@@ -1099,28 +1183,38 @@ function wire(){
   const tx=$("#tx");
   const send=async()=>{
     const t=tx.value.trim();if(!t)return;tx.value="";drawPv();
-    const pl={t,ts:Date.now()},u=LP_ON()?firstUrl(t):null,sd=$("#sd");
+    const pl={t,ts:Date.now()},u=LP_ON()?firstUrl(t):null,sd=$("#sd"),rp=replyTo;if(rp){pl.rp=rp;clearReply()}
     if(u){sd.disabled=true;sd.textContent="…";try{const lk=await fetchPreview(u);if(lk)pl.lk=lk}finally{sd.disabled=false;sd.textContent=tr("common.send")}}
-    if(!await sendMsg(pl)){tx.value=t;drawPv()}};
+    if(!await sendMsg(pl)){tx.value=t;drawPv();if(rp&&!replyTo){replyTo=rp;drawReply()}}};
   $("#sd").addEventListener("click",send);
-  tx.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
+  /* Returtasten: på telefon gir den linjeskift (Dan 26. nov: «folk skriver hele romaner»; pila sender). På PC og Mac sender Enter, Shift+Enter gir linjeskift. */
+  const touchKb=()=>matchMedia("(pointer:coarse)").matches&&narrow();
+  tx.addEventListener("keydown",e=>{if(e.key==="Escape"&&replyTo){clearReply();return}});
+  tx.addEventListener("keydown",e=>{if(e.key!=="Enter"||e.isComposing||e.shiftKey||touchKb())return;e.preventDefault();send()});
+  /* Feltet vokser oppover til omtrent seks linjer (CSS max-height), så ruller det inni. Pila vises bare når det står tekst (`.has`, mobil.css). */
+  const fit=()=>{
+    $("#bar").classList.toggle("has",!!tx.value.trim());
+    if(!tx.value){tx.style.height="";return}
+    tx.style.height="auto";const ex=tx.offsetHeight-tx.clientHeight;tx.style.height=(tx.scrollHeight+ex)+"px";
+  };
+  tx.addEventListener("input",fit);
   /* «skriver …»: første tastetrykk etter en pause sendes med en gang, så sendes det hvert 2. sekund mens du skriver. Tomt felt sender «ikke skriver» med en gang. */
   tx.addEventListener("input",()=>{if(!S.chat)return;const now=Date.now();
     if(!tx.value){S.myTyp=null;trackMe(true);return}
     const first=!S.myTyp||now-S.myTyp.n>3000;S.myTyp={c:S.chat.id,n:now};trackMe(first)});
   /* forhåndsvisning av smilefjes mens du skriver (27. oktober): vises bare når teksten inneholder en kode; selve meldingen sendes som før */
   const epv=$("#epv");
-  const drawPv=()=>{const t=tx.value;epv.textContent="";if(!t){epv.hidden=true;return}
+  const drawPv=()=>{fit();const t=tx.value;epv.textContent="";if(!t){epv.hidden=true;return}
     const ns=emojiNodes(t);if(!ns.some(n=>typeof n!=="string")&&ns.join("")===t){epv.hidden=true;return}
     ns.forEach(n=>epv.append(n));epv.hidden=false};
   tx.addEventListener("input",drawPv);
   const emo=$("#emo");
-  const put=t=>{const v=tx.value,pre=v&&!/\s$/.test(v)?" ":"";tx.value=v+pre+t+" ";drawPv();tx.focus()};
+  const put=t=>{const v=tx.value,pre=v&&!/\s$/.test(v)?" ":"";tx.value=v+pre+t+" ";drawPv();if(!touchKb())tx.focus()};
   const FIGS=[[":)","smile"],[":D","grin"],[";)","wink"],[":(","sad"],[":P","tongue"],[":O","surprised"],[":'(","cry"],["xD","xd"],["(lol)","lol"],[":L","rofl"],["(Y)","yes"],["(N)","no"],[":-@","angry"],["(H)","cool"],["8-)","glasses"],["(6)","devil"],["(A)","angel"],["(K)","kiss"],["<3","heart"],["(U)","broken"],["(b)","beer"],["(*)","star"],["(brb)","hourglass"]];
   const pf=el("div",{class:"eg"}),pe=el("div",{class:"eg",hidden:true});
   for(const[c,id]of FIGS){const b=el("button",{type:"button",class:"ef",title:c+" ("+AN_FIG[id][0]+")","aria-label":tr("emo.pickAria",{name:AN_FIG[id][0],code:c}),onclick:()=>put(c)});b.append(anEl(id),el("span",{class:"efn","aria-hidden":"true"},AN_FIG[id][0]));pf.append(b)}
   for(const e of ["😊","😃","😉","🙁","😛","❤️","👍","👎","😮","😎","😈","😇","😢","💋","💔","🎉"]){
-    pe.append(el("button",{type:"button",class:"ef",onclick:()=>{tx.value+=e;drawPv();tx.focus()}},e));
+    pe.append(el("button",{type:"button",class:"ef",onclick:()=>{tx.value+=e;drawPv();if(!touchKb())tx.focus()}},e));
   }
   const t1=el("button",{type:"button",class:"etab on"},tr("emo.tabFigures")),t2=el("button",{type:"button",class:"etab"},tr("emo.tabEmoji"));
   const tab=n=>{pf.hidden=n!==1;pe.hidden=n!==2;t1.classList.toggle("on",n===1);t2.classList.toggle("on",n===2)};
@@ -1152,6 +1246,13 @@ function wire(){
    emo.addEventListener("pointerup",up);emo.addEventListener("pointercancel",up);}
   $("#log").addEventListener("click",()=>{if(!emo.hidden)emoShut()});
   $("#sd").addEventListener("click",emoShut);
+  /* Tastaturet blir oppe når du sender, og legges ned når du drar i samtalen, trykker på en tom flate eller åpner smil/+ (Dan 26. nov). */
+  $("#sd").addEventListener("mousedown",e=>e.preventDefault());
+  $("#sd").addEventListener("click",()=>{if(touchKb())tx.focus()});
+  const kbDown=()=>{if(touchKb()&&document.activeElement===tx)tx.blur()};
+  $("#log").addEventListener("touchmove",kbDown,{passive:true});
+  $("#log").addEventListener("click",e=>{if(!e.target.closest(".m,a,button,img,.npill"))kbDown()});
+  $("#eb").addEventListener("click",kbDown);$("#plusb").addEventListener("click",kbDown);
   $("#dp").addEventListener("click",async()=>{
     if(Date.now()<S.cdUntil)return;
     if(await sendMsg({dp:1,ts:Date.now()})){S.cdUntil=Date.now()+60000;cdTick();clearInterval(S.cdT);S.cdT=setInterval(cdTick,1000);dobbelt()}

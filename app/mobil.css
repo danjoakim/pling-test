@@ -707,3 +707,32 @@ html:not(.lys) .avs.cx{background:#14294a!important}
 .menu .snbox #snok{margin-top:12px;height:46px;border-radius:12px;font-size:15px}
 .menu .snbox #snst{margin-top:10px}
 }
+
+/* Status D (26. nov): statusord i farge under navnet, personlig melding i egen stripe under toppen */
+.pmstrip{display:none}
+@media(max-width:700px){
+.ch{flex-wrap:wrap}
+.ch .pmstrip{display:flex;order:9;flex:0 0 auto;width:calc(100% + 12px);box-sizing:border-box;margin:10px -8px -12px -4px;padding:8px 16px;gap:8px;align-items:center;background:#122a4d;border-top:1px solid #1d3a68;color:#8fb0dc;font:italic 12.5px var(--ui)}
+html.lys .ch .pmstrip{background:#e9f2fb;border-top-color:#c5ddf2;color:#5b7a9e}
+.ch .pmstrip .pmt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch .pmstrip.open .pmt{white-space:normal;overflow:visible}
+.ch .pmstrip .pmv{flex:none;border:0;background:none;text-shadow:none;padding:2px 0 2px 6px;font:700 12.5px var(--ui);font-style:normal;color:#7fb2ff;cursor:pointer}
+html.lys .ch .pmstrip .pmv{color:#2a6fd0}
+.ch .ti .tsub{font-weight:700;font-size:13.5px}
+html:not(.lys) .ch .ti .tsub.s-on{color:#3fcf5a}html:not(.lys) .ch .ti .tsub.s-busy{color:#ff6b6b}html:not(.lys) .ch .ti .tsub.s-away{color:#ffb347}html:not(.lys) .ch .ti .tsub.s-off{color:#8a9bb3}
+html.lys .ch .ti .tsub.s-on{color:#1c8a37}html.lys .ch .ti .tsub.s-busy{color:#c0392b}html.lys .ch .ti .tsub.s-away{color:#b36b00}html.lys .ch .ti .tsub.s-off{color:#5b7a9e}
+}
+
+/* Skrivefelt B (26. nov): feltet vokser, pila kommer bare med tekst, bjella tar pilas plass når feltet er tomt */
+@media(max-width:700px){
+.bar,html.lys .bar{align-items:flex-end}
+.bar #tx,.win .bar #tx{order:2;flex:1 1 0;height:50px;min-height:50px;max-height:164px;border-radius:25px;border:1px solid #c5ddf2;background:#fff;padding:13px 52px 13px 18px;font-size:17px;line-height:24px;color:#10304f;box-sizing:border-box;width:auto}
+html:not(.lys) .bar #tx,html:not(.lys) .win .bar #tx{background:#12294d;border-color:#2a4468;color:#e6f0fb}
+.bar #eb{margin-bottom:3px}
+.bar:not(.has) #sd{display:none!important}
+}
+
+@media(max-width:700px){
+.rps{order:89;margin:0 10px;padding:8px 12px;border:1px solid #2a4468;border-radius:14px 14px 0 0;background:#12294d}
+html.lys .rps{background:#fff;border-color:#c5ddf2}
+}

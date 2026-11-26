@@ -40,7 +40,8 @@ const srv=http.createServer((q,r)=>{const f=q.url.startsWith("/lib/")?DIR+q.url.
  // pending og bekreftet er to tegninger av "samme" boble; bare den første har enter, og den er egen
  assert.ok(ent.some(x=>x[0]&&x[1]),"egen melding glir inn mens den venter: "+JSON.stringify(ent));
  await B.waitForFunction(()=>![...document.querySelectorAll("#log .m.mine")].pop().classList.contains("pending"));
- assert.strictEqual(await B.evaluate(()=>[...document.querySelectorAll("#log .m.mine")].pop().classList.contains("enter")),false,"bekreftet egen melding animeres ikke på nytt");
+ await B.waitForTimeout(600); /* med rask lagring kan boblen fortsatt bære «enter» de første 250 ms (bevegelsen fortsetter), men den skal ikke starte på nytt */
+ assert.strictEqual(await B.evaluate(()=>[...document.querySelectorAll("#log .m.mine")].pop().getAnimations().filter(a=>a.playState==="running").length),0,"bekreftet egen melding animeres ikke på nytt");
  const mr=await B.evaluate(()=>{const e=document.createElement("div");e.className="m mine enter";document.querySelector("#log").append(e);const n=getComputedStyle(e).animationName;e.remove();return n});
  assert.strictEqual(mr,"mright");
  console.log("3 egen melding glir inn fra høyre, bare én gang");
