@@ -989,6 +989,8 @@ const pushKey="prek_push_token";
 /* Uten bunter finnes ikke alltid cap.Plugins.X; registerPlugin(navn) gir en proxy til den innebygde modulen uansett. */
 function nativePlugin(name){const cap=window.Capacitor;if(!(cap&&cap.isNativePlatform&&cap.isNativePlatform()))return null;
   return (cap.Plugins&&cap.Plugins[name])||(cap.registerPlugin?cap.registerPlugin(name):null)}
+/* iPhone-appen: den grå raden over tastaturet (pilene og ✓) skjules; den gjør ikke noe nyttig i samtalen (Dan 26. nov). Plugin: @capacitor/keyboard, resize «none» i ios/capacitor.config.json så oppførselen ellers er som før. */
+try{const kb=nativePlugin("Keyboard");if(kb&&kb.setAccessoryBarVisible)Promise.resolve(kb.setAccessoryBarVisible({isVisible:false})).catch(()=>{})}catch(e){}
 function pushPlugin(){try{return nativePlugin("PushNotifications")}catch(e){return null}}
 let pushWired=false;
 async function initPush(){

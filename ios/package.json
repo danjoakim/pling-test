@@ -9,6 +9,7 @@
     "@capacitor/core": "^7",
     "@capacitor/haptics": "^7",
     "@capacitor/ios": "^7",
+    "@capacitor/keyboard": "^7",
     "@capacitor/push-notifications": "^7",
     "@capgo/native-audio": "^7"
   }

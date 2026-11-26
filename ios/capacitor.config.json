@@ -11,6 +11,9 @@
       "presentationOptions": [
         "badge"
       ]
+    },
+    "Keyboard": {
+      "resize": "none"
     }
   }
 }
